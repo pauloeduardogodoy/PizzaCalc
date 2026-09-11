@@ -2,8 +2,19 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Calculadora de Massa — Pizza Napolitana</title>
+
+<!-- PWA -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#cc5500">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Pizza Massa">
+<link rel="icon" href="./favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+
 <style>
   :root {
     --orange: #cc5500;
@@ -36,6 +47,15 @@
     margin: 0 0 4px;
     color: var(--orange);
     letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  header h1 img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    flex: none;
   }
   header p {
     margin: 0 0 24px;
@@ -518,7 +538,7 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>🍕 Calculadora de Massa</h1>
+    <h1><img src="icon-512.png" alt="Ícone Pizza"> Calculadora de Massa</h1>
     <p>Pizza Napolitana — Venturelli 95/5 • Hidratação 67% • Poolish</p>
   </header>
 
@@ -1129,6 +1149,15 @@
 
   // Inicializa
   render();
+
+  // ===== PWA: registra o service worker (offline / instalável) =====
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch((err) => {
+        console.warn('Falha ao registrar o service worker:', err);
+      });
+    });
+  }
 </script>
 </body>
 </html>
