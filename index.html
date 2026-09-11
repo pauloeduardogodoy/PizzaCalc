@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Massa — Pizza Napolitana</title>
+<style>
+  :root {
+    --orange: #cc5500;
+    --orange-light: #fff3e0;
+    --dark: #2b2118;
+    --gray: #6b6b6b;
+    --line: #e6ddd2;
+    --green: #2e8c6a;
+    --bg: #faf7f2;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    line-height: 1.5;
+    padding: 24px 16px 60px;
+  }
+
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  header h1 {
+    font-size: 1.8rem;
+    margin: 0 0 4px;
+    color: var(--orange);
+    letter-spacing: 0.5px;
+  }
+  header p {
+    margin: 0 0 24px;
+    color: var(--gray);
+    font-size: 0.9rem;
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .card h2 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--orange);
+    margin: 0 0 16px;
+  }
+
+  /* Controles */
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 640px) {
+    .controls { grid-template-columns: 1fr; }
+  }
+
+  .control label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.92rem;
+    margin-bottom: 8px;
+  }
+  .control .val {
+    color: var(--orange);
+    font-weight: 700;
+  }
+
+  .row-input {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  input[type="range"] {
+    flex: 1 1 100%;
+    accent-color: var(--orange);
+    height: 6px;
+  }
+  input[type="number"] {
+    width: 72px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 1rem;
+    text-align: center;
+    color: var(--dark);
+  }
+  input[type="number"]:focus {
+    outline: 2px solid var(--orange);
+    border-color: var(--orange);
+  }
+  .unit { color: var(--gray); font-size: 0.85rem; min-width: 46px; }
+
+  .summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--gray);
+  }
+  .summary b { color: var(--dark); }
+
+  /* Tabela de ingredientes */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+  th {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gray);
+    font-weight: 600;
+  }
+  td.qty {
+    text-align: right;
+    font-weight: 700;
+    color: var(--orange);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  tr.total td {
+    border-top: 2px solid var(--dark);
+    border-bottom: none;
+    font-weight: 700;
+    padding-top: 12px;
+  }
+  tr.subhead td {
+    background: var(--orange-light);
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--orange);
+    padding: 8px;
+  }
+  td.note { color: var(--gray); font-size: 0.82rem; }
+
+  .pill {
+    display: inline-block;
+    background: var(--orange-light);
+    color: var(--orange);
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+
+  .fixed-note {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .fixed-note b { color: var(--green); }
+
+  footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-top: 24px;
+  }
+
+  .warn-box {
+    display: none;
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: #fff6e5;
+    border: 1px solid #e0a020;
+    border-left: 4px solid #e0a020;
+    border-radius: 8px;
+    font-size: 0.86rem;
+    color: #7a5200;
+    line-height: 1.45;
+  }
+  .warn-box.show { display: block; }
+  .warn-box b { color: #b36b00; }
+
+  .alert-box {
+    display: none;
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: #fdecea;
+    border: 1px solid #c0392b;
+    border-left: 4px solid #c0392b;
+    border-radius: 8px;
+    font-size: 0.86rem;
+    color: #8a1c12;
+    line-height: 1.45;
+  }
+  .alert-box.show { display: block; }
+  .alert-box b { color: #a8200e; }
+
+  .btns { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+  button {
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--dark);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  button:hover { background: var(--orange-light); border-color: var(--orange); }
+  button.primary { background: var(--orange); color: #fff; border-color: var(--orange); }
+  button.primary:hover { background: #b34a00; }
+
+  /* ===== Timeline do cronograma ===== */
+  .timeline-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .timeline-head .progress {
+    font-size: 0.8rem;
+    color: var(--gray);
+  }
+  .timeline-head .progress b { color: var(--orange); }
+
+  .timeline {
+    position: relative;
+    margin-top: 8px;
+    padding-left: 8px;
+  }
+  /* linha vertical conectando as etapas */
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 21px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background: var(--line);
+  }
+
+  .step {
+    position: relative;
+    display: flex;
+    gap: 16px;
+    padding: 0 0 18px 0;
+  }
+  .step:last-child { padding-bottom: 0; }
+
+  .step .dot {
+    position: relative;
+    z-index: 1;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--dotcolor, #999);
+    color: var(--dotcolor, #999);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  .step .content {
+    flex: 1;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--dotcolor, #999);
+    border-radius: 10px;
+    padding: 12px 14px;
+    transition: opacity 0.2s;
+  }
+
+  .step .step-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .step .title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--dark);
+  }
+  .step .time {
+    font-size: 0.78rem;
+    color: var(--gray);
+    white-space: nowrap;
+  }
+  .step .tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--dotcolor, #999);
+    background: color-mix(in srgb, var(--dotcolor, #999) 12%, #fff);
+    padding: 1px 8px;
+    border-radius: 20px;
+    margin-left: 6px;
+  }
+  .step .lead {
+    font-size: 0.9rem;
+    margin: 8px 0 6px;
+    line-height: 1.45;
+  }
+  .step ul {
+    margin: 6px 0 0;
+    padding-left: 18px;
+  }
+  .step ul li {
+    font-size: 0.86rem;
+    color: #444;
+    margin-bottom: 3px;
+    line-height: 1.4;
+  }
+  .step .step-warn {
+    margin-top: 8px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #a8200e;
+  }
+
+  /* checkbox de conclusão */
+  .step .done-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: var(--gray);
+    cursor: pointer;
+    user-select: none;
+  }
+  .step .done-toggle input { accent-color: var(--green); width: 16px; height: 16px; cursor: pointer; }
+
+  .step.done .content { opacity: 0.55; }
+  .step.done .title { text-decoration: line-through; }
+  .step.done .dot {
+    background: var(--dotcolor, #999);
+    color: #fff;
+  }
+
+  #timelineWrap { display: none; }
+  #timelineWrap.show { display: block; }
+
+  /* Controle de início do poolish */
+  .start-ctrl {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 4px 0 14px;
+    padding: 12px 14px;
+    background: var(--orange-light);
+    border-radius: 10px;
+  }
+  .start-ctrl label { font-weight: 600; font-size: 0.9rem; }
+  .start-ctrl input[type="date"],
+  .start-ctrl select {
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: var(--dark);
+    background: #fff;
+  }
+  .start-ctrl .hint { font-size: 0.78rem; color: var(--gray); }
+
+  /* Data/hora calculada no card da etapa */
+  .step .when {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--dotcolor, #999);
+    margin-top: 2px;
+  }
+  .step .when .rel { color: var(--gray); font-weight: 400; }
+
+  @media print {
+    @page { size: A4 portrait; margin: 12mm; }
+
+    html, body { background: #fff; }
+    body { padding: 0; font-size: 11px; }
+    .wrap { max-width: 100%; }
+
+    /* Esconde controles e botões sempre na impressão */
+    .controls-card, .btns { display: none !important; }
+    .start-ctrl { display: none !important; }
+    .timeline-head .progress { display: none !important; }
+
+    /* Compacta cards e evita quebras no meio */
+    .card {
+      box-shadow: none;
+      border-color: #ccc;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .card h2 { margin: 0 0 8px; font-size: 0.72rem; }
+
+    header h1 { font-size: 1.4rem; margin-bottom: 2px; }
+    header p { margin-bottom: 12px; font-size: 0.82rem; }
+
+    /* Tabelas mais densas */
+    th, td { padding: 4px 6px; font-size: 0.9rem; }
+    th { font-size: 0.66rem; }
+    tr.total td { padding-top: 6px; }
+    tr.subhead td { padding: 5px 6px; }
+
+    /* Nota compacta */
+    .fixed-note {
+      margin-top: 8px;
+      padding-top: 8px;
+      font-size: 0.72rem;
+      line-height: 1.35;
+    }
+
+    footer { margin-top: 12px; font-size: 0.72rem; }
+
+    /* A timeline fica visível na impressão quando o card do cronograma aparece */
+    #timelineWrap { display: block !important; }
+    .step { break-inside: avoid; page-break-inside: avoid; }
+
+    /* PADRÃO (Ctrl+P e botão "Imprimir receita"): esconde o cronograma,
+       imprime apenas a ficha de ingredientes. O cronograma sai pelo seu
+       próprio botão ("Imprimir cronograma"). */
+    #timelineCard { display: none !important; }
+    body.print-cronograma #timelineCard,
+    body.print-tudo #timelineCard { display: block !important; }
+
+    /* MODO "só cronograma": esconde ficha e mostra apenas a timeline */
+    body.print-cronograma header,
+    body.print-cronograma .controls-card,
+    body.print-cronograma #cardIngredientes,
+    body.print-cronograma #cardDivisao,
+    body.print-cronograma footer { display: none !important; }
+    body.print-cronograma #timelineCard {
+      break-before: auto;
+      page-break-before: auto;
+      margin: 0;
+      border: none;
+      padding: 0;
+    }
+
+    /* MODO "tudo": ficha na página 1, cronograma começa na página 2 */
+    body.print-tudo #timelineCard {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    /* Cronograma compacto (uma página A4) — vale para "só cronograma" e "tudo" */
+    body.print-cronograma, body.print-tudo { font-size: 12px; }
+    body.print-cronograma #timelineCard h2,
+    body.print-tudo #timelineCard h2 { font-size: 1.05rem; margin: 0 0 8px; }
+    body.print-cronograma .timeline,
+    body.print-tudo .timeline { margin-top: 5px; padding-left: 5px; }
+    body.print-cronograma .timeline::before,
+    body.print-tudo .timeline::before { left: 18px; }
+    body.print-cronograma .step,
+    body.print-tudo .step { gap: 12px; padding-bottom: 11px; }
+    body.print-cronograma .step .dot,
+    body.print-tudo .step .dot {
+      width: 25px; height: 25px; font-size: 0.85rem; border-width: 2px;
+    }
+    body.print-cronograma .step .content,
+    body.print-tudo .step .content { padding: 9px 12px; }
+    body.print-cronograma .step .title,
+    body.print-tudo .step .title { font-size: 1rem; }
+    body.print-cronograma .step .when,
+    body.print-tudo .step .when { font-size: 0.85rem; margin-top: 2px; }
+    body.print-cronograma .step .tag,
+    body.print-tudo .step .tag { font-size: 0.74rem; padding: 1px 7px; }
+    body.print-cronograma .step .lead,
+    body.print-tudo .step .lead { font-size: 0.9rem; margin: 5px 0 4px; line-height: 1.35; }
+    body.print-cronograma .step ul,
+    body.print-tudo .step ul { margin: 4px 0 0; padding-left: 16px; }
+    body.print-cronograma .step ul li,
+    body.print-tudo .step ul li { font-size: 0.85rem; margin-bottom: 2px; line-height: 1.3; }
+    body.print-cronograma .step .step-warn,
+    body.print-tudo .step .step-warn { margin-top: 5px; font-size: 0.85rem; }
+    /* checkbox "concluído" não faz sentido impresso -> esconde */
+    body.print-cronograma .step .done-toggle,
+    body.print-tudo .step .done-toggle { display: none !important; }
+
+    /* Garante que as cores de fundo (subheads, notas, bolinhas) saiam na impressão */
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🍕 Calculadora de Massa</h1>
+    <p>Pizza Napolitana — Venturelli 95/5 • Hidratação 67% • Poolish</p>
+  </header>
+
+  <!-- Controles -->
+  <div class="card controls-card">
+    <h2>Ajuste a produção</h2>
+    <div class="controls">
+      <div class="control">
+        <label>Número de discos: <span class="val" id="discosVal">6</span></label>
+        <div class="row-input">
+          <input type="range" id="discosRange" min="2" max="10" step="1" value="6">
+          <input type="number" id="discosNum" min="2" max="10" step="1" value="6">
+          <span class="unit">discos</span>
+        </div>
+      </div>
+      <div class="control">
+        <label>Peso por bola: <span class="val" id="pesoVal">280</span> g</label>
+        <div class="row-input">
+          <input type="range" id="pesoRange" min="260" max="320" step="5" value="280">
+          <input type="number" id="pesoNum" min="260" max="320" step="5" value="280">
+          <span class="unit">g</span>
+        </div>
+      </div>
+      <div class="control">
+        <label>Hidratação: <span class="val" id="hidraVal">67</span>%</label>
+        <div class="row-input">
+          <input type="range" id="hidraRange" min="60" max="85" step="1" value="67">
+          <input type="number" id="hidraNum" min="60" max="85" step="1" value="67">
+          <span class="unit">%</span>
+        </div>
+      </div>
+    </div>
+    <div class="summary">
+      <span>Massa total: <b id="massaTotal">1680 g</b></span>
+      <span>Farinha total: <b id="farinhaTotal">1000 g</b></span>
+      <span>Hidratação: <b id="hidraResumo">67%</b></span>
+      <span>Sal: <b>2,5%</b></span>
+    </div>
+    <div class="warn-box" id="hidraWarn">
+      ⚠️ <b>Hidratação alta (<span id="hidraWarnVal">71</span>%).</b>
+      Acima de 70% a massa fica mais mole e pegajosa, exigindo mais força na sova e
+      técnica de dobras (stretch &amp; fold) para ganhar estrutura. O manuseio na abertura
+      também fica mais delicado. Considere usar água bem gelada e polvilhar bem a bancada.
+    </div>
+    <div class="alert-box" id="capacidadeAlert">
+      🚫 <b>Massa total (<span id="alertMassaVal">0</span> g) acima da capacidade da Halo Core (2500 g).</b>
+      Reduza o número de discos ou o peso por bola para caber na masseira. Bater um volume
+      acima do limite sobrecarrega o motor e prejudica o desenvolvimento do glúten.
+    </div>
+    <div class="btns">
+      <button class="primary" onclick="setPreset(6,280,67)">Receita padrão (6 × 280g · 67%)</button>
+      <button onclick="imprimirReceita()">Imprimir receita</button>
+      <button onclick="imprimirTudo()">Imprimir tudo</button>
+    </div>
+  </div>
+
+  <!-- Ingredientes -->
+  <div class="card" id="cardIngredientes">
+    <h2>Ingredientes</h2>
+    <table>
+      <thead>
+        <tr><th>Ingrediente</th><th>Baker's %</th><th style="text-align:right">Quantidade</th></tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+
+    <div class="fixed-note">
+      <b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita
+      (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e
+      recalcula a água total. O <b>poolish</b> sempre usa 30% da farinha total, 100% de hidratação e
+      metade do fermento — a água restante entra na massa final.
+      Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.
+    </div>
+  </div>
+
+  <!-- Divisão Poolish / Massa Final -->
+  <div class="card" id="cardDivisao">
+    <h2>Divisão por etapa</h2>
+    <table>
+      <tbody id="tbodyEtapas"></tbody>
+    </table>
+  </div>
+
+  <!-- Cronograma (timeline) -->
+  <div class="card" id="timelineCard">
+    <div class="timeline-head">
+      <h2 style="margin:0">Cronograma passo a passo</h2>
+      <span class="progress" id="tlProgress">0 de 5 etapas</span>
+    </div>
+    <div class="btns" style="margin-top:12px">
+      <button class="primary" id="tlToggle" onclick="toggleTimeline()">Mostrar cronograma</button>
+      <button onclick="carregarCronogramaPadrao()">Carregar cronograma padrão</button>
+      <button onclick="imprimirCronograma()">Imprimir cronograma</button>
+      <button id="tlReset" onclick="resetTimeline()" style="display:none">Limpar marcações</button>
+    </div>
+    <div id="timelineWrap">
+      <div class="start-ctrl">
+        <label>Início do poolish:</label>
+        <select id="inicioDia" aria-label="Dia"></select>
+        <select id="inicioMes" aria-label="Mês"></select>
+        <select id="inicioAno" aria-label="Ano"></select>
+        <span style="color:var(--gray)">às</span>
+        <select id="inicioHora" aria-label="Hora"></select>
+        <span class="hint">Etapa 5 (assar): <b id="fimPrevisto">—</b></span>
+      </div>
+      <div class="timeline" id="timeline"></div>
+    </div>
+  </div>
+
+  <footer>
+    Baseado no cronograma validado • Maturação ~53h • Ooni Halo Core • Fornetto Slim 390°C
+  </footer>
+</div>
+
+<script>
+  // ===== Proporções base da receita (baker's percentages) =====
+  // Referência: 6 discos × 280g = 1680g de massa final
+  const PCT = {
+    almaItaliana: 0.95,   // 95% da farinha
+    integral: 0.05,       // 5% da farinha
+    agua: 0.67,           // 67% de hidratação
+    sal: 0.025,           // 2,5%
+    fermento: 0.001       // 0,1%
+  };
+  // Perda de massa no manuseio (~1%): massa teórica / rendimento real
+  const LOSS = 0.0094;
+
+  // Poolish: 30% da farinha total, 100% hidratação, 50% do fermento
+  const POOLISH_FLOUR_FRAC = 0.30;
+  const POOLISH_HYDRATION = 1.00;
+  const POOLISH_FERMENT_FRAC = 0.50;
+
+  // ===== Cronograma (baseado nos docx validados) =====
+  // As quantidades (com {chaves}) são preenchidas dinamicamente a partir do cálculo.
+  const CRONOGRAMA = [
+    {
+      cor: '#2e5e8c', offsetH: 0, tag: '0h', titulo: 'Poolish',
+      lead: '{poolishFarinha} farinha Alma Italiana + {poolishAgua} água + {poolishFerm} fermento seco.',
+      itens: [
+        '2h fora da geladeira + 18h na geladeira à 4°C.',
+        'Bowl da Halo Core com a tampa de silicone fechada, porém com o furo de ventilação aberto.'
+      ],
+      warn: null
+    },
+    {
+      cor: '#2e8c6a', offsetH: 20, tag: '+20h', titulo: 'Massa final — Halo Core',
+      lead: 'Todo o poolish + {finalAlma} Alma Italiana + {finalIntegral} Integral + {finalAgua} água gelada com gelo moído + {finalSal} sal + {finalFerm} fermento seco.',
+      itens: [
+        'Toda a água + todo o poolish no bowl em velocidade 4 por 1 minuto até dissolver bem.',
+        'Adicionar o fermento e a farinha restante aos poucos em velocidade 5 por 4 minutos.',
+        'Pausa de 20 minutos para descanso de relaxamento do glúten (puntata curta).',
+        'Adicionar o sal em velocidade 6 por 2 minutos.',
+        'Sova em velocidade 8 ou 9 por 6 minutos para ganhar força, monitorando a temperatura.',
+        'Caso necessário, sove em velocidade 12 por no máximo 45s.'
+      ],
+      warn: 'Temperatura final 23-24°C'
+    },
+    {
+      cor: '#5e5e8c', offsetH: 20.5, tag: '28,5h à 4°C', titulo: 'Maturação em geladeira',
+      lead: 'Massa no bowl Tramontina 8,3L fechado com filme em contato + tampa. Vai para a geladeira ~30 min após a massa final.',
+      itens: [],
+      warn: null
+    },
+    {
+      cor: '#cc8a00', offsetH: 49, tag: '+4h antes de assar', titulo: 'Bolear + Appretto',
+      lead: '{discos} panetti de {peso} armazenados nos potes com desmoldante e tampados fora da geladeira.',
+      itens: [
+        'Temperatura ambiente < 22°C: 4h.',
+        'Temperatura ambiente > 25°C: 2,5h a 3h.',
+        'Observar os panetti — quando dobrarem de volume, estão prontos.'
+      ],
+      warn: null
+    },
+    {
+      cor: '#cc3300', offsetH: 53, tag: '+53h total', titulo: 'Assar — Fornetto Slim',
+      lead: 'Forno pré-aquecido por 40 minutos.',
+      itens: [
+        'Temperatura 390°C.',
+        '100-150 segundos (conforme o ponto de borda e leopard spots desejado).'
+      ],
+      warn: null
+    }
+  ];
+
+  // ===== Formatação =====
+  function fmt(g) {
+    // Abaixo de 10g mostra 1 casa decimal (fermento/sal pequenos); acima, inteiro
+    if (g < 10) return g.toFixed(g < 1 ? 2 : 1).replace('.', ',') + ' g';
+    return Math.round(g) + ' g';
+  }
+  function pct(p) { return (p * 100).toFixed(p < 0.01 ? 2 : (p < 0.1 ? 1 : 0)).replace('.', ',') + '%'; }
+
+  // ===== Cálculo =====
+  // hidra = fração de hidratação (ex.: 0.67 para 67%)
+  function calcular(discos, peso, hidra) {
+    const massaFinal = discos * peso;                    // massa que sai em bolas
+    const massaTeorica = massaFinal * (1 + LOSS);        // compensa perda
+    // massaTeorica = farinha * (1 + agua + sal + fermento)
+    const somaPct = 1 + hidra + PCT.sal + PCT.fermento;
+    const farinha = massaTeorica / somaPct;
+
+    const alma = farinha * PCT.almaItaliana;
+    const integral = farinha * PCT.integral;
+    const agua = farinha * hidra;
+    const sal = farinha * PCT.sal;
+    const fermento = farinha * PCT.fermento;
+
+    // Poolish
+    const poolishFarinha = farinha * POOLISH_FLOUR_FRAC;   // toda de Alma Italiana
+    const poolishAgua = poolishFarinha * POOLISH_HYDRATION;
+    const poolishFermento = fermento * POOLISH_FERMENT_FRAC;
+
+    // Massa final (o que sobra)
+    const massaAlma = alma - poolishFarinha;   // Alma restante
+    const massaIntegral = integral;            // toda a integral vai na massa final
+    const massaAgua = agua - poolishAgua;
+    const massaFermento = fermento - poolishFermento;
+    const massaSal = sal;
+
+    return {
+      farinha, alma, integral, agua, sal, fermento, massaFinal, massaTeorica, hidra,
+      poolish: { farinha: poolishFarinha, agua: poolishAgua, fermento: poolishFermento },
+      final: { alma: massaAlma, integral: massaIntegral, agua: massaAgua, fermento: massaFermento, sal: massaSal }
+    };
+  }
+
+  // ===== Render =====
+  function render() {
+    const discos = clamp(parseInt(discosNum.value) || 2, 2, 10);
+    const peso = clamp(parseInt(pesoNum.value) || 260, 260, 320);
+    const hidra = clamp(parseInt(hidraNum.value) || 60, 60, 85) / 100;
+    const r = calcular(discos, peso, hidra);
+
+    // Summary
+    document.getElementById('discosVal').textContent = discos;
+    document.getElementById('pesoVal').textContent = peso;
+    const hidraPct = Math.round(hidra * 100);
+    document.getElementById('hidraVal').textContent = hidraPct;
+    document.getElementById('hidraResumo').textContent = hidraPct + '%';
+
+    // Aviso de hidratação alta (71% ou mais)
+    const warn = document.getElementById('hidraWarn');
+    if (hidraPct >= 71) {
+      document.getElementById('hidraWarnVal').textContent = hidraPct;
+      warn.classList.add('show');
+    } else {
+      warn.classList.remove('show');
+    }
+    document.getElementById('massaTotal').textContent = fmt(r.massaFinal);
+    document.getElementById('farinhaTotal').textContent = fmt(r.farinha);
+
+    // Alerta de capacidade da Halo Core (limite 2500g de massa total)
+    const alert = document.getElementById('capacidadeAlert');
+    const massaEl = document.getElementById('massaTotal');
+    if (r.massaFinal > 2500) {
+      document.getElementById('alertMassaVal').textContent = Math.round(r.massaFinal);
+      alert.classList.add('show');
+      massaEl.style.color = '#c0392b';
+    } else {
+      alert.classList.remove('show');
+      massaEl.style.color = '';
+    }
+
+    // Tabela principal
+    const rows = [
+      ['Farinha Alma Italiana', PCT.almaItaliana, r.alma],
+      ['Farinha Integral', PCT.integral, r.integral],
+      ['Água', r.hidra, r.agua],
+      ['Sal', PCT.sal, r.sal],
+      ['Fermento biológico seco', PCT.fermento, r.fermento],
+    ];
+    let html = '';
+    for (const [nome, p, val] of rows) {
+      html += `<tr><td>${nome}</td><td>${pct(p)}</td><td class="qty">${fmt(val)}</td></tr>`;
+    }
+    html += `<tr class="total"><td>Massa total</td><td></td><td class="qty">${fmt(r.massaFinal)}</td></tr>`;
+    document.getElementById('tbody').innerHTML = html;
+
+    // Tabela por etapa (poolish / massa final)
+    let e = '';
+    e += `<tr class="subhead"><td colspan="2">1 · Poolish (30% da farinha · 100% hidratação)</td></tr>`;
+    e += etapaRow('Farinha Alma Italiana', r.poolish.farinha);
+    e += etapaRow('Água', r.poolish.agua);
+    e += etapaRow('Fermento seco', r.poolish.fermento);
+
+    e += `<tr class="subhead"><td colspan="2">2 · Massa final</td></tr>`;
+    e += etapaRow('Poolish (todo)', r.poolish.farinha + r.poolish.agua + r.poolish.fermento);
+    e += etapaRow('Farinha Alma Italiana', r.final.alma);
+    e += etapaRow('Farinha Integral', r.final.integral);
+    e += etapaRow('Água gelada', r.final.agua);
+    e += etapaRow('Sal', r.final.sal);
+    e += etapaRow('Fermento seco', r.final.fermento);
+    document.getElementById('tbodyEtapas').innerHTML = e;
+
+    // Timeline (quantidades dinâmicas)
+    renderTimeline(r, discos, peso);
+  }
+
+  // ===== Timeline =====
+  let doneSteps = loadDone();
+
+  function renderTimeline(r, discos, peso) {
+    const vals = {
+      poolishFarinha: fmt(r.poolish.farinha),
+      poolishAgua: fmt(r.poolish.agua),
+      poolishFerm: fmt(r.poolish.fermento),
+      finalAlma: fmt(r.final.alma),
+      finalIntegral: fmt(r.final.integral),
+      finalAgua: fmt(r.final.agua),
+      finalSal: fmt(r.final.sal),
+      finalFerm: fmt(r.final.fermento),
+      discos: String(discos),
+      peso: fmt(peso)
+    };
+    const fill = (s) => s.replace(/\{(\w+)\}/g, (m, k) => (k in vals ? vals[k] : m));
+
+    // Data/hora de início do poolish (do input); se inválida, mostra só o horário relativo
+    const inicio = getInicio();
+
+    let html = '';
+    CRONOGRAMA.forEach((step, i) => {
+      const done = doneSteps.includes(i);
+      const tag = step.tag ? `<span class="tag">${step.tag}</span>` : '';
+      const itens = step.itens.length
+        ? `<ul>${step.itens.map(it => `<li>${it}</li>`).join('')}</ul>` : '';
+      const warn = step.warn ? `<div class="step-warn">▲ ${step.warn}</div>` : '';
+
+      // horário calculado
+      let whenHtml;
+      if (inicio) {
+        const dt = new Date(inicio.getTime() + step.offsetH * 3600 * 1000);
+        whenHtml = `<span class="when">${formatDateTime(dt)} <span class="rel">(${offsetLabel(step.offsetH)})</span></span>`;
+      } else {
+        whenHtml = `<span class="when rel">${offsetLabel(step.offsetH)} do início</span>`;
+      }
+
+      html += `
+        <div class="step ${done ? 'done' : ''}" style="--dotcolor:${step.cor}">
+          <div class="dot">${done ? '✓' : (i + 1)}</div>
+          <div class="content">
+            <div class="step-top">
+              <span class="title">${step.titulo}${tag}</span>
+            </div>
+            ${whenHtml}
+            <div class="lead">${fill(step.lead)}</div>
+            ${itens}
+            ${warn}
+            <label class="done-toggle">
+              <input type="checkbox" ${done ? 'checked' : ''} onchange="toggleDone(${i}, this.checked)">
+              Concluído
+            </label>
+          </div>
+        </div>`;
+    });
+    document.getElementById('timeline').innerHTML = html;
+
+    // Previsão do fim (etapa 5) no cabeçalho
+    const fimEl = document.getElementById('fimPrevisto');
+    if (inicio) {
+      const fim = new Date(inicio.getTime() + 53 * 3600 * 1000);
+      fimEl.textContent = formatDateTime(fim);
+    } else {
+      fimEl.textContent = '— (defina o início)';
+    }
+
+    // Progresso
+    const n = doneSteps.length;
+    document.getElementById('tlProgress').innerHTML =
+      `<b>${n}</b> de ${CRONOGRAMA.length} etapas`;
+    document.getElementById('tlReset').style.display = n > 0 ? '' : 'none';
+  }
+
+  // ===== Data/hora do cronograma =====
+  const DIAS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+
+  function getInicio() {
+    const dia = parseInt(document.getElementById('inicioDia').value);
+    const mes = parseInt(document.getElementById('inicioMes').value);   // 1-12
+    const ano = parseInt(document.getElementById('inicioAno').value);
+    const hora = document.getElementById('inicioHora').value;           // "HH:MM"
+    if (!dia || !mes || !ano || !hora) return null;
+    const [hh, min] = hora.split(':').map(Number);
+    const d = new Date(ano, mes - 1, dia, hh, min, 0, 0);
+    // valida (evita, ex., 31 de fevereiro virar março)
+    if (d.getDate() !== dia || d.getMonth() !== mes - 1) return null;
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  function formatDateTime(d) {
+    const dia = DIAS[d.getDay()];
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const hh = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
+    return `${dia} ${dd}/${mm} · ${hh}:${min}`;
+  }
+
+  // Converte horas decimais (ex.: 20.5) em rótulo "+20h30"
+  function offsetLabel(h) {
+    if (h === 0) return 'início';
+    const horas = Math.floor(h);
+    const min = Math.round((h - horas) * 60);
+    return min === 0 ? `+${horas}h` : `+${horas}h${String(min).padStart(2, '0')}`;
+  }
+
+  function toggleDone(i, checked) {
+    if (checked && !doneSteps.includes(i)) doneSteps.push(i);
+    if (!checked) doneSteps = doneSteps.filter(x => x !== i);
+    saveDone();
+    render();
+  }
+
+  function toggleTimeline() {
+    const wrap = document.getElementById('timelineWrap');
+    const btn = document.getElementById('tlToggle');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    btn.textContent = show ? 'Ocultar cronograma' : 'Mostrar cronograma';
+  }
+
+  // Carrega o cronograma padrão do docx: início na próxima sexta às 14:00
+  function carregarCronogramaPadrao() {
+    const now = new Date();
+    const d = new Date(now);
+    const diff = (5 - now.getDay() + 7) % 7;   // próxima sexta (getDay 5)
+    // se hoje já é sexta, mantém hoje; senão avança para a próxima
+    d.setDate(now.getDate() + diff);
+    inicioDia.value = String(d.getDate());
+    inicioMes.value = String(d.getMonth() + 1);
+    inicioAno.value = String(d.getFullYear());
+    inicioHora.value = '14:00';
+    salvarInicio();
+    // Garante a timeline visível para o usuário ver o resultado
+    const wrap = document.getElementById('timelineWrap');
+    if (!wrap.classList.contains('show')) toggleTimeline();
+    render();
+  }
+
+  // Imprime apenas a ficha de ingredientes (sem o cronograma)
+  function imprimirReceita() {
+    document.body.classList.add('print-receita');
+    const limpar = () => {
+      document.body.classList.remove('print-receita');
+      window.removeEventListener('afterprint', limpar);
+    };
+    window.addEventListener('afterprint', limpar);
+    window.print();
+  }
+
+  // Imprime tudo: ficha na página 1, cronograma na página 2
+  function imprimirTudo() {
+    const wrap = document.getElementById('timelineWrap');
+    const estavaOculta = !wrap.classList.contains('show');
+    if (estavaOculta) wrap.classList.add('show');
+
+    document.body.classList.add('print-tudo');
+    const limpar = () => {
+      document.body.classList.remove('print-tudo');
+      if (estavaOculta) wrap.classList.remove('show');
+      window.removeEventListener('afterprint', limpar);
+    };
+    window.addEventListener('afterprint', limpar);
+    window.print();
+  }
+
+  // Imprime apenas o cronograma (numa folha só, sem a ficha de ingredientes)
+  function imprimirCronograma() {
+    // A timeline precisa estar visível para entrar na impressão
+    const wrap = document.getElementById('timelineWrap');
+    const estavaOculta = !wrap.classList.contains('show');
+    if (estavaOculta) wrap.classList.add('show');
+
+    document.body.classList.add('print-cronograma');
+    const limpar = () => {
+      document.body.classList.remove('print-cronograma');
+      if (estavaOculta) wrap.classList.remove('show');
+      window.removeEventListener('afterprint', limpar);
+    };
+    window.addEventListener('afterprint', limpar);
+    window.print();
+  }
+
+  function resetTimeline() {
+    doneSteps = [];
+    saveDone();
+    render();
+  }
+
+  function loadDone() {
+    try {
+      const raw = localStorage.getItem('pizzaTimelineDone');
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+  function saveDone() {
+    try { localStorage.setItem('pizzaTimelineDone', JSON.stringify(doneSteps)); } catch (e) {}
+  }
+
+  function etapaRow(nome, val) {
+    return `<tr><td>${nome}</td><td class="qty">${fmt(val)}</td></tr>`;
+  }
+
+  function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+  // ===== Sincronização dos controles =====
+  const discosRange = document.getElementById('discosRange');
+  const discosNum = document.getElementById('discosNum');
+  const pesoRange = document.getElementById('pesoRange');
+  const pesoNum = document.getElementById('pesoNum');
+  const hidraRange = document.getElementById('hidraRange');
+  const hidraNum = document.getElementById('hidraNum');
+
+  function syncFromRange(range, num) { num.value = range.value; render(); }
+  function syncFromNum(num, range) {
+    let v = parseInt(num.value);
+    if (!isNaN(v)) {
+      // mantém o slider dentro do alcance visual, sem travar o número
+      range.value = clamp(v, parseInt(range.min), parseInt(range.max));
+    }
+    render();
+  }
+
+  discosRange.addEventListener('input', () => syncFromRange(discosRange, discosNum));
+  discosNum.addEventListener('input', () => syncFromNum(discosNum, discosRange));
+  pesoRange.addEventListener('input', () => syncFromRange(pesoRange, pesoNum));
+  pesoNum.addEventListener('input', () => syncFromNum(pesoNum, pesoRange));
+  hidraRange.addEventListener('input', () => syncFromRange(hidraRange, hidraNum));
+  hidraNum.addEventListener('input', () => syncFromNum(hidraNum, hidraRange));
+
+  // Início do poolish: dia/mês/ano/hora via <select> (formato BR garantido)
+  const inicioDia = document.getElementById('inicioDia');
+  const inicioMes = document.getElementById('inicioMes');
+  const inicioAno = document.getElementById('inicioAno');
+  const inicioHora = document.getElementById('inicioHora');
+  const pad = (n) => String(n).padStart(2, '0');
+  const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+
+  (function popularSelects() {
+    // Dias 1-31
+    let od = '';
+    for (let d = 1; d <= 31; d++) od += `<option value="${d}">${pad(d)}</option>`;
+    inicioDia.innerHTML = od;
+    // Meses 1-12 (nome em pt)
+    let om = '';
+    MESES.forEach((nome, i) => { om += `<option value="${i + 1}">${nome}</option>`; });
+    inicioMes.innerHTML = om;
+    // Anos: atual e os 2 seguintes
+    const anoAtual = new Date().getFullYear();
+    let oa = '';
+    for (let a = anoAtual; a <= anoAtual + 2; a++) oa += `<option value="${a}">${a}</option>`;
+    inicioAno.innerHTML = oa;
+    // Horas 00:00 - 23:30 (passos de 30 min)
+    let oh = '';
+    for (let h = 0; h < 24; h++) {
+      for (const m of [0, 30]) {
+        const v = `${pad(h)}:${pad(m)}`;
+        oh += `<option value="${v}">${v}</option>`;
+      }
+    }
+    inicioHora.innerHTML = oh;
+  })();
+
+  function salvarInicio() {
+    try {
+      localStorage.setItem('pizzaInicioDia', inicioDia.value);
+      localStorage.setItem('pizzaInicioMes', inicioMes.value);
+      localStorage.setItem('pizzaInicioAno', inicioAno.value);
+      localStorage.setItem('pizzaInicioHora', inicioHora.value);
+    } catch (e) {}
+  }
+
+  [inicioDia, inicioMes, inicioAno, inicioHora].forEach(sel => {
+    sel.addEventListener('change', () => { salvarInicio(); render(); });
+  });
+
+  // Restaura início salvo ou usa padrão (próxima sexta às 14:00)
+  (function initInicio() {
+    let sd, sm, sa, sh;
+    try {
+      sd = localStorage.getItem('pizzaInicioDia');
+      sm = localStorage.getItem('pizzaInicioMes');
+      sa = localStorage.getItem('pizzaInicioAno');
+      sh = localStorage.getItem('pizzaInicioHora');
+    } catch (e) {}
+    if (sd && sm && sa && sh) {
+      inicioDia.value = sd;
+      inicioMes.value = sm;
+      inicioAno.value = sa;
+      inicioHora.value = sh;
+    } else {
+      const now = new Date();
+      const d = new Date(now);
+      const diff = (5 - now.getDay() + 7) % 7;   // próxima sexta (5)
+      d.setDate(now.getDate() + diff);
+      inicioDia.value = String(d.getDate());
+      inicioMes.value = String(d.getMonth() + 1);
+      inicioAno.value = String(d.getFullYear());
+      inicioHora.value = '14:00';
+    }
+  })();
+
+  function setPreset(d, p, h) {
+    discosNum.value = d; discosRange.value = d;
+    pesoNum.value = p; pesoRange.value = p;
+    hidraNum.value = h; hidraRange.value = h;
+    render();
+  }
+
+  // Inicializa
+  render();
+</script>
+</body>
+</html>
