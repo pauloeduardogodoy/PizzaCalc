@@ -1,8 +1,9 @@
 // Service Worker — cache offline da Calculadora de Massa
 // Estratégia: cache-first para os arquivos do app (tudo local, sem rede).
 
-const CACHE = 'pizza-massa-v1';
+const CACHE = 'pizza-massa-v2';
 const ASSETS = [
+  './',
   './index.html',
   './manifest.json',
   './icon-192.png',
@@ -29,18 +30,37 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch: responde do cache; se não achar, busca na rede e cacheia
+// Fetch: responde do cache; se não achar, busca na rede e cacheia.
+// Para navegações de página (ex.: pedido antigo por calculadora.html),
+// faz fallback para index.html — conserta instalações antigas.
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request)
+  const req = event.request;
+  if (req.method !== 'GET') return;
+
+  // Requisições de navegação (abrir uma página): tenta a rede; se falhar
+  // ou vier 404 (ex.: pedido antigo por calculadora.html), cai no index.html
+  if (req.mode === 'navigate') {
+    event.respondWith(
+      fetch(req)
         .then((resp) => {
-          // cacheia respostas válidas do mesmo domínio
+          if (resp && resp.ok) return resp;
+          return caches.match('./index.html').then((r) => r || caches.match('./') || resp);
+        })
+        .catch(() =>
+          caches.match('./index.html').then((r) => r || caches.match('./'))
+        )
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(req).then((cached) => {
+      if (cached) return cached;
+      return fetch(req)
+        .then((resp) => {
           if (resp && resp.status === 200 && resp.type === 'basic') {
             const copy = resp.clone();
-            caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+            caches.open(CACHE).then((cache) => cache.put(req, copy));
           }
           return resp;
         })
