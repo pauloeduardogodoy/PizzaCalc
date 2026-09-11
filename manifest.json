@@ -2,7 +2,7 @@
   "name": "Calculadora de Massa — Pizza Napolitana",
   "short_name": "Pizza Massa",
   "description": "Calculadora de ingredientes e cronograma para pizza napolitana com poolish.",
-  "start_url": "./calculadora.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
