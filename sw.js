@@ -3,7 +3,7 @@
 
 const CACHE = 'pizza-massa-v1';
 const ASSETS = [
-  './calculadora.html',
+  './index.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
