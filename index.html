@@ -390,6 +390,23 @@
   #timelineWrap { display: none; }
   #timelineWrap.show { display: block; }
 
+  /* Tabela de velocidades */
+  #velocidadesWrap { display: none; }
+  #velocidadesWrap.show { display: block; }
+  .vel-intro { font-size: 0.86rem; color: var(--gray); line-height: 1.45; margin: 4px 0 12px; }
+  .vel-intro b { color: var(--dark); }
+  .vel-table { width: 100%; border-collapse: collapse; }
+  .vel-table th, .vel-table td {
+    text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); font-size: 0.9rem;
+  }
+  .vel-table th {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--gray); font-weight: 600;
+  }
+  .vel-table td:nth-child(1) { font-weight: 700; color: var(--orange); font-variant-numeric: tabular-nums; }
+  .vel-table td:nth-child(2), .vel-table td:nth-child(3) { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .vel-table tr.vel-key td { background: var(--orange-light); }
+
   /* Painel de planejamento do cronograma */
   .plan-ctrl {
     margin: 4px 0 14px;
@@ -465,6 +482,10 @@
     .plan-ctrl { display: none !important; }
     #cronoAlerts { display: none !important; }
     .timeline-head .progress { display: none !important; }
+
+    /* A tabela de velocidades NÃO sai nas impressões da receita/cronograma;
+       só no seu próprio modo (print-velocidades). */
+    #velocidadesCard { display: none !important; }
 
     /* Compacta cards e evita quebras no meio */
     .card {
@@ -560,6 +581,22 @@
     /* checkbox "concluído" não faz sentido impresso -> esconde */
     body.print-cronograma .step .done-toggle,
     body.print-tudo .step .done-toggle { display: none !important; }
+
+    /* MODO "só tabela de velocidades": esconde tudo menos o card de velocidades */
+    body.print-velocidades header,
+    body.print-velocidades .controls-card,
+    body.print-velocidades #cardIngredientes,
+    body.print-velocidades #cardDivisao,
+    body.print-velocidades #timelineCard,
+    body.print-velocidades footer { display: none !important; }
+    body.print-velocidades #velocidadesCard {
+      display: block !important;
+      break-before: auto; page-break-before: auto;
+      margin: 0; border: none; padding: 0;
+    }
+    body.print-velocidades #velocidadesWrap { display: block !important; }
+    body.print-velocidades .vel-table th,
+    body.print-velocidades .vel-table td { font-size: 0.9rem; padding: 5px 8px; }
 
     /* Garante que as cores de fundo (subheads, notas, bolinhas) saiam na impressão */
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -695,6 +732,30 @@
     </div>
   </div>
 
+  <!-- Tabela de velocidades da Halo Core -->
+  <div class="card" id="velocidadesCard">
+    <div class="timeline-head">
+      <h2 style="margin:0">Tabela de velocidades — Ooni Halo Core</h2>
+    </div>
+    <div class="btns" style="margin-top:12px">
+      <button class="primary" id="velToggle" onclick="toggleVelocidades()">Mostrar tabela de velocidades</button>
+      <button onclick="imprimirVelocidades()">Imprimir tabela</button>
+    </div>
+    <div id="velocidadesWrap">
+      <p class="vel-intro">
+        Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é
+        espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b>
+        (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).
+      </p>
+      <table class="vel-table">
+        <thead>
+          <tr><th>Vel.</th><th>Potência</th><th>RPM</th><th>Uso / equivalente industrial</th></tr>
+        </thead>
+        <tbody id="velTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
   <footer>
     Baseado no cronograma validado • Maturação ~53h • Ooni Halo Core • Fornetto Slim 390°C
   </footer>
@@ -785,6 +846,31 @@
     maturacaoMin: 12, maturacaoMax: 48,                    // horas em bloco (faixa saudável)
     noiteInicio: 22, noiteFim: 5                           // 22:00 às 05:00 = horário incômodo
   };
+
+  // ===== Tabela de velocidades da Ooni Halo Core (20 velocidades) =====
+  // [velocidade, potência %, RPM, uso/equivalente industrial, destaque?]
+  const VELOCIDADES = [
+    [1, 5, 60, 'Mistura lenta inicial', false],
+    [2, 10, 73, 'Mistura lenta', false],
+    [3, 15, 85, 'Mistura', false],
+    [4, 20, 98, 'Incorporar / hidratar ≈ 1ª vel. industrial', true],
+    [5, 25, 111, 'Incorporar farinha', false],
+    [6, 30, 123, 'Adicionar sal', false],
+    [7, 35, 136, 'Desenvolvimento', false],
+    [8, 40, 148, 'Desenvolvimento / sova', false],
+    [9, 45, 161, 'Sova', false],
+    [10, 50, 174, 'Sova', false],
+    [11, 55, 186, 'Sova de força', false],
+    [12, 60, 199, 'Força ≈ 2ª vel. industrial', true],
+    [13, 65, 212, 'Alta', false],
+    [14, 70, 224, 'Alta', false],
+    [15, 75, 237, 'Alta', false],
+    [16, 80, 249, 'Burst de fechamento', false],
+    [17, 85, 262, 'Burst', false],
+    [18, 90, 275, 'Burst', false],
+    [19, 95, 287, 'Burst', false],
+    [20, 100, 300, 'Máxima', false]
+  ];
 
   // ===== Formatação =====
   function fmt(g) {
@@ -1134,6 +1220,40 @@
     btn.textContent = show ? 'Ocultar cronograma' : 'Mostrar cronograma';
   }
 
+  // ===== Tabela de velocidades =====
+  function renderVelocidades() {
+    const html = VELOCIDADES.map(([v, pot, rpm, uso, key]) =>
+      `<tr class="${key ? 'vel-key' : ''}">
+        <td>${v}</td><td>${pot}%</td><td>${rpm} RPM</td><td>${uso}</td>
+      </tr>`
+    ).join('');
+    document.getElementById('velTbody').innerHTML = html;
+  }
+
+  function toggleVelocidades() {
+    const wrap = document.getElementById('velocidadesWrap');
+    const btn = document.getElementById('velToggle');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    btn.textContent = show ? 'Ocultar tabela de velocidades' : 'Mostrar tabela de velocidades';
+  }
+
+  // Imprime apenas a tabela de velocidades (independente da receita e do cronograma)
+  function imprimirVelocidades() {
+    const wrap = document.getElementById('velocidadesWrap');
+    const estavaOculta = !wrap.classList.contains('show');
+    if (estavaOculta) wrap.classList.add('show');
+
+    document.body.classList.add('print-velocidades');
+    const limpar = () => {
+      document.body.classList.remove('print-velocidades');
+      if (estavaOculta) wrap.classList.remove('show');
+      window.removeEventListener('afterprint', limpar);
+    };
+    window.addEventListener('afterprint', limpar);
+    window.print();
+  }
+
   // Carrega o cronograma padrão: poolish sexta 14:00, assar domingo 19:00, appretto 4h
   function carregarCronogramaPadrao() {
     aplicarPlanoPadrao();
@@ -1337,6 +1457,7 @@
 
   // Inicializa
   render();
+  renderVelocidades();
 
   // ===== PWA: registra o service worker (offline / instalável) =====
   if ('serviceWorker' in navigator) {
