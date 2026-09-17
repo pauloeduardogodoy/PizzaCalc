@@ -42,6 +42,13 @@
     margin: 0 auto;
   }
 
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
   header h1 {
     font-size: 1.8rem;
     margin: 0 0 4px;
@@ -56,6 +63,34 @@
     height: 40px;
     border-radius: 8px;
     flex: none;
+  }
+  .lang-switcher {
+    display: flex;
+    gap: 8px;
+    flex: none;
+  }
+  .lang-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: #fff;
+    color: var(--dark);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .lang-btn:hover { background: var(--orange-light); border-color: var(--orange); }
+  .lang-btn.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .lang-btn .flag {
+    width: 22px;
+    height: 16px;
+    border-radius: 2px;
+    display: block;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
   }
   header p {
     margin: 0 0 24px;
@@ -479,6 +514,7 @@
 
     /* Esconde controles e botões sempre na impressão */
     .controls-card, .btns { display: none !important; }
+    .lang-switcher { display: none !important; }
     .plan-ctrl { display: none !important; }
     #cronoAlerts { display: none !important; }
     .timeline-head .progress { display: none !important; }
@@ -606,24 +642,51 @@
 <body>
 <div class="wrap">
   <header>
-    <h1><img src="icon-512.png" alt="Ícone Pizza"> Calculadora de Massa</h1>
-    <p>Pizza Napolitana — Venturelli 95/5 • Hidratação 67% • Poolish</p>
+    <div class="header-top">
+      <h1><img src="icon-512.png" alt="Ícone Pizza"> <span data-i18n="appTitle">Calculadora de Massa</span></h1>
+      <div class="lang-switcher">
+        <button class="lang-btn" data-lang="pt" onclick="setLang('pt')" title="Português">
+          <svg class="flag" viewBox="0 0 28 20" aria-hidden="true">
+            <rect width="28" height="20" fill="#009c3b"/>
+            <path d="M14 2 L26 10 L14 18 L2 10 Z" fill="#ffdf00"/>
+            <circle cx="14" cy="10" r="4.2" fill="#002776"/>
+          </svg>
+          PT
+        </button>
+        <button class="lang-btn" data-lang="en" onclick="setLang('en')" title="English">
+          <svg class="flag" viewBox="0 0 28 20" aria-hidden="true">
+            <rect width="28" height="20" fill="#b22234"/>
+            <g fill="#fff">
+              <rect y="1.54" width="28" height="1.54"/>
+              <rect y="4.62" width="28" height="1.54"/>
+              <rect y="7.69" width="28" height="1.54"/>
+              <rect y="10.77" width="28" height="1.54"/>
+              <rect y="13.85" width="28" height="1.54"/>
+              <rect y="16.92" width="28" height="1.54"/>
+            </g>
+            <rect width="11.2" height="10.77" fill="#3c3b6e"/>
+          </svg>
+          EN
+        </button>
+      </div>
+    </div>
+    <p data-i18n="appSubtitle">Pizza Napolitana — Venturelli 95/5 • Hidratação 67% • Poolish</p>
   </header>
 
   <!-- Controles -->
   <div class="card controls-card">
-    <h2>Ajuste a produção</h2>
+    <h2 data-i18n="ajusteProducao">Ajuste a produção</h2>
     <div class="controls">
       <div class="control">
-        <label>Número de discos: <span class="val" id="discosVal">6</span></label>
+        <label><span data-i18n="numDiscos">Número de discos</span>: <span class="val" id="discosVal">6</span></label>
         <div class="row-input">
           <input type="range" id="discosRange" min="2" max="10" step="1" value="6">
           <input type="number" id="discosNum" min="2" max="10" step="1" value="6">
-          <span class="unit">discos</span>
+          <span class="unit" data-i18n="unitDiscos">discos</span>
         </div>
       </div>
       <div class="control">
-        <label>Peso por panetto: <span class="val" id="pesoVal">280</span> g</label>
+        <label><span data-i18n="pesoPanetto">Peso por panetto</span>: <span class="val" id="pesoVal">280</span> g</label>
         <div class="row-input">
           <input type="range" id="pesoRange" min="260" max="320" step="5" value="280">
           <input type="number" id="pesoNum" min="260" max="320" step="5" value="280">
@@ -631,7 +694,7 @@
         </div>
       </div>
       <div class="control">
-        <label>Hidratação: <span class="val" id="hidraVal">67</span>%</label>
+        <label><span data-i18n="hidratacao">Hidratação</span>: <span class="val" id="hidraVal">67</span>%</label>
         <div class="row-input">
           <input type="range" id="hidraRange" min="60" max="85" step="1" value="67">
           <input type="number" id="hidraNum" min="60" max="85" step="1" value="67">
@@ -640,51 +703,36 @@
       </div>
     </div>
     <div class="summary">
-      <span>Massa total: <b id="massaTotal">1680 g</b></span>
-      <span>Farinha total: <b id="farinhaTotal">1000 g</b></span>
-      <span>Hidratação: <b id="hidraResumo">67%</b></span>
-      <span>Sal: <b>2,5%</b></span>
+      <span><span data-i18n="massaTotalLbl">Massa total</span>: <b id="massaTotal">1680 g</b></span>
+      <span><span data-i18n="farinhaTotalLbl">Farinha total</span>: <b id="farinhaTotal">1000 g</b></span>
+      <span><span data-i18n="hidratacao">Hidratação</span>: <b id="hidraResumo">67%</b></span>
+      <span><span data-i18n="salLbl">Sal</span>: <b>2,5%</b></span>
     </div>
-    <div class="warn-box" id="hidraWarn">
-      ⚠️ <b>Hidratação alta (<span id="hidraWarnVal">71</span>%).</b>
-      Acima de 70% a massa fica mais mole e pegajosa, exigindo mais força na sova e
-      técnica de dobras (stretch &amp; fold) para ganhar estrutura. O manuseio na abertura
-      também fica mais delicado. Considere usar água bem gelada e polvilhar bem a bancada.
-    </div>
-    <div class="alert-box" id="capacidadeAlert">
-      🚫 <b>Massa total (<span id="alertMassaVal">0</span> g) acima da capacidade da Halo Core (2500 g).</b>
-      Reduza o número de discos ou o peso por bola para caber na masseira. Bater um volume
-      acima do limite sobrecarrega o motor e prejudica o desenvolvimento do glúten.
-    </div>
+    <div class="warn-box" id="hidraWarn"></div>
+    <div class="alert-box" id="capacidadeAlert"></div>
     <div class="btns">
-      <button class="primary" onclick="setPreset(6,280,67)">Receita padrão (6 × 280g · 67%)</button>
-      <button onclick="imprimirReceita()">Imprimir receita</button>
-      <button onclick="imprimirTudo()">Imprimir tudo</button>
+      <button class="primary" onclick="setPreset(6,280,67)" data-i18n="btnReceitaPadrao">Receita padrão (6 × 280g · 67%)</button>
+      <button onclick="imprimirReceita()" data-i18n="btnImprimirReceita">Imprimir receita</button>
+      <button onclick="imprimirTudo()" data-i18n="btnImprimirTudo">Imprimir tudo</button>
     </div>
   </div>
 
   <!-- Ingredientes -->
   <div class="card" id="cardIngredientes">
-    <h2>Ingredientes</h2>
+    <h2 data-i18n="ingredientes">Ingredientes</h2>
     <table>
       <thead>
-        <tr><th>Ingrediente</th><th>Baker's %</th><th style="text-align:right">Quantidade</th></tr>
+        <tr><th data-i18n="thIngrediente">Ingrediente</th><th data-i18n="thBakers">Baker's %</th><th style="text-align:right" data-i18n="thQuantidade">Quantidade</th></tr>
       </thead>
       <tbody id="tbody"></tbody>
     </table>
 
-    <div class="fixed-note">
-      <b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita
-      (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e
-      recalcula a água total. O <b>poolish</b> sempre usa 30% da farinha total, 100% de hidratação e
-      metade do fermento — a água restante entra na massa final.
-      Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.
-    </div>
+    <div class="fixed-note" id="comoFunciona"></div>
   </div>
 
   <!-- Divisão Poolish / Massa Final -->
   <div class="card" id="cardDivisao">
-    <h2>Divisão por etapa</h2>
+    <h2 data-i18n="divisaoEtapa">Divisão por etapa</h2>
     <table>
       <tbody id="tbodyEtapas"></tbody>
     </table>
@@ -693,35 +741,35 @@
   <!-- Cronograma (timeline) -->
   <div class="card" id="timelineCard">
     <div class="timeline-head">
-      <h2 style="margin:0">Cronograma passo a passo</h2>
-      <span class="progress" id="tlProgress">0 de 5 etapas</span>
+      <h2 style="margin:0" data-i18n="cronogramaTitulo">Cronograma passo a passo</h2>
+      <span class="progress" id="tlProgress"></span>
     </div>
     <div class="btns" style="margin-top:12px">
-      <button class="primary" id="tlToggle" onclick="toggleTimeline()">Mostrar cronograma</button>
-      <button onclick="carregarCronogramaPadrao()">Carregar cronograma padrão</button>
-      <button onclick="imprimirCronograma()">Imprimir cronograma</button>
-      <button id="tlReset" onclick="resetTimeline()" style="display:none">Limpar marcações</button>
+      <button class="primary" id="tlToggle" onclick="toggleTimeline()" data-i18n="btnMostrarCrono">Mostrar cronograma</button>
+      <button onclick="carregarCronogramaPadrao()" data-i18n="btnCarregarPadrao">Carregar cronograma padrão</button>
+      <button onclick="imprimirCronograma()" data-i18n="btnImprimirCrono">Imprimir cronograma</button>
+      <button id="tlReset" onclick="resetTimeline()" style="display:none" data-i18n="btnLimpar">Limpar marcações</button>
     </div>
     <div id="timelineWrap">
       <div class="plan-ctrl">
         <div class="plan-row">
-          <label>Início do poolish:</label>
+          <label data-i18n="inicioPoolish">Início do poolish:</label>
           <select id="inicioDia" aria-label="Dia do início"></select>
           <select id="inicioMes" aria-label="Mês do início"></select>
           <select id="inicioAno" aria-label="Ano do início"></select>
-          <span class="sep">às</span>
+          <span class="sep" data-i18n="as">às</span>
           <select id="inicioHora" aria-label="Hora do início"></select>
         </div>
         <div class="plan-row">
-          <label>Hora de assar:</label>
+          <label data-i18n="horaAssar">Hora de assar:</label>
           <select id="assarDia" aria-label="Dia de assar"></select>
           <select id="assarMes" aria-label="Mês de assar"></select>
           <select id="assarAno" aria-label="Ano de assar"></select>
-          <span class="sep">às</span>
+          <span class="sep" data-i18n="as">às</span>
           <select id="assarHora" aria-label="Hora de assar"></select>
         </div>
         <div class="plan-row">
-          <label>Duração do appretto: <b id="apprettoVal">4,0</b> h</label>
+          <label><span data-i18n="duracaoAppretto">Duração do appretto</span>: <b id="apprettoVal">4,0</b> h</label>
           <input type="range" id="apprettoRange" min="2" max="5" step="0.5" value="4">
         </div>
       </div>
@@ -735,33 +783,236 @@
   <!-- Tabela de velocidades da Halo Core -->
   <div class="card" id="velocidadesCard">
     <div class="timeline-head">
-      <h2 style="margin:0">Tabela de velocidades — Ooni Halo Core</h2>
+      <h2 style="margin:0" data-i18n="velTitulo">Tabela de velocidades — Ooni Halo Core</h2>
     </div>
     <div class="btns" style="margin-top:12px">
-      <button class="primary" id="velToggle" onclick="toggleVelocidades()">Mostrar tabela de velocidades</button>
-      <button onclick="imprimirVelocidades()">Imprimir tabela</button>
+      <button class="primary" id="velToggle" onclick="toggleVelocidades()" data-i18n="btnMostrarVel">Mostrar tabela de velocidades</button>
+      <button onclick="imprimirVelocidades()" data-i18n="btnImprimirVel">Imprimir tabela</button>
     </div>
     <div id="velocidadesWrap">
-      <p class="vel-intro">
-        Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é
-        espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b>
-        (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).
-      </p>
+      <p class="vel-intro" id="velIntro"></p>
       <table class="vel-table">
         <thead>
-          <tr><th>Vel.</th><th>Potência</th><th>RPM</th><th>Uso / equivalente industrial</th></tr>
+          <tr><th data-i18n="thVel">Vel.</th><th data-i18n="thPotencia">Potência</th><th>RPM</th><th data-i18n="thUso">Uso / equivalente industrial</th></tr>
         </thead>
         <tbody id="velTbody"></tbody>
       </table>
     </div>
   </div>
 
-  <footer>
+  <footer id="footer" data-i18n="footer">
     Baseado no cronograma validado • Maturação ~53h • Ooni Halo Core • Fornetto Slim 390°C
   </footer>
 </div>
 
 <script>
+  // ===== Internacionalização (PT padrão / EN) =====
+  let LANG = 'pt';
+
+  const I18N = {
+    pt: {
+      appTitle: 'Calculadora de Massa',
+      appSubtitle: 'Pizza Napolitana — Venturelli 95/5 • Hidratação 67% • Poolish',
+      ajusteProducao: 'Ajuste a produção',
+      numDiscos: 'Número de discos',
+      unitDiscos: 'discos',
+      pesoPanetto: 'Peso por panetto',
+      hidratacao: 'Hidratação',
+      massaTotalLbl: 'Massa total',
+      farinhaTotalLbl: 'Farinha total',
+      salLbl: 'Sal',
+      btnReceitaPadrao: 'Receita padrão (6 × 280g · 67%)',
+      btnImprimirReceita: 'Imprimir receita',
+      btnImprimirTudo: 'Imprimir tudo',
+      ingredientes: 'Ingredientes',
+      thIngrediente: 'Ingrediente', thBakers: "Baker's %", thQuantidade: 'Quantidade',
+      divisaoEtapa: 'Divisão por etapa',
+      cronogramaTitulo: 'Cronograma passo a passo',
+      btnMostrarCrono: 'Mostrar cronograma', btnOcultarCrono: 'Ocultar cronograma',
+      btnCarregarPadrao: 'Carregar cronograma padrão',
+      btnImprimirCrono: 'Imprimir cronograma',
+      btnLimpar: 'Limpar marcações',
+      inicioPoolish: 'Início do poolish:', horaAssar: 'Hora de assar:', as: 'às',
+      duracaoAppretto: 'Duração do appretto',
+      velTitulo: 'Tabela de velocidades — Ooni Halo Core',
+      btnMostrarVel: 'Mostrar tabela de velocidades', btnOcultarVel: 'Ocultar tabela de velocidades',
+      btnImprimirVel: 'Imprimir tabela',
+      thVel: 'Vel.', thPotencia: 'Potência', thUso: 'Uso / equivalente industrial',
+      footer: 'Baseado no cronograma validado • Maturação ~53h • Ooni Halo Core • Fornetto Slim 390°C',
+      velIntro: 'Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b> (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).',
+      comoFunciona: '<b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e recalcula a água total. O <b>poolish</b> sempre usa 30% da farinha total, 100% de hidratação e metade do fermento — a água restante entra na massa final. Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.',
+      progresso: (n, t) => `<b>${n}</b> de ${t} etapas`,
+      // ingredientes (tabela)
+      ingFarinhaAlma: 'Farinha Alma Italiana', ingFarinhaIntegral: 'Farinha Integral',
+      ingAgua: 'Água', ingSal: 'Sal', ingFermento: 'Fermento biológico seco', ingMassaTotal: 'Massa total',
+      // divisão por etapa
+      subPoolish: '1 · Poolish (30% da farinha · 100% hidratação)', subMassaFinal: '2 · Massa final',
+      divAguaGelada: 'Água gelada', divFermentoSeco: 'Fermento seco', divPoolishTodo: 'Poolish (todo)',
+      // alertas
+      hidraAlta: (p) => `⚠️ <b>Hidratação alta (${p}%).</b> Acima de 70% a massa fica mais mole e pegajosa, exigindo mais força na sova e técnica de dobras (stretch &amp; fold) para ganhar estrutura. O manuseio na abertura também fica mais delicado. Considere usar água bem gelada e polvilhar bem a bancada.`,
+      capacidade: (g) => `🚫 <b>Massa total (${g} g) acima da capacidade da Halo Core (2500 g).</b> Reduza o número de discos ou o peso por panetto para caber na masseira. Bater um volume acima do limite sobrecarrega o motor e prejudica o desenvolvimento do glúten.`,
+      cronoDefina: 'Defina o <b>início do poolish</b> e a <b>hora de assar</b> para calcular o cronograma.',
+      cronoAssarCedo: '🚫 <b>Hora de assar cedo demais.</b> Não há tempo entre a massa final e o forno. Atrase a hora de assar ou adiante o início do poolish.',
+      cronoMaturCurta: (d, min) => `⚠️ <b>Maturação em bloco curta (${d}).</b> Abaixo de ${min}h a massa desenvolve menos sabor e força. Considere adiantar o início do poolish.`,
+      cronoMaturLonga: (d, max) => `⚠️ <b>Maturação em bloco longa (${d}).</b> Acima de ${max}h a massa pode sobrematurar (mais ácida, glúten frágil). Considere atrasar o início do poolish.`,
+      cronoApprettoLongo: (d) => `⚠️ <b>Appretto longo (${d}).</b> Risco de sobrefermentação dos panetti (espalham, perdem tensão). Considere reduzir ou deixar parte na geladeira.`,
+      cronoNoite: (lista) => `🌙 <b>Atividade em horário incômodo (22:00–05:00):</b> ${lista}. Ajuste o início do poolish ou a hora de assar para deslocar.`,
+      atInicio: 'Início do poolish', atMassa: 'Massa final', atBolear: 'Boleamento',
+      // cronograma (etapas)
+      stPoolishTit: 'Poolish',
+      stPoolishLead: '{poolishFarinha} farinha Alma Italiana + {poolishAgua} água + {poolishFerm} fermento seco.',
+      stPoolishI1: '2h fora da geladeira + o restante na geladeira à 4°C ({poolishFrio} de frio).',
+      stPoolishI2: 'Bowl da Halo Core com a tampa de silicone fechada, porém com o furo de ventilação aberto.',
+      stMassaTit: 'Massa final — Halo Core',
+      stMassaLead: 'Todo o poolish + {finalAlma} Alma Italiana + {finalIntegral} Integral + {finalAgua} água gelada com gelo moído + {finalSal} sal + {finalFerm} fermento seco.',
+      stMassaI1: 'Toda a água + todo o poolish no bowl em velocidade 4 por 1 minuto até dissolver bem.',
+      stMassaI2: 'Adicionar o fermento e a farinha restante aos poucos em velocidade 5 por 4 minutos.',
+      stMassaI3: 'Pausa de 20 minutos para descanso de relaxamento do glúten (puntata curta).',
+      stMassaI4: 'Adicionar o sal em velocidade 6 por 2 minutos.',
+      stMassaI5: 'Sova em velocidade 8 ou 9 por 6 minutos para ganhar força, monitorando a temperatura.',
+      stMassaI6: 'Caso necessário, sove em velocidade 12 por no máximo 45s.',
+      stMassaWarn: 'Temperatura final 23-24°C',
+      stMaturTit: 'Maturação em geladeira',
+      stMaturLead: 'Massa no bowl Tramontina 8,3L fechado com filme em contato + tampa. Vai para a geladeira ~30 min após a massa final. Total de maturação em bloco: {maturacao}.',
+      stBolearTit: 'Bolear + Appretto',
+      stBolearLead: '{discos} panetti de {peso} armazenados nos potes com desmoldante e tampados fora da geladeira ({appretto} de appretto).',
+      stBolearI1: 'Temperatura ambiente < 22°C: até ~4h.',
+      stBolearI2: 'Temperatura ambiente > 25°C: 2,5h a 3h.',
+      stBolearI3: 'Observar os panetti — quando dobrarem de volume, estão prontos.',
+      stAssarTit: 'Assar — Fornetto Slim',
+      stAssarLead: 'Forno pré-aquecido por 40 minutos.',
+      stAssarI1: 'Temperatura 390°C.',
+      stAssarI2: '100-150 segundos (conforme o ponto de borda e leopard spots desejado).',
+      // durações e datas
+      inicioLabel: 'início',
+      dias: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+      apprettoSuffix: 'de appretto',
+      concluido: 'Concluído',
+      vuMisturaLenta: 'Mistura lenta inicial', vuMistura: 'Mistura',
+      vuIncorporar1a: 'Incorporar / hidratar ≈ 1ª vel. industrial',
+      vuIncorporarFarinha: 'Incorporar farinha', vuAdicionarSal: 'Adicionar sal',
+      vuDesenvolvimento: 'Desenvolvimento', vuSova: 'Sova', vuSovaForca: 'Sova de força',
+      vuForca2a: 'Força ≈ 2ª vel. industrial', vuAlta: 'Alta',
+      vuBurst: 'Burst de fechamento', vuMaxima: 'Máxima'
+    },
+    en: {
+      appTitle: 'Dough Calculator',
+      appSubtitle: 'Neapolitan Pizza — Venturelli 95/5 • 67% Hydration • Poolish',
+      ajusteProducao: 'Adjust the batch',
+      numDiscos: 'Number of pizzas',
+      unitDiscos: 'pizzas',
+      pesoPanetto: 'Weight per dough ball',
+      hidratacao: 'Hydration',
+      massaTotalLbl: 'Total dough',
+      farinhaTotalLbl: 'Total flour',
+      salLbl: 'Salt',
+      btnReceitaPadrao: 'Default recipe (6 × 280g · 67%)',
+      btnImprimirReceita: 'Print recipe',
+      btnImprimirTudo: 'Print all',
+      ingredientes: 'Ingredients',
+      thIngrediente: 'Ingredient', thBakers: "Baker's %", thQuantidade: 'Quantity',
+      divisaoEtapa: 'Breakdown by stage',
+      cronogramaTitulo: 'Step-by-step schedule',
+      btnMostrarCrono: 'Show schedule', btnOcultarCrono: 'Hide schedule',
+      btnCarregarPadrao: 'Load default schedule',
+      btnImprimirCrono: 'Print schedule',
+      btnLimpar: 'Clear checks',
+      inicioPoolish: 'Poolish start:', horaAssar: 'Baking time:', as: 'at',
+      duracaoAppretto: 'Appretto duration',
+      velTitulo: 'Speed table — Ooni Halo Core',
+      btnMostrarVel: 'Show speed table', btnOcultarVel: 'Hide speed table',
+      btnImprimirVel: 'Print table',
+      thVel: 'Speed', thPotencia: 'Power', thUso: 'Use / industrial equivalent',
+      footer: 'Based on the validated schedule • Maturation ~53h • Ooni Halo Core • Fornetto Slim 390°C',
+      velIntro: 'Spiral mixer with rotating bowl (60–300 RPM). Since the industrial mixer is also a spiral, the comparison is direct by hook RPM: <b>industrial 1st speed ≈ 100 RPM</b> (speed 4) and <b>2nd speed ≈ 200 RPM</b> (speed 12).',
+      comoFunciona: '<b>How it works:</b> Quantities scale proportionally, keeping the recipe ratios (flour 95% Alma + 5% Integral, salt 2.5%, yeast 0.1%). <b>Hydration</b> is adjustable and recalculates the total water. The <b>poolish</b> always uses 30% of the total flour, 100% hydration and half the yeast — the remaining water goes into the final dough. A ~1% dough loss during handling is accounted for in the reverse calculation.',
+      progresso: (n, t) => `<b>${n}</b> of ${t} steps`,
+      ingFarinhaAlma: 'Alma Italiana flour', ingFarinhaIntegral: 'Wholemeal flour',
+      ingAgua: 'Water', ingSal: 'Salt', ingFermento: 'Dry yeast', ingMassaTotal: 'Total dough',
+      subPoolish: '1 · Poolish (30% of flour · 100% hydration)', subMassaFinal: '2 · Final dough',
+      divAguaGelada: 'Cold water', divFermentoSeco: 'Dry yeast', divPoolishTodo: 'Poolish (all)',
+      hidraAlta: (p) => `⚠️ <b>High hydration (${p}%).</b> Above 70% the dough gets softer and stickier, requiring more kneading force and stretch &amp; fold technique to build structure. Shaping is also more delicate. Consider using very cold water and flouring the bench well.`,
+      capacidade: (g) => `🚫 <b>Total dough (${g} g) above the Halo Core capacity (2500 g).</b> Reduce the number of pizzas or the weight per ball to fit the mixer. Mixing above the limit overloads the motor and hurts gluten development.`,
+      cronoDefina: 'Set the <b>poolish start</b> and the <b>baking time</b> to compute the schedule.',
+      cronoAssarCedo: '🚫 <b>Baking time too early.</b> There is no time between the final dough and the oven. Push the baking time later or start the poolish earlier.',
+      cronoMaturCurta: (d, min) => `⚠️ <b>Short bulk maturation (${d}).</b> Below ${min}h the dough develops less flavor and strength. Consider starting the poolish earlier.`,
+      cronoMaturLonga: (d, max) => `⚠️ <b>Long bulk maturation (${d}).</b> Above ${max}h the dough may over-mature (more acidic, fragile gluten). Consider starting the poolish later.`,
+      cronoApprettoLongo: (d) => `⚠️ <b>Long appretto (${d}).</b> Risk of over-proofing the dough balls (they spread, lose tension). Consider reducing it or keeping part in the fridge.`,
+      cronoNoite: (lista) => `🌙 <b>Activity at an awkward time (22:00–05:00):</b> ${lista}. Adjust the poolish start or the baking time to shift it.`,
+      atInicio: 'Poolish start', atMassa: 'Final dough', atBolear: 'Balling',
+      stPoolishTit: 'Poolish',
+      stPoolishLead: '{poolishFarinha} Alma Italiana flour + {poolishAgua} water + {poolishFerm} dry yeast.',
+      stPoolishI1: '2h at room temperature + the rest in the fridge at 4°C ({poolishFrio} cold).',
+      stPoolishI2: 'Halo Core bowl with the silicone lid closed, but with the vent hole open.',
+      stMassaTit: 'Final dough — Halo Core',
+      stMassaLead: 'All the poolish + {finalAlma} Alma Italiana + {finalIntegral} Wholemeal + {finalAgua} ice-cold water with crushed ice + {finalSal} salt + {finalFerm} dry yeast.',
+      stMassaI1: 'All the water + all the poolish in the bowl at speed 4 for 1 minute until well dissolved.',
+      stMassaI2: 'Add the yeast and the remaining flour gradually at speed 5 for 4 minutes.',
+      stMassaI3: '20-minute rest to relax the gluten (short puntata).',
+      stMassaI4: 'Add the salt at speed 6 for 2 minutes.',
+      stMassaI5: 'Knead at speed 8 or 9 for 6 minutes to build strength, monitoring the temperature.',
+      stMassaI6: 'If needed, knead at speed 12 for no more than 45s.',
+      stMassaWarn: 'Final temperature 23-24°C',
+      stMaturTit: 'Cold maturation',
+      stMaturLead: 'Dough in the closed Tramontina 8.3L bowl with plastic film in contact + lid. Goes to the fridge ~30 min after the final dough. Total bulk maturation: {maturacao}.',
+      stBolearTit: 'Balling + Appretto',
+      stBolearLead: '{discos} dough balls of {peso} stored in the containers with release agent and covered at room temperature ({appretto} of appretto).',
+      stBolearI1: 'Room temperature < 22°C: up to ~4h.',
+      stBolearI2: 'Room temperature > 25°C: 2.5h to 3h.',
+      stBolearI3: 'Watch the dough balls — when they double in volume, they are ready.',
+      stAssarTit: 'Bake — Fornetto Slim',
+      stAssarLead: 'Oven preheated for 40 minutes.',
+      stAssarI1: 'Temperature 390°C.',
+      stAssarI2: '100-150 seconds (depending on the crust and leopard spots desired).',
+      inicioLabel: 'start',
+      dias: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      apprettoSuffix: 'of appretto',
+      concluido: 'Done',
+      vuMisturaLenta: 'Initial slow mixing', vuMistura: 'Mixing',
+      vuIncorporar1a: 'Incorporate / hydrate ≈ industrial 1st speed',
+      vuIncorporarFarinha: 'Incorporate flour', vuAdicionarSal: 'Add salt',
+      vuDesenvolvimento: 'Development', vuSova: 'Kneading', vuSovaForca: 'Strength kneading',
+      vuForca2a: 'Strength ≈ industrial 2nd speed', vuAlta: 'High',
+      vuBurst: 'Finishing burst', vuMaxima: 'Maximum'
+    }
+  };
+
+  function t(key, ...args) {
+    const v = I18N[LANG][key];
+    return typeof v === 'function' ? v(...args) : v;
+  }
+
+  // Aplica os textos estáticos (data-i18n) e refaz o conteúdo dinâmico
+  function aplicarIdioma() {
+    document.documentElement.lang = (LANG === 'pt') ? 'pt-BR' : 'en';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const k = el.getAttribute('data-i18n');
+      if (I18N[LANG][k] !== undefined) el.innerHTML = t(k);
+    });
+    // botões toggle refletem o estado atual (mostrar/ocultar)
+    const tlWrap = document.getElementById('timelineWrap');
+    document.getElementById('tlToggle').textContent =
+      tlWrap.classList.contains('show') ? t('btnOcultarCrono') : t('btnMostrarCrono');
+    const velWrap = document.getElementById('velocidadesWrap');
+    document.getElementById('velToggle').textContent =
+      velWrap.classList.contains('show') ? t('btnOcultarVel') : t('btnMostrarVel');
+    // nota, intro e conteúdos dependentes de idioma
+    document.getElementById('comoFunciona').innerHTML = t('comoFunciona');
+    document.getElementById('velIntro').innerHTML = t('velIntro');
+    // selects de mês reconstroem com nomes traduzidos (se já populados)
+    if (typeof repopularMeses === 'function') repopularMeses();
+    renderVelocidades();
+    render();
+  }
+
+  function setLang(lang) {
+    LANG = (lang === 'en') ? 'en' : 'pt';
+    try { localStorage.setItem('pizzaLang', LANG); } catch (e) {}
+    document.querySelectorAll('.lang-btn').forEach(b =>
+      b.classList.toggle('active', b.getAttribute('data-lang') === LANG));
+    aplicarIdioma();
+  }
+
   // ===== Proporções base da receita (baker's percentages) =====
   // Referência: 6 discos × 280g = 1680g de massa final
   const PCT = {
@@ -785,56 +1036,29 @@
   // {chaves} de quantidade e {duração} são preenchidas na renderização.
   const CRONOGRAMA = [
     {
-      id: 'poolish', cor: '#2e5e8c', titulo: 'Poolish',
-      tagFn: (p) => '+' + durLabel(horasDesdeInicio(p, p.inicio)),
-      lead: '{poolishFarinha} farinha Alma Italiana + {poolishAgua} água + {poolishFerm} fermento seco.',
-      itens: [
-        '2h fora da geladeira + o restante na geladeira à 4°C ({poolishFrio} de frio).',
-        'Bowl da Halo Core com a tampa de silicone fechada, porém com o furo de ventilação aberto.'
-      ],
-      warn: null
+      id: 'poolish', cor: '#2e5e8c', horario: 'inicio',
+      titKey: 'stPoolishTit', leadKey: 'stPoolishLead',
+      itensKeys: ['stPoolishI1', 'stPoolishI2'], warnKey: null
     },
     {
-      id: 'massa', cor: '#2e8c6a', titulo: 'Massa final — Halo Core',
-      tagFn: (p) => '+' + durLabel(horasDesdeInicio(p, p.massaFinal)),
-      lead: 'Todo o poolish + {finalAlma} Alma Italiana + {finalIntegral} Integral + {finalAgua} água gelada com gelo moído + {finalSal} sal + {finalFerm} fermento seco.',
-      itens: [
-        'Toda a água + todo o poolish no bowl em velocidade 4 por 1 minuto até dissolver bem.',
-        'Adicionar o fermento e a farinha restante aos poucos em velocidade 5 por 4 minutos.',
-        'Pausa de 20 minutos para descanso de relaxamento do glúten (puntata curta).',
-        'Adicionar o sal em velocidade 6 por 2 minutos.',
-        'Sova em velocidade 8 ou 9 por 6 minutos para ganhar força, monitorando a temperatura.',
-        'Caso necessário, sove em velocidade 12 por no máximo 45s.'
-      ],
-      warn: 'Temperatura final 23-24°C'
+      id: 'massa', cor: '#2e8c6a', horario: 'massaFinal',
+      titKey: 'stMassaTit', leadKey: 'stMassaLead',
+      itensKeys: ['stMassaI1', 'stMassaI2', 'stMassaI3', 'stMassaI4', 'stMassaI5', 'stMassaI6'],
+      warnKey: 'stMassaWarn'
     },
     {
-      id: 'maturacao', cor: '#5e5e8c', titulo: 'Maturação em geladeira',
-      tagFn: (p) => '+' + durLabel(horasDesdeInicio(p, p.geladeira)),
-      lead: 'Massa no bowl Tramontina 8,3L fechado com filme em contato + tampa. Vai para a geladeira ~30 min após a massa final. Total de maturação em bloco: {maturacao}.',
-      itens: [],
-      warn: null
+      id: 'maturacao', cor: '#5e5e8c', horario: 'geladeira',
+      titKey: 'stMaturTit', leadKey: 'stMaturLead', itensKeys: [], warnKey: null
     },
     {
-      id: 'bolear', cor: '#cc8a00', titulo: 'Bolear + Appretto',
-      tagFn: (p) => '+' + durLabel(horasDesdeInicio(p, p.bolear)),
-      lead: '{discos} panetti de {peso} armazenados nos potes com desmoldante e tampados fora da geladeira ({appretto} de appretto).',
-      itens: [
-        'Temperatura ambiente < 22°C: até ~4h.',
-        'Temperatura ambiente > 25°C: 2,5h a 3h.',
-        'Observar os panetti — quando dobrarem de volume, estão prontos.'
-      ],
-      warn: null
+      id: 'bolear', cor: '#cc8a00', horario: 'bolear',
+      titKey: 'stBolearTit', leadKey: 'stBolearLead',
+      itensKeys: ['stBolearI1', 'stBolearI2', 'stBolearI3'], warnKey: null
     },
     {
-      id: 'assar', cor: '#cc3300', titulo: 'Assar — Fornetto Slim',
-      tagFn: (p) => '+' + durLabel(horasDesdeInicio(p, p.assar)),
-      lead: 'Forno pré-aquecido por 40 minutos.',
-      itens: [
-        'Temperatura 390°C.',
-        '100-150 segundos (conforme o ponto de borda e leopard spots desejado).'
-      ],
-      warn: null
+      id: 'assar', cor: '#cc3300', horario: 'assar',
+      titKey: 'stAssarTit', leadKey: 'stAssarLead',
+      itensKeys: ['stAssarI1', 'stAssarI2'], warnKey: null
     }
   ];
 
@@ -850,26 +1074,26 @@
   // ===== Tabela de velocidades da Ooni Halo Core (20 velocidades) =====
   // [velocidade, potência %, RPM, uso/equivalente industrial, destaque?]
   const VELOCIDADES = [
-    [1, 5, 60, 'Mistura lenta inicial', false],
-    [2, 10, 73, 'Mistura lenta', false],
-    [3, 15, 85, 'Mistura', false],
-    [4, 20, 98, 'Incorporar / hidratar ≈ 1ª vel. industrial', true],
-    [5, 25, 111, 'Incorporar farinha', false],
-    [6, 30, 123, 'Adicionar sal', false],
-    [7, 35, 136, 'Desenvolvimento', false],
-    [8, 40, 148, 'Desenvolvimento / sova', false],
-    [9, 45, 161, 'Sova', false],
-    [10, 50, 174, 'Sova', false],
-    [11, 55, 186, 'Sova de força', false],
-    [12, 60, 199, 'Força ≈ 2ª vel. industrial', true],
-    [13, 65, 212, 'Alta', false],
-    [14, 70, 224, 'Alta', false],
-    [15, 75, 237, 'Alta', false],
-    [16, 80, 249, 'Burst de fechamento', false],
-    [17, 85, 262, 'Burst', false],
-    [18, 90, 275, 'Burst', false],
-    [19, 95, 287, 'Burst', false],
-    [20, 100, 300, 'Máxima', false]
+    [1, 5, 60, 'vuMisturaLenta', false],
+    [2, 10, 73, 'vuMisturaLenta', false],
+    [3, 15, 85, 'vuMistura', false],
+    [4, 20, 98, 'vuIncorporar1a', true],
+    [5, 25, 111, 'vuIncorporarFarinha', false],
+    [6, 30, 123, 'vuAdicionarSal', false],
+    [7, 35, 136, 'vuDesenvolvimento', false],
+    [8, 40, 148, 'vuDesenvolvimento', false],
+    [9, 45, 161, 'vuSova', false],
+    [10, 50, 174, 'vuSova', false],
+    [11, 55, 186, 'vuSovaForca', false],
+    [12, 60, 199, 'vuForca2a', true],
+    [13, 65, 212, 'vuAlta', false],
+    [14, 70, 224, 'vuAlta', false],
+    [15, 75, 237, 'vuAlta', false],
+    [16, 80, 249, 'vuBurst', false],
+    [17, 85, 262, 'vuBurst', false],
+    [18, 90, 275, 'vuBurst', false],
+    [19, 95, 287, 'vuBurst', false],
+    [20, 100, 300, 'vuMaxima', false]
   ];
 
   // ===== Formatação =====
@@ -931,7 +1155,7 @@
     // Aviso de hidratação alta (71% ou mais)
     const warn = document.getElementById('hidraWarn');
     if (hidraPct >= 71) {
-      document.getElementById('hidraWarnVal').textContent = hidraPct;
+      warn.innerHTML = t('hidraAlta', hidraPct);
       warn.classList.add('show');
     } else {
       warn.classList.remove('show');
@@ -943,7 +1167,7 @@
     const alert = document.getElementById('capacidadeAlert');
     const massaEl = document.getElementById('massaTotal');
     if (r.massaFinal > 2500) {
-      document.getElementById('alertMassaVal').textContent = Math.round(r.massaFinal);
+      alert.innerHTML = t('capacidade', Math.round(r.massaFinal));
       alert.classList.add('show');
       massaEl.style.color = '#c0392b';
     } else {
@@ -953,33 +1177,33 @@
 
     // Tabela principal
     const rows = [
-      ['Farinha Alma Italiana', PCT.almaItaliana, r.alma],
-      ['Farinha Integral', PCT.integral, r.integral],
-      ['Água', r.hidra, r.agua],
-      ['Sal', PCT.sal, r.sal],
-      ['Fermento biológico seco', PCT.fermento, r.fermento],
+      [t('ingFarinhaAlma'), PCT.almaItaliana, r.alma],
+      [t('ingFarinhaIntegral'), PCT.integral, r.integral],
+      [t('ingAgua'), r.hidra, r.agua],
+      [t('ingSal'), PCT.sal, r.sal],
+      [t('ingFermento'), PCT.fermento, r.fermento],
     ];
     let html = '';
     for (const [nome, p, val] of rows) {
       html += `<tr><td>${nome}</td><td>${pct(p)}</td><td class="qty">${fmt(val)}</td></tr>`;
     }
-    html += `<tr class="total"><td>Massa total</td><td></td><td class="qty">${fmt(r.massaFinal)}</td></tr>`;
+    html += `<tr class="total"><td>${t('ingMassaTotal')}</td><td></td><td class="qty">${fmt(r.massaFinal)}</td></tr>`;
     document.getElementById('tbody').innerHTML = html;
 
     // Tabela por etapa (poolish / massa final)
     let e = '';
-    e += `<tr class="subhead"><td colspan="2">1 · Poolish (30% da farinha · 100% hidratação)</td></tr>`;
-    e += etapaRow('Farinha Alma Italiana', r.poolish.farinha);
-    e += etapaRow('Água', r.poolish.agua);
-    e += etapaRow('Fermento seco', r.poolish.fermento);
+    e += `<tr class="subhead"><td colspan="2">${t('subPoolish')}</td></tr>`;
+    e += etapaRow(t('ingFarinhaAlma'), r.poolish.farinha);
+    e += etapaRow(t('ingAgua'), r.poolish.agua);
+    e += etapaRow(t('divFermentoSeco'), r.poolish.fermento);
 
-    e += `<tr class="subhead"><td colspan="2">2 · Massa final</td></tr>`;
-    e += etapaRow('Poolish (todo)', r.poolish.farinha + r.poolish.agua + r.poolish.fermento);
-    e += etapaRow('Farinha Alma Italiana', r.final.alma);
-    e += etapaRow('Farinha Integral', r.final.integral);
-    e += etapaRow('Água gelada', r.final.agua);
-    e += etapaRow('Sal', r.final.sal);
-    e += etapaRow('Fermento seco', r.final.fermento);
+    e += `<tr class="subhead"><td colspan="2">${t('subMassaFinal')}</td></tr>`;
+    e += etapaRow(t('divPoolishTodo'), r.poolish.farinha + r.poolish.agua + r.poolish.fermento);
+    e += etapaRow(t('ingFarinhaAlma'), r.final.alma);
+    e += etapaRow(t('ingFarinhaIntegral'), r.final.integral);
+    e += etapaRow(t('divAguaGelada'), r.final.agua);
+    e += etapaRow(t('ingSal'), r.final.sal);
+    e += etapaRow(t('divFermentoSeco'), r.final.fermento);
     document.getElementById('tbodyEtapas').innerHTML = e;
 
     // Timeline (quantidades dinâmicas)
@@ -1022,13 +1246,16 @@
     let html = '';
     CRONOGRAMA.forEach((step, i) => {
       const done = doneSteps.includes(i);
-      const itens = step.itens.length
-        ? `<ul>${step.itens.map(it => `<li>${fill(it)}</li>`).join('')}</ul>` : '';
-      const warn = step.warn ? `<div class="step-warn">▲ ${step.warn}</div>` : '';
+      const itens = step.itensKeys.length
+        ? `<ul>${step.itensKeys.map(k => `<li>${fill(t(k))}</li>`).join('')}</ul>` : '';
+      const warn = step.warnKey ? `<div class="step-warn">▲ ${t(step.warnKey)}</div>` : '';
 
-      // tag (pílula) com a duração calculada do passo
-      const tagTxt = (plano && step.tagFn) ? step.tagFn(plano) : '';
-      const tag = tagTxt ? `<span class="tag">${tagTxt}</span>` : '';
+      // tag (pílula) com o tempo decorrido desde o início do poolish até este passo
+      let tag = '';
+      if (plano) {
+        const dt = plano[step.horario];
+        tag = `<span class="tag">+${durLabel(horasDesdeInicio(plano, dt))}</span>`;
+      }
 
       let whenHtml = '';
       if (horarios) {
@@ -1041,15 +1268,15 @@
           <div class="dot">${done ? '✓' : (i + 1)}</div>
           <div class="content">
             <div class="step-top">
-              <span class="title">${step.titulo}${tag}</span>
+              <span class="title">${t(step.titKey)}${tag}</span>
             </div>
             ${whenHtml}
-            <div class="lead">${fill(step.lead)}</div>
+            <div class="lead">${fill(t(step.leadKey))}</div>
             ${itens}
             ${warn}
             <label class="done-toggle">
               <input type="checkbox" ${done ? 'checked' : ''} onchange="toggleDone(${i}, this.checked)">
-              Concluído
+              ${t('concluido') || 'Concluído'}
             </label>
           </div>
         </div>`;
@@ -1065,8 +1292,7 @@
 
     // Progresso
     const n = doneSteps.length;
-    document.getElementById('tlProgress').innerHTML =
-      `<b>${n}</b> de ${CRONOGRAMA.length} etapas`;
+    document.getElementById('tlProgress').innerHTML = t('progresso', n, CRONOGRAMA.length);
     document.getElementById('tlReset').style.display = n > 0 ? '' : 'none';
   }
 
@@ -1112,46 +1338,42 @@
   function renderCronoAlerts(plano) {
     const box = document.getElementById('cronoAlerts');
     if (!plano) {
-      box.innerHTML = `<div class="crono-alert warn">Defina o <b>início do poolish</b> e a <b>hora de assar</b> para calcular o cronograma.</div>`;
+      box.innerHTML = `<div class="crono-alert warn">${t('cronoDefina')}</div>`;
       return;
     }
     const alerts = [];
 
-    // Impossível: assar antes do mínimo necessário (poolish + maturação mínima + appretto)
     if (plano.maturacaoH < 0) {
-      alerts.push({ cls: 'bad', msg: `🚫 <b>Hora de assar cedo demais.</b> Não há tempo entre a massa final e o forno. Atrase a hora de assar ou adiante o início do poolish.` });
+      alerts.push({ cls: 'bad', msg: t('cronoAssarCedo') });
     } else {
-      // Maturação em bloco fora da faixa saudável
       if (plano.maturacaoH < PLANO.maturacaoMin) {
-        alerts.push({ cls: 'warn', msg: `⚠️ <b>Maturação em bloco curta (${durLabel(plano.maturacaoH)}).</b> Abaixo de ${PLANO.maturacaoMin}h a massa desenvolve menos sabor e força. Considere adiantar o início do poolish.` });
+        alerts.push({ cls: 'warn', msg: t('cronoMaturCurta', durLabel(plano.maturacaoH), PLANO.maturacaoMin) });
       } else if (plano.maturacaoH > PLANO.maturacaoMax) {
-        alerts.push({ cls: 'warn', msg: `⚠️ <b>Maturação em bloco longa (${durLabel(plano.maturacaoH)}).</b> Acima de ${PLANO.maturacaoMax}h a massa pode sobrematurar (mais ácida, glúten frágil). Considere atrasar o início do poolish.` });
+        alerts.push({ cls: 'warn', msg: t('cronoMaturLonga', durLabel(plano.maturacaoH), PLANO.maturacaoMax) });
       }
     }
 
-    // Appretto fora da faixa
     if (plano.apprettoH > 4.5) {
-      alerts.push({ cls: 'warn', msg: `⚠️ <b>Appretto longo (${durLabel(plano.apprettoH)}).</b> Risco de sobrefermentação dos panetti (espalham, perdem tensão). Considere reduzir ou deixar parte na geladeira.` });
+      alerts.push({ cls: 'warn', msg: t('cronoApprettoLongo', durLabel(plano.apprettoH)) });
     }
 
     // Horário incômodo (22:00-05:00) nas atividades que exigem você
     const atividades = [
-      ['Massa final', plano.massaFinal],
-      ['Boleamento', plano.bolear]
+      [t('atInicio'), plano.inicio],
+      [t('atMassa'), plano.massaFinal],
+      [t('atBolear'), plano.bolear]
     ];
-    // o próprio início do poolish também é atividade manual
-    atividades.unshift(['Início do poolish', plano.inicio]);
     const incomodas = atividades.filter(([, dt]) => ehNoite(dt));
     if (incomodas.length) {
-      const lista = incomodas.map(([nome, dt]) => `${nome} às ${horaCurta(dt)}`).join(', ');
-      alerts.push({ cls: 'night', msg: `🌙 <b>Atividade em horário incômodo (22:00–05:00):</b> ${lista}. Ajuste o início do poolish ou a hora de assar para deslocar.` });
+      const conector = LANG === 'pt' ? 'às' : 'at';
+      const lista = incomodas.map(([nome, dt]) => `${nome} ${conector} ${horaCurta(dt)}`).join(', ');
+      alerts.push({ cls: 'night', msg: t('cronoNoite', lista) });
     }
 
     box.innerHTML = alerts.map(a => `<div class="crono-alert ${a.cls}">${a.msg}</div>`).join('');
   }
 
   // ===== Data/hora do cronograma =====
-  const DIAS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
   // Lê uma data/hora de um trio de selects (prefixo: 'inicio' ou 'assar')
   function lerDataHora(prefixo) {
@@ -1184,7 +1406,7 @@
   }
 
   function formatDateTime(d) {
-    const dia = DIAS[d.getDay()];
+    const dia = t('dias')[d.getDay()];
     const dd = String(d.getDate()).padStart(2, '0');
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const hh = String(d.getHours()).padStart(2, '0');
@@ -1217,14 +1439,14 @@
     const btn = document.getElementById('tlToggle');
     const show = !wrap.classList.contains('show');
     wrap.classList.toggle('show', show);
-    btn.textContent = show ? 'Ocultar cronograma' : 'Mostrar cronograma';
+    btn.textContent = show ? t('btnOcultarCrono') : t('btnMostrarCrono');
   }
 
   // ===== Tabela de velocidades =====
   function renderVelocidades() {
-    const html = VELOCIDADES.map(([v, pot, rpm, uso, key]) =>
+    const html = VELOCIDADES.map(([v, pot, rpm, usoKey, key]) =>
       `<tr class="${key ? 'vel-key' : ''}">
-        <td>${v}</td><td>${pot}%</td><td>${rpm} RPM</td><td>${uso}</td>
+        <td>${v}</td><td>${pot}%</td><td>${rpm} RPM</td><td>${t(usoKey)}</td>
       </tr>`
     ).join('');
     document.getElementById('velTbody').innerHTML = html;
@@ -1235,7 +1457,7 @@
     const btn = document.getElementById('velToggle');
     const show = !wrap.classList.contains('show');
     wrap.classList.toggle('show', show);
-    btn.textContent = show ? 'Ocultar tabela de velocidades' : 'Mostrar tabela de velocidades';
+    btn.textContent = show ? t('btnOcultarVel') : t('btnMostrarVel');
   }
 
   // Imprime apenas a tabela de velocidades (independente da receita e do cronograma)
@@ -1367,13 +1589,15 @@
   const assarHora = document.getElementById('assarHora');
   const apprettoRange = document.getElementById('apprettoRange');
   const pad = (n) => String(n).padStart(2, '0');
-  const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  const MESES_PT = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  const MESES_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const mesesAtuais = () => (LANG === 'en' ? MESES_EN : MESES_PT);
 
   function opcoesData() {
     let od = '';
     for (let d = 1; d <= 31; d++) od += `<option value="${d}">${pad(d)}</option>`;
     let om = '';
-    MESES.forEach((nome, i) => { om += `<option value="${i + 1}">${nome}</option>`; });
+    mesesAtuais().forEach((nome, i) => { om += `<option value="${i + 1}">${nome}</option>`; });
     const anoAtual = new Date().getFullYear();
     let oa = '';
     for (let a = anoAtual; a <= anoAtual + 2; a++) oa += `<option value="${a}">${a}</option>`;
@@ -1382,6 +1606,17 @@
       for (const m of [0, 30]) { const v = `${pad(h)}:${pad(m)}`; oh += `<option value="${v}">${v}</option>`; }
     }
     return { od, om, oa, oh };
+  }
+
+  // Reconstrói só os selects de mês preservando o valor selecionado (troca de idioma)
+  function repopularMeses() {
+    [inicioMes, assarMes].forEach(sel => {
+      const val = sel.value;
+      let om = '';
+      mesesAtuais().forEach((nome, i) => { om += `<option value="${i + 1}">${nome}</option>`; });
+      sel.innerHTML = om;
+      if (val) sel.value = val;
+    });
   }
 
   (function popularSelects() {
@@ -1455,9 +1690,16 @@
     render();
   }
 
-  // Inicializa
-  render();
-  renderVelocidades();
+  // Inicializa idioma (restaura salvo ou usa PT padrão) e aplica tudo
+  (function initLang() {
+    let saved = 'pt';
+    try { saved = localStorage.getItem('pizzaLang') || 'pt'; } catch (e) {}
+    LANG = (saved === 'en') ? 'en' : 'pt';
+    document.querySelectorAll('.lang-btn').forEach(b =>
+      b.classList.toggle('active', b.getAttribute('data-lang') === LANG));
+  })();
+
+  aplicarIdioma();   // aplica textos estáticos + dinâmicos (chama render e renderVelocidades)
 
   // ===== PWA: registra o service worker (offline / instalável) =====
   if ('serviceWorker' in navigator) {
