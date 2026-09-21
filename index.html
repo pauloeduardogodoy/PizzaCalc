@@ -97,6 +97,20 @@
     margin: 0 0 24px;
     color: var(--gray);
     font-size: 0.9rem;
+    text-align: center;
+  }
+
+  /* Em telas estreitas (celular), os botões descem para baixo do título e
+     ficam centralizados na tela, em vez de alinhados à esquerda. */
+  @media (max-width: 640px) {
+    .header-top {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .lang-switcher { justify-content: center; }
+    /* folga entre os botões (acima) e o subtítulo "Pizza Napolitana..." */
+    header p { margin-top: 14px; }
   }
 
   /* Botão "manter tela ligada" (Wake Lock) — fica na linha do seletor de idioma */
@@ -239,7 +253,25 @@
     color: var(--dark);
     background: #fff;
   }
+  .perfis-botoes {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
   .perfis-row button { padding: 8px 14px; font-size: 0.85rem; }
+
+  /* Linha separando o bloco de perfis (e alertas) da barra de botões
+     "Receita padrão / Imprimir" no card de produção. */
+  .controls-card .btns {
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+
+  /* Telas estreitas: seletor de perfil em linha cheia; botões na linha seguinte */
+  @media (max-width: 640px) {
+    .perfis-row { flex-direction: column; align-items: stretch; }
+    .perfis-row select { width: 100%; min-width: 0; }
+  }
   @media print { .perfis { display: none !important; } }
 
   /* Tabela de ingredientes */
@@ -607,6 +639,26 @@
   .mix-step.active .mix-clock { color: var(--orange); }
   .mix-timer button { padding: 6px 14px; font-size: 0.85rem; }
   .mix-optional { font-size: 0.78rem; color: var(--gray); font-style: italic; }
+  /* Etapa concluída com alarme tocando: destaque pulsante + botão vermelho */
+  .mix-step.alarme {
+    border-color: #c0392b;
+    border-left-color: #c0392b;
+    background: #fdecea;
+    animation: mixPulse 1s ease-in-out infinite;
+  }
+  @keyframes mixPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0); }
+    50% { box-shadow: 0 0 0 4px rgba(192, 57, 43, 0.18); }
+  }
+  .alarme-btn {
+    background: #c0392b !important;
+    color: #fff !important;
+    border-color: #c0392b !important;
+    font-weight: 700;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  .alarme-btn:hover { background: #a8200e !important; }
 
   /* Timer do forno Fornetto */
   #fornoWrap { display: none; }
@@ -621,6 +673,13 @@
   }
   .forno-timer.running { border-color: var(--orange); border-left-color: var(--orange); background: var(--orange-light); }
   .forno-timer.ready { border-left-color: var(--green); }
+  /* Alarme tocando: destaque vermelho pulsante (sobrepõe running/ready) */
+  .forno-timer.alarme {
+    border-color: #c0392b;
+    border-left-color: #c0392b;
+    background: #fdecea;
+    animation: mixPulse 1s ease-in-out infinite;
+  }
   .forno-top {
     display: flex;
     align-items: baseline;
@@ -644,12 +703,12 @@
     background: var(--orange);
     transition: width 0.3s linear, background 0.3s;
   }
-  /* marca a janela ideal 100–150s (de 55.5% a 83.3% de 180s) */
+  /* marca a janela ideal 90–140s (de 52.9% a 82.4% de 170s) */
   .coccao-bar::before {
     content: "";
     position: absolute;
     top: 0; bottom: 0;
-    left: 55.5%; width: 27.8%;
+    left: 52.9%; width: 29.4%;
     background: rgba(46, 140, 106, 0.25);
     border-left: 1px dashed var(--green);
     border-right: 1px dashed var(--green);
@@ -691,6 +750,19 @@
     accent-color: var(--orange);
     height: 6px;
   }
+  /* Linhas de data (poolish/assar): título em cima, selects na linha de baixo */
+  .plan-row-data {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    margin-bottom: 6px;   /* respiro extra até o próximo bloco */
+  }
+  .plan-selects {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .plan-selects select { flex: 1; min-width: 64px; }
 
   /* Alertas do cronograma (horário incômodo, fases fora de faixa) */
   .crono-alert {
@@ -938,20 +1010,22 @@
       <label for="perfilSelect" data-i18n="perfisLabel">Perfis salvos</label>
       <div class="perfis-row">
         <select id="perfilSelect" onchange="carregarPerfil(this.value)"></select>
-        <button onclick="salvarPerfil()" data-i18n="btnSalvarPerfil">Salvar perfil</button>
-        <button id="perfilExcluir" onclick="excluirPerfil()" data-i18n="btnExcluirPerfil">Excluir</button>
+        <div class="perfis-botoes">
+          <button onclick="salvarPerfil()" data-i18n="btnSalvarPerfil">Salvar perfil</button>
+          <button id="perfilExcluir" onclick="excluirPerfil()" data-i18n="btnExcluirPerfil">Excluir</button>
+        </div>
       </div>
     </div>
-
-    <div class="warn-box" id="hidraWarn"></div>
-    <div class="warn-box" id="loteWarn"></div>
-    <div class="alert-box" id="capacidadeAlert"></div>
 
     <div class="btns">
       <button class="primary" onclick="setPreset(6,280,67)" data-i18n="btnReceitaPadrao">Receita padrão (6 × 280g · 67%)</button>
       <button onclick="imprimirReceita()" data-i18n="btnImprimirReceita">Imprimir receita</button>
       <button onclick="imprimirTudo()" data-i18n="btnImprimirTudo">Imprimir tudo</button>
     </div>
+
+    <div class="warn-box" id="hidraWarn"></div>
+    <div class="warn-box" id="loteWarn"></div>
+    <div class="alert-box" id="capacidadeAlert"></div>
   </div>
 
   <!-- Ingredientes -->
@@ -959,7 +1033,7 @@
     <h2 data-i18n="ingredientes">Ingredientes</h2>
     <table>
       <thead>
-        <tr><th data-i18n="thIngrediente">Ingrediente</th><th data-i18n="thBakers">Baker's %</th><th style="text-align:right" data-i18n="thQuantidade">Quantidade</th></tr>
+        <tr><th data-i18n="thIngrediente">Ingrediente</th><th data-i18n="thBakers">%</th><th style="text-align:right" data-i18n="thQuantidade">Quantidade</th></tr>
       </thead>
       <tbody id="tbody"></tbody>
     </table>
@@ -1039,7 +1113,7 @@
   <!-- Timer do forno Fornetto Slim -->
   <div class="card" id="fornoCard">
     <div class="timeline-head">
-      <h2 style="margin:0" data-i18n="fornoTitulo">Forno — Fornetto Slim</h2>
+      <h2 style="margin:0" data-i18n="fornoTitulo">Guia de cocção — Fornetto Slim</h2>
     </div>
     <div class="btns" style="margin-top:12px">
       <button class="primary" id="fornoToggle" onclick="toggleForno()" data-i18n="btnMostrarForno">Mostrar timers do forno</button>
@@ -1064,8 +1138,8 @@
       <!-- Cocção (progressivo, com janela 100–150s) -->
       <div class="forno-timer" id="coccaoTimer">
         <div class="forno-top">
-          <span class="mtitle" data-i18n="coccaoTit">Assamento</span>
-          <span class="mvel" data-i18n="coccaoVel">100–150 s</span>
+          <span class="mtitle" data-i18n="coccaoTit">Cocção</span>
+          <span class="mvel" data-i18n="coccaoVel">90–140 s</span>
         </div>
         <p class="mdesc" id="coccaoDesc"></p>
         <div class="mix-timer">
@@ -1093,21 +1167,23 @@
     </div>
     <div id="timelineWrap">
       <div class="plan-ctrl">
-        <div class="plan-row">
+        <div class="plan-row plan-row-data">
           <label data-i18n="inicioPoolish">Início do poolish:</label>
-          <select id="inicioDia" aria-label="Dia do início"></select>
-          <select id="inicioMes" aria-label="Mês do início"></select>
-          <select id="inicioAno" aria-label="Ano do início"></select>
-          <span class="sep" data-i18n="as">às</span>
-          <select id="inicioHora" aria-label="Hora do início"></select>
+          <div class="plan-selects">
+            <select id="inicioDia" aria-label="Dia do início"></select>
+            <select id="inicioMes" aria-label="Mês do início"></select>
+            <select id="inicioAno" aria-label="Ano do início"></select>
+            <select id="inicioHora" aria-label="Hora do início"></select>
+          </div>
         </div>
-        <div class="plan-row">
+        <div class="plan-row plan-row-data">
           <label data-i18n="horaAssar">Hora de assar:</label>
-          <select id="assarDia" aria-label="Dia de assar"></select>
-          <select id="assarMes" aria-label="Mês de assar"></select>
-          <select id="assarAno" aria-label="Ano de assar"></select>
-          <span class="sep" data-i18n="as">às</span>
-          <select id="assarHora" aria-label="Hora de assar"></select>
+          <div class="plan-selects">
+            <select id="assarDia" aria-label="Dia de assar"></select>
+            <select id="assarMes" aria-label="Mês de assar"></select>
+            <select id="assarAno" aria-label="Ano de assar"></select>
+            <select id="assarHora" aria-label="Hora de assar"></select>
+          </div>
         </div>
         <div class="plan-row">
           <label><span data-i18n="duracaoAppretto">Duração do appretto</span>: <b id="apprettoVal">4,0</b> h</label>
@@ -1153,7 +1229,7 @@
   const I18N = {
     pt: {
       appTitle: 'Calculadora de Massa',
-      appSubtitle: 'Pizza Napolitana — Venturelli 95/5 • Hidratação 67% • Poolish',
+      appSubtitle: 'Pizza Napolitana<br>Venturelli 95/5 • Hidratação 67% • Poolish 30%',
       wakeOff: 'Manter tela ligada',
       wakeOn: 'Tela sempre ligada',
       wakeIndisponivel: 'Tela sempre ligada (indisponível neste navegador)',
@@ -1177,7 +1253,7 @@
       perfilNomePadrao: (d, p, h) => `${d} × ${p}g · ${h}%`,
       perfilExcluirConfirm: (nome) => `Excluir o perfil "${nome}"?`,
       ingredientes: 'Ingredientes',
-      thIngrediente: 'Ingrediente', thBakers: "Baker's %", thQuantidade: 'Quantidade',
+      thIngrediente: 'Ingrediente', thBakers: "%", thQuantidade: 'Quantidade',
       divisaoEtapa: 'Divisão por etapa',
       cronogramaTitulo: 'Cronograma passo a passo',
       btnMostrarCrono: 'Mostrar cronograma', btnOcultarCrono: 'Ocultar cronograma',
@@ -1225,6 +1301,7 @@
       mixIntro: 'Siga as etapas da massa final na Halo Core com o timer. Cada etapa toca um alarme ao terminar e libera a próxima. Monitore a temperatura para chegar em <b>19–23°C</b>.',
       mixTotalLbl: (dur) => `Tempo ativo de mistura: <b>${dur}</b> (fora a pausa)`,
       mixStart: 'Iniciar', mixPause: 'Pausar', mixResume: 'Retomar', mixReset: 'Zerar',
+      mixPararAlarme: '🔔 Parar alarme',
       mixOpcional: 'opcional',
       mixS1Tit: 'Dissolver o poolish', mixS1Vel: 'vel. 4',
       mixS1Desc: 'Toda a água + todo o poolish no bowl por 1 minuto até dissolver bem.',
@@ -1239,17 +1316,17 @@
       mixS6Tit: 'Burst de fechamento', mixS6Vel: 'vel. 12',
       mixS6Desc: 'Se necessário, sove em velocidade 12 por no máximo 45 segundos.',
       // Timer do forno Fornetto
-      fornoTitulo: 'Forno — Fornetto Slim',
+      fornoTitulo: 'Guia de cocção — Fornetto Slim',
       btnMostrarForno: 'Mostrar timers do forno', btnOcultarForno: 'Ocultar timers do forno',
-      fornoIntro: 'Dois timers: <b>pré-aquecimento</b> (40 min a 390°C) e <b>assamento</b> (100–150 s). O alarme toca quando o forno está pronto e nos pontos de cocção — sem queimar a napolitana.',
+      fornoIntro: 'Dois timers: <b>pré-aquecimento</b> (40 min a 390°C) e <b>cocção</b> (90–140 s). O alarme toca quando o forno está pronto e nos pontos de cocção — sem queimar a napolitana.',
       preaqTit: 'Pré-aquecimento', preaqVel: '390°C · 40 min',
       preaqDesc: 'Deixe o Fornetto Slim aquecer por 40 minutos a 390°C antes da primeira pizza. O alarme avisa quando estiver pronto.',
       preaqPronto: '🔥 Forno pronto! Pré-aquecido a 390°C.',
-      coccaoTit: 'Assamento', coccaoVel: '100–150 s',
-      coccaoDesc: 'Cronômetro crescente. Gire a pizza a cada ~30 s. A faixa verde marca a janela ideal de 100–150 s — observe borda e leopard spots.',
-      coccaoWait: (s) => `Assando… ${s}s (aguarde a janela de 100 s)`,
+      coccaoTit: 'Cocção', coccaoVel: '90–140 s',
+      coccaoDesc: 'Cronômetro crescente. Gire a pizza a cada ~30 s. A faixa verde marca a janela ideal de 90–140 s — observe borda e leopard spots.',
+      coccaoWait: (s) => `Assando… ${s}s (aguarde a janela de 90 s)`,
       coccaoOk: (s) => `✅ Ponto ideal — ${s}s. Observe a borda e retire quando quiser.`,
-      coccaoOver: (s) => `⚠️ Passou de 150 s (${s}s) — risco de ressecar/queimar.`,
+      coccaoOver: (s) => `⚠️ Passou de 140 s (${s}s) — risco de ressecar/queimar.`,
       cronoDefina: 'Defina o <b>início do poolish</b> e a <b>hora de assar</b> para calcular o cronograma.',
       cronoAssarCedo: '🚫 <b>Hora de assar cedo demais.</b> Não há tempo entre a massa final e o forno. Atrase a hora de assar ou adiante o início do poolish.',
       cronoMaturCurta: (d, min) => `⚠️ <b>Maturação em bloco curta (${d}).</b> Abaixo de ${min}h a massa desenvolve menos sabor e força. Considere adiantar o início do poolish.`,
@@ -1281,7 +1358,7 @@
       stAssarTit: 'Assar — Fornetto Slim',
       stAssarLead: 'Forno pré-aquecido por 40 minutos.',
       stAssarI1: 'Temperatura 390°C.',
-      stAssarI2: '100-150 segundos (conforme o ponto de borda e leopard spots desejado).',
+      stAssarI2: '90-140 segundos (conforme o ponto de borda e leopard spots desejado).',
       // durações e datas
       inicioLabel: 'início',
       dias: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
@@ -1296,7 +1373,7 @@
     },
     en: {
       appTitle: 'Dough Calculator',
-      appSubtitle: 'Neapolitan Pizza — Venturelli 95/5 • 67% Hydration • Poolish',
+      appSubtitle: 'Neapolitan Pizza<br>Venturelli 95/5 • 67% Hydration • Poolish 30%',
       wakeOff: 'Keep screen on',
       wakeOn: 'Screen stays on',
       wakeIndisponivel: 'Keep screen on (not supported in this browser)',
@@ -1320,7 +1397,7 @@
       perfilNomePadrao: (d, p, h) => `${d} × ${p}g · ${h}%`,
       perfilExcluirConfirm: (nome) => `Delete profile "${nome}"?`,
       ingredientes: 'Ingredients',
-      thIngrediente: 'Ingredient', thBakers: "Baker's %", thQuantidade: 'Quantity',
+      thIngrediente: 'Ingredient', thBakers: "%", thQuantidade: 'Quantity',
       divisaoEtapa: 'Breakdown by stage',
       cronogramaTitulo: 'Step-by-step schedule',
       btnMostrarCrono: 'Show schedule', btnOcultarCrono: 'Hide schedule',
@@ -1365,6 +1442,7 @@
       mixIntro: 'Follow the final-dough steps on the Halo Core with the timer. Each step rings an alarm when it ends and unlocks the next one. Monitor the temperature to reach <b>19–23°C</b>.',
       mixTotalLbl: (dur) => `Active mixing time: <b>${dur}</b> (excluding the rest)`,
       mixStart: 'Start', mixPause: 'Pause', mixResume: 'Resume', mixReset: 'Reset',
+      mixPararAlarme: '🔔 Stop alarm',
       mixOpcional: 'optional',
       mixS1Tit: 'Dissolve the poolish', mixS1Vel: 'speed 4',
       mixS1Desc: 'All the water + all the poolish in the bowl for 1 minute until well dissolved.',
@@ -1379,17 +1457,17 @@
       mixS6Tit: 'Finishing burst', mixS6Vel: 'speed 12',
       mixS6Desc: 'If needed, knead at speed 12 for no more than 45 seconds.',
       // Fornetto oven timer
-      fornoTitulo: 'Oven — Fornetto Slim',
+      fornoTitulo: 'Baking guide — Fornetto Slim',
       btnMostrarForno: 'Show oven timers', btnOcultarForno: 'Hide oven timers',
-      fornoIntro: 'Two timers: <b>preheat</b> (40 min at 390°C) and <b>bake</b> (100–150 s). The alarm rings when the oven is ready and at the baking marks — so you never burn the Neapolitan.',
+      fornoIntro: 'Two timers: <b>preheat</b> (40 min at 390°C) and <b>baking</b> (90–140 s). The alarm rings when the oven is ready and at the baking marks — so you never burn the Neapolitan.',
       preaqTit: 'Preheat', preaqVel: '390°C · 40 min',
       preaqDesc: 'Let the Fornetto Slim heat up for 40 minutes at 390°C before the first pizza. The alarm rings when it is ready.',
       preaqPronto: '🔥 Oven ready! Preheated to 390°C.',
-      coccaoTit: 'Bake', coccaoVel: '100–150 s',
-      coccaoDesc: 'Count-up timer. Rotate the pizza every ~30 s. The green band marks the ideal 100–150 s window — watch the crust and leopard spots.',
-      coccaoWait: (s) => `Baking… ${s}s (wait for the 100 s window)`,
+      coccaoTit: 'Baking', coccaoVel: '90–140 s',
+      coccaoDesc: 'Count-up timer. Rotate the pizza every ~30 s. The green band marks the ideal 90–140 s window — watch the crust and leopard spots.',
+      coccaoWait: (s) => `Baking… ${s}s (wait for the 90 s window)`,
       coccaoOk: (s) => `✅ Sweet spot — ${s}s. Watch the crust and pull it whenever you like.`,
-      coccaoOver: (s) => `⚠️ Past 150 s (${s}s) — risk of drying out/burning.`,
+      coccaoOver: (s) => `⚠️ Past 140 s (${s}s) — risk of drying out/burning.`,
       cronoDefina: 'Set the <b>poolish start</b> and the <b>baking time</b> to compute the schedule.',
       cronoAssarCedo: '🚫 <b>Baking time too early.</b> There is no time between the final dough and the oven. Push the baking time later or start the poolish earlier.',
       cronoMaturCurta: (d, min) => `⚠️ <b>Short bulk maturation (${d}).</b> Below ${min}h the dough develops less flavor and strength. Consider starting the poolish earlier.`,
@@ -1420,7 +1498,7 @@
       stAssarTit: 'Bake — Fornetto Slim',
       stAssarLead: 'Oven preheated for 40 minutes.',
       stAssarI1: 'Temperature 390°C.',
-      stAssarI2: '100-150 seconds (depending on the crust and leopard spots desired).',
+      stAssarI2: '90-140 seconds (depending on the crust and leopard spots desired).',
       inicioLabel: 'start',
       dias: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
       apprettoSuffix: 'of appretto',
@@ -2038,6 +2116,17 @@
     } catch (e) { /* áudio indisponível — silencioso */ }
   }
 
+  // Alarme contínuo: repete os bipes até pararAlarme() ser chamado.
+  let _alarmeTick = null;
+  function iniciarAlarme() {
+    if (_alarmeTick) return;   // já está tocando
+    beep(3);
+    _alarmeTick = setInterval(() => beep(3), 1600);
+  }
+  function pararAlarme() {
+    if (_alarmeTick) { clearInterval(_alarmeTick); _alarmeTick = null; }
+  }
+
   // ===== Guia de mistura passo a passo (com timer) =====
   // Cada etapa: [chaveTitulo, chaveVel, chaveDesc, segundos, opcional?]
   const MIX_STEPS = [
@@ -2049,7 +2138,8 @@
     ['mixS6Tit', 'mixS6Vel', 'mixS6Desc', 45, true]
   ];
   // Estado do timer: qual etapa está ativa, segundos restantes, rodando?
-  let mixState = { idx: -1, restante: 0, rodando: false, tick: null, done: [] };
+  // 'alarme' indica que uma etapa terminou e o alarme está tocando em loop.
+  let mixState = { idx: -1, restante: 0, rodando: false, tick: null, done: [], alarme: false };
 
   function mmss(s) {
     s = Math.max(0, Math.round(s));
@@ -2071,8 +2161,12 @@
       const restante = ativa ? mixState.restante : seg;
       const rodando = ativa && mixState.rodando;
 
+      const alarmando = ativa && mixState.alarme;
       let btns;
-      if (!ativa || (!rodando && restante === seg)) {
+      if (alarmando) {
+        // etapa terminou e o alarme está tocando: botão para silenciar
+        btns = `<button class="alarme-btn" onclick="mixPararAlarme()">${t('mixPararAlarme')}</button>`;
+      } else if (!ativa || (!rodando && restante === seg)) {
         btns = `<button class="primary" onclick="mixStart(${i})">${t('mixStart')}</button>`;
       } else if (rodando) {
         btns = `<button onclick="mixPause()">${t('mixPause')}</button>
@@ -2083,7 +2177,7 @@
       }
 
       html += `
-        <div class="mix-step ${ativa ? 'active' : ''} ${done ? 'done' : ''}">
+        <div class="mix-step ${ativa ? 'active' : ''} ${done ? 'done' : ''} ${alarmando ? 'alarme' : ''}">
           <div class="mix-step-top">
             <span class="mtitle">${i + 1}. ${t(titK)}<span class="mvel">${t(velK)}</span></span>
             ${opcional ? `<span class="mix-optional">(${t('mixOpcional')})</span>` : ''}
@@ -2107,7 +2201,16 @@
     return `${seg} s`;
   }
 
+  // Para o alarme da etapa concluída (botão "Parar alarme")
+  function mixPararAlarme() {
+    pararAlarme();
+    mixState.alarme = false;
+    renderMix();
+  }
+
   function mixStart(i) {
+    // ao iniciar outra etapa, silencia qualquer alarme pendente
+    pararAlarme(); mixState.alarme = false;
     // pausa qualquer timer anterior
     if (mixState.tick) { clearInterval(mixState.tick); mixState.tick = null; }
     // se trocou de etapa (ou primeira vez), zera o restante para a duração cheia
@@ -2124,7 +2227,8 @@
         mixState.rodando = false;
         mixState.restante = 0;
         if (!mixState.done.includes(i)) mixState.done.push(i);
-        beep(3);
+        mixState.alarme = true;
+        iniciarAlarme();
       }
       atualizarRelogioMix();
     }, 1000);
@@ -2138,6 +2242,7 @@
   }
 
   function mixReset(i) {
+    pararAlarme(); mixState.alarme = false;
     if (mixState.tick) { clearInterval(mixState.tick); mixState.tick = null; }
     mixState.rodando = false;
     mixState.restante = MIX_STEPS[i][3];
@@ -2165,12 +2270,12 @@
 
   // ===== Timers do forno Fornetto =====
   const PREAQ_SEG = 40 * 60;      // 40 min de pré-aquecimento
-  const COCCAO_MIN = 100;         // janela ideal: início (s)
-  const COCCAO_MAX = 150;         // janela ideal: fim (s)
-  const COCCAO_BAR = 180;         // total da barra de progresso (s)
+  const COCCAO_MIN = 90;          // janela ideal: início (s)
+  const COCCAO_MAX = 140;         // janela ideal: fim (s)
+  const COCCAO_BAR = 170;         // total da barra de progresso (s)
 
   // Pré-aquecimento (regressivo)
-  let preaq = { restante: PREAQ_SEG, rodando: false, tick: null };
+  let preaq = { restante: PREAQ_SEG, rodando: false, tick: null, alarme: false };
   function preaqToggle() {
     if (preaq.rodando) { preaqPause(); return; }
     if (preaq.restante <= 0) preaq.restante = PREAQ_SEG;
@@ -2183,7 +2288,8 @@
         preaq.restante = 0;
         preaqPause();
         document.getElementById('preaqTimer').classList.add('ready');
-        beep(4);
+        preaq.alarme = true;
+        iniciarAlarme();
         document.getElementById('preaqDesc').innerHTML = `<b>${t('preaqPronto')}</b>`;
       }
       atualizarPreaq();
@@ -2197,6 +2303,7 @@
     atualizarPreaq();
   }
   function preaqReset() {
+    preaqPararAlarme();
     preaqPause();
     preaq.restante = PREAQ_SEG;
     const timer = document.getElementById('preaqTimer');
@@ -2204,21 +2311,45 @@
     document.getElementById('preaqDesc').innerHTML = t('preaqDesc');
     atualizarPreaq();
   }
+  function preaqPararAlarme() {
+    pararAlarme();
+    preaq.alarme = false;
+    document.getElementById('preaqTimer').classList.remove('alarme');
+    atualizarPreaq();
+  }
   function atualizarPreaq() {
     document.getElementById('preaqClock').textContent = mmss(preaq.restante);
-    document.getElementById('preaqBtn').textContent = preaq.rodando ? t('mixPause') : t('mixStart');
+    const btn = document.getElementById('preaqBtn');
+    const timer = document.getElementById('preaqTimer');
+    if (preaq.alarme) {
+      timer.classList.add('alarme');
+      btn.textContent = t('mixPararAlarme');
+      btn.className = 'alarme-btn';
+      btn.setAttribute('onclick', 'preaqPararAlarme()');
+    } else {
+      timer.classList.remove('alarme');
+      btn.textContent = preaq.rodando ? t('mixPause') : t('mixStart');
+      btn.className = 'primary';
+      btn.setAttribute('onclick', 'preaqToggle()');
+    }
   }
 
   // Cocção (progressivo, com marcações em 100s e 150s)
-  let coccao = { seg: 0, rodando: false, tick: null, beep100: false, beep150: false };
+  let coccao = { seg: 0, rodando: false, tick: null, beep100: false, beep150: false, alarme: false };
   function coccaoToggle() {
     if (coccao.rodando) { coccaoPause(); return; }
     coccao.rodando = true;
     document.getElementById('coccaoTimer').classList.add('running');
     coccao.tick = setInterval(() => {
       coccao.seg += 1;
+      // 100s: início da janela ideal -> aviso único
       if (coccao.seg === COCCAO_MIN && !coccao.beep100) { coccao.beep100 = true; beep(2); }
-      if (coccao.seg === COCCAO_MAX && !coccao.beep150) { coccao.beep150 = true; beep(3); }
+      // 150s: fim da janela ideal -> alarme contínuo até parar
+      if (coccao.seg === COCCAO_MAX && !coccao.beep150) {
+        coccao.beep150 = true;
+        coccao.alarme = true;
+        iniciarAlarme();
+      }
       atualizarCoccao();
     }, 1000);
     atualizarCoccao();
@@ -2230,14 +2361,33 @@
     atualizarCoccao();
   }
   function coccaoReset() {
+    coccaoPararAlarme();
     coccaoPause();
     coccao.seg = 0; coccao.beep100 = false; coccao.beep150 = false;
+    atualizarCoccao();
+  }
+  function coccaoPararAlarme() {
+    pararAlarme();
+    coccao.alarme = false;
+    document.getElementById('coccaoTimer').classList.remove('alarme');
     atualizarCoccao();
   }
   function atualizarCoccao() {
     const s = coccao.seg;
     document.getElementById('coccaoClock').textContent = mmss(s);
-    document.getElementById('coccaoBtn').textContent = coccao.rodando ? t('mixPause') : t('mixStart');
+    const btn = document.getElementById('coccaoBtn');
+    const timer = document.getElementById('coccaoTimer');
+    if (coccao.alarme) {
+      timer.classList.add('alarme');
+      btn.textContent = t('mixPararAlarme');
+      btn.className = 'alarme-btn';
+      btn.setAttribute('onclick', 'coccaoPararAlarme()');
+    } else {
+      timer.classList.remove('alarme');
+      btn.textContent = coccao.rodando ? t('mixPause') : t('mixStart');
+      btn.className = 'primary';
+      btn.setAttribute('onclick', 'coccaoToggle()');
+    }
 
     // barra de progresso (0..COCCAO_BAR)
     const fill = document.getElementById('coccaoFill');
