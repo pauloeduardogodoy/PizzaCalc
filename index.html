@@ -66,8 +66,9 @@
   }
   .lang-switcher {
     display: flex;
+    align-items: center;
     gap: 8px;
-    flex: none;
+    flex-wrap: wrap;
   }
   .lang-btn {
     display: inline-flex;
@@ -97,6 +98,39 @@
     color: var(--gray);
     font-size: 0.9rem;
   }
+
+  /* Botão "manter tela ligada" (Wake Lock) — fica na linha do seletor de idioma */
+  .wake-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: #fff;
+    color: var(--gray);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .wake-btn .wake-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--gray);
+    flex: none;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .wake-btn.on {
+    border-color: var(--green);
+    color: var(--green);
+    background: color-mix(in srgb, var(--green) 8%, #fff);
+  }
+  .wake-btn.on .wake-dot {
+    background: var(--green);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 25%, transparent);
+  }
+  .wake-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  @media print { .wake-btn { display: none !important; } }
 
   .card {
     background: #fff;
@@ -173,6 +207,40 @@
     color: var(--gray);
   }
   .summary b { color: var(--dark); }
+
+  /* Perfis de massa salvos */
+  .perfis {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+  .perfis > label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gray);
+    margin-bottom: 8px;
+  }
+  .perfis-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .perfis-row select {
+    flex: 1;
+    min-width: 160px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 0.92rem;
+    color: var(--dark);
+    background: #fff;
+  }
+  .perfis-row button { padding: 8px 14px; font-size: 0.85rem; }
+  @media print { .perfis { display: none !important; } }
 
   /* Tabela de ingredientes */
   table {
@@ -798,6 +866,10 @@
     <div class="header-top">
       <h1><img src="icon-512.png" alt="Ícone Pizza"> <span data-i18n="appTitle">Calculadora de Massa</span></h1>
       <div class="lang-switcher">
+        <button id="wakeToggle" class="wake-btn" onclick="toggleWakeLock()" aria-pressed="false" title="Manter tela ligada">
+          <span class="wake-dot"></span>
+          <span id="wakeLabel" data-i18n="wakeOff">Manter tela ligada</span>
+        </button>
         <button class="lang-btn" data-lang="pt" onclick="setLang('pt')" title="Português">
           <svg class="flag" viewBox="0 0 28 20" aria-hidden="true">
             <rect width="28" height="20" fill="#009c3b"/>
@@ -861,9 +933,20 @@
       <span><span data-i18n="hidratacao">Hidratação</span>: <b id="hidraResumo">67%</b></span>
       <span><span data-i18n="salLbl">Sal</span>: <b>2,5%</b></span>
     </div>
+    <!-- Perfis de massa salvos -->
+    <div class="perfis">
+      <label for="perfilSelect" data-i18n="perfisLabel">Perfis salvos</label>
+      <div class="perfis-row">
+        <select id="perfilSelect" onchange="carregarPerfil(this.value)"></select>
+        <button onclick="salvarPerfil()" data-i18n="btnSalvarPerfil">Salvar perfil</button>
+        <button id="perfilExcluir" onclick="excluirPerfil()" data-i18n="btnExcluirPerfil">Excluir</button>
+      </div>
+    </div>
+
     <div class="warn-box" id="hidraWarn"></div>
     <div class="warn-box" id="loteWarn"></div>
     <div class="alert-box" id="capacidadeAlert"></div>
+
     <div class="btns">
       <button class="primary" onclick="setPreset(6,280,67)" data-i18n="btnReceitaPadrao">Receita padrão (6 × 280g · 67%)</button>
       <button onclick="imprimirReceita()" data-i18n="btnImprimirReceita">Imprimir receita</button>
@@ -1071,6 +1154,9 @@
     pt: {
       appTitle: 'Calculadora de Massa',
       appSubtitle: 'Pizza Napolitana — Venturelli 95/5 • Hidratação 67% • Poolish',
+      wakeOff: 'Manter tela ligada',
+      wakeOn: 'Tela sempre ligada',
+      wakeIndisponivel: 'Tela sempre ligada (indisponível neste navegador)',
       ajusteProducao: 'Ajuste a produção',
       numDiscos: 'Número de discos',
       unitDiscos: 'discos',
@@ -1082,6 +1168,14 @@
       btnReceitaPadrao: 'Receita padrão (6 × 280g · 67%)',
       btnImprimirReceita: 'Imprimir receita',
       btnImprimirTudo: 'Imprimir tudo',
+      perfisLabel: 'Perfis salvos',
+      perfisVazio: '— nenhum perfil salvo —',
+      perfisSelecione: '— selecione um perfil —',
+      btnSalvarPerfil: 'Salvar perfil',
+      btnExcluirPerfil: 'Excluir',
+      perfilNomePrompt: 'Nome do perfil:',
+      perfilNomePadrao: (d, p, h) => `${d} × ${p}g · ${h}%`,
+      perfilExcluirConfirm: (nome) => `Excluir o perfil "${nome}"?`,
       ingredientes: 'Ingredientes',
       thIngrediente: 'Ingrediente', thBakers: "Baker's %", thQuantidade: 'Quantidade',
       divisaoEtapa: 'Divisão por etapa',
@@ -1203,6 +1297,9 @@
     en: {
       appTitle: 'Dough Calculator',
       appSubtitle: 'Neapolitan Pizza — Venturelli 95/5 • 67% Hydration • Poolish',
+      wakeOff: 'Keep screen on',
+      wakeOn: 'Screen stays on',
+      wakeIndisponivel: 'Keep screen on (not supported in this browser)',
       ajusteProducao: 'Adjust the batch',
       numDiscos: 'Number of pizzas',
       unitDiscos: 'pizzas',
@@ -1214,6 +1311,14 @@
       btnReceitaPadrao: 'Default recipe (6 × 280g · 67%)',
       btnImprimirReceita: 'Print recipe',
       btnImprimirTudo: 'Print all',
+      perfisLabel: 'Saved profiles',
+      perfisVazio: '— no saved profiles —',
+      perfisSelecione: '— select a profile —',
+      btnSalvarPerfil: 'Save profile',
+      btnExcluirPerfil: 'Delete',
+      perfilNomePrompt: 'Profile name:',
+      perfilNomePadrao: (d, p, h) => `${d} × ${p}g · ${h}%`,
+      perfilExcluirConfirm: (nome) => `Delete profile "${nome}"?`,
       ingredientes: 'Ingredients',
       thIngrediente: 'Ingredient', thBakers: "Baker's %", thQuantidade: 'Quantity',
       divisaoEtapa: 'Breakdown by stage',
@@ -1371,6 +1476,13 @@
       fornoWrap.classList.contains('show') ? t('btnOcultarForno') : t('btnMostrarForno');
     atualizarPreaq();
     atualizarCoccao();
+    // botão de wake lock (rótulo depende do estado, não só do data-i18n)
+    if (typeof atualizarBotaoWake === 'function') atualizarBotaoWake();
+    // dropdown de perfis (placeholder é traduzido) — preserva a seleção atual
+    if (typeof popularPerfis === 'function') {
+      const selPerfil = document.getElementById('perfilSelect');
+      popularPerfis(selPerfil && selPerfil.value !== '' ? selPerfil.value : null);
+    }
     // selects de mês reconstroem com nomes traduzidos (se já populados)
     if (typeof repopularMeses === 'function') repopularMeses();
     renderVelocidades();
@@ -2429,6 +2541,84 @@
     render();
   }
 
+  // ===== Perfis de massa salvos =====
+  // Cada perfil guarda a configuração de PRODUÇÃO (discos, peso, hidratação).
+  // Datas do cronograma e temperaturas do DDT são circunstanciais e não entram.
+  function lerPerfis() {
+    try {
+      const raw = localStorage.getItem('pizzaPerfis');
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function gravarPerfis(lista) {
+    try { localStorage.setItem('pizzaPerfis', JSON.stringify(lista)); } catch (e) {}
+  }
+
+  // (Re)constrói o dropdown de perfis. Chamada também na troca de idioma.
+  function popularPerfis(selecionado) {
+    const sel = document.getElementById('perfilSelect');
+    const perfis = lerPerfis();
+    const placeholder = perfis.length ? t('perfisSelecione') : t('perfisVazio');
+    let html = `<option value="">${placeholder}</option>`;
+    perfis.forEach((p, i) => {
+      html += `<option value="${i}">${escapeHtml(p.nome)}</option>`;
+    });
+    sel.innerHTML = html;
+    sel.value = (selecionado != null) ? String(selecionado) : '';
+    document.getElementById('perfilExcluir').disabled = (sel.value === '');
+  }
+
+  // Escapa texto do usuário para inserir com segurança no <option>
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function salvarPerfil() {
+    const d = clamp(parseInt(discosNum.value) || 2, 2, 10);
+    const p = clamp(parseInt(pesoNum.value) || 260, 260, 320);
+    const h = clamp(parseInt(hidraNum.value) || 60, 60, 85);
+    const sugestao = t('perfilNomePadrao', d, p, h);
+    const nome = (prompt(t('perfilNomePrompt'), sugestao) || '').trim();
+    if (!nome) return;
+
+    const perfis = lerPerfis();
+    const existente = perfis.findIndex(x => x.nome === nome);
+    const perfil = { nome, discos: d, peso: p, hidra: h };
+    if (existente >= 0) perfis[existente] = perfil;   // sobrescreve o de mesmo nome
+    else perfis.push(perfil);
+    gravarPerfis(perfis);
+    popularPerfis(perfis.findIndex(x => x.nome === nome));
+  }
+
+  function carregarPerfil(idx) {
+    if (idx === '' || idx == null) {
+      document.getElementById('perfilExcluir').disabled = true;
+      return;
+    }
+    const perfis = lerPerfis();
+    const p = perfis[parseInt(idx)];
+    if (!p) return;
+    setPreset(p.discos, p.peso, p.hidra);
+    document.getElementById('perfilExcluir').disabled = false;
+  }
+
+  function excluirPerfil() {
+    const sel = document.getElementById('perfilSelect');
+    const idx = sel.value;
+    if (idx === '') return;
+    const perfis = lerPerfis();
+    const p = perfis[parseInt(idx)];
+    if (!p) return;
+    if (!confirm(t('perfilExcluirConfirm', p.nome))) return;
+    perfis.splice(parseInt(idx), 1);
+    gravarPerfis(perfis);
+    popularPerfis(null);
+  }
+
+  popularPerfis(null);
+
   // Inicializa idioma (restaura salvo ou usa PT padrão) e aplica tudo
   (function initLang() {
     let saved = 'pt';
@@ -2436,6 +2626,80 @@
     LANG = (saved === 'en') ? 'en' : 'pt';
     document.querySelectorAll('.lang-btn').forEach(b =>
       b.classList.toggle('active', b.getAttribute('data-lang') === LANG));
+  })();
+
+  // ===== Manter tela ligada (Screen Wake Lock API) =====
+  // Impede o celular de apagar a tela enquanto o usuário está com as mãos na
+  // massa / de olho nos timers. Requer https ou app instalado (não em file://).
+  // O lock cai ao trocar de aba/bloquear a tela, então re-adquirimos no
+  // 'visibilitychange' enquanto o usuário mantiver a opção ligada.
+  let wakeLock = null;
+  let wakeDesejado = false;
+  const wakeSuportado = ('wakeLock' in navigator);
+
+  function atualizarBotaoWake() {
+    const btn = document.getElementById('wakeToggle');
+    const label = document.getElementById('wakeLabel');
+    if (!wakeSuportado) {
+      btn.disabled = true;
+      btn.classList.remove('on');
+      btn.setAttribute('aria-pressed', 'false');
+      label.textContent = t('wakeIndisponivel');
+      return;
+    }
+    const ativo = wakeDesejado && wakeLock !== null;
+    btn.classList.toggle('on', ativo);
+    btn.setAttribute('aria-pressed', ativo ? 'true' : 'false');
+    label.textContent = ativo ? t('wakeOn') : t('wakeOff');
+  }
+
+  async function requestWakeLock() {
+    if (!wakeSuportado) return;
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', () => {
+        wakeLock = null;
+        atualizarBotaoWake();
+      });
+    } catch (e) {
+      // ex.: bateria baixa, permissão negada — desiste silenciosamente
+      wakeLock = null;
+    }
+    atualizarBotaoWake();
+  }
+
+  async function releaseWakeLock() {
+    if (wakeLock) {
+      try { await wakeLock.release(); } catch (e) {}
+      wakeLock = null;
+    }
+    atualizarBotaoWake();
+  }
+
+  async function toggleWakeLock() {
+    if (!wakeSuportado) return;
+    wakeDesejado = !wakeDesejado;
+    try { localStorage.setItem('pizzaWake', wakeDesejado ? '1' : '0'); } catch (e) {}
+    if (wakeDesejado) await requestWakeLock();
+    else await releaseWakeLock();
+  }
+
+  // Re-adquire o lock quando a página volta a ficar visível (o SO derruba o
+  // lock ao minimizar/bloquear). Só reativa se o usuário deixou a opção ligada.
+  document.addEventListener('visibilitychange', () => {
+    if (wakeDesejado && wakeLock === null && document.visibilityState === 'visible') {
+      requestWakeLock();
+    }
+  });
+
+  // Restaura a preferência salva (tenta reativar; o navegador pode exigir um
+  // gesto do usuário — nesse caso o clique no botão resolve).
+  (function initWake() {
+    let saved = '0';
+    try { saved = localStorage.getItem('pizzaWake') || '0'; } catch (e) {}
+    wakeDesejado = (saved === '1');
+    if (wakeDesejado) requestWakeLock();
+    atualizarBotaoWake();
   })();
 
   aplicarIdioma();   // aplica textos estáticos + dinâmicos (chama render e renderVelocidades)
