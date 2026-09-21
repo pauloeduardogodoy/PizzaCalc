@@ -442,6 +442,155 @@
   .vel-table td:nth-child(2), .vel-table td:nth-child(3) { font-variant-numeric: tabular-nums; white-space: nowrap; }
   .vel-table tr.vel-key td { background: var(--orange-light); }
 
+  /* Calculadora de temperatura da água (DDT) */
+  .ddt-intro { font-size: 0.86rem; color: var(--gray); line-height: 1.45; margin: 0 0 16px; }
+  .ddt-intro b { color: var(--dark); }
+  .ddt-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 18px;
+  }
+  @media (max-width: 560px) { .ddt-grid { grid-template-columns: 1fr; } }
+  .ddt-field label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+  .ddt-field .val, .ddt-field b { color: var(--orange); }
+  .ddt-field input[type="range"] {
+    width: 100%;
+    accent-color: var(--orange);
+    height: 6px;
+  }
+  .ddt-result {
+    margin-top: 20px;
+    padding: 16px 18px;
+    background: var(--orange-light);
+    border: 1px solid var(--orange);
+    border-radius: 10px;
+    text-align: center;
+  }
+  .ddt-result .big {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--orange);
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+  .ddt-result .cap { font-size: 0.82rem; color: var(--gray); margin-top: 4px; }
+  .ddt-result .gelo {
+    margin-top: 10px;
+    font-size: 0.92rem;
+    color: var(--dark);
+  }
+  .ddt-result .gelo b { color: var(--orange); }
+
+  /* Guia de mistura passo a passo (com timer) */
+  #mixWrap { display: none; }
+  #mixWrap.show { display: block; }
+  .mix-steps { display: flex; flex-direction: column; gap: 12px; margin-top: 6px; }
+  .mix-step {
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .mix-step.active {
+    border-color: var(--orange);
+    border-left-color: var(--orange);
+    background: var(--orange-light);
+  }
+  .mix-step.done { opacity: 0.6; border-left-color: var(--green); }
+  .mix-step-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .mix-step .mtitle { font-weight: 700; font-size: 1rem; color: var(--dark); }
+  .mix-step .mvel {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--orange);
+    background: color-mix(in srgb, var(--orange) 12%, #fff);
+    padding: 1px 8px;
+    border-radius: 20px;
+    margin-left: 6px;
+  }
+  .mix-step .mdesc { font-size: 0.88rem; color: #444; margin: 6px 0 0; line-height: 1.4; }
+  .mix-timer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .mix-clock {
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--dark);
+    min-width: 76px;
+  }
+  .mix-step.active .mix-clock { color: var(--orange); }
+  .mix-timer button { padding: 6px 14px; font-size: 0.85rem; }
+  .mix-optional { font-size: 0.78rem; color: var(--gray); font-style: italic; }
+
+  /* Timer do forno Fornetto */
+  #fornoWrap { display: none; }
+  #fornoWrap.show { display: block; }
+  .forno-timer {
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 12px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .forno-timer.running { border-color: var(--orange); border-left-color: var(--orange); background: var(--orange-light); }
+  .forno-timer.ready { border-left-color: var(--green); }
+  .forno-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .forno-timer .running .mix-clock { color: var(--orange); }
+  /* Barra de progresso da cocção (janela 100–150s sobre um total de 180s) */
+  .coccao-bar {
+    position: relative;
+    height: 10px;
+    background: var(--line);
+    border-radius: 6px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  .coccao-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--orange);
+    transition: width 0.3s linear, background 0.3s;
+  }
+  /* marca a janela ideal 100–150s (de 55.5% a 83.3% de 180s) */
+  .coccao-bar::before {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 55.5%; width: 27.8%;
+    background: rgba(46, 140, 106, 0.25);
+    border-left: 1px dashed var(--green);
+    border-right: 1px dashed var(--green);
+  }
+  .coccao-status { margin-top: 8px; font-size: 0.88rem; font-weight: 600; min-height: 1.2em; }
+  .coccao-status.wait { color: var(--gray); }
+  .coccao-status.ok { color: var(--green); }
+  .coccao-status.over { color: #c0392b; }
+
   /* Painel de planejamento do cronograma */
   .plan-ctrl {
     margin: 4px 0 14px;
@@ -522,6 +671,10 @@
     /* A tabela de velocidades NÃO sai nas impressões da receita/cronograma;
        só no seu próprio modo (print-velocidades). */
     #velocidadesCard { display: none !important; }
+
+    /* Cards interativos (temperatura da água, guia de mistura, timers do forno)
+       nunca são impressos — são ferramentas de tela, não fazem parte da ficha. */
+    #ddtCard, #mixCard, #fornoCard { display: none !important; }
 
     /* Compacta cards e evita quebras no meio */
     .card {
@@ -709,6 +862,7 @@
       <span><span data-i18n="salLbl">Sal</span>: <b>2,5%</b></span>
     </div>
     <div class="warn-box" id="hidraWarn"></div>
+    <div class="warn-box" id="loteWarn"></div>
     <div class="alert-box" id="capacidadeAlert"></div>
     <div class="btns">
       <button class="primary" onclick="setPreset(6,280,67)" data-i18n="btnReceitaPadrao">Receita padrão (6 × 280g · 67%)</button>
@@ -736,6 +890,110 @@
     <table>
       <tbody id="tbodyEtapas"></tbody>
     </table>
+  </div>
+
+  <!-- Temperatura da água (DDT) -->
+  <div class="card" id="ddtCard">
+    <h2 data-i18n="ddtTitulo">Temperatura da água (Halo Core)</h2>
+    <p class="ddt-intro" id="ddtIntro"></p>
+    <div class="ddt-grid">
+      <div class="ddt-field">
+        <label for="ddtAmbiente" data-i18n="ddtAmbiente">Temperatura ambiente</label>
+        <div class="row-input">
+          <input type="number" id="ddtAmbiente" min="0" max="45" step="1" value="21">
+          <span class="unit">°C</span>
+        </div>
+      </div>
+      <div class="ddt-field">
+        <label for="ddtFarinha" data-i18n="ddtFarinha">Temperatura da farinha</label>
+        <div class="row-input">
+          <input type="number" id="ddtFarinha" min="0" max="45" step="1" value="21">
+          <span class="unit">°C</span>
+        </div>
+      </div>
+      <div class="ddt-field">
+        <label for="ddtPoolish" data-i18n="ddtPoolish">Temperatura do poolish</label>
+        <div class="row-input">
+          <input type="number" id="ddtPoolish" min="0" max="30" step="1" value="4">
+          <span class="unit">°C</span>
+        </div>
+      </div>
+      <div class="ddt-field">
+        <label for="ddtAlvo" data-i18n="ddtAlvo">Massa desejada</label>
+        <div class="row-input">
+          <input type="number" id="ddtAlvo" min="19" max="23" step="0.5" value="21">
+          <span class="unit">°C</span>
+        </div>
+      </div>
+      <div class="ddt-field">
+        <label for="ddtAtrito"><span data-i18n="ddtAtrito">Atrito da masseira</span>: <b id="ddtAtritoVal">36</b> °C</label>
+        <input type="range" id="ddtAtrito" min="0" max="45" step="1" value="36">
+      </div>
+    </div>
+    <div class="ddt-result" id="ddtResult"></div>
+    <div class="warn-box" id="ddtWarn"></div>
+    <div class="btns">
+      <button onclick="resetDDT()" data-i18n="btnResetDDT">Restaurar padrão</button>
+    </div>
+    <div class="fixed-note" id="ddtNota"></div>
+  </div>
+
+  <!-- Guia de mistura passo a passo (com timer) -->
+  <div class="card" id="mixCard">
+    <div class="timeline-head">
+      <h2 style="margin:0" data-i18n="mixTitulo">Guia de mistura — Halo Core</h2>
+      <span class="progress" id="mixTotal"></span>
+    </div>
+    <div class="btns" style="margin-top:12px">
+      <button class="primary" id="mixToggle" onclick="toggleMix()" data-i18n="btnMostrarMix">Mostrar guia de mistura</button>
+    </div>
+    <div id="mixWrap">
+      <p class="ddt-intro" id="mixIntro"></p>
+      <div class="mix-steps" id="mixSteps"></div>
+    </div>
+  </div>
+
+  <!-- Timer do forno Fornetto Slim -->
+  <div class="card" id="fornoCard">
+    <div class="timeline-head">
+      <h2 style="margin:0" data-i18n="fornoTitulo">Forno — Fornetto Slim</h2>
+    </div>
+    <div class="btns" style="margin-top:12px">
+      <button class="primary" id="fornoToggle" onclick="toggleForno()" data-i18n="btnMostrarForno">Mostrar timers do forno</button>
+    </div>
+    <div id="fornoWrap">
+      <p class="ddt-intro" id="fornoIntro"></p>
+
+      <!-- Pré-aquecimento (regressivo) -->
+      <div class="forno-timer" id="preaqTimer">
+        <div class="forno-top">
+          <span class="mtitle" data-i18n="preaqTit">Pré-aquecimento</span>
+          <span class="mvel" data-i18n="preaqVel">390°C · 40 min</span>
+        </div>
+        <p class="mdesc" id="preaqDesc"></p>
+        <div class="mix-timer">
+          <span class="mix-clock" id="preaqClock">40:00</span>
+          <button class="primary" id="preaqBtn" onclick="preaqToggle()" data-i18n="mixStart">Iniciar</button>
+          <button onclick="preaqReset()" data-i18n="mixReset">Zerar</button>
+        </div>
+      </div>
+
+      <!-- Cocção (progressivo, com janela 100–150s) -->
+      <div class="forno-timer" id="coccaoTimer">
+        <div class="forno-top">
+          <span class="mtitle" data-i18n="coccaoTit">Assamento</span>
+          <span class="mvel" data-i18n="coccaoVel">100–150 s</span>
+        </div>
+        <p class="mdesc" id="coccaoDesc"></p>
+        <div class="mix-timer">
+          <span class="mix-clock" id="coccaoClock">00:00</span>
+          <button class="primary" id="coccaoBtn" onclick="coccaoToggle()" data-i18n="mixStart">Iniciar</button>
+          <button onclick="coccaoReset()" data-i18n="mixReset">Zerar</button>
+        </div>
+        <div class="coccao-bar"><div class="coccao-fill" id="coccaoFill"></div></div>
+        <div class="coccao-status" id="coccaoStatus"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Cronograma (timeline) -->
@@ -850,7 +1108,54 @@
       divAguaGelada: 'Água gelada', divFermentoSeco: 'Fermento seco', divPoolishTodo: 'Poolish (todo)',
       // alertas
       hidraAlta: (p) => `⚠️ <b>Hidratação alta (${p}%).</b> Acima de 70% a massa fica mais mole e pegajosa, exigindo mais força na sova e técnica de dobras (stretch &amp; fold) para ganhar estrutura. O manuseio na abertura também fica mais delicado. Considere usar água bem gelada e polvilhar bem a bancada.`,
-      capacidade: (g) => `🚫 <b>Massa total (${g} g) acima da capacidade da Halo Core (2500 g).</b> Reduza o número de discos ou o peso por panetto para caber na masseira. Bater um volume acima do limite sobrecarrega o motor e prejudica o desenvolvimento do glúten.`,
+      capacidade: (g, max) => `🚫 <b>Massa total (${g} g) acima da capacidade da Halo Core (${max} g).</b> Reduza o número de discos ou o peso por panetto para caber na masseira. Bater um volume acima do limite sobrecarrega o motor e prejudica o desenvolvimento do glúten.`,
+      loteMin: (g, min) => `⚠️ <b>Lote pequeno (${g} g).</b> Abaixo de ~${min} g a massa fica baixa demais na cuba e a espiral não "pega" bem o gancho, sovando de forma irregular. Considere aumentar o número de discos ou misturar à mão.`,
+      // DDT — temperatura da água
+      ddtTitulo: 'Temperatura da água (Halo Core)',
+      ddtIntro: 'A Halo Core aquece a massa pelo atrito da espiral, mas o <b>poolish</b> sai da geladeira frio e puxa a temperatura para baixo. Por isso usamos a regra de 4 fatores: <b>água = (massa desejada × 4) − (farinha + ambiente + atrito + poolish)</b>. Alvo da massa final: <b>19–23°C</b>.',
+      ddtAmbiente: 'Temperatura ambiente',
+      ddtFarinha: 'Temperatura da farinha',
+      ddtPoolish: 'Temperatura do poolish',
+      ddtAlvo: 'Massa desejada',
+      ddtAtrito: 'Atrito da masseira',
+      ddtAguaLabel: 'Temperatura da água',
+      btnResetDDT: 'Restaurar padrão',
+      ddtGelo: (g, total) => `Use ~<b>${g} g</b> de gelo moído no lugar de parte dos ${total} g de água (o restante como água gelada) para ajudar a atingir a temperatura.`,
+      ddtGeloZero: 'Água da torneira gelada já deve bastar — não é necessário gelo.',
+      ddtFrio: (c) => `⚠️ <b>Água muito fria (${c}°C).</b> Na prática, use o máximo de gelo possível e água quase congelante. Considere resfriar a farinha ou baixar a temperatura ambiente.`,
+      ddtQuente: (c) => `⚠️ <b>Água morna necessária (${c}°C).</b> Ambiente/farinha frios demais; a massa pode sair abaixo do alvo. Use água na temperatura ambiente ou levemente morna.`,
+      ddtNota: '<b>Poolish:</b> saindo da geladeira, fica em torno de 4°C — meça se puder. Ele é ~46% da massa e resfria bastante, então a água pedida costuma ser mais alta do que sem pré-fermento. <b>Atrito:</b> a sova de força da Halo Core (vel. 8–9 + burst) aquece muito a massa. O padrão de <b>36°C</b> foi calibrado numa fornada real (água 2°C, ambiente/farinha 21°C, poolish 4°C → massa 20,9°C). Meça a temperatura no fim de cada fornada e ajuste o atrito para afinar.',
+      // Guia de mistura com timer
+      mixTitulo: 'Guia de mistura — Halo Core',
+      btnMostrarMix: 'Mostrar guia de mistura', btnOcultarMix: 'Ocultar guia de mistura',
+      mixIntro: 'Siga as etapas da massa final na Halo Core com o timer. Cada etapa toca um alarme ao terminar e libera a próxima. Monitore a temperatura para chegar em <b>19–23°C</b>.',
+      mixTotalLbl: (dur) => `Tempo ativo de mistura: <b>${dur}</b> (fora a pausa)`,
+      mixStart: 'Iniciar', mixPause: 'Pausar', mixResume: 'Retomar', mixReset: 'Zerar',
+      mixOpcional: 'opcional',
+      mixS1Tit: 'Dissolver o poolish', mixS1Vel: 'vel. 4',
+      mixS1Desc: 'Toda a água + todo o poolish no bowl por 1 minuto até dissolver bem.',
+      mixS2Tit: 'Incorporar a farinha', mixS2Vel: 'vel. 5',
+      mixS2Desc: 'Adicionar o fermento e a farinha restante aos poucos por 4 minutos.',
+      mixS3Tit: 'Descanso (puntata curta)', mixS3Vel: 'parada',
+      mixS3Desc: 'Pausa de 20 minutos para relaxamento do glúten (não é autólise: há poolish e fermento).',
+      mixS4Tit: 'Adicionar o sal', mixS4Vel: 'vel. 6',
+      mixS4Desc: 'Adicionar o sal e misturar por 2 minutos.',
+      mixS5Tit: 'Sova de força', mixS5Vel: 'vel. 8–9',
+      mixS5Desc: 'Sova por 6 minutos para ganhar força, monitorando a temperatura.',
+      mixS6Tit: 'Burst de fechamento', mixS6Vel: 'vel. 12',
+      mixS6Desc: 'Se necessário, sove em velocidade 12 por no máximo 45 segundos.',
+      // Timer do forno Fornetto
+      fornoTitulo: 'Forno — Fornetto Slim',
+      btnMostrarForno: 'Mostrar timers do forno', btnOcultarForno: 'Ocultar timers do forno',
+      fornoIntro: 'Dois timers: <b>pré-aquecimento</b> (40 min a 390°C) e <b>assamento</b> (100–150 s). O alarme toca quando o forno está pronto e nos pontos de cocção — sem queimar a napolitana.',
+      preaqTit: 'Pré-aquecimento', preaqVel: '390°C · 40 min',
+      preaqDesc: 'Deixe o Fornetto Slim aquecer por 40 minutos a 390°C antes da primeira pizza. O alarme avisa quando estiver pronto.',
+      preaqPronto: '🔥 Forno pronto! Pré-aquecido a 390°C.',
+      coccaoTit: 'Assamento', coccaoVel: '100–150 s',
+      coccaoDesc: 'Cronômetro crescente. Gire a pizza a cada ~30 s. A faixa verde marca a janela ideal de 100–150 s — observe borda e leopard spots.',
+      coccaoWait: (s) => `Assando… ${s}s (aguarde a janela de 100 s)`,
+      coccaoOk: (s) => `✅ Ponto ideal — ${s}s. Observe a borda e retire quando quiser.`,
+      coccaoOver: (s) => `⚠️ Passou de 150 s (${s}s) — risco de ressecar/queimar.`,
       cronoDefina: 'Defina o <b>início do poolish</b> e a <b>hora de assar</b> para calcular o cronograma.',
       cronoAssarCedo: '🚫 <b>Hora de assar cedo demais.</b> Não há tempo entre a massa final e o forno. Atrase a hora de assar ou adiante o início do poolish.',
       cronoMaturCurta: (d, min) => `⚠️ <b>Maturação em bloco curta (${d}).</b> Abaixo de ${min}h a massa desenvolve menos sabor e força. Considere adiantar o início do poolish.`,
@@ -871,7 +1176,7 @@
       stMassaI4: 'Adicionar o sal em velocidade 6 por 2 minutos.',
       stMassaI5: 'Sova em velocidade 8 ou 9 por 6 minutos para ganhar força, monitorando a temperatura.',
       stMassaI6: 'Caso necessário, sove em velocidade 12 por no máximo 45s.',
-      stMassaWarn: 'Temperatura final 23-24°C',
+      stMassaWarn: 'Temperatura final 19-23°C',
       stMaturTit: 'Maturação em geladeira',
       stMaturLead: 'Massa no bowl Tramontina 8,3L fechado com filme em contato + tampa. Vai para a geladeira ~30 min após a massa final. Total de maturação em bloco: {maturacao}.',
       stBolearTit: 'Bolear + Appretto',
@@ -932,7 +1237,54 @@
       subPoolish: '1 · Poolish (30% of flour · 100% hydration)', subMassaFinal: '2 · Final dough',
       divAguaGelada: 'Cold water', divFermentoSeco: 'Dry yeast', divPoolishTodo: 'Poolish (all)',
       hidraAlta: (p) => `⚠️ <b>High hydration (${p}%).</b> Above 70% the dough gets softer and stickier, requiring more kneading force and stretch &amp; fold technique to build structure. Shaping is also more delicate. Consider using very cold water and flouring the bench well.`,
-      capacidade: (g) => `🚫 <b>Total dough (${g} g) above the Halo Core capacity (2500 g).</b> Reduce the number of pizzas or the weight per ball to fit the mixer. Mixing above the limit overloads the motor and hurts gluten development.`,
+      capacidade: (g, max) => `🚫 <b>Total dough (${g} g) above the Halo Core capacity (${max} g).</b> Reduce the number of pizzas or the weight per ball to fit the mixer. Mixing above the limit overloads the motor and hurts gluten development.`,
+      loteMin: (g, min) => `⚠️ <b>Small batch (${g} g).</b> Below ~${min} g the dough sits too low in the bowl and the spiral hook can't grab it properly, kneading unevenly. Consider increasing the number of pizzas or mixing by hand.`,
+      // DDT — water temperature
+      ddtTitulo: 'Water temperature (Halo Core)',
+      ddtIntro: 'The Halo Core warms the dough through the spiral friction, but the <b>poolish</b> comes out of the fridge cold and pulls the temperature down. So we use the 4-factor rule: <b>water = (desired dough × 4) − (flour + room + friction + poolish)</b>. Final-dough target: <b>19–23°C</b>.',
+      ddtAmbiente: 'Room temperature',
+      ddtFarinha: 'Flour temperature',
+      ddtPoolish: 'Poolish temperature',
+      ddtAlvo: 'Desired dough',
+      ddtAtrito: 'Mixer friction',
+      ddtAguaLabel: 'Water temperature',
+      btnResetDDT: 'Reset to default',
+      ddtGelo: (g, total) => `Use ~<b>${g} g</b> of crushed ice in place of part of the ${total} g of water (the rest as cold water) to help hit the target.`,
+      ddtGeloZero: 'Cold tap water should be enough — no ice needed.',
+      ddtFrio: (c) => `⚠️ <b>Water too cold (${c}°C).</b> In practice, use as much ice as possible and near-freezing water. Consider chilling the flour or lowering the room temperature.`,
+      ddtQuente: (c) => `⚠️ <b>Warm water needed (${c}°C).</b> Room/flour too cold; the dough may come out below target. Use room-temperature or slightly warm water.`,
+      ddtNota: '<b>Poolish:</b> straight from the fridge it sits around 4°C — measure it if you can. It is ~46% of the dough and cools it noticeably, so the required water is usually higher than without a pre-ferment. <b>Friction:</b> the Halo Core strength knead (speed 8–9 + burst) heats the dough a lot. The default of <b>36°C</b> was calibrated on a real batch (water 2°C, room/flour 21°C, poolish 4°C → dough 20.9°C). Measure the temperature at the end of each batch and tweak the friction to fine-tune.',
+      // Mixing guide with timer
+      mixTitulo: 'Mixing guide — Halo Core',
+      btnMostrarMix: 'Show mixing guide', btnOcultarMix: 'Hide mixing guide',
+      mixIntro: 'Follow the final-dough steps on the Halo Core with the timer. Each step rings an alarm when it ends and unlocks the next one. Monitor the temperature to reach <b>19–23°C</b>.',
+      mixTotalLbl: (dur) => `Active mixing time: <b>${dur}</b> (excluding the rest)`,
+      mixStart: 'Start', mixPause: 'Pause', mixResume: 'Resume', mixReset: 'Reset',
+      mixOpcional: 'optional',
+      mixS1Tit: 'Dissolve the poolish', mixS1Vel: 'speed 4',
+      mixS1Desc: 'All the water + all the poolish in the bowl for 1 minute until well dissolved.',
+      mixS2Tit: 'Incorporate the flour', mixS2Vel: 'speed 5',
+      mixS2Desc: 'Add the yeast and the remaining flour gradually for 4 minutes.',
+      mixS3Tit: 'Rest (short puntata)', mixS3Vel: 'stopped',
+      mixS3Desc: '20-minute rest to relax the gluten (not autolysis: poolish and yeast are present).',
+      mixS4Tit: 'Add the salt', mixS4Vel: 'speed 6',
+      mixS4Desc: 'Add the salt and mix for 2 minutes.',
+      mixS5Tit: 'Strength kneading', mixS5Vel: 'speed 8–9',
+      mixS5Desc: 'Knead for 6 minutes to build strength, monitoring the temperature.',
+      mixS6Tit: 'Finishing burst', mixS6Vel: 'speed 12',
+      mixS6Desc: 'If needed, knead at speed 12 for no more than 45 seconds.',
+      // Fornetto oven timer
+      fornoTitulo: 'Oven — Fornetto Slim',
+      btnMostrarForno: 'Show oven timers', btnOcultarForno: 'Hide oven timers',
+      fornoIntro: 'Two timers: <b>preheat</b> (40 min at 390°C) and <b>bake</b> (100–150 s). The alarm rings when the oven is ready and at the baking marks — so you never burn the Neapolitan.',
+      preaqTit: 'Preheat', preaqVel: '390°C · 40 min',
+      preaqDesc: 'Let the Fornetto Slim heat up for 40 minutes at 390°C before the first pizza. The alarm rings when it is ready.',
+      preaqPronto: '🔥 Oven ready! Preheated to 390°C.',
+      coccaoTit: 'Bake', coccaoVel: '100–150 s',
+      coccaoDesc: 'Count-up timer. Rotate the pizza every ~30 s. The green band marks the ideal 100–150 s window — watch the crust and leopard spots.',
+      coccaoWait: (s) => `Baking… ${s}s (wait for the 100 s window)`,
+      coccaoOk: (s) => `✅ Sweet spot — ${s}s. Watch the crust and pull it whenever you like.`,
+      coccaoOver: (s) => `⚠️ Past 150 s (${s}s) — risk of drying out/burning.`,
       cronoDefina: 'Set the <b>poolish start</b> and the <b>baking time</b> to compute the schedule.',
       cronoAssarCedo: '🚫 <b>Baking time too early.</b> There is no time between the final dough and the oven. Push the baking time later or start the poolish earlier.',
       cronoMaturCurta: (d, min) => `⚠️ <b>Short bulk maturation (${d}).</b> Below ${min}h the dough develops less flavor and strength. Consider starting the poolish earlier.`,
@@ -952,7 +1304,7 @@
       stMassaI4: 'Add the salt at speed 6 for 2 minutes.',
       stMassaI5: 'Knead at speed 8 or 9 for 6 minutes to build strength, monitoring the temperature.',
       stMassaI6: 'If needed, knead at speed 12 for no more than 45s.',
-      stMassaWarn: 'Final temperature 23-24°C',
+      stMassaWarn: 'Final temperature 19-23°C',
       stMaturTit: 'Cold maturation',
       stMaturLead: 'Dough in the closed Tramontina 8.3L bowl with plastic film in contact + lid. Goes to the fridge ~30 min after the final dough. Total bulk maturation: {maturacao}.',
       stBolearTit: 'Balling + Appretto',
@@ -999,6 +1351,26 @@
     // nota, intro e conteúdos dependentes de idioma
     document.getElementById('comoFunciona').innerHTML = t('comoFunciona');
     document.getElementById('velIntro').innerHTML = t('velIntro');
+    document.getElementById('ddtIntro').innerHTML = t('ddtIntro');
+    document.getElementById('ddtNota').innerHTML = t('ddtNota');
+    document.getElementById('mixIntro').innerHTML = t('mixIntro');
+    const mixWrap = document.getElementById('mixWrap');
+    document.getElementById('mixToggle').textContent =
+      mixWrap.classList.contains('show') ? t('btnOcultarMix') : t('btnMostrarMix');
+    renderMix();
+    // Timers do forno (textos dinâmicos + botões)
+    document.getElementById('fornoIntro').innerHTML = t('fornoIntro');
+    if (preaq.restante > 0 || !preaq.rodando) {
+      // só reescreve a descrição se não estiver mostrando "forno pronto"
+      const preaqReady = document.getElementById('preaqTimer').classList.contains('ready');
+      document.getElementById('preaqDesc').innerHTML = preaqReady ? `<b>${t('preaqPronto')}</b>` : t('preaqDesc');
+    }
+    document.getElementById('coccaoDesc').innerHTML = t('coccaoDesc');
+    const fornoWrap = document.getElementById('fornoWrap');
+    document.getElementById('fornoToggle').textContent =
+      fornoWrap.classList.contains('show') ? t('btnOcultarForno') : t('btnMostrarForno');
+    atualizarPreaq();
+    atualizarCoccao();
     // selects de mês reconstroem com nomes traduzidos (se já populados)
     if (typeof repopularMeses === 'function') repopularMeses();
     renderVelocidades();
@@ -1024,6 +1396,11 @@
   };
   // Perda de massa no manuseio (~1%): massa teórica / rendimento real
   const LOSS = 0.0094;
+
+  // Faixa de carga da cuba da Ooni Halo Core (massa total, g).
+  // Acima do teto o motor sofre; abaixo do piso a espiral não pega bem a massa.
+  const HALO_MIN = 700;
+  const HALO_MAX = 2500;
 
   // Poolish: 30% da farinha total, 100% hidratação, 50% do fermento
   const POOLISH_FLOUR_FRAC = 0.30;
@@ -1163,16 +1540,26 @@
     document.getElementById('massaTotal').textContent = fmt(r.massaFinal);
     document.getElementById('farinhaTotal').textContent = fmt(r.farinha);
 
-    // Alerta de capacidade da Halo Core (limite 2500g de massa total)
+    // Faixa de carga da Halo Core: acima de HALO_MAX o motor sofre; abaixo de
+    // HALO_MIN a espiral bate mal (massa pouca para o gancho pegar).
     const alert = document.getElementById('capacidadeAlert');
+    const warnLote = document.getElementById('loteWarn');
     const massaEl = document.getElementById('massaTotal');
-    if (r.massaFinal > 2500) {
-      alert.innerHTML = t('capacidade', Math.round(r.massaFinal));
+    if (r.massaFinal > HALO_MAX) {
+      alert.innerHTML = t('capacidade', Math.round(r.massaFinal), HALO_MAX);
       alert.classList.add('show');
       massaEl.style.color = '#c0392b';
     } else {
       alert.classList.remove('show');
       massaEl.style.color = '';
+    }
+    if (r.massaFinal >= HALO_MIN && r.massaFinal <= HALO_MAX) {
+      warnLote.classList.remove('show');
+    } else if (r.massaFinal < HALO_MIN) {
+      warnLote.innerHTML = t('loteMin', Math.round(r.massaFinal), HALO_MIN);
+      warnLote.classList.add('show');
+    } else {
+      warnLote.classList.remove('show');
     }
 
     // Tabela principal
@@ -1208,6 +1595,62 @@
 
     // Timeline (quantidades dinâmicas)
     renderTimeline(r, discos, peso);
+
+    // Calculadora de temperatura da água: o gelo é estimado sobre a água que
+    // realmente entra na massa final (a água do poolish já foi ao frigorífico).
+    renderDDT(r.final.agua);
+  }
+
+  // ===== Temperatura da água (DDT) =====
+  // Com pré-fermento (poolish), usa-se a regra de 4 FATORES: o poolish é uma
+  // massa grande (30% da farinha + água igual) que sai da geladeira fria e
+  // puxa a temperatura final para baixo.
+  //   água = (massa desejada × 4) − (farinha + ambiente + atrito + poolish)
+  function renderDDT(aguaTotal) {
+    const ambiente = clampFloat(parseFloat(ddtAmbiente.value), 0, 45);
+    const farinha = clampFloat(parseFloat(ddtFarinha.value), 0, 45);
+    const poolishT = clampFloat(parseFloat(ddtPoolish.value), 0, 30);
+    const alvo = clampFloat(parseFloat(ddtAlvo.value), 19, 23);
+    const atrito = clampFloat(parseFloat(ddtAtrito.value), 0, 45);
+    document.getElementById('ddtAtritoVal').textContent = atrito;
+
+    // Se algum campo estiver vazio/inválido, não calcula
+    if ([ambiente, farinha, poolishT, alvo, atrito].some(v => isNaN(v))) return;
+
+    const aguaTemp = alvo * 4 - (farinha + ambiente + atrito + poolishT);
+    const aguaArred = Math.round(aguaTemp * 10) / 10;
+
+    // Estimativa de gelo sobre a ÁGUA DA MASSA FINAL (a do poolish já está fria).
+    // Quanto mais fria a água pedida em relação à torneira (assumida ~ambiente),
+    // mais gelo; usamos uma fração proporcional ao déficit térmico.
+    const totalAgua = Math.round(aguaTotal || 0);
+    let geloG = 0;
+    if (aguaArred < ambiente && totalAgua > 0) {
+      const deficit = ambiente - aguaArred;         // °C a remover
+      const frac = Math.min(0.5, deficit / 40);     // teto de 50% em gelo
+      geloG = Math.round(totalAgua * frac);
+    }
+
+    const geloHtml = geloG > 0
+      ? `<div class="gelo">${t('ddtGelo', geloG, totalAgua)}</div>`
+      : `<div class="gelo">${t('ddtGeloZero')}</div>`;
+
+    document.getElementById('ddtResult').innerHTML =
+      `<div class="cap">${t('ddtAguaLabel')}</div>
+       <div class="big">${String(aguaArred).replace('.', ',')} °C</div>
+       ${geloHtml}`;
+
+    // Avisos de valores extremos (fora do que é prático)
+    const warn = document.getElementById('ddtWarn');
+    if (aguaArred < 1) {
+      warn.innerHTML = t('ddtFrio', String(aguaArred).replace('.', ','));
+      warn.classList.add('show');
+    } else if (aguaArred > 35) {
+      warn.innerHTML = t('ddtQuente', String(aguaArred).replace('.', ','));
+      warn.classList.add('show');
+    } else {
+      warn.classList.remove('show');
+    }
   }
 
   // ===== Timeline =====
@@ -1460,6 +1903,258 @@
     btn.textContent = show ? t('btnOcultarVel') : t('btnMostrarVel');
   }
 
+  // ===== Alarme sonoro (Web Audio) — compartilhado pelos timers =====
+  let _audioCtx = null;
+  function beep(times = 2) {
+    try {
+      _audioCtx = _audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = _audioCtx;
+      if (ctx.state === 'suspended') ctx.resume();
+      for (let i = 0; i < times; i++) {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = 880;
+        const start = ctx.currentTime + i * 0.35;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.3, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.25);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.3);
+      }
+    } catch (e) { /* áudio indisponível — silencioso */ }
+  }
+
+  // ===== Guia de mistura passo a passo (com timer) =====
+  // Cada etapa: [chaveTitulo, chaveVel, chaveDesc, segundos, opcional?]
+  const MIX_STEPS = [
+    ['mixS1Tit', 'mixS1Vel', 'mixS1Desc', 60, false],
+    ['mixS2Tit', 'mixS2Vel', 'mixS2Desc', 240, false],
+    ['mixS3Tit', 'mixS3Vel', 'mixS3Desc', 1200, false],
+    ['mixS4Tit', 'mixS4Vel', 'mixS4Desc', 120, false],
+    ['mixS5Tit', 'mixS5Vel', 'mixS5Desc', 360, false],
+    ['mixS6Tit', 'mixS6Vel', 'mixS6Desc', 45, true]
+  ];
+  // Estado do timer: qual etapa está ativa, segundos restantes, rodando?
+  let mixState = { idx: -1, restante: 0, rodando: false, tick: null, done: [] };
+
+  function mmss(s) {
+    s = Math.max(0, Math.round(s));
+    const m = Math.floor(s / 60);
+    const seg = s % 60;
+    return `${String(m).padStart(2, '0')}:${String(seg).padStart(2, '0')}`;
+  }
+
+  function renderMix() {
+    // tempo ativo total (soma de tudo menos a pausa da etapa 3)
+    const ativoSeg = MIX_STEPS.reduce((acc, st, i) => acc + (i === 2 ? 0 : st[3]), 0);
+    document.getElementById('mixTotal').innerHTML = t('mixTotalLbl', durSeg(ativoSeg));
+
+    let html = '';
+    MIX_STEPS.forEach((st, i) => {
+      const [titK, velK, descK, seg, opcional] = st;
+      const ativa = mixState.idx === i;
+      const done = mixState.done.includes(i);
+      const restante = ativa ? mixState.restante : seg;
+      const rodando = ativa && mixState.rodando;
+
+      let btns;
+      if (!ativa || (!rodando && restante === seg)) {
+        btns = `<button class="primary" onclick="mixStart(${i})">${t('mixStart')}</button>`;
+      } else if (rodando) {
+        btns = `<button onclick="mixPause()">${t('mixPause')}</button>
+                <button onclick="mixReset(${i})">${t('mixReset')}</button>`;
+      } else {
+        btns = `<button class="primary" onclick="mixStart(${i})">${t('mixResume')}</button>
+                <button onclick="mixReset(${i})">${t('mixReset')}</button>`;
+      }
+
+      html += `
+        <div class="mix-step ${ativa ? 'active' : ''} ${done ? 'done' : ''}">
+          <div class="mix-step-top">
+            <span class="mtitle">${i + 1}. ${t(titK)}<span class="mvel">${t(velK)}</span></span>
+            ${opcional ? `<span class="mix-optional">(${t('mixOpcional')})</span>` : ''}
+          </div>
+          <p class="mdesc">${t(descK)}</p>
+          <div class="mix-timer">
+            <span class="mix-clock">${mmss(restante)}</span>
+            ${btns}
+          </div>
+        </div>`;
+    });
+    document.getElementById('mixSteps').innerHTML = html;
+  }
+
+  // Duração em segundos -> "20 min", "6 min", "1 min 45 s"
+  function durSeg(s) {
+    const m = Math.floor(s / 60);
+    const seg = s % 60;
+    if (m && seg) return `${m} min ${seg} s`;
+    if (m) return `${m} min`;
+    return `${seg} s`;
+  }
+
+  function mixStart(i) {
+    // pausa qualquer timer anterior
+    if (mixState.tick) { clearInterval(mixState.tick); mixState.tick = null; }
+    // se trocou de etapa (ou primeira vez), zera o restante para a duração cheia
+    if (mixState.idx !== i || mixState.restante <= 0) {
+      mixState.restante = MIX_STEPS[i][3];
+    }
+    mixState.idx = i;
+    mixState.rodando = true;
+    mixState.tick = setInterval(() => {
+      mixState.restante -= 1;
+      if (mixState.restante <= 0) {
+        clearInterval(mixState.tick);
+        mixState.tick = null;
+        mixState.rodando = false;
+        mixState.restante = 0;
+        if (!mixState.done.includes(i)) mixState.done.push(i);
+        beep(3);
+      }
+      atualizarRelogioMix();
+    }, 1000);
+    renderMix();
+  }
+
+  function mixPause() {
+    if (mixState.tick) { clearInterval(mixState.tick); mixState.tick = null; }
+    mixState.rodando = false;
+    renderMix();
+  }
+
+  function mixReset(i) {
+    if (mixState.tick) { clearInterval(mixState.tick); mixState.tick = null; }
+    mixState.rodando = false;
+    mixState.restante = MIX_STEPS[i][3];
+    mixState.done = mixState.done.filter(x => x !== i);
+    renderMix();
+  }
+
+  // Atualiza só o relógio da etapa ativa sem re-renderizar tudo (a cada segundo)
+  function atualizarRelogioMix() {
+    if (mixState.rodando || mixState.restante === 0) {
+      const clock = document.querySelector('.mix-step.active .mix-clock');
+      if (clock) clock.textContent = mmss(mixState.restante);
+      if (mixState.restante === 0) renderMix();  // etapa terminou -> atualiza botões/estado
+    }
+  }
+
+  function toggleMix() {
+    const wrap = document.getElementById('mixWrap');
+    const btn = document.getElementById('mixToggle');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    btn.textContent = show ? t('btnOcultarMix') : t('btnMostrarMix');
+    if (show) renderMix();
+  }
+
+  // ===== Timers do forno Fornetto =====
+  const PREAQ_SEG = 40 * 60;      // 40 min de pré-aquecimento
+  const COCCAO_MIN = 100;         // janela ideal: início (s)
+  const COCCAO_MAX = 150;         // janela ideal: fim (s)
+  const COCCAO_BAR = 180;         // total da barra de progresso (s)
+
+  // Pré-aquecimento (regressivo)
+  let preaq = { restante: PREAQ_SEG, rodando: false, tick: null };
+  function preaqToggle() {
+    if (preaq.rodando) { preaqPause(); return; }
+    if (preaq.restante <= 0) preaq.restante = PREAQ_SEG;
+    preaq.rodando = true;
+    document.getElementById('preaqTimer').classList.add('running');
+    document.getElementById('preaqTimer').classList.remove('ready');
+    preaq.tick = setInterval(() => {
+      preaq.restante -= 1;
+      if (preaq.restante <= 0) {
+        preaq.restante = 0;
+        preaqPause();
+        document.getElementById('preaqTimer').classList.add('ready');
+        beep(4);
+        document.getElementById('preaqDesc').innerHTML = `<b>${t('preaqPronto')}</b>`;
+      }
+      atualizarPreaq();
+    }, 1000);
+    atualizarPreaq();
+  }
+  function preaqPause() {
+    if (preaq.tick) { clearInterval(preaq.tick); preaq.tick = null; }
+    preaq.rodando = false;
+    document.getElementById('preaqTimer').classList.remove('running');
+    atualizarPreaq();
+  }
+  function preaqReset() {
+    preaqPause();
+    preaq.restante = PREAQ_SEG;
+    const timer = document.getElementById('preaqTimer');
+    timer.classList.remove('ready');
+    document.getElementById('preaqDesc').innerHTML = t('preaqDesc');
+    atualizarPreaq();
+  }
+  function atualizarPreaq() {
+    document.getElementById('preaqClock').textContent = mmss(preaq.restante);
+    document.getElementById('preaqBtn').textContent = preaq.rodando ? t('mixPause') : t('mixStart');
+  }
+
+  // Cocção (progressivo, com marcações em 100s e 150s)
+  let coccao = { seg: 0, rodando: false, tick: null, beep100: false, beep150: false };
+  function coccaoToggle() {
+    if (coccao.rodando) { coccaoPause(); return; }
+    coccao.rodando = true;
+    document.getElementById('coccaoTimer').classList.add('running');
+    coccao.tick = setInterval(() => {
+      coccao.seg += 1;
+      if (coccao.seg === COCCAO_MIN && !coccao.beep100) { coccao.beep100 = true; beep(2); }
+      if (coccao.seg === COCCAO_MAX && !coccao.beep150) { coccao.beep150 = true; beep(3); }
+      atualizarCoccao();
+    }, 1000);
+    atualizarCoccao();
+  }
+  function coccaoPause() {
+    if (coccao.tick) { clearInterval(coccao.tick); coccao.tick = null; }
+    coccao.rodando = false;
+    document.getElementById('coccaoTimer').classList.remove('running');
+    atualizarCoccao();
+  }
+  function coccaoReset() {
+    coccaoPause();
+    coccao.seg = 0; coccao.beep100 = false; coccao.beep150 = false;
+    atualizarCoccao();
+  }
+  function atualizarCoccao() {
+    const s = coccao.seg;
+    document.getElementById('coccaoClock').textContent = mmss(s);
+    document.getElementById('coccaoBtn').textContent = coccao.rodando ? t('mixPause') : t('mixStart');
+
+    // barra de progresso (0..COCCAO_BAR)
+    const fill = document.getElementById('coccaoFill');
+    fill.style.width = Math.min(100, (s / COCCAO_BAR) * 100) + '%';
+    fill.style.background = s > COCCAO_MAX ? '#c0392b' : 'var(--orange)';
+
+    // status textual conforme a janela
+    const status = document.getElementById('coccaoStatus');
+    if (s < COCCAO_MIN) {
+      status.className = 'coccao-status wait';
+      status.textContent = t('coccaoWait', s);
+    } else if (s <= COCCAO_MAX) {
+      status.className = 'coccao-status ok';
+      status.textContent = t('coccaoOk', s);
+    } else {
+      status.className = 'coccao-status over';
+      status.textContent = t('coccaoOver', s);
+    }
+  }
+
+  function toggleForno() {
+    const wrap = document.getElementById('fornoWrap');
+    const btn = document.getElementById('fornoToggle');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    btn.textContent = show ? t('btnOcultarForno') : t('btnMostrarForno');
+    if (show) { atualizarPreaq(); atualizarCoccao(); }
+  }
+
   // Imprime apenas a tabela de velocidades (independente da receita e do cronograma)
   function imprimirVelocidades() {
     const wrap = document.getElementById('velocidadesWrap');
@@ -1577,6 +2272,50 @@
   pesoNum.addEventListener('input', () => syncFromNum(pesoNum, pesoRange));
   hidraRange.addEventListener('input', () => syncFromRange(hidraRange, hidraNum));
   hidraNum.addEventListener('input', () => syncFromNum(hidraNum, hidraRange));
+
+  // ===== Controles da calculadora de temperatura da água (DDT) =====
+  const ddtAmbiente = document.getElementById('ddtAmbiente');
+  const ddtFarinha = document.getElementById('ddtFarinha');
+  const ddtPoolish = document.getElementById('ddtPoolish');
+  const ddtAlvo = document.getElementById('ddtAlvo');
+  const ddtAtrito = document.getElementById('ddtAtrito');
+
+  function salvarDDT() {
+    try {
+      localStorage.setItem('pizzaDDT', JSON.stringify({
+        ambiente: ddtAmbiente.value, farinha: ddtFarinha.value,
+        poolish: ddtPoolish.value, alvo: ddtAlvo.value, atrito: ddtAtrito.value
+      }));
+    } catch (e) {}
+  }
+  [ddtAmbiente, ddtFarinha, ddtPoolish, ddtAlvo, ddtAtrito].forEach(el => {
+    el.addEventListener('input', () => { salvarDDT(); render(); });
+  });
+  // Valores iniciais padrão do card DDT (fonte única para init e reset)
+  const DDT_PADRAO = { ambiente: '21', farinha: '21', poolish: '4', alvo: '21', atrito: '36' };
+
+  (function initDDT() {
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem('pizzaDDT')); } catch (e) {}
+    if (saved) {
+      if (saved.ambiente != null) ddtAmbiente.value = saved.ambiente;
+      if (saved.farinha != null) ddtFarinha.value = saved.farinha;
+      if (saved.poolish != null) ddtPoolish.value = saved.poolish;
+      if (saved.alvo != null) ddtAlvo.value = saved.alvo;
+      if (saved.atrito != null) ddtAtrito.value = saved.atrito;
+    }
+  })();
+
+  // Restaura os valores iniciais padrão do card de temperatura da água
+  function resetDDT() {
+    ddtAmbiente.value = DDT_PADRAO.ambiente;
+    ddtFarinha.value = DDT_PADRAO.farinha;
+    ddtPoolish.value = DDT_PADRAO.poolish;
+    ddtAlvo.value = DDT_PADRAO.alvo;
+    ddtAtrito.value = DDT_PADRAO.atrito;
+    salvarDDT();
+    render();
+  }
 
   // Controles do cronograma: início do poolish, hora de assar, appretto
   const inicioDia = document.getElementById('inicioDia');
