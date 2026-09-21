@@ -1,7 +1,7 @@
 // Service Worker — cache offline da Calculadora de Massa
 // Estratégia: cache-first para os arquivos do app (tudo local, sem rede).
 
-const CACHE = 'pizza-massa-v2';
+const CACHE = 'pizza-massa-v10';
 const ASSETS = [
   './',
   './index.html',
