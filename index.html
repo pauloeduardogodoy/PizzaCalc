@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Calculadora de Massa — Pizza Napolitana</title>
+<title>PizzaCalc — Pizza Napolitana</title>
 
 <!-- PWA -->
 <link rel="manifest" href="./manifest.json">
@@ -11,7 +11,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Pizza Massa">
+<meta name="apple-mobile-web-app-title" content="PizzaCalc">
 <link rel="icon" href="./favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="./icon-192.png">
 
@@ -145,6 +145,43 @@
   }
   .wake-btn:disabled { opacity: 0.5; cursor: not-allowed; }
   @media print { .wake-btn { display: none !important; } }
+
+  /* Barra de abas de navegação */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    padding: 8px 0;
+  }
+  .tab-btn {
+    flex: 1;
+    min-width: 0;
+    padding: 9px 8px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--gray);
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .tab-btn:hover { background: var(--orange-light); border-color: var(--orange); }
+  .tab-btn.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+  /* Telas estreitas: compacta as abas para os 5 rótulos caberem numa linha */
+  @media (max-width: 560px) {
+    .tabs { gap: 4px; }
+    .tab-btn { padding: 8px 4px; font-size: 0.74rem; }
+  }
+  /* Só a aba ativa é exibida */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
 
   .card {
     background: #fff;
@@ -543,6 +580,8 @@
   .vel-table tr.vel-key td { background: var(--orange-light); }
 
   /* Calculadora de temperatura da água (DDT) */
+  #ddtWrap { display: none; }
+  #ddtWrap.show { display: block; }
   .ddt-intro { font-size: 0.86rem; color: var(--gray); line-height: 1.45; margin: 0 0 16px; }
   .ddt-intro b { color: var(--dark); }
   /* Telas grandes: as 4 caixas de temperatura numa linha (4 colunas);
@@ -787,6 +826,18 @@
   .fornada .f-atrito { font-weight: 700; color: var(--orange); }
   @media print { #diarioCard { display: none !important; } }
 
+  /* Molho — The Ultimate Sauce */
+  /* última linha da tabela com borda pontilhada; o passo a passo não repete a linha */
+  #molhoTbody tr:last-child td { border-bottom: 1px dashed var(--line); }
+  .molho-passos { margin-top: 6px; padding-top: 6px; }
+  .molho-passos-tit {
+    font-weight: 700; color: var(--orange);
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .molho-passos ol { margin: 0; padding-left: 20px; }
+  .molho-passos ol li { font-size: 0.9rem; color: #333; margin-bottom: 6px; line-height: 1.45; }
+
   /* Painel de planejamento do cronograma */
   .plan-ctrl {
     margin: 4px 0 14px;
@@ -875,6 +926,11 @@
     body { padding: 0; font-size: 11px; }
     .wrap { max-width: 100%; }
 
+    /* Na impressão, todas as abas ficam visíveis (a navegação some).
+       Os modos de impressão escondem os cards que não interessam. */
+    .tabs { display: none !important; }
+    .tab-panel { display: block !important; }
+
     /* Esconde controles e botões sempre na impressão */
     .controls-card, .btns { display: none !important; }
     .lang-switcher { display: none !important; }
@@ -936,6 +992,7 @@
     body.print-cronograma .controls-card,
     body.print-cronograma #cardIngredientes,
     body.print-cronograma #cardDivisao,
+    body.print-cronograma #molhoCard,
     body.print-cronograma footer { display: none !important; }
     body.print-cronograma #timelineCard {
       break-before: auto;
@@ -990,6 +1047,7 @@
     body.print-velocidades .controls-card,
     body.print-velocidades #cardIngredientes,
     body.print-velocidades #cardDivisao,
+    body.print-velocidades #molhoCard,
     body.print-velocidades #timelineCard,
     body.print-velocidades footer { display: none !important; }
     body.print-velocidades #velocidadesCard {
@@ -1010,7 +1068,7 @@
 <div class="wrap">
   <header>
     <div class="header-top">
-      <h1><img src="icon-512.png" alt="Ícone Pizza"> <span data-i18n="appTitle">Calculadora de Massa</span></h1>
+      <h1><img src="icon-512.png" alt="Ícone Pizza"> <span data-i18n="appTitle">PizzaCalc</span></h1>
       <div class="lang-switcher">
         <button id="wakeToggle" class="wake-btn" onclick="toggleWakeLock()" aria-pressed="false" title="Manter tela ligada">
           <span class="wake-dot"></span>
@@ -1092,7 +1150,7 @@
     </div>
 
     <div class="btns">
-      <button class="primary" onclick="setPreset(6,280,67)" data-i18n="btnReceitaPadrao">Receita padrão (6 × 280g · 67%)</button>
+      <button class="primary" onclick="receitaPadrao()" data-i18n="btnReceitaPadrao">Receita padrão (6 × 280g · 67%)</button>
       <button onclick="imprimirReceita()" data-i18n="btnImprimirReceita">Imprimir receita</button>
       <button onclick="imprimirTudo()" data-i18n="btnImprimirTudo">Imprimir tudo</button>
     </div>
@@ -1101,6 +1159,18 @@
     <div class="warn-box" id="loteWarn"></div>
     <div class="alert-box" id="capacidadeAlert"></div>
   </div>
+
+  <!-- Barra de abas -->
+  <nav class="tabs" id="tabs">
+    <button class="tab-btn" data-tab="receita" onclick="setTab('receita')" data-i18n="tabReceita">Receita</button>
+    <button class="tab-btn" data-tab="preparo" onclick="setTab('preparo')" data-i18n="tabPreparo">Preparo</button>
+    <button class="tab-btn" data-tab="cronograma" onclick="setTab('cronograma')" data-i18n="tabCronograma">Cronograma</button>
+    <button class="tab-btn" data-tab="diario" onclick="setTab('diario')" data-i18n="tabDiario">Diário</button>
+    <button class="tab-btn" data-tab="referencia" onclick="setTab('referencia')" data-i18n="tabReferencia">Referência</button>
+  </nav>
+
+  <!-- ABA: Receita -->
+  <div class="tab-panel" data-tab="receita">
 
   <!-- Ingredientes -->
   <div class="card" id="cardIngredientes">
@@ -1123,9 +1193,37 @@
     </table>
   </div>
 
+  <!-- Molho — The Ultimate Sauce -->
+  <div class="card" id="molhoCard">
+    <h2 data-i18n="molhoTitulo">Molho — The Ultimate Sauce</h2>
+    <p class="ddt-intro" id="molhoIntro"></p>
+    <table>
+      <thead>
+        <tr><th data-i18n="molhoThIngred">Ingrediente</th><th style="text-align:right" data-i18n="molhoThQtd">Quantidade</th></tr>
+      </thead>
+      <tbody id="molhoTbody"></tbody>
+    </table>
+    <div class="molho-passos">
+      <div class="molho-passos-tit" data-i18n="molhoPassosTit">Passo a passo</div>
+      <ol id="molhoPassos"></ol>
+    </div>
+    <div class="fixed-note" id="molhoNota"></div>
+  </div>
+
+  </div><!-- /ABA Receita -->
+
+  <!-- ABA: Preparo -->
+  <div class="tab-panel" data-tab="preparo">
+
   <!-- Temperatura da água (DDT) -->
   <div class="card" id="ddtCard">
-    <h2 data-i18n="ddtTitulo">Temperatura da água (Halo Core)</h2>
+    <div class="timeline-head">
+      <h2 style="margin:0" data-i18n="ddtTitulo">Temperatura da água (Halo Core)</h2>
+    </div>
+    <div class="btns" style="margin-top:12px">
+      <button class="primary" id="ddtToggle" onclick="toggleDDT()" data-i18n="btnMostrarDDT">Mostrar temperatura</button>
+    </div>
+    <div id="ddtWrap">
     <p class="ddt-intro" id="ddtIntro"></p>
     <div class="ddt-grid">
       <div class="ddt-field">
@@ -1167,6 +1265,7 @@
       <button onclick="resetDDT()" data-i18n="btnResetDDT">Restaurar padrão</button>
     </div>
     <div class="fixed-note" id="ddtNota"></div>
+    </div><!-- /ddtWrap -->
   </div>
 
   <!-- Guia de mistura passo a passo (com timer) -->
@@ -1227,6 +1326,11 @@
     </div>
   </div>
 
+  </div><!-- /ABA Preparo -->
+
+  <!-- ABA: Diário -->
+  <div class="tab-panel" data-tab="diario">
+
   <!-- Diário de fornadas -->
   <div class="card" id="diarioCard">
     <div class="timeline-head">
@@ -1253,6 +1357,11 @@
       </div>
     </div>
   </div>
+
+  </div><!-- /ABA Diário -->
+
+  <!-- ABA: Cronograma -->
+  <div class="tab-panel" data-tab="cronograma">
 
   <!-- Cronograma (timeline) -->
   <div class="card" id="timelineCard">
@@ -1298,6 +1407,11 @@
     </div>
   </div>
 
+  </div><!-- /ABA Cronograma -->
+
+  <!-- ABA: Referência -->
+  <div class="tab-panel" data-tab="referencia">
+
   <!-- Tabela de velocidades da Halo Core -->
   <div class="card" id="velocidadesCard">
     <div class="timeline-head">
@@ -1318,6 +1432,8 @@
     </div>
   </div>
 
+  </div><!-- /ABA Referência -->
+
   <footer id="footer" data-i18n="footer">
     Baseado no cronograma validado • Maturação ~53h • Ooni Halo Core • Fornetto Slim 390°C
   </footer>
@@ -1329,11 +1445,34 @@
 
   const I18N = {
     pt: {
-      appTitle: 'Calculadora de Massa',
+      appTitle: 'PizzaCalc',
       appSubtitle: 'Pizza Napolitana<br>Venturelli 95/5 • Hidratação 67% • Poolish 30%',
       wakeOff: 'Manter tela ligada',
       wakeOn: 'Tela sempre ligada',
       wakeIndisponivel: 'Tela sempre ligada (indisponível neste navegador)',
+      // Abas de navegação
+      tabReceita: 'Receita', tabPreparo: 'Preparo', tabCronograma: 'Cronograma',
+      tabDiario: 'Diário', tabReferencia: 'Referência',
+      // Molho — The Ultimate Sauce
+      molhoTitulo: 'Molho — The Ultimate Sauce',
+      molhoIntro: 'Molho rústico de tomate pelado, cru (sem cozinhar). Quantidades escalam com o nº de discos.',
+      molhoThIngred: 'Ingrediente', molhoThQtd: 'Quantidade',
+      molhoNota: 'Rende para <b>{discos} disco(s)</b>. Base da receita: 4 discos = 1 lata de 400 g de tomate pelado. Ajuste sal, azeite e manjericão a gosto.',
+      molhoPassosTit: 'Passo a passo',
+      // ingredientes do molho [nome, quantidade-base-para-4-discos, unidade, escala?]
+      molhoIngTomate: 'Tomate pelado italiano',
+      molhoIngAlho: 'Alho cru', molhoIngManjericao: 'Manjericão fresco',
+      molhoIngAzeite: 'Azeite extra virgem', molhoIngOregano: 'Orégano',
+      molhoIngSal: 'Sal', molhoIngPimenta: 'Pimenta do reino',
+      molhoQtdAlho: (d) => `${d} ${(d === '1' || /^[¼½¾]$/.test(d)) ? 'dente' : 'dentes'}`,
+      molhoQtdManjericao: (min, max) => `${min}–${max} folhas`,
+      molhoQtdAzeite: 'a gosto', molhoQtdOregano: 'um punhado',
+      molhoQtdSal: 'uma pitada', molhoQtdPimenta: 'uma pitada',
+      molhoP1: 'Pique os tomates grosseiramente ou esprema-os com as mãos, para um molho rústico.',
+      molhoP2: 'Amasse bem o alho.',
+      molhoP3: 'Pique o manjericão grosseiramente ou rasgue as folhas com as mãos.',
+      molhoP4: 'Junte todos os ingredientes num bowl, misture bem, cubra com filme plástico ou tampa e reserve na geladeira.',
+      molhoP5: 'Pronto! O molho mais top para a sua pizza napolitana. 🍅',
       ajusteProducao: 'Ajuste a produção',
       numDiscos: 'Número de discos',
       unitDiscos: 'discos',
@@ -1383,6 +1522,7 @@
       loteMin: (g, min) => `⚠️ <b>Lote pequeno (${g} g).</b> Abaixo de ~${min} g a massa fica baixa demais na cuba e a espiral não "pega" bem o gancho, sovando de forma irregular. Considere aumentar o número de discos ou misturar à mão.`,
       // DDT — temperatura da água
       ddtTitulo: 'Temperatura da água (Halo Core)',
+      btnMostrarDDT: 'Mostrar temperatura', btnOcultarDDT: 'Ocultar temperatura',
       ddtIntro: 'A Halo Core aquece a massa pelo atrito da espiral, mas o <b>poolish</b> sai da geladeira frio e puxa a temperatura para baixo. Por isso usamos a regra de 4 fatores: <b>água = (massa desejada × 4) − (farinha + ambiente + atrito + poolish)</b>. Alvo da massa final: <b>19–23°C</b>.',
       ddtAmbiente: 'Ambiente',
       ddtFarinha: 'Farinha',
@@ -1505,11 +1645,33 @@
       vuBurst: 'Burst de fechamento', vuMaxima: 'Máxima'
     },
     en: {
-      appTitle: 'Dough Calculator',
+      appTitle: 'PizzaCalc',
       appSubtitle: 'Neapolitan Pizza<br>Venturelli 95/5 • 67% Hydration • Poolish 30%',
       wakeOff: 'Keep screen on',
       wakeOn: 'Screen stays on',
       wakeIndisponivel: 'Keep screen on (not supported in this browser)',
+      // Navigation tabs
+      tabReceita: 'Recipe', tabPreparo: 'Prep', tabCronograma: 'Schedule',
+      tabDiario: 'Log', tabReferencia: 'Reference',
+      // Sauce — The Ultimate Sauce
+      molhoTitulo: 'Sauce — The Ultimate Sauce',
+      molhoIntro: 'Rustic raw (uncooked) peeled-tomato sauce. Quantities scale with the number of pizzas.',
+      molhoThIngred: 'Ingredient', molhoThQtd: 'Quantity',
+      molhoNota: 'Yields for <b>{discos} pizza(s)</b>. Recipe base: 4 pizzas = one 400 g can of peeled tomatoes. Adjust salt, oil and basil to taste.',
+      molhoPassosTit: 'Step by step',
+      molhoIngTomate: 'Italian peeled tomatoes',
+      molhoIngAlho: 'Raw garlic', molhoIngManjericao: 'Fresh basil',
+      molhoIngAzeite: 'Extra virgin olive oil', molhoIngOregano: 'Oregano',
+      molhoIngSal: 'Salt', molhoIngPimenta: 'Black pepper',
+      molhoQtdAlho: (d) => `${d} ${(d === '1' || /^[¼½¾]$/.test(d)) ? 'clove' : 'cloves'}`,
+      molhoQtdManjericao: (min, max) => `${min}–${max} leaves`,
+      molhoQtdAzeite: 'to taste', molhoQtdOregano: 'a handful',
+      molhoQtdSal: 'a pinch', molhoQtdPimenta: 'a pinch',
+      molhoP1: 'Roughly chop the tomatoes or crush them by hand, for a rustic sauce.',
+      molhoP2: 'Crush the garlic well.',
+      molhoP3: 'Roughly chop the basil or tear the leaves by hand.',
+      molhoP4: 'Combine everything in a bowl, mix well, cover with plastic film or a lid and keep in the fridge.',
+      molhoP5: 'Done! The ultimate sauce for your Neapolitan pizza. 🍅',
       ajusteProducao: 'Adjust the batch',
       numDiscos: 'Number of pizzas',
       unitDiscos: 'pizzas',
@@ -1556,6 +1718,7 @@
       loteMin: (g, min) => `⚠️ <b>Small batch (${g} g).</b> Below ~${min} g the dough sits too low in the bowl and the spiral hook can't grab it properly, kneading unevenly. Consider increasing the number of pizzas or mixing by hand.`,
       // DDT — water temperature
       ddtTitulo: 'Water temperature (Halo Core)',
+      btnMostrarDDT: 'Show temperature', btnOcultarDDT: 'Hide temperature',
       ddtIntro: 'The Halo Core warms the dough through the spiral friction, but the <b>poolish</b> comes out of the fridge cold and pulls the temperature down. So we use the 4-factor rule: <b>water = (desired dough × 4) − (flour + room + friction + poolish)</b>. Final-dough target: <b>19–23°C</b>.',
       ddtAmbiente: 'Room',
       ddtFarinha: 'Flour',
@@ -1697,6 +1860,9 @@
     document.getElementById('velIntro').innerHTML = t('velIntro');
     document.getElementById('ddtIntro').innerHTML = t('ddtIntro');
     document.getElementById('ddtNota').innerHTML = t('ddtNota');
+    const ddtWrap = document.getElementById('ddtWrap');
+    document.getElementById('ddtToggle').textContent =
+      ddtWrap.classList.contains('show') ? t('btnOcultarDDT') : t('btnMostrarDDT');
     document.getElementById('mixIntro').innerHTML = t('mixIntro');
     const mixWrap = document.getElementById('mixWrap');
     document.getElementById('mixToggle').textContent =
@@ -1956,6 +2122,116 @@
     // Calculadora de temperatura da água: o gelo é estimado sobre a água que
     // realmente entra na massa final (a água do poolish já foi ao frigorífico).
     renderDDT(r.final.agua);
+
+    // Molho (quantidades escalam com o nº de discos)
+    renderMolho(discos);
+  }
+
+  // ===== Molho — The Ultimate Sauce =====
+  // Base da receita: 4 discos. Tomate, alho e manjericão escalam com o nº de
+  // discos; azeite/orégano/sal/pimenta são "a gosto" e não mudam.
+  const MOLHO_BASE_DISCOS = 4;
+  const MOLHO_TOMATE_G = 400;      // 1 lata de 400 g para 4 discos
+  const MOLHO_ALHO_DENTES = 0.5;   // meio dente para 4 discos
+  const MOLHO_MANJ_MIN = 10;       // 10–20 folhas para 4 discos
+  const MOLHO_MANJ_MAX = 20;
+
+  // Formata número em pt/en com vírgula/ponto e sem casas desnecessárias
+  function numFmt(n) {
+    const s = (Math.round(n * 100) / 100).toString();
+    return LANG === 'en' ? s : s.replace('.', ',');
+  }
+
+  // Formata dentes de alho como fração (múltiplos de 1/4): "¼", "½", "¾", "1", "1 ¼"…
+  function fracDente(n) {
+    const inteiro = Math.floor(n);
+    const resto = Math.round((n - inteiro) * 4);   // 0..4 quartos
+    const simb = ['', '¼', '½', '¾'][resto];
+    if (resto === 4) return String(inteiro + 1);   // segurança
+    if (inteiro === 0) return simb || '0';
+    return simb ? `${inteiro} ${simb}` : String(inteiro);
+  }
+
+  function renderMolho(discos) {
+    const fator = discos / MOLHO_BASE_DISCOS;
+
+    const tomateG = Math.round(MOLHO_TOMATE_G * fator);
+    const latas = Math.round((tomateG / 400) * 2) / 2;   // equivalente em latas de 400 g
+    const latasTxt = numFmt(latas);
+
+    // Alho: arredonda para 1/4 de dente (prático de medir)
+    const alhoDentes = Math.round(MOLHO_ALHO_DENTES * fator * 4) / 4;
+    // Manjericão: escala a faixa 20–30 folhas, arredondando para inteiros
+    const manjMin = Math.round(MOLHO_MANJ_MIN * fator);
+    const manjMax = Math.round(MOLHO_MANJ_MAX * fator);
+
+    const rows = [
+      [t('molhoIngTomate'), `${tomateG} g <span style="color:var(--gray);font-weight:400">(${latasTxt} lata${latas === 1 ? '' : 's'})</span>`],
+      [t('molhoIngAlho'), t('molhoQtdAlho', fracDente(alhoDentes))],
+      [t('molhoIngManjericao'), t('molhoQtdManjericao', manjMin, manjMax)],
+      [t('molhoIngAzeite'), t('molhoQtdAzeite')],
+      [t('molhoIngOregano'), t('molhoQtdOregano')],
+      [t('molhoIngSal'), t('molhoQtdSal')],
+      [t('molhoIngPimenta'), t('molhoQtdPimenta')]
+    ];
+    document.getElementById('molhoTbody').innerHTML = rows.map(
+      ([nome, qtd]) => `<tr><td>${nome}</td><td class="qty" style="font-weight:600">${qtd}</td></tr>`
+    ).join('');
+
+    const passos = ['molhoP1', 'molhoP2', 'molhoP3', 'molhoP4', 'molhoP5'];
+    document.getElementById('molhoPassos').innerHTML =
+      passos.map(k => `<li>${t(k)}</li>`).join('');
+
+    document.getElementById('molhoNota').innerHTML =
+      t('molhoNota').replace('{discos}', String(discos));
+  }
+
+  // ===== Abas de navegação =====
+  function setTab(nome) {
+    document.querySelectorAll('.tab-btn').forEach(b =>
+      b.classList.toggle('active', b.getAttribute('data-tab') === nome));
+    document.querySelectorAll('.tab-panel').forEach(p =>
+      p.classList.toggle('active', p.getAttribute('data-tab') === nome));
+  }
+  (function initTab() {
+    // Sempre inicia na aba Receita ao abrir/recarregar (não restaura a última).
+    setTab('receita');
+  })();
+
+  // ===== Estado dos blocos colapsáveis (aberto por padrão + persistência) =====
+  // Salva se um bloco está aberto. Chave no localStorage: 'pizzaOpen_<id>'.
+  function saveWrap(id, aberto) {
+    try { localStorage.setItem('pizzaOpen_' + id, aberto ? '1' : '0'); } catch (e) {}
+  }
+  // Restaura o estado de um bloco. Sem preferência salva => ABERTO por padrão.
+  function restoreWrap(wrapId, btnId, txtOcultar, txtMostrar) {
+    let pref = null;
+    try { pref = localStorage.getItem('pizzaOpen_' + wrapId); } catch (e) {}
+    const aberto = (pref === null) ? true : (pref === '1');
+    const wrap = document.getElementById(wrapId);
+    const btn = document.getElementById(btnId);
+    if (!wrap) return;
+    wrap.classList.toggle('show', aberto);
+    if (btn) btn.textContent = aberto ? t(txtOcultar) : t(txtMostrar);
+  }
+  // Abre/fecha todos os blocos conforme a preferência (chamado no init e na troca de idioma).
+  function restoreWraps() {
+    restoreWrap('ddtWrap', 'ddtToggle', 'btnOcultarDDT', 'btnMostrarDDT');
+    restoreWrap('mixWrap', 'mixToggle', 'btnOcultarMix', 'btnMostrarMix');
+    restoreWrap('fornoWrap', 'fornoToggle', 'btnOcultarForno', 'btnMostrarForno');
+    restoreWrap('timelineWrap', 'tlToggle', 'btnOcultarCrono', 'btnMostrarCrono');
+    restoreWrap('velocidadesWrap', 'velToggle', 'btnOcultarVel', 'btnMostrarVel');
+    restoreWrap('diarioWrap', 'diarioToggle', 'btnOcultarDiario', 'btnMostrarDiario');
+  }
+
+  function toggleDDT() {
+    const wrap = document.getElementById('ddtWrap');
+    const btn = document.getElementById('ddtToggle');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    btn.textContent = show ? t('btnOcultarDDT') : t('btnMostrarDDT');
+    saveWrap('ddtWrap', show);
+    if (show) render();
   }
 
   // ===== Temperatura da água (DDT) =====
@@ -2240,6 +2516,7 @@
     const show = !wrap.classList.contains('show');
     wrap.classList.toggle('show', show);
     btn.textContent = show ? t('btnOcultarCrono') : t('btnMostrarCrono');
+    saveWrap('timelineWrap', show);
   }
 
   // ===== Tabela de velocidades =====
@@ -2258,6 +2535,7 @@
     const show = !wrap.classList.contains('show');
     wrap.classList.toggle('show', show);
     btn.textContent = show ? t('btnOcultarVel') : t('btnMostrarVel');
+    saveWrap('velocidadesWrap', show);
   }
 
   // ===== Alarme sonoro (Web Audio) — compartilhado pelos timers =====
@@ -2432,6 +2710,7 @@
     const show = !wrap.classList.contains('show');
     wrap.classList.toggle('show', show);
     btn.textContent = show ? t('btnOcultarMix') : t('btnMostrarMix');
+    saveWrap('mixWrap', show);
     if (show) renderMix();
   }
 
@@ -2581,6 +2860,7 @@
     const show = !wrap.classList.contains('show');
     wrap.classList.toggle('show', show);
     btn.textContent = show ? t('btnOcultarForno') : t('btnMostrarForno');
+    saveWrap('fornoWrap', show);
     if (show) { atualizarPreaq(); atualizarCoccao(); }
   }
 
@@ -2752,6 +3032,7 @@
     const show = !wrap.classList.contains('show');
     wrap.classList.toggle('show', show);
     btn.textContent = show ? t('btnOcultarDiario') : t('btnMostrarDiario');
+    saveWrap('diarioWrap', show);
     if (show) renderDiario();
   }
 
@@ -3099,6 +3380,15 @@
     render();
   }
 
+  // Botão "Receita padrão": aplica o preset e volta o dropdown de perfis ao início.
+  function receitaPadrao() {
+    setPreset(6, 280, 67);
+    const sel = document.getElementById('perfilSelect');
+    if (sel) sel.value = '';
+    const btnEx = document.getElementById('perfilExcluir');
+    if (btnEx) btnEx.disabled = true;
+  }
+
   // ===== Perfis de massa salvos =====
   // Cada perfil guarda a configuração de PRODUÇÃO (discos, peso, hidratação).
   // Datas do cronograma e temperaturas do DDT são circunstanciais e não entram.
@@ -3260,6 +3550,7 @@
     atualizarBotaoWake();
   })();
 
+  restoreWraps();    // abre/fecha os blocos conforme a preferência salva (padrão: aberto)
   aplicarIdioma();   // aplica textos estáticos + dinâmicos (chama render e renderVelocidades)
 
   // ===== PWA: registra o service worker (offline / instalável) =====
