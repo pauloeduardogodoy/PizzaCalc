@@ -1,4 +1,4 @@
-# 🍕 PizzaCalc — Pizza Napolitana
+# 🍕 Calculadora de Massa — Pizza Napolitana
 
 > **PT** · Calculadora e guia de produção para pizza napolitana com poolish, pensada para quem
 > faz em casa com a masseira **Ooni Halo Core** e o forno **Fornetto Slim**.
@@ -28,16 +28,24 @@ com base no equipamento real de casa. A receita de referência (fonte da verdade
 
 ### Funcionalidades
 
+O app é organizado em **abas** (Receita · Preparo · Cronograma · Diário · Referência), com os
+controles de produção sempre visíveis no topo — assim você chega rápido ao que precisa. Cada
+card recolhível (água, mistura, cocção, cronograma, diário, velocidades) abre por padrão e
+**lembra se você o deixou aberto ou fechado** entre sessões. O app sempre inicia na aba Receita.
+
 - **Calculadora de ingredientes** — Escala a receita por nº de discos (2–10), peso por panetto
   (260–320 g) e hidratação (60–85%), mantendo as baker's percentages. Mostra a divisão
   poolish / massa final. Compensa ~1% de perda no manuseio.
+- **Molho — The Ultimate Sauce** — Receita de molho rústico de tomate pelado (cru), com
+  ingredientes, quantidades (que escalam com o nº de discos) e passo a passo.
 - **Alertas de produção** — Avisa hidratação alta (≥71%) e faixa de carga da cuba da Halo Core
   (abaixo de ~700 g a espiral não pega; acima de 2500 g sobrecarrega o motor).
 - **Perfis de massa salvos** — Salva/carrega configurações nomeadas de produção (localStorage).
-- **Calculadora de temperatura da água (DDT)** — Regra de 4 fatores, considerando que o
-  **poolish** sai da geladeira frio: `água = (massa desejada × 4) − (farinha + ambiente +
-  atrito + poolish)`. Estima o gelo moído a usar. O **atrito** da Halo Core é calibrável
-  (padrão 36°C, obtido de fornada real). Alvo da massa: **19–23°C** (padrão 21°C).
+- **Calculadora de temperatura da água (DDT)** — Card recolhível. Regra de 4 fatores,
+  considerando que o **poolish** sai da geladeira frio: `água = (massa desejada × 4) −
+  (farinha + ambiente + atrito + poolish)`. Estima o gelo moído a usar. O **atrito** da Halo
+  Core é calibrável (padrão 36°C, obtido de fornada real). Alvo da massa: **19–23°C**
+  (padrão 21°C). Botão "Restaurar padrão".
 - **Guia de mistura passo a passo** — As etapas da massa final na Halo Core com timer por etapa
   (Iniciar/Pausar/Zerar) e **alarme contínuo** que toca até você tocar em "Parar alarme".
 - **Guia de cocção — Fornetto Slim** — Timer de **pré-aquecimento** (40 min a 390°C) e de
@@ -89,16 +97,24 @@ based on real home equipment. Reference recipe (source of truth):
 
 ### Features
 
+The app is organized into **tabs** (Recipe · Prep · Schedule · Log · Reference), with the
+production controls always visible at the top — so you reach what you need quickly. Each
+collapsible card (water, mixing, baking, schedule, log, speeds) opens by default and
+**remembers whether you left it open or closed** across sessions. The app always starts on
+the Recipe tab.
+
 - **Ingredient calculator** — Scales by number of pizzas (2–10), weight per ball (260–320 g)
   and hydration (60–85%), keeping baker's percentages. Shows the poolish / final-dough split.
   Accounts for ~1% handling loss.
+- **Sauce — The Ultimate Sauce** — Rustic raw peeled-tomato sauce recipe, with ingredients,
+  quantities (scaling with the number of pizzas) and step-by-step instructions.
 - **Batch alerts** — Warns about high hydration (≥71%) and the Halo Core bowl load range (below
   ~700 g the spiral won't grab; above 2500 g it overloads the motor).
 - **Saved dough profiles** — Save/load named production settings (localStorage).
-- **Water temperature calculator (DDT)** — 4-factor rule, accounting for the cold **poolish**
-  from the fridge: `water = (desired dough × 4) − (flour + room + friction + poolish)`. Estimates
-  crushed ice. The Halo Core **friction** is calibratable (default 36°C, from a real batch).
-  Dough target: **19–23°C** (default 21°C).
+- **Water temperature calculator (DDT)** — Collapsible card. 4-factor rule, accounting for the
+  cold **poolish** from the fridge: `water = (desired dough × 4) − (flour + room + friction +
+  poolish)`. Estimates crushed ice. The Halo Core **friction** is calibratable (default 36°C,
+  from a real batch). Dough target: **19–23°C** (default 21°C). "Reset to default" button.
 - **Step-by-step mixing guide** — The final-dough steps on the Halo Core with a per-step timer
   (Start/Pause/Reset) and a **continuous alarm** that rings until you tap "Stop alarm".
 - **Baking guide — Fornetto Slim** — **Preheat** timer (40 min at 390°C) and **baking** timer
