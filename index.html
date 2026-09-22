@@ -545,12 +545,18 @@
   /* Calculadora de temperatura da água (DDT) */
   .ddt-intro { font-size: 0.86rem; color: var(--gray); line-height: 1.45; margin: 0 0 16px; }
   .ddt-intro b { color: var(--dark); }
+  /* Telas grandes: as 4 caixas de temperatura numa linha (4 colunas);
+     o atrito (último campo, slider) ocupa a linha inteira abaixo. */
   .ddt-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px 18px;
   }
-  @media (max-width: 560px) { .ddt-grid { grid-template-columns: 1fr; } }
+  .ddt-grid .ddt-field:last-child { grid-column: 1 / -1; }
+  /* Celular: 2 caixas por linha (2 + 2); atrito ocupa a linha toda. */
+  @media (max-width: 560px) {
+    .ddt-grid { grid-template-columns: 1fr 1fr; }
+  }
   .ddt-field label {
     display: block;
     font-weight: 600;
@@ -718,6 +724,69 @@
   .coccao-status.ok { color: var(--green); }
   .coccao-status.over { color: #c0392b; }
 
+  /* Diário de fornadas */
+  #diarioWrap { display: none; }
+  #diarioWrap.show { display: block; }
+  .diario-medias {
+    margin: 6px 0 16px;
+    padding: 12px 14px;
+    background: var(--orange-light);
+    border-radius: 10px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  .diario-medias .med-tit {
+    font-weight: 700; color: var(--orange);
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .diario-medias b { color: var(--dark); font-variant-numeric: tabular-nums; }
+  .diario-medias .med-btn {
+    margin-top: 10px; padding: 6px 12px; font-size: 0.82rem;
+  }
+  .diario-vazio { font-size: 0.88rem; color: var(--gray); font-style: italic; }
+  .diario-lista { display: flex; flex-direction: column; gap: 10px; }
+  .fornada {
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--orange);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .fornada-top {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 8px; flex-wrap: wrap;
+    cursor: pointer;
+    list-style: none;          /* remove o marcador padrão do summary */
+    user-select: none;
+  }
+  .fornada-top::-webkit-details-marker { display: none; }
+  /* seta indicando expandir/recolher */
+  .fornada-top::after {
+    content: "▸";
+    margin-left: auto;
+    color: var(--orange);
+    font-size: 0.9rem;
+    transition: transform 0.15s;
+  }
+  .fornada[open] > .fornada-top::after { transform: rotate(90deg); }
+  /* respiro entre o cabeçalho e o conteúdo quando aberto */
+  .fornada[open] > .fornada-top { margin-bottom: 8px; }
+  .fornada .f-data { font-weight: 700; color: var(--dark); font-size: 0.95rem; }
+  .fornada .f-config { font-size: 0.82rem; color: var(--gray); }
+  .fornada .f-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px 14px;
+    margin: 8px 0 0; font-size: 0.84rem;
+  }
+  .fornada .f-grid span b { color: var(--dark); font-variant-numeric: tabular-nums; }
+  .fornada .f-nota {
+    margin-top: 8px; font-size: 0.86rem; color: #444; line-height: 1.4;
+    font-style: italic;
+  }
+  .fornada .f-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .fornada .f-btns button { padding: 5px 12px; font-size: 0.8rem; }
+  .fornada .f-atrito { font-weight: 700; color: var(--orange); }
+  @media print { #diarioCard { display: none !important; } }
+
   /* Painel de planejamento do cronograma */
   .plan-ctrl {
     margin: 4px 0 14px;
@@ -762,7 +831,7 @@
     gap: 6px;
     flex-wrap: wrap;
   }
-  .plan-selects select { flex: 1; min-width: 64px; }
+  .plan-selects select { flex: 1; min-width: 60px; font-size: 0.85rem; padding: 7px 8px; }
 
   /* Alertas do cronograma (horário incômodo, fases fora de faixa) */
   .crono-alert {
@@ -1055,28 +1124,28 @@
     <p class="ddt-intro" id="ddtIntro"></p>
     <div class="ddt-grid">
       <div class="ddt-field">
-        <label for="ddtAmbiente" data-i18n="ddtAmbiente">Temperatura ambiente</label>
+        <label for="ddtAmbiente" data-i18n="ddtAmbiente">Ambiente</label>
         <div class="row-input">
           <input type="number" id="ddtAmbiente" min="0" max="45" step="1" value="21">
           <span class="unit">°C</span>
         </div>
       </div>
       <div class="ddt-field">
-        <label for="ddtFarinha" data-i18n="ddtFarinha">Temperatura da farinha</label>
+        <label for="ddtFarinha" data-i18n="ddtFarinha">Farinha</label>
         <div class="row-input">
           <input type="number" id="ddtFarinha" min="0" max="45" step="1" value="21">
           <span class="unit">°C</span>
         </div>
       </div>
       <div class="ddt-field">
-        <label for="ddtPoolish" data-i18n="ddtPoolish">Temperatura do poolish</label>
+        <label for="ddtPoolish" data-i18n="ddtPoolish">Poolish</label>
         <div class="row-input">
           <input type="number" id="ddtPoolish" min="0" max="30" step="1" value="4">
           <span class="unit">°C</span>
         </div>
       </div>
       <div class="ddt-field">
-        <label for="ddtAlvo" data-i18n="ddtAlvo">Massa desejada</label>
+        <label for="ddtAlvo" data-i18n="ddtAlvo">Massa</label>
         <div class="row-input">
           <input type="number" id="ddtAlvo" min="19" max="23" step="0.5" value="21">
           <span class="unit">°C</span>
@@ -1149,6 +1218,33 @@
         </div>
         <div class="coccao-bar"><div class="coccao-fill" id="coccaoFill"></div></div>
         <div class="coccao-status" id="coccaoStatus"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diário de fornadas -->
+  <div class="card" id="diarioCard">
+    <div class="timeline-head">
+      <h2 style="margin:0" data-i18n="diarioTitulo">Diário de fornadas</h2>
+      <span class="progress" id="diarioContagem"></span>
+    </div>
+    <div class="btns" style="margin-top:12px">
+      <button class="primary" id="diarioToggle" onclick="toggleDiario()" data-i18n="btnMostrarDiario">Mostrar diário</button>
+      <button onclick="registrarFornada()" data-i18n="btnRegistrarFornada">Registrar fornada</button>
+    </div>
+    <div id="diarioWrap">
+      <p class="ddt-intro" id="diarioIntro"></p>
+
+      <!-- Médias / calibração -->
+      <div class="diario-medias" id="diarioMedias"></div>
+
+      <!-- Lista de fornadas -->
+      <div class="diario-lista" id="diarioLista"></div>
+
+      <!-- Exportar / compartilhar / importar -->
+      <div class="btns" style="margin-top:16px">
+        <button onclick="exportarDiario()" data-i18n="btnExportarDiario">Exportar / compartilhar</button>
+        <button onclick="importarDiario()" data-i18n="btnImportarDiario">Importar</button>
       </div>
     </div>
   </div>
@@ -1283,10 +1379,10 @@
       // DDT — temperatura da água
       ddtTitulo: 'Temperatura da água (Halo Core)',
       ddtIntro: 'A Halo Core aquece a massa pelo atrito da espiral, mas o <b>poolish</b> sai da geladeira frio e puxa a temperatura para baixo. Por isso usamos a regra de 4 fatores: <b>água = (massa desejada × 4) − (farinha + ambiente + atrito + poolish)</b>. Alvo da massa final: <b>19–23°C</b>.',
-      ddtAmbiente: 'Temperatura ambiente',
-      ddtFarinha: 'Temperatura da farinha',
-      ddtPoolish: 'Temperatura do poolish',
-      ddtAlvo: 'Massa desejada',
+      ddtAmbiente: 'Ambiente',
+      ddtFarinha: 'Farinha',
+      ddtPoolish: 'Poolish',
+      ddtAlvo: 'Massa',
       ddtAtrito: 'Atrito da masseira',
       ddtAguaLabel: 'Temperatura da água',
       btnResetDDT: 'Restaurar padrão',
@@ -1327,6 +1423,38 @@
       coccaoWait: (s) => `Assando… ${s}s (aguarde a janela de 90 s)`,
       coccaoOk: (s) => `✅ Ponto ideal — ${s}s. Observe a borda e retire quando quiser.`,
       coccaoOver: (s) => `⚠️ Passou de 140 s (${s}s) — risco de ressecar/queimar.`,
+      // Diário de fornadas
+      diarioTitulo: 'Diário de fornadas',
+      btnMostrarDiario: 'Mostrar diário', btnOcultarDiario: 'Ocultar diário',
+      btnRegistrarFornada: 'Registrar fornada',
+      btnExportarDiario: 'Exportar / compartilhar', btnImportarDiario: 'Importar',
+      diarioIntro: 'Registre cada fornada com as temperaturas e a <b>massa final medida</b>. O app calcula o atrito real da Halo Core em cada uma e a média — use para calibrar a temperatura da água. Dados salvos só neste aparelho; exporte para levar a outro celular.',
+      diarioVazio: 'Nenhuma fornada registrada ainda. Toque em "Registrar fornada" ao final de uma produção.',
+      diarioContagemLbl: (n) => `${n} fornada${n === 1 ? '' : 's'}`,
+      // prompts do registro
+      promptMassaMedida: 'Temperatura da massa final medida (°C):',
+      promptTempoForno: 'Tempo de cocção que funcionou (segundos) — opcional:',
+      promptNota: 'Observações (borda, leopard spots, manuseio…) — opcional:',
+      // rótulos dos campos na ficha
+      fLabelProd: 'Produção', fLabelAmbiente: 'Ambiente', fLabelFarinha: 'Farinha',
+      fLabelPoolish: 'Poolish', fLabelAgua: 'Água', fLabelMassa: 'Massa medida',
+      fLabelForno: 'Forno', fLabelAtrito: 'Atrito calc.',
+      fUsarAtrito: 'Usar este atrito', fExcluir: 'Excluir',
+      fExcluirConfirm: 'Excluir esta fornada?',
+      // médias
+      medTitulo: 'Médias para calibração',
+      medAtrito: (v, n) => `Atrito médio da Halo Core: <b>${v}°C</b> (de ${n} fornada${n === 1 ? '' : 's'} com massa medida).`,
+      medSemDados: 'Registre fornadas com a massa medida para calcular o atrito médio.',
+      medUsarBtn: 'Aplicar atrito médio no cálculo da água',
+      medAplicado: (v) => `Atrito ${v}°C aplicado ao card de temperatura da água.`,
+      // exportar / importar
+      exportPrompt: 'Copie os dados abaixo (JSON) para backup ou para enviar. Para compartilhar num app, use o botão do sistema.',
+      exportResumoTit: 'Resumo do diário de fornadas',
+      importPrompt: 'Cole aqui o JSON exportado de outro aparelho:',
+      importOk: (n) => `${n} fornada${n === 1 ? '' : 's'} importada${n === 1 ? '' : 's'}.`,
+      importErro: 'Não foi possível ler os dados. Verifique se o JSON está completo.',
+      importVazio: 'Nada para importar.',
+      shareTitulo: 'Diário de fornadas — Pizza Napolitana',
       cronoDefina: 'Defina o <b>início do poolish</b> e a <b>hora de assar</b> para calcular o cronograma.',
       cronoAssarCedo: '🚫 <b>Hora de assar cedo demais.</b> Não há tempo entre a massa final e o forno. Atrase a hora de assar ou adiante o início do poolish.',
       cronoMaturCurta: (d, min) => `⚠️ <b>Maturação em bloco curta (${d}).</b> Abaixo de ${min}h a massa desenvolve menos sabor e força. Considere adiantar o início do poolish.`,
@@ -1424,10 +1552,10 @@
       // DDT — water temperature
       ddtTitulo: 'Water temperature (Halo Core)',
       ddtIntro: 'The Halo Core warms the dough through the spiral friction, but the <b>poolish</b> comes out of the fridge cold and pulls the temperature down. So we use the 4-factor rule: <b>water = (desired dough × 4) − (flour + room + friction + poolish)</b>. Final-dough target: <b>19–23°C</b>.',
-      ddtAmbiente: 'Room temperature',
-      ddtFarinha: 'Flour temperature',
-      ddtPoolish: 'Poolish temperature',
-      ddtAlvo: 'Desired dough',
+      ddtAmbiente: 'Room',
+      ddtFarinha: 'Flour',
+      ddtPoolish: 'Poolish',
+      ddtAlvo: 'Dough',
       ddtAtrito: 'Mixer friction',
       ddtAguaLabel: 'Water temperature',
       btnResetDDT: 'Reset to default',
@@ -1468,6 +1596,34 @@
       coccaoWait: (s) => `Baking… ${s}s (wait for the 90 s window)`,
       coccaoOk: (s) => `✅ Sweet spot — ${s}s. Watch the crust and pull it whenever you like.`,
       coccaoOver: (s) => `⚠️ Past 140 s (${s}s) — risk of drying out/burning.`,
+      // Bake log
+      diarioTitulo: 'Bake log',
+      btnMostrarDiario: 'Show log', btnOcultarDiario: 'Hide log',
+      btnRegistrarFornada: 'Log a bake',
+      btnExportarDiario: 'Export / share', btnImportarDiario: 'Import',
+      diarioIntro: 'Log each bake with the temperatures and the <b>measured final dough temp</b>. The app computes the real Halo Core friction for each one and the average — use it to calibrate the water temperature. Data is stored only on this device; export it to move to another phone.',
+      diarioVazio: 'No bakes logged yet. Tap "Log a bake" at the end of a batch.',
+      diarioContagemLbl: (n) => `${n} bake${n === 1 ? '' : 's'}`,
+      promptMassaMedida: 'Measured final dough temperature (°C):',
+      promptTempoForno: 'Baking time that worked (seconds) — optional:',
+      promptNota: 'Notes (crust, leopard spots, handling…) — optional:',
+      fLabelProd: 'Batch', fLabelAmbiente: 'Room', fLabelFarinha: 'Flour',
+      fLabelPoolish: 'Poolish', fLabelAgua: 'Water', fLabelMassa: 'Measured dough',
+      fLabelForno: 'Oven', fLabelAtrito: 'Calc. friction',
+      fUsarAtrito: 'Use this friction', fExcluir: 'Delete',
+      fExcluirConfirm: 'Delete this bake?',
+      medTitulo: 'Averages for calibration',
+      medAtrito: (v, n) => `Average Halo Core friction: <b>${v}°C</b> (from ${n} bake${n === 1 ? '' : 's'} with measured dough).`,
+      medSemDados: 'Log bakes with the measured dough temp to compute the average friction.',
+      medUsarBtn: 'Apply average friction to the water calc',
+      medAplicado: (v) => `Friction ${v}°C applied to the water temperature card.`,
+      exportPrompt: 'Copy the data below (JSON) for backup or to send. To share in an app, use the system button.',
+      exportResumoTit: 'Bake log summary',
+      importPrompt: 'Paste here the JSON exported from another device:',
+      importOk: (n) => `${n} bake${n === 1 ? '' : 's'} imported.`,
+      importErro: 'Could not read the data. Check that the JSON is complete.',
+      importVazio: 'Nothing to import.',
+      shareTitulo: 'Bake log — Neapolitan Pizza',
       cronoDefina: 'Set the <b>poolish start</b> and the <b>baking time</b> to compute the schedule.',
       cronoAssarCedo: '🚫 <b>Baking time too early.</b> There is no time between the final dough and the oven. Push the baking time later or start the poolish earlier.',
       cronoMaturCurta: (d, min) => `⚠️ <b>Short bulk maturation (${d}).</b> Below ${min}h the dough develops less flavor and strength. Consider starting the poolish earlier.`,
@@ -1561,6 +1717,12 @@
       const selPerfil = document.getElementById('perfilSelect');
       popularPerfis(selPerfil && selPerfil.value !== '' ? selPerfil.value : null);
     }
+    // diário de fornadas (intro + botão + fichas dependem do idioma)
+    document.getElementById('diarioIntro').innerHTML = t('diarioIntro');
+    const diarioWrap = document.getElementById('diarioWrap');
+    document.getElementById('diarioToggle').textContent =
+      diarioWrap.classList.contains('show') ? t('btnOcultarDiario') : t('btnMostrarDiario');
+    if (typeof renderDiario === 'function') renderDiario();
     // selects de mês reconstroem com nomes traduzidos (se já populados)
     if (typeof repopularMeses === 'function') repopularMeses();
     renderVelocidades();
@@ -2416,6 +2578,247 @@
     btn.textContent = show ? t('btnOcultarForno') : t('btnMostrarForno');
     if (show) { atualizarPreaq(); atualizarCoccao(); }
   }
+
+  // ===== Diário de fornadas =====
+  // Cada fornada guarda produção + temperaturas do dia + massa medida + forno + nota.
+  // Com a massa medida, recalcula o atrito real da Halo Core (inverso do DDT).
+  function lerDiario() {
+    try {
+      const raw = localStorage.getItem('pizzaDiario');
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function gravarDiario(lista) {
+    try { localStorage.setItem('pizzaDiario', JSON.stringify(lista)); } catch (e) {}
+  }
+
+  // Atrito real de uma fornada = massa*4 − (farinha + ambiente + poolish + água).
+  // Retorna null se faltar a massa medida ou alguma temperatura.
+  function atritoDaFornada(f) {
+    const vals = [f.massa, f.farinha, f.ambiente, f.poolish, f.agua];
+    if (vals.some(v => v == null || isNaN(v))) return null;
+    return f.massa * 4 - (f.farinha + f.ambiente + f.poolish + f.agua);
+  }
+
+  // Formata a data de um timestamp no padrão brasileiro dd/mm/aaaa
+  function dataCurta(ts) {
+    const d = new Date(ts);
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    return `${dd}/${mm}/${d.getFullYear()}`;
+  }
+
+  function registrarFornada() {
+    // Captura a configuração atual (produção + card DDT)
+    const discos = clamp(parseInt(discosNum.value) || 2, 2, 10);
+    const peso = clamp(parseInt(pesoNum.value) || 260, 260, 320);
+    const hidra = clamp(parseInt(hidraNum.value) || 60, 60, 85);
+    const ambiente = parseFloat(ddtAmbiente.value);
+    const farinha = parseFloat(ddtFarinha.value);
+    const poolish = parseFloat(ddtPoolish.value);
+    // A água usada: pega o valor calculado no card DDT (resultado exibido).
+    const agua = ddtAguaCalculada();
+
+    // Pede a massa medida (obrigatória para calibrar; pode cancelar p/ registrar sem)
+    const massaTxt = prompt(t('promptMassaMedida'), '');
+    if (massaTxt === null) return;   // cancelou
+    const massa = parseFloat(String(massaTxt).replace(',', '.'));
+
+    const tempoTxt = prompt(t('promptTempoForno'), '');
+    if (tempoTxt === null) return;
+    const forno = tempoTxt.trim() === '' ? null : parseInt(tempoTxt);
+
+    const nota = (prompt(t('promptNota'), '') || '').trim();
+
+    const fornada = {
+      ts: Date.now(),
+      discos, peso, hidra,
+      ambiente: isNaN(ambiente) ? null : ambiente,
+      farinha: isNaN(farinha) ? null : farinha,
+      poolish: isNaN(poolish) ? null : poolish,
+      agua: (agua == null || isNaN(agua)) ? null : agua,
+      massa: isNaN(massa) ? null : massa,
+      forno: (forno == null || isNaN(forno)) ? null : forno,
+      nota
+    };
+    const lista = lerDiario();
+    lista.push(fornada);
+    gravarDiario(lista);
+    // garante que o diário esteja visível ao registrar
+    const wrap = document.getElementById('diarioWrap');
+    if (!wrap.classList.contains('show')) toggleDiario();
+    renderDiario();
+  }
+
+  // Temperatura da água calculada atualmente no card DDT (mesma fórmula de renderDDT)
+  function ddtAguaCalculada() {
+    const ambiente = clampFloat(parseFloat(ddtAmbiente.value), 0, 45);
+    const farinha = clampFloat(parseFloat(ddtFarinha.value), 0, 45);
+    const poolishT = clampFloat(parseFloat(ddtPoolish.value), 0, 30);
+    const alvo = clampFloat(parseFloat(ddtAlvo.value), 19, 23);
+    const atrito = clampFloat(parseFloat(ddtAtrito.value), 0, 45);
+    if ([ambiente, farinha, poolishT, alvo, atrito].some(v => isNaN(v))) return null;
+    return Math.round((alvo * 4 - (farinha + ambiente + atrito + poolishT)) * 10) / 10;
+  }
+
+  function excluirFornada(ts) {
+    if (!confirm(t('fExcluirConfirm'))) return;
+    gravarDiario(lerDiario().filter(f => f.ts !== ts));
+    renderDiario();
+  }
+
+  // Aplica um valor de atrito no card DDT e recalcula
+  function aplicarAtrito(valor) {
+    const v = clampFloat(Math.round(valor), 0, 45);
+    ddtAtrito.value = String(v);
+    salvarDDT();
+    render();
+    alert(t('medAplicado', v));
+  }
+
+  // Calcula o atrito médio a partir das fornadas com massa medida
+  function atritoMedio() {
+    const atritos = lerDiario().map(atritoDaFornada).filter(a => a != null);
+    if (!atritos.length) return null;
+    const soma = atritos.reduce((a, b) => a + b, 0);
+    return { media: Math.round((soma / atritos.length) * 10) / 10, n: atritos.length };
+  }
+
+  function renderDiario() {
+    const lista = lerDiario().slice().sort((a, b) => b.ts - a.ts);   // mais recente primeiro
+    document.getElementById('diarioContagem').textContent = t('diarioContagemLbl', lista.length);
+
+    // Médias / calibração
+    const med = document.getElementById('diarioMedias');
+    const am = atritoMedio();
+    if (am) {
+      med.innerHTML =
+        `<div class="med-tit">${t('medTitulo')}</div>
+         <div>${t('medAtrito', String(am.media).replace('.', ','), am.n)}</div>
+         <button class="med-btn" onclick="aplicarAtrito(${am.media})">${t('medUsarBtn')}</button>`;
+    } else {
+      med.innerHTML = `<div class="med-tit">${t('medTitulo')}</div><div>${t('medSemDados')}</div>`;
+    }
+
+    // Lista de fornadas
+    const box = document.getElementById('diarioLista');
+    if (!lista.length) {
+      box.innerHTML = `<div class="diario-vazio">${t('diarioVazio')}</div>`;
+      return;
+    }
+    box.innerHTML = lista.map(f => {
+      const atr = atritoDaFornada(f);
+      const linha = (lbl, val, unidade) =>
+        (val == null || (typeof val === 'number' && isNaN(val)))
+          ? '' : `<span>${lbl}: <b>${String(val).replace('.', ',')}${unidade || ''}</b></span>`;
+      const atritoHtml = atr != null
+        ? `<span>${t('fLabelAtrito')}: <b class="f-atrito">${String(Math.round(atr)).replace('.', ',')}°C</b></span>`
+        : '';
+      const usarBtn = atr != null
+        ? `<button onclick="aplicarAtrito(${atr})">${t('fUsarAtrito')}</button>` : '';
+      return `
+        <details class="fornada">
+          <summary class="fornada-top">
+            <span class="f-data">${dataCurta(f.ts)}</span>
+            <span class="f-config">${t('fLabelProd')}: ${f.discos} × ${f.peso}g · ${f.hidra}%</span>
+          </summary>
+          <div class="f-grid">
+            ${linha(t('fLabelAmbiente'), f.ambiente, '°C')}
+            ${linha(t('fLabelFarinha'), f.farinha, '°C')}
+            ${linha(t('fLabelPoolish'), f.poolish, '°C')}
+            ${linha(t('fLabelAgua'), f.agua, '°C')}
+            ${linha(t('fLabelMassa'), f.massa, '°C')}
+            ${linha(t('fLabelForno'), f.forno, 's')}
+            ${atritoHtml}
+          </div>
+          ${f.nota ? `<div class="f-nota">${escapeHtml(f.nota)}</div>` : ''}
+          <div class="f-btns">
+            ${usarBtn}
+            <button onclick="excluirFornada(${f.ts})">${t('fExcluir')}</button>
+          </div>
+        </details>`;
+    }).join('');
+  }
+
+  function toggleDiario() {
+    const wrap = document.getElementById('diarioWrap');
+    const btn = document.getElementById('diarioToggle');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    btn.textContent = show ? t('btnOcultarDiario') : t('btnMostrarDiario');
+    if (show) renderDiario();
+  }
+
+  // ===== Exportar / compartilhar / importar =====
+  // Monta um resumo legível em texto (com as médias) + o JSON completo.
+  function montarExport() {
+    const lista = lerDiario();
+    const am = atritoMedio();
+    const linhas = [];
+    linhas.push(t('exportResumoTit'));
+    if (am) {
+      linhas.push(`- ${t('medTitulo')}: ${String(am.media).replace('.', ',')}°C (${am.n})`);
+    }
+    lista.slice().sort((a, b) => b.ts - a.ts).forEach(f => {
+      const atr = atritoDaFornada(f);
+      const partes = [
+        dataCurta(f.ts),
+        `${f.discos}x${f.peso}g/${f.hidra}%`,
+        f.ambiente != null ? `amb ${f.ambiente}` : null,
+        f.farinha != null ? `far ${f.farinha}` : null,
+        f.poolish != null ? `pool ${f.poolish}` : null,
+        f.agua != null ? `agua ${f.agua}` : null,
+        f.massa != null ? `massa ${f.massa}` : null,
+        f.forno != null ? `${f.forno}s` : null,
+        atr != null ? `atrito ${Math.round(atr)}` : null,
+        f.nota ? `"${f.nota}"` : null
+      ].filter(Boolean);
+      linhas.push('- ' + partes.join(' · '));
+    });
+    const resumo = linhas.join('\n');
+    const json = JSON.stringify({ app: 'pizza-diario', v: 1, fornadas: lista }, null, 2);
+    return { resumo, json };
+  }
+
+  async function exportarDiario() {
+    const { resumo, json } = montarExport();
+    const texto = `${resumo}\n\n--- JSON ---\n${json}`;
+    // Tenta o compartilhamento nativo (celular); senão, mostra para copiar.
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: t('shareTitulo'), text: texto });
+        return;
+      } catch (e) { /* usuário cancelou ou falhou — cai no fallback */ }
+    }
+    // Fallback: copia para a área de transferência e mostra o texto
+    try { await navigator.clipboard.writeText(texto); } catch (e) {}
+    prompt(t('exportPrompt'), json);
+  }
+
+  function importarDiario() {
+    const txt = prompt(t('importPrompt'), '');
+    if (txt === null || txt.trim() === '') return;
+    let dados;
+    try {
+      dados = JSON.parse(txt);
+    } catch (e) { alert(t('importErro')); return; }
+    const novas = Array.isArray(dados) ? dados : (dados && dados.fornadas);
+    if (!Array.isArray(novas)) { alert(t('importErro')); return; }
+    if (!novas.length) { alert(t('importVazio')); return; }
+    // Mescla com o existente, evitando duplicar pelo timestamp
+    const atual = lerDiario();
+    const existentes = new Set(atual.map(f => f.ts));
+    let add = 0;
+    novas.forEach(f => {
+      if (f && f.ts != null && !existentes.has(f.ts)) { atual.push(f); add++; }
+    });
+    gravarDiario(atual);
+    renderDiario();
+    alert(t('importOk', add));
+  }
+
+  renderDiario();
 
   // Imprime apenas a tabela de velocidades (independente da receita e do cronograma)
   function imprimirVelocidades() {
