@@ -42,6 +42,8 @@ zerar).
   poolish / massa final. Compensa ~1% de perda no manuseio.
 - **Molho — The Ultimate Sauce** — Receita de molho rústico de tomate pelado (cru), com
   ingredientes, quantidades (que escalam com o nº de discos) e passo a passo.
+- **Lista de compras** — Ingredientes de massa e molho, já escalados pelo nº de discos,
+  agrupados para conferir na hora de comprar. Com botão de imprimir.
 - **Alertas de produção** — Avisa hidratação alta (≥71%) e faixa de carga da cuba da Halo Core
   (abaixo de ~700 g a espiral não pega; acima de 2500 g sobrecarrega o motor).
 - **Perfis de massa salvos** — Salva/carrega configurações nomeadas de produção (localStorage).
@@ -64,6 +66,10 @@ zerar).
   resumo) e importa para migrar entre aparelhos.
 - **Tabela de velocidades da Halo Core** — As 20 velocidades com potência, RPM e equivalência
   industrial.
+- **Glossário napolitano** — Termos da técnica (poolish, biga, puntata, staglio, appretto,
+  panetto, maturação, cornicione, leopard spots…) com definições. Botão de imprimir.
+- **Solução de problemas** — Problemas comuns (massa rasga, encolhe, borda pálida, azeda…)
+  com causa provável e como ajustar.
 - **Manter tela ligada** — Impede o celular de apagar a tela durante a produção (Wake Lock API).
 - **Impressão** — Modos independentes: só receita, só cronograma, tudo, ou só a tabela de
   velocidades.
@@ -114,6 +120,8 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   Accounts for ~1% handling loss.
 - **Sauce — The Ultimate Sauce** — Rustic raw peeled-tomato sauce recipe, with ingredients,
   quantities (scaling with the number of pizzas) and step-by-step instructions.
+- **Shopping list** — Dough and sauce ingredients, already scaled by the number of pizzas,
+  grouped for easy checking while shopping. With a print button.
 - **Batch alerts** — Warns about high hydration (≥71%) and the Halo Core bowl load range (below
   ~700 g the spiral won't grab; above 2500 g it overloads the motor).
 - **Saved dough profiles** — Save/load named production settings (localStorage).
@@ -133,6 +141,10 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   calculator, closing the calibration loop. Export/share (JSON + summary) and import to move
   between devices.
 - **Halo Core speed table** — All 20 speeds with power, RPM and industrial equivalence.
+- **Neapolitan glossary** — Technique terms (poolish, biga, puntata, staglio, appretto,
+  panetto, maturation, cornicione, leopard spots…) with definitions. Print button.
+- **Troubleshooting** — Common issues (dough tears, shrinks, pale crust, too sour…) with
+  likely cause and how to fix.
 - **Keep screen on** — Prevents the phone screen from turning off during a bake (Wake Lock API).
 - **Printing** — Independent modes: recipe only, schedule only, everything, or the speed table.
 
