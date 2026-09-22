@@ -740,6 +740,8 @@
   @media (max-width: 560px) {
     .print-btn .btn-txt, .icon-label-btn .btn-txt { display: none; }
     .print-btn, .icon-label-btn { padding: 8px 12px; }
+    /* fonte menor p/ "Receita padrão" caber na linha com as 2 impressoras */
+    .btn-receita-padrao { font-size: 0.78rem; padding: 8px 10px; }
   }
   /* Botões com ícone + texto SEMPRE (não colapsam no mobile) */
   .icon-fixed-btn { display: inline-flex; align-items: center; gap: 7px; }
@@ -1209,7 +1211,7 @@
     </div>
 
     <div class="btns">
-      <button class="primary" onclick="receitaPadrao()" data-i18n="btnReceitaPadrao">Receita padrão (6 × 280g · 67%)</button>
+      <button class="primary btn-receita-padrao" onclick="receitaPadrao()" data-i18n="btnReceitaPadrao">Receita padrão (6 × 280g · 67%)</button>
       <button class="print-btn" onclick="imprimirReceita()"><span class="print-ico" data-ico="impressora1"></span><span class="btn-txt" data-i18n="btnImprimirReceita">Imprimir receita</span></button>
       <button class="print-btn" onclick="imprimirTudo()"><span class="print-ico" data-ico="impressoraN"></span><span class="btn-txt" data-i18n="btnImprimirTudo">Imprimir tudo</span></button>
     </div>
