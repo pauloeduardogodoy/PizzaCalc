@@ -591,12 +591,58 @@
   .vel-table td:nth-child(2), .vel-table td:nth-child(3) { font-variant-numeric: tabular-nums; white-space: nowrap; }
   .vel-table tr.vel-key td { background: var(--orange-light); }
 
+  /* Glossário napolitano */
+  #glossarioWrap { display: none; }
+  #glossarioWrap.show { display: block; }
+  .glossario { margin: 10px 0 0; }
+  .glossario dt {
+    font-weight: 700; color: var(--orange); font-size: 0.92rem;
+    margin-top: 12px;
+  }
+  .glossario dt:first-child { margin-top: 0; }
+  .glossario dt .termo-it { color: var(--gray); font-weight: 400; font-style: italic; font-size: 0.85rem; }
+  .glossario dd { margin: 2px 0 0; font-size: 0.88rem; color: #444; line-height: 1.45; }
+
+  /* Guia de solução de problemas */
+  #troubleWrap { display: none; }
+  #troubleWrap.show { display: block; }
+  .trouble-lista { display: flex; flex-direction: column; gap: 10px; }
+  .trouble {
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--orange);
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+  .trouble > summary {
+    cursor: pointer; list-style: none; user-select: none;
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 700; font-size: 0.95rem; color: var(--dark);
+  }
+  .trouble > summary::-webkit-details-marker { display: none; }
+  .trouble > summary::after {
+    content: "▸"; margin-left: auto; color: var(--orange);
+    font-size: 0.9rem; transition: transform 0.15s;
+  }
+  .trouble[open] > summary::after { transform: rotate(90deg); }
+  .trouble[open] > summary { margin-bottom: 8px; }
+  .trouble .t-causa { font-size: 0.86rem; color: #444; line-height: 1.45; margin: 0 0 6px; }
+  .trouble .t-causa b, .trouble .t-fix b { color: var(--dark); }
+  .trouble .t-fix { font-size: 0.86rem; color: #444; line-height: 1.45; margin: 0; }
+  .trouble .t-fix b { color: var(--green); }
+
+  /* Cards colapsáveis da aba Receita (ingredientes, divisão, molho) */
+  #ingWrap, #divWrap, #molhoWrap { display: none; }
+  #ingWrap.show, #divWrap.show, #molhoWrap.show { display: block; }
+
   /* Calculadora de temperatura da água (DDT) */
   #ddtWrap { display: none; }
   #ddtWrap.show { display: block; }
   .ddt-intro { font-size: 0.86rem; color: var(--gray); line-height: 1.45; margin: 0 0 16px; }
   /* respiro entre o cabeçalho e a intro quando ela é o 1º elemento do bloco */
-  #ddtWrap > .ddt-intro:first-child, #fornoWrap > .ddt-intro:first-child { margin-top: 10px; }
+  #ddtWrap > .ddt-intro:first-child, #fornoWrap > .ddt-intro:first-child,
+  #molhoWrap > .ddt-intro:first-child { margin-top: 10px; }
+  /* respiro nos wraps que começam direto com tabela (ingredientes / divisão) */
+  #ingWrap, #divWrap { padding-top: 10px; }
   .ddt-intro b { color: var(--dark); }
   /* Telas grandes: as 4 caixas de temperatura numa linha (4 colunas);
      o atrito (último campo, slider) ocupa a linha inteira abaixo. */
@@ -899,6 +945,31 @@
   .molho-passos ol { margin: 0; padding-left: 20px; }
   .molho-passos ol li { font-size: 0.9rem; color: #333; margin-bottom: 6px; line-height: 1.45; }
 
+  /* Lista de compras */
+  #comprasWrap { display: none; }
+  #comprasWrap.show { display: block; padding-top: 10px; }
+  .compras-grupo { margin-top: 14px; }
+  .compras-grupo:first-child { margin-top: 0; }
+  .compras-grupo-tit {
+    font-weight: 700; color: var(--orange);
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .compras-item {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 6px 0; border-bottom: 1px solid var(--line);
+    font-size: 0.92rem;
+  }
+  .compras-item .c-box {
+    flex: none;
+    width: 9px; height: 9px;
+    border-radius: 2px;
+    background: var(--orange);
+    align-self: center;
+  }
+  .compras-item .c-nome { flex: 1; }
+  .compras-item .c-qtd { font-weight: 700; color: var(--dark); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
   /* Painel de planejamento do cronograma */
   .plan-ctrl {
     margin: 4px 0 14px;
@@ -1002,6 +1073,12 @@
     /* A tabela de velocidades NÃO sai nas impressões da receita/cronograma;
        só no seu próprio modo (print-velocidades). */
     #velocidadesCard { display: none !important; }
+    /* Glossário é material de tela, nunca impresso */
+    #glossarioCard { display: none !important; }
+    /* Solução de problemas: material de tela (some por padrão; volta no print-glossario? não) */
+    #troubleCard { display: none !important; }
+    /* Lista de compras: sai só no seu próprio modo (print-compras) */
+    #comprasCard { display: none !important; }
 
     /* Cards interativos (temperatura da água, guia de mistura, timers do forno)
        nunca são impressos — são ferramentas de tela, não fazem parte da ficha. */
@@ -1039,6 +1116,8 @@
 
     /* A timeline fica visível na impressão quando o card do cronograma aparece */
     #timelineWrap { display: block !important; }
+    /* wraps colapsáveis da receita ficam visíveis na impressão mesmo se recolhidos */
+    #ingWrap, #divWrap, #molhoWrap { display: block !important; }
     .step { break-inside: avoid; page-break-inside: avoid; }
 
     /* PADRÃO (Ctrl+P e botão "Imprimir receita"): esconde o cronograma,
@@ -1119,6 +1198,37 @@
     body.print-velocidades #velocidadesWrap { display: block !important; }
     body.print-velocidades .vel-table th,
     body.print-velocidades .vel-table td { font-size: 0.9rem; padding: 5px 8px; }
+
+    /* MODO "só glossário": esconde tudo menos o card do glossário */
+    body.print-glossario header,
+    body.print-glossario .controls-card,
+    body.print-glossario #cardIngredientes,
+    body.print-glossario #cardDivisao,
+    body.print-glossario #molhoCard,
+    body.print-glossario #timelineCard,
+    body.print-glossario #velocidadesCard,
+    body.print-glossario footer { display: none !important; }
+    body.print-glossario #glossarioCard {
+      display: block !important;
+      break-before: auto; page-break-before: auto;
+      margin: 0; border: none; padding: 0;
+    }
+    body.print-glossario #glossarioWrap { display: block !important; }
+
+    /* MODO "só lista de compras" */
+    body.print-compras header,
+    body.print-compras .controls-card,
+    body.print-compras #cardIngredientes,
+    body.print-compras #cardDivisao,
+    body.print-compras #molhoCard,
+    body.print-compras #timelineCard,
+    body.print-compras footer { display: none !important; }
+    body.print-compras #comprasCard {
+      display: block !important;
+      break-before: auto; page-break-before: auto;
+      margin: 0; border: none; padding: 0;
+    }
+    body.print-compras #comprasWrap { display: block !important; }
 
     /* Garante que as cores de fundo (subheads, notas, bolinhas) saiam na impressão */
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -1260,7 +1370,11 @@
 
   <!-- Ingredientes -->
   <div class="card" id="cardIngredientes">
-    <h2 data-i18n="ingredientes">Ingredientes</h2>
+    <div class="timeline-head card-head" id="ingToggle" onclick="toggleIng()" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="ingredientes">Ingredientes</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="ingWrap">
     <table>
       <thead>
         <tr><th data-i18n="thIngrediente">Ingrediente</th><th data-i18n="thBakers">%</th><th style="text-align:right" data-i18n="thQuantidade">Quantidade</th></tr>
@@ -1269,19 +1383,29 @@
     </table>
 
     <div class="fixed-note" id="comoFunciona"></div>
+    </div><!-- /ingWrap -->
   </div>
 
   <!-- Divisão Poolish / Massa Final -->
   <div class="card" id="cardDivisao">
-    <h2 data-i18n="divisaoEtapa">Divisão por etapa</h2>
+    <div class="timeline-head card-head" id="divToggle" onclick="toggleDiv()" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="divisaoEtapa">Divisão por etapa</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="divWrap">
     <table>
       <tbody id="tbodyEtapas"></tbody>
     </table>
+    </div><!-- /divWrap -->
   </div>
 
   <!-- Molho — The Ultimate Sauce -->
   <div class="card" id="molhoCard">
-    <h2 data-i18n="molhoTitulo">Molho — The Ultimate Sauce</h2>
+    <div class="timeline-head card-head" id="molhoToggle" onclick="toggleMolho()" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="molhoTitulo">Molho — The Ultimate Sauce</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="molhoWrap">
     <p class="ddt-intro" id="molhoIntro"></p>
     <table>
       <thead>
@@ -1294,6 +1418,22 @@
       <ol id="molhoPassos"></ol>
     </div>
     <div class="fixed-note" id="molhoNota"></div>
+    </div><!-- /molhoWrap -->
+  </div>
+
+  <!-- Lista de compras -->
+  <div class="card" id="comprasCard">
+    <div class="timeline-head card-head" id="comprasToggle" onclick="toggleCompras()" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="comprasTitulo">Lista de compras</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div class="btns" style="margin-top:12px">
+      <button class="print-btn" onclick="imprimirCompras()"><span class="print-ico"></span><span class="btn-txt" data-i18n="btnImprimirCompras">Imprimir lista</span></button>
+    </div>
+    <div id="comprasWrap">
+      <p class="ddt-intro" id="comprasIntro"></p>
+      <div id="comprasLista"></div>
+    </div>
   </div>
 
   </div><!-- /ABA Receita -->
@@ -1512,6 +1652,32 @@
     </div>
   </div>
 
+  <!-- Glossário napolitano -->
+  <div class="card" id="glossarioCard">
+    <div class="timeline-head card-head" id="glossarioToggle" onclick="toggleGlossario()" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="glossarioTitulo">Glossário napolitano</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div class="btns" style="margin-top:12px">
+      <button class="print-btn" onclick="imprimirGlossario()"><span class="print-ico"></span><span class="btn-txt" data-i18n="btnImprimirGlossario">Imprimir glossário</span></button>
+    </div>
+    <div id="glossarioWrap">
+      <dl class="glossario" id="glossarioLista"></dl>
+    </div>
+  </div>
+
+  <!-- Guia de solução de problemas -->
+  <div class="card" id="troubleCard">
+    <div class="timeline-head card-head" id="troubleToggle" onclick="toggleTrouble()" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="troubleTitulo">Solução de problemas</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="troubleWrap">
+      <p class="ddt-intro" id="troubleIntro"></p>
+      <div class="trouble-lista" id="troubleLista"></div>
+    </div>
+  </div>
+
   </div><!-- /ABA Referência -->
 
   <footer id="footer" data-i18n="footer">
@@ -1543,6 +1709,62 @@
   };
   // Chevron dos cabeçalhos colapsáveis (gira via CSS quando .card-head.open)
   const CHEVRON = `<svg class="chevron" ${SVG_ATTRS}><path d="M6 9l6 6 6-6"/></svg>`;
+
+  // ===== Glossário napolitano ===== [termo, definição]
+  const GLOSSARIO = {
+    pt: [
+      ['Poolish', 'Pré-fermento líquido (100% de hidratação, com pouco fermento), fermentado horas antes da massa final. Traz sabor e leveza.'],
+      ['Biga', 'Pré-fermento seco (~45% de hidratação). Alternativa ao poolish, dá massa mais estruturada e aromática.'],
+      ['Puntata', 'Fermentação em bloco: a massa inteira descansa antes de ser dividida.'],
+      ['Staglio', 'Divisão da massa e boleamento nos panetti (bolas individuais).'],
+      ['Appretto', 'Segunda fermentação, já com os panetti boleados, até a hora de assar.'],
+      ['Panetto (pl. panetti)', 'Cada bola de massa que vira uma pizza.'],
+      ['Maturação', 'Desenvolvimento da massa no frio (geladeira): melhora sabor, digestibilidade e estrutura.'],
+      ['Hidratação', 'Quantidade de água em relação à farinha, em %. 67% = 670 g de água para 1000 g de farinha.'],
+      ['Baker\'s %', 'Notação de padeiro: cada ingrediente é uma % do peso da farinha (que é sempre 100%).'],
+      ['DDT', 'Desired Dough Temperature — a temperatura final desejada da massa (aqui, 19–23°C).'],
+      ['Cornicione', 'A borda alta e aerada da pizza napolitana.'],
+      ['Leopard spots', 'As manchinhas escuras (pintado de leopardo) na borda, sinal de forno bem quente.']
+    ],
+    en: [
+      ['Poolish', 'A liquid pre-ferment (100% hydration, little yeast) fermented hours before the final dough. Adds flavor and lightness.'],
+      ['Biga', 'A stiff pre-ferment (~45% hydration). Alternative to poolish; yields a more structured, aromatic dough.'],
+      ['Puntata', 'Bulk fermentation: the whole dough rests before being divided.'],
+      ['Staglio', 'Dividing the dough and shaping it into balls (panetti).'],
+      ['Appretto', 'Second fermentation, with the dough already balled, until baking time.'],
+      ['Panetto (pl. panetti)', 'Each dough ball that becomes one pizza.'],
+      ['Maturation', 'Cold development of the dough (fridge): improves flavor, digestibility and structure.'],
+      ['Hydration', 'Amount of water relative to flour, in %. 67% = 670 g water per 1000 g flour.'],
+      ['Baker\'s %', 'Baker\'s notation: every ingredient is a % of the flour weight (flour = 100%).'],
+      ['DDT', 'Desired Dough Temperature — the target final dough temperature (here, 19–23°C).'],
+      ['Cornicione', 'The tall, airy crust rim of a Neapolitan pizza.'],
+      ['Leopard spots', 'The dark charred spots on the crust — a sign of a properly hot oven.']
+    ]
+  };
+
+  // ===== Solução de problemas ===== [problema, causa, ajuste]
+  const TROUBLE = {
+    pt: [
+      ['A massa rasga ao abrir', 'Glúten pouco desenvolvido ou massa fria/subfermentada.', 'Sove um pouco mais para dar força; deixe os panetti chegarem à temperatura ambiente (2–4h) antes de abrir; não use farinha fraca demais.'],
+      ['A massa encolhe / volta ao abrir', 'Glúten tenso, appretto (2ª fermentação) curto.', 'Deixe os panetti descansarem mais no appretto; abra com as mãos, sem forçar; se resistir, aguarde 10–15 min e volte.'],
+      ['Massa mole e pegajosa, difícil de manusear', 'Hidratação alta ou massa quente.', 'Reduza a hidratação (ex.: 65%); use água mais gelada (veja a calculadora de água); polvilhe bem a bancada; capriche nas dobras.'],
+      ['Borda (cornicione) pálida, sem cor', 'Forno não estava quente o bastante ou tempo curto.', 'Pré-aqueça o Fornetto os 40 min completos a 390°C; deixe assar até a janela de 90–140 s; gire a pizza para dourar por igual.'],
+      ['Queimou embaixo mas crua em cima', 'Pedra/base quente demais em relação ao teto.', 'Reduza levemente a temperatura; asse um pouco mais alto na câmara; gire e, se preciso, levante a pizza por alguns segundos no fim.'],
+      ['Pizza sem alveolagem (borda densa)', 'Subfermentação ou massa fria ao assar.', 'Aumente a maturação/appretto; garanta panetti em temperatura ambiente; confira o fermento e a temperatura final da massa (19–23°C).'],
+      ['Massa azeda demais', 'Sobrematuração (tempo/temperatura em excesso).', 'Reduza o tempo de maturação em bloco ou a temperatura; ajuste o cronograma para uma janela menor.'],
+      ['Fundo grudou na pá / não desliza', 'Pouca farinha na pá ou massa parada tempo demais na pá.', 'Use semolina na pá; monte a pizza rápido e chacoalhe a pá antes de enfornar.']
+    ],
+    en: [
+      ['Dough tears when opening', 'Underdeveloped gluten or cold/underproofed dough.', 'Knead a bit more for strength; let the balls reach room temperature (2–4h) before opening; avoid too weak a flour.'],
+      ['Dough shrinks back when opening', 'Tense gluten, short appretto (2nd proof).', 'Give the balls more appretto; open by hand without forcing; if it resists, wait 10–15 min and try again.'],
+      ['Soft, sticky dough, hard to handle', 'High hydration or warm dough.', 'Lower the hydration (e.g. 65%); use colder water (see the water calculator); flour the bench well; do more folds.'],
+      ['Pale crust (cornicione), no color', 'Oven not hot enough or too short.', 'Preheat the Fornetto the full 40 min at 390°C; bake into the 90–140 s window; rotate the pizza for even browning.'],
+      ['Burnt on the bottom, raw on top', 'Stone/base too hot relative to the top.', 'Lower the temperature slightly; bake a bit higher in the chamber; rotate and, if needed, lift the pizza for a few seconds at the end.'],
+      ['No open crumb (dense crust)', 'Underproofing or cold dough at bake time.', 'Increase maturation/appretto; make sure the balls are at room temperature; check the yeast and the final dough temp (19–23°C).'],
+      ['Dough too sour', 'Over-maturation (too much time/temperature).', 'Reduce bulk maturation time or temperature; adjust the schedule to a shorter window.'],
+      ['Stuck to the peel / won\'t slide', 'Not enough flour on the peel or dough sat too long on it.', 'Use semolina on the peel; build the pizza fast and shake the peel before launching.']
+    ]
+  };
 
   // ===== Internacionalização (PT padrão / EN) =====
   let LANG = 'pt';
@@ -1577,6 +1799,11 @@
       molhoP3: 'Pique o manjericão grosseiramente ou rasgue as folhas com as mãos.',
       molhoP4: 'Junte todos os ingredientes num bowl, misture bem, cubra com filme plástico ou tampa e reserve na geladeira.',
       molhoP5: 'Pronto! O molho mais top para a sua pizza napolitana. 🍅',
+      // Lista de compras
+      comprasTitulo: 'Lista de compras',
+      btnImprimirCompras: 'Imprimir lista',
+      comprasIntro: 'Ingredientes para <b>{discos} disco(s)</b>, já escalados. Massa e molho.',
+      comprasGrupoMassa: 'Massa', comprasGrupoMolho: 'Molho (The Ultimate Sauce)',
       ajusteProducao: 'Ajuste a produção',
       numDiscos: 'Número de discos',
       unitDiscos: 'discos',
@@ -1607,8 +1834,13 @@
       inicioPoolish: 'Início do poolish:', horaAssar: 'Hora de assar:', as: 'às',
       duracaoAppretto: 'Duração do appretto',
       velTitulo: 'Tabela de velocidades — Ooni Halo Core',
+      glossarioTitulo: 'Glossário napolitano',
+      troubleTitulo: 'Solução de problemas',
+      troubleIntro: 'Problemas comuns na napolitana, causas prováveis e como ajustar. Toque em cada item para expandir.',
+      troubleCausa: 'Causa provável', troubleFix: 'Como ajustar',
       btnMostrarVel: 'Mostrar tabela de velocidades', btnOcultarVel: 'Ocultar tabela de velocidades',
       btnImprimirVel: 'Imprimir tabela',
+      btnImprimirGlossario: 'Imprimir glossário',
       thVel: 'Vel.', thPotencia: 'Potência', thUso: 'Uso / equivalente industrial',
       footer: 'Baseado no cronograma validado • Maturação ~53h • Ooni Halo Core • Fornetto Slim 390°C',
       velIntro: 'Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b> (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).',
@@ -1776,6 +2008,11 @@
       molhoP3: 'Roughly chop the basil or tear the leaves by hand.',
       molhoP4: 'Combine everything in a bowl, mix well, cover with plastic film or a lid and keep in the fridge.',
       molhoP5: 'Done! The ultimate sauce for your Neapolitan pizza. 🍅',
+      // Shopping list
+      comprasTitulo: 'Shopping list',
+      btnImprimirCompras: 'Print list',
+      comprasIntro: 'Ingredients for <b>{discos} pizza(s)</b>, already scaled. Dough and sauce.',
+      comprasGrupoMassa: 'Dough', comprasGrupoMolho: 'Sauce (The Ultimate Sauce)',
       ajusteProducao: 'Adjust the batch',
       numDiscos: 'Number of pizzas',
       unitDiscos: 'pizzas',
@@ -1806,8 +2043,13 @@
       inicioPoolish: 'Poolish start:', horaAssar: 'Baking time:', as: 'at',
       duracaoAppretto: 'Appretto duration',
       velTitulo: 'Speed table — Ooni Halo Core',
+      glossarioTitulo: 'Neapolitan glossary',
+      troubleTitulo: 'Troubleshooting',
+      troubleIntro: 'Common Neapolitan issues, likely causes and how to fix them. Tap each item to expand.',
+      troubleCausa: 'Likely cause', troubleFix: 'How to fix',
       btnMostrarVel: 'Show speed table', btnOcultarVel: 'Hide speed table',
       btnImprimirVel: 'Print table',
+      btnImprimirGlossario: 'Print glossary',
       thVel: 'Speed', thPotencia: 'Power', thUso: 'Use / industrial equivalent',
       footer: 'Based on the validated schedule • Maturation ~53h • Ooni Halo Core • Fornetto Slim 390°C',
       velIntro: 'Spiral mixer with rotating bowl (60–300 RPM). Since the industrial mixer is also a spiral, the comparison is direct by hook RPM: <b>industrial 1st speed ≈ 100 RPM</b> (speed 4) and <b>2nd speed ≈ 200 RPM</b> (speed 12).',
@@ -1987,6 +2229,9 @@
     // selects de mês reconstroem com nomes traduzidos (se já populados)
     if (typeof repopularMeses === 'function') repopularMeses();
     renderVelocidades();
+    if (typeof renderGlossario === 'function') renderGlossario();
+    if (typeof renderTrouble === 'function') renderTrouble();
+    document.getElementById('troubleIntro').innerHTML = t('troubleIntro');
     render();
   }
 
@@ -2215,6 +2460,68 @@
 
     // Molho (quantidades escalam com o nº de discos)
     renderMolho(discos);
+
+    // Lista de compras (massa + molho, já escalados)
+    renderCompras(r, discos);
+  }
+
+  // ===== Lista de compras =====
+  function renderCompras(r, discos) {
+    const item = (nome, qtd) =>
+      `<div class="compras-item"><span class="c-box"></span><span class="c-nome">${nome}</span><span class="c-qtd">${qtd}</span></div>`;
+
+    // Massa (reaproveita os totais já calculados em r)
+    const massa = [
+      [t('ingFarinhaAlma'), fmt(r.alma)],
+      [t('ingFarinhaIntegral'), fmt(r.integral)],
+      [t('ingSal'), fmt(r.sal)],
+      [t('ingFermento'), fmt(r.fermento)]
+    ];
+
+    // Molho (mesma escala do renderMolho: base 4 discos)
+    const fator = discos / MOLHO_BASE_DISCOS;
+    const tomateG = Math.round(MOLHO_TOMATE_G * fator);
+    const latas = Math.round((tomateG / 400) * 2) / 2;
+    const alhoDentes = Math.round(MOLHO_ALHO_DENTES * fator * 4) / 4;
+    const manjMin = Math.round(MOLHO_MANJ_MIN * fator);
+    const manjMax = Math.round(MOLHO_MANJ_MAX * fator);
+    const molho = [
+      [t('molhoIngTomate'), `${tomateG} g (${numFmt(latas)} lata${latas === 1 ? '' : 's'})`],
+      [t('molhoIngAlho'), t('molhoQtdAlho', fracDente(alhoDentes))],
+      [t('molhoIngManjericao'), t('molhoQtdManjericao', manjMin, manjMax)],
+      [t('molhoIngAzeite'), t('molhoQtdAzeite')],
+      [t('molhoIngOregano'), t('molhoQtdOregano')],
+      [t('molhoIngSal'), t('molhoQtdSal')],
+      [t('molhoIngPimenta'), t('molhoQtdPimenta')]
+    ];
+
+    document.getElementById('comprasIntro').innerHTML = t('comprasIntro').replace('{discos}', String(discos));
+    document.getElementById('comprasLista').innerHTML =
+      `<div class="compras-grupo"><div class="compras-grupo-tit">${t('comprasGrupoMassa')}</div>${massa.map(([n, q]) => item(n, q)).join('')}</div>` +
+      `<div class="compras-grupo"><div class="compras-grupo-tit">${t('comprasGrupoMolho')}</div>${molho.map(([n, q]) => item(n, q)).join('')}</div>`;
+  }
+
+  function toggleCompras() {
+    const wrap = document.getElementById('comprasWrap');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    setHeadState('comprasToggle', show);
+    saveWrap('comprasWrap', show);
+  }
+
+  // Imprime apenas a lista de compras
+  function imprimirCompras() {
+    const wrap = document.getElementById('comprasWrap');
+    const estavaOculta = !wrap.classList.contains('show');
+    if (estavaOculta) wrap.classList.add('show');
+    document.body.classList.add('print-compras');
+    const limpar = () => {
+      document.body.classList.remove('print-compras');
+      if (estavaOculta) wrap.classList.remove('show');
+      window.removeEventListener('afterprint', limpar);
+    };
+    window.addEventListener('afterprint', limpar);
+    window.print();
   }
 
   // ===== Molho — The Ultimate Sauce =====
@@ -2314,12 +2621,40 @@
   }
   // Abre/fecha todos os blocos conforme a preferência (chamado no init e na troca de idioma).
   function restoreWraps() {
+    restoreWrap('ingWrap', 'ingToggle');
+    restoreWrap('divWrap', 'divToggle');
+    restoreWrap('molhoWrap', 'molhoToggle');
+    restoreWrap('comprasWrap', 'comprasToggle');
     restoreWrap('ddtWrap', 'ddtToggle');
     restoreWrap('mixWrap', 'mixToggle');
     restoreWrap('fornoWrap', 'fornoToggle');
     restoreWrap('timelineWrap', 'tlToggle');
     restoreWrap('velocidadesWrap', 'velToggle');
+    restoreWrap('glossarioWrap', 'glossarioToggle');
+    restoreWrap('troubleWrap', 'troubleToggle');
     restoreWrap('diarioWrap', 'diarioToggle');
+  }
+
+  function toggleIng() {
+    const wrap = document.getElementById('ingWrap');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    setHeadState('ingToggle', show);
+    saveWrap('ingWrap', show);
+  }
+  function toggleDiv() {
+    const wrap = document.getElementById('divWrap');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    setHeadState('divToggle', show);
+    saveWrap('divWrap', show);
+  }
+  function toggleMolho() {
+    const wrap = document.getElementById('molhoWrap');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    setHeadState('molhoToggle', show);
+    saveWrap('molhoWrap', show);
   }
 
   function toggleDDT() {
@@ -2631,6 +2966,41 @@
     wrap.classList.toggle('show', show);
     setHeadState('velToggle', show);
     saveWrap('velocidadesWrap', show);
+  }
+
+  // ===== Glossário napolitano =====
+  function renderGlossario() {
+    const itens = GLOSSARIO[LANG] || GLOSSARIO.pt;
+    document.getElementById('glossarioLista').innerHTML = itens.map(
+      ([termo, def]) => `<dt>${termo}</dt><dd>${def}</dd>`
+    ).join('');
+  }
+  function toggleGlossario() {
+    const wrap = document.getElementById('glossarioWrap');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    setHeadState('glossarioToggle', show);
+    saveWrap('glossarioWrap', show);
+  }
+
+  // ===== Solução de problemas =====
+  function renderTrouble() {
+    const itens = TROUBLE[LANG] || TROUBLE.pt;
+    document.getElementById('troubleLista').innerHTML = itens.map(
+      ([prob, causa, fix]) => `
+        <details class="trouble">
+          <summary>${prob}</summary>
+          <p class="t-causa"><b>${t('troubleCausa')}:</b> ${causa}</p>
+          <p class="t-fix"><b>${t('troubleFix')}:</b> ${fix}</p>
+        </details>`
+    ).join('');
+  }
+  function toggleTrouble() {
+    const wrap = document.getElementById('troubleWrap');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    setHeadState('troubleToggle', show);
+    saveWrap('troubleWrap', show);
   }
 
   // ===== Alarme sonoro (Web Audio) — compartilhado pelos timers =====
@@ -3227,6 +3597,21 @@
     document.body.classList.add('print-velocidades');
     const limpar = () => {
       document.body.classList.remove('print-velocidades');
+      if (estavaOculta) wrap.classList.remove('show');
+      window.removeEventListener('afterprint', limpar);
+    };
+    window.addEventListener('afterprint', limpar);
+    window.print();
+  }
+
+  // Imprime apenas o glossário
+  function imprimirGlossario() {
+    const wrap = document.getElementById('glossarioWrap');
+    const estavaOculta = !wrap.classList.contains('show');
+    if (estavaOculta) wrap.classList.add('show');
+    document.body.classList.add('print-glossario');
+    const limpar = () => {
+      document.body.classList.remove('print-glossario');
       if (estavaOculta) wrap.classList.remove('show');
       window.removeEventListener('afterprint', limpar);
     };
