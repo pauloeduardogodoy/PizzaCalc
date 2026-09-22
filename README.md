@@ -28,10 +28,14 @@ com base no equipamento real de casa. A receita de referência (fonte da verdade
 
 ### Funcionalidades
 
-O app é organizado em **abas** (Receita · Preparo · Cronograma · Diário · Referência), com os
-controles de produção sempre visíveis no topo — assim você chega rápido ao que precisa. Cada
-card recolhível (água, mistura, cocção, cronograma, diário, velocidades) abre por padrão e
+O app é organizado em **abas** (Receita · Preparo · Cronograma · Diário · Referência) com
+ícones; no celular as abas mostram só o ícone. Os controles de produção ficam sempre visíveis
+no topo. Cada card recolhível (água, mistura, cocção, cronograma, diário, velocidades)
+**expande/recolhe ao clicar no cabeçalho** (com um chevron que gira), abre por padrão e
 **lembra se você o deixou aberto ou fechado** entre sessões. O app sempre inicia na aba Receita.
+Os botões usam ícones: os de ação comum (imprimir, salvar, registrar, exportar/importar)
+mostram ícone + texto no desktop e só ícone no celular; os timers usam só ícones (play/pausar/
+zerar).
 
 - **Calculadora de ingredientes** — Escala a receita por nº de discos (2–10), peso por panetto
   (260–320 g) e hidratação (60–85%), mantendo as baker's percentages. Mostra a divisão
@@ -97,11 +101,13 @@ based on real home equipment. Reference recipe (source of truth):
 
 ### Features
 
-The app is organized into **tabs** (Recipe · Prep · Schedule · Log · Reference), with the
-production controls always visible at the top — so you reach what you need quickly. Each
-collapsible card (water, mixing, baking, schedule, log, speeds) opens by default and
-**remembers whether you left it open or closed** across sessions. The app always starts on
-the Recipe tab.
+The app is organized into **tabs** (Recipe · Prep · Schedule · Log · Reference) with icons;
+on mobile the tabs show the icon only. The production controls stay visible at the top. Each
+collapsible card (water, mixing, baking, schedule, log, speeds) **expands/collapses when you
+tap its header** (with a rotating chevron), opens by default and **remembers whether you left
+it open or closed** across sessions. The app always starts on the Recipe tab. Buttons use
+icons: common actions (print, save, log, export/import) show icon + text on desktop and
+icon-only on mobile; timers use icons only (play/pause/reset).
 
 - **Ingredient calculator** — Scales by number of pizzas (2–10), weight per ball (260–320 g)
   and hydration (60–85%), keeping baker's percentages. Shows the poolish / final-dough split.
