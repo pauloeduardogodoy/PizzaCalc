@@ -1,4 +1,4 @@
-# 🍕 Calculadora de Massa — Pizza Napolitana
+# 🍕 PizzaCalc — Pizza Napolitana
 
 > **PT** · Calculadora e guia de produção para pizza napolitana com poolish, pensada para quem
 > faz em casa com a masseira **Ooni Halo Core** e o forno **Fornetto Slim**.
