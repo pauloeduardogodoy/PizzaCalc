@@ -831,7 +831,12 @@
     gap: 6px;
     flex-wrap: wrap;
   }
-  .plan-selects select { flex: 1; min-width: 60px; font-size: 0.85rem; padding: 7px 8px; }
+  .plan-selects select { flex: 1; min-width: 52px; font-size: 0.85rem; padding: 7px 6px; }
+  /* dia e mês mais estreitos; ano e hora mais largos */
+  .plan-selects select:nth-child(1),
+  .plan-selects select:nth-child(2) { flex: 0.8; }
+  .plan-selects select:nth-child(3),
+  .plan-selects select:nth-child(4) { flex: 1.3; }
 
   /* Alertas do cronograma (horário incômodo, fases fora de faixa) */
   .crono-alert {
