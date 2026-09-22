@@ -447,6 +447,9 @@
     color: var(--gray);
   }
   .timeline-head .progress b { color: var(--orange); }
+  /* subtítulo (tempo ativo / contagem) logo abaixo do cabeçalho, colado ao conteúdo */
+  .progress-sub { display: block; margin: 10px 0 4px; font-size: 0.86rem; color: var(--gray); line-height: 1.45; }
+  .progress-sub b { color: var(--dark); }
 
   .timeline {
     position: relative;
@@ -592,6 +595,8 @@
   #ddtWrap { display: none; }
   #ddtWrap.show { display: block; }
   .ddt-intro { font-size: 0.86rem; color: var(--gray); line-height: 1.45; margin: 0 0 16px; }
+  /* respiro entre o cabeçalho e a intro quando ela é o 1º elemento do bloco */
+  #ddtWrap > .ddt-intro:first-child, #fornoWrap > .ddt-intro:first-child { margin-top: 10px; }
   .ddt-intro b { color: var(--dark); }
   /* Telas grandes: as 4 caixas de temperatura numa linha (4 colunas);
      o atrito (último campo, slider) ocupa a linha inteira abaixo. */
@@ -711,8 +716,53 @@
     font-weight: 700;
     padding: 8px 16px;
     font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
   }
   .alarme-btn:hover { background: #a8200e !important; }
+  /* Botões de timer só com ícone (play/pause/zerar) */
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px;
+    width: 40px;
+    height: 40px;
+  }
+  .timer-ico { width: 20px; height: 20px; flex: none; display: block; }
+  .alarme-btn .timer-ico { width: 18px; height: 18px; }
+
+  /* Botões com ícone + texto (desktop) / só ícone (mobile) */
+  .print-btn, .icon-label-btn { display: inline-flex; align-items: center; gap: 7px; }
+  .print-ico { display: inline-flex; }
+  .btn-ico { width: 17px; height: 17px; display: block; flex: none; }
+  @media (max-width: 560px) {
+    .print-btn .btn-txt, .icon-label-btn .btn-txt { display: none; }
+    .print-btn, .icon-label-btn { padding: 8px 12px; }
+  }
+  /* Botões com ícone + texto SEMPRE (não colapsam no mobile) */
+  .icon-fixed-btn { display: inline-flex; align-items: center; gap: 7px; }
+
+  /* Cabeçalho de card colapsável (clicável) + chevron */
+  .card-head {
+    cursor: pointer;
+    user-select: none;
+    border-radius: 8px;
+    margin: -4px -6px;
+    padding: 4px 6px;
+  }
+  .card-head:hover { background: var(--orange-light); }
+  .card-head:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+  .chevron-wrap {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    color: var(--orange);
+  }
+  .chevron { width: 20px; height: 20px; display: block; transition: transform 0.2s ease; }
+  .card-head.open .chevron { transform: rotate(180deg); }
+  @media print { .chevron-wrap { display: none !important; } }
 
   /* Timer do forno Fornetto */
   #fornoWrap { display: none; }
@@ -1152,16 +1202,16 @@
       <div class="perfis-row">
         <select id="perfilSelect" onchange="carregarPerfil(this.value)"></select>
         <div class="perfis-botoes">
-          <button onclick="salvarPerfil()" data-i18n="btnSalvarPerfil">Salvar perfil</button>
-          <button id="perfilExcluir" onclick="excluirPerfil()" data-i18n="btnExcluirPerfil">Excluir</button>
+          <button class="icon-label-btn" onclick="salvarPerfil()"><span class="print-ico" data-ico="disquete"></span><span class="btn-txt" data-i18n="btnSalvarPerfil">Salvar perfil</span></button>
+          <button class="icon-fixed-btn" id="perfilExcluir" onclick="excluirPerfil()"><span class="print-ico" data-ico="lixeira"></span><span data-i18n="btnExcluirPerfil">Excluir</span></button>
         </div>
       </div>
     </div>
 
     <div class="btns">
       <button class="primary" onclick="receitaPadrao()" data-i18n="btnReceitaPadrao">Receita padrão (6 × 280g · 67%)</button>
-      <button onclick="imprimirReceita()" data-i18n="btnImprimirReceita">Imprimir receita</button>
-      <button onclick="imprimirTudo()" data-i18n="btnImprimirTudo">Imprimir tudo</button>
+      <button class="print-btn" onclick="imprimirReceita()"><span class="print-ico" data-ico="impressora1"></span><span class="btn-txt" data-i18n="btnImprimirReceita">Imprimir receita</span></button>
+      <button class="print-btn" onclick="imprimirTudo()"><span class="print-ico" data-ico="impressoraN"></span><span class="btn-txt" data-i18n="btnImprimirTudo">Imprimir tudo</span></button>
     </div>
 
     <div class="warn-box" id="hidraWarn"></div>
@@ -1251,11 +1301,9 @@
 
   <!-- Temperatura da água (DDT) -->
   <div class="card" id="ddtCard">
-    <div class="timeline-head">
+    <div class="timeline-head card-head" id="ddtToggle" onclick="toggleDDT()" role="button" tabindex="0" aria-expanded="true">
       <h2 style="margin:0" data-i18n="ddtTitulo">Temperatura da água (Halo Core)</h2>
-    </div>
-    <div class="btns" style="margin-top:12px">
-      <button class="primary" id="ddtToggle" onclick="toggleDDT()" data-i18n="btnMostrarDDT">Mostrar temperatura</button>
+      <span class="chevron-wrap"></span>
     </div>
     <div id="ddtWrap">
     <p class="ddt-intro" id="ddtIntro"></p>
@@ -1304,14 +1352,12 @@
 
   <!-- Guia de mistura passo a passo (com timer) -->
   <div class="card" id="mixCard">
-    <div class="timeline-head">
+    <div class="timeline-head card-head" id="mixToggle" onclick="toggleMix()" role="button" tabindex="0" aria-expanded="true">
       <h2 style="margin:0" data-i18n="mixTitulo">Guia de mistura — Halo Core</h2>
-      <span class="progress" id="mixTotal"></span>
-    </div>
-    <div class="btns" style="margin-top:12px">
-      <button class="primary" id="mixToggle" onclick="toggleMix()" data-i18n="btnMostrarMix">Mostrar guia de mistura</button>
+      <span class="chevron-wrap"></span>
     </div>
     <div id="mixWrap">
+      <span class="progress progress-sub" id="mixTotal"></span>
       <p class="ddt-intro" id="mixIntro"></p>
       <div class="mix-steps" id="mixSteps"></div>
     </div>
@@ -1319,11 +1365,9 @@
 
   <!-- Timer do forno Fornetto Slim -->
   <div class="card" id="fornoCard">
-    <div class="timeline-head">
+    <div class="timeline-head card-head" id="fornoToggle" onclick="toggleForno()" role="button" tabindex="0" aria-expanded="true">
       <h2 style="margin:0" data-i18n="fornoTitulo">Guia de cocção — Fornetto Slim</h2>
-    </div>
-    <div class="btns" style="margin-top:12px">
-      <button class="primary" id="fornoToggle" onclick="toggleForno()" data-i18n="btnMostrarForno">Mostrar timers do forno</button>
+      <span class="chevron-wrap"></span>
     </div>
     <div id="fornoWrap">
       <p class="ddt-intro" id="fornoIntro"></p>
@@ -1337,8 +1381,8 @@
         <p class="mdesc" id="preaqDesc"></p>
         <div class="mix-timer">
           <span class="mix-clock" id="preaqClock">40:00</span>
-          <button class="primary" id="preaqBtn" onclick="preaqToggle()" data-i18n="mixStart">Iniciar</button>
-          <button onclick="preaqReset()" data-i18n="mixReset">Zerar</button>
+          <button class="primary icon-btn" id="preaqBtn" onclick="preaqToggle()"></button>
+          <button class="icon-btn" id="preaqResetBtn" onclick="preaqReset()"></button>
         </div>
       </div>
 
@@ -1351,8 +1395,8 @@
         <p class="mdesc" id="coccaoDesc"></p>
         <div class="mix-timer">
           <span class="mix-clock" id="coccaoClock">00:00</span>
-          <button class="primary" id="coccaoBtn" onclick="coccaoToggle()" data-i18n="mixStart">Iniciar</button>
-          <button onclick="coccaoReset()" data-i18n="mixReset">Zerar</button>
+          <button class="primary icon-btn" id="coccaoBtn" onclick="coccaoToggle()"></button>
+          <button class="icon-btn" id="coccaoResetBtn" onclick="coccaoReset()"></button>
         </div>
         <div class="coccao-bar"><div class="coccao-fill" id="coccaoFill"></div></div>
         <div class="coccao-status" id="coccaoStatus"></div>
@@ -1367,15 +1411,15 @@
 
   <!-- Diário de fornadas -->
   <div class="card" id="diarioCard">
-    <div class="timeline-head">
+    <div class="timeline-head card-head" id="diarioToggle" onclick="toggleDiario()" role="button" tabindex="0" aria-expanded="true">
       <h2 style="margin:0" data-i18n="diarioTitulo">Diário de fornadas</h2>
-      <span class="progress" id="diarioContagem"></span>
+      <span class="chevron-wrap"></span>
     </div>
     <div class="btns" style="margin-top:12px">
-      <button class="primary" id="diarioToggle" onclick="toggleDiario()" data-i18n="btnMostrarDiario">Mostrar diário</button>
-      <button onclick="registrarFornada()" data-i18n="btnRegistrarFornada">Registrar fornada</button>
+      <button class="icon-label-btn" onclick="registrarFornada()"><span class="print-ico" data-ico="livroMais"></span><span class="btn-txt" data-i18n="btnRegistrarFornada">Registrar fornada</span></button>
     </div>
     <div id="diarioWrap">
+      <span class="progress progress-sub" id="diarioContagem"></span>
       <p class="ddt-intro" id="diarioIntro"></p>
 
       <!-- Médias / calibração -->
@@ -1386,8 +1430,8 @@
 
       <!-- Exportar / compartilhar / importar -->
       <div class="btns" style="margin-top:16px">
-        <button onclick="exportarDiario()" data-i18n="btnExportarDiario">Exportar / compartilhar</button>
-        <button onclick="importarDiario()" data-i18n="btnImportarDiario">Importar</button>
+        <button class="icon-label-btn" onclick="exportarDiario()"><span class="print-ico" data-ico="exportar"></span><span class="btn-txt" data-i18n="btnExportarDiario">Exportar / compartilhar</span></button>
+        <button class="icon-label-btn" onclick="importarDiario()"><span class="print-ico" data-ico="importar"></span><span class="btn-txt" data-i18n="btnImportarDiario">Importar</span></button>
       </div>
     </div>
   </div>
@@ -1399,15 +1443,15 @@
 
   <!-- Cronograma (timeline) -->
   <div class="card" id="timelineCard">
-    <div class="timeline-head">
+    <div class="timeline-head card-head" id="tlToggle" onclick="toggleTimeline()" role="button" tabindex="0" aria-expanded="true">
       <h2 style="margin:0" data-i18n="cronogramaTitulo">Cronograma passo a passo</h2>
       <span class="progress" id="tlProgress"></span>
+      <span class="chevron-wrap"></span>
     </div>
     <div class="btns" style="margin-top:12px">
-      <button class="primary" id="tlToggle" onclick="toggleTimeline()" data-i18n="btnMostrarCrono">Mostrar cronograma</button>
-      <button onclick="carregarCronogramaPadrao()" data-i18n="btnCarregarPadrao">Carregar cronograma padrão</button>
-      <button onclick="imprimirCronograma()" data-i18n="btnImprimirCrono">Imprimir cronograma</button>
-      <button id="tlReset" onclick="resetTimeline()" style="display:none" data-i18n="btnLimpar">Limpar marcações</button>
+      <button class="icon-fixed-btn" onclick="carregarCronogramaPadrao()"><span class="print-ico" data-ico="recarregar"></span><span data-i18n="btnCarregarPadrao">Carregar cronograma padrão</span></button>
+      <button class="print-btn" onclick="imprimirCronograma()"><span class="print-ico"></span><span class="btn-txt" data-i18n="btnImprimirCrono">Imprimir cronograma</span></button>
+      <button class="icon-fixed-btn" id="tlReset" onclick="resetTimeline()" style="display:none"><span class="print-ico" data-ico="borracha"></span><span data-i18n="btnLimpar">Limpar marcações</span></button>
     </div>
     <div id="timelineWrap">
       <div class="plan-ctrl">
@@ -1448,12 +1492,12 @@
 
   <!-- Tabela de velocidades da Halo Core -->
   <div class="card" id="velocidadesCard">
-    <div class="timeline-head">
+    <div class="timeline-head card-head" id="velToggle" onclick="toggleVelocidades()" role="button" tabindex="0" aria-expanded="true">
       <h2 style="margin:0" data-i18n="velTitulo">Tabela de velocidades — Ooni Halo Core</h2>
+      <span class="chevron-wrap"></span>
     </div>
     <div class="btns" style="margin-top:12px">
-      <button class="primary" id="velToggle" onclick="toggleVelocidades()" data-i18n="btnMostrarVel">Mostrar tabela de velocidades</button>
-      <button onclick="imprimirVelocidades()" data-i18n="btnImprimirVel">Imprimir tabela</button>
+      <button class="print-btn" onclick="imprimirVelocidades()"><span class="print-ico"></span><span class="btn-txt" data-i18n="btnImprimirVel">Imprimir tabela</span></button>
     </div>
     <div id="velocidadesWrap">
       <p class="vel-intro" id="velIntro"></p>
@@ -1474,6 +1518,30 @@
 </div>
 
 <script>
+  // ===== Ícones SVG dos timers (traço/fill único, herdam currentColor) =====
+  const SVG_ATTRS = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+  const ICO = {
+    play: `<svg class="timer-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>`,
+    pause: `<svg class="timer-ico" ${SVG_ATTRS}><rect x="7" y="5" width="3.4" height="14" rx="1" fill="currentColor" stroke="none"/><rect x="13.6" y="5" width="3.4" height="14" rx="1" fill="currentColor" stroke="none"/></svg>`,
+    reset: `<svg class="timer-ico" ${SVG_ATTRS}><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/></svg>`,
+    sino: `<svg class="timer-ico" ${SVG_ATTRS}><path d="M6 8a6 6 0 0 1 12 0c0 7 3 5 3 9H3c0-4 3-2 3-9z"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg>`,
+    impressora: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M6 9V3h12v6"/><rect x="6" y="13" width="12" height="8"/><path d="M6 17H4a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2"/></svg>`,
+    // impressora original (Imprimir receita)
+    impressora1: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M6 9V3h12v6"/><rect x="6" y="13" width="12" height="8"/><path d="M6 17H4a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2"/></svg>`,
+    // impressora original completa + "+" sobreposto no canto (Imprimir tudo)
+    impressoraN: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M6 9V3h12v6"/><rect x="6" y="13" width="12" height="8"/><path d="M6 17H4a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2"/><path d="M20 2.5v7M16.5 6h7" stroke-width="2.6"/></svg>`,
+    // Fase 3
+    disquete: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M5 3h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M8 3v5h6V3"/><rect x="8" y="13" width="8" height="5"/></svg>`,
+    livroMais: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M11 5c-1.4-1.1-3.3-1.8-5.5-1.8H2.5v12.6h4c1.6 0 3.1.5 4.5 1.5 1.4-1 2.9-1.5 4.5-1.5h4V3.2h-3C14.3 3.2 12.4 3.9 11 5z"/><path d="M11 5v12.3"/><path d="M18.5 14v7M15 17.5h7" stroke-width="2.6"/></svg>`,
+    exportar: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/></svg>`,
+    importar: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/></svg>`,
+    lixeira: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><path d="M10 11v6M14 11v6"/></svg>`,
+    recarregar: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v4h-4"/></svg>`,
+    borracha: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M8 20H5l-2-2a2 2 0 0 1 0-2.8l9-9a2 2 0 0 1 2.8 0l4 4a2 2 0 0 1 0 2.8L13 20z"/><path d="M8 20h13"/><path d="M9 11l6 6"/></svg>`
+  };
+  // Chevron dos cabeçalhos colapsáveis (gira via CSS quando .card-head.open)
+  const CHEVRON = `<svg class="chevron" ${SVG_ATTRS}><path d="M6 9l6 6 6-6"/></svg>`;
+
   // ===== Internacionalização (PT padrão / EN) =====
   let LANG = 'pt';
 
@@ -1578,17 +1646,17 @@
       mixStart: 'Iniciar', mixPause: 'Pausar', mixResume: 'Retomar', mixReset: 'Zerar',
       mixPararAlarme: '🔔 Parar alarme',
       mixOpcional: 'opcional',
-      mixS1Tit: 'Dissolver o poolish', mixS1Vel: 'vel. 4',
+      mixS1Tit: 'Dissolver o poolish', mixS1Vel: 'velocidade 4',
       mixS1Desc: 'Toda a água + todo o poolish no bowl por 1 minuto até dissolver bem.',
-      mixS2Tit: 'Incorporar a farinha', mixS2Vel: 'vel. 5',
+      mixS2Tit: 'Incorporar a farinha', mixS2Vel: 'velocidade 5',
       mixS2Desc: 'Adicionar o fermento e a farinha restante aos poucos por 4 minutos.',
       mixS3Tit: 'Descanso (puntata curta)', mixS3Vel: 'parada',
       mixS3Desc: 'Pausa de 20 minutos para relaxamento do glúten (não é autólise: há poolish e fermento).',
-      mixS4Tit: 'Adicionar o sal', mixS4Vel: 'vel. 6',
+      mixS4Tit: 'Adicionar o sal', mixS4Vel: 'velocidade 6',
       mixS4Desc: 'Adicionar o sal e misturar por 2 minutos.',
-      mixS5Tit: 'Sova de força', mixS5Vel: 'vel. 8–9',
+      mixS5Tit: 'Sova de força', mixS5Vel: 'velocidade 8–9',
       mixS5Desc: 'Sova por 6 minutos para ganhar força, monitorando a temperatura.',
-      mixS6Tit: 'Burst de fechamento', mixS6Vel: 'vel. 12',
+      mixS6Tit: 'Burst de fechamento', mixS6Vel: 'velocidade 12',
       mixS6Desc: 'Se necessário, sove em velocidade 12 por no máximo 45 segundos.',
       // Timer do forno Fornetto
       fornoTitulo: 'Guia de cocção — Fornetto Slim',
@@ -1882,25 +1950,12 @@
       const k = el.getAttribute('data-i18n');
       if (I18N[LANG][k] !== undefined) el.innerHTML = t(k);
     });
-    // botões toggle refletem o estado atual (mostrar/ocultar)
-    const tlWrap = document.getElementById('timelineWrap');
-    document.getElementById('tlToggle').textContent =
-      tlWrap.classList.contains('show') ? t('btnOcultarCrono') : t('btnMostrarCrono');
-    const velWrap = document.getElementById('velocidadesWrap');
-    document.getElementById('velToggle').textContent =
-      velWrap.classList.contains('show') ? t('btnOcultarVel') : t('btnMostrarVel');
     // nota, intro e conteúdos dependentes de idioma
     document.getElementById('comoFunciona').innerHTML = t('comoFunciona');
     document.getElementById('velIntro').innerHTML = t('velIntro');
     document.getElementById('ddtIntro').innerHTML = t('ddtIntro');
     document.getElementById('ddtNota').innerHTML = t('ddtNota');
-    const ddtWrap = document.getElementById('ddtWrap');
-    document.getElementById('ddtToggle').textContent =
-      ddtWrap.classList.contains('show') ? t('btnOcultarDDT') : t('btnMostrarDDT');
     document.getElementById('mixIntro').innerHTML = t('mixIntro');
-    const mixWrap = document.getElementById('mixWrap');
-    document.getElementById('mixToggle').textContent =
-      mixWrap.classList.contains('show') ? t('btnOcultarMix') : t('btnMostrarMix');
     renderMix();
     // Timers do forno (textos dinâmicos + botões)
     document.getElementById('fornoIntro').innerHTML = t('fornoIntro');
@@ -1910,11 +1965,13 @@
       document.getElementById('preaqDesc').innerHTML = preaqReady ? `<b>${t('preaqPronto')}</b>` : t('preaqDesc');
     }
     document.getElementById('coccaoDesc').innerHTML = t('coccaoDesc');
-    const fornoWrap = document.getElementById('fornoWrap');
-    document.getElementById('fornoToggle').textContent =
-      fornoWrap.classList.contains('show') ? t('btnOcultarForno') : t('btnMostrarForno');
     atualizarPreaq();
     atualizarCoccao();
+    // botões ícone+texto que colapsam no mobile: title/aria-label a partir do texto
+    document.querySelectorAll('.print-btn, .icon-label-btn').forEach(b => {
+      const txt = b.querySelector('.btn-txt');
+      if (txt) { b.setAttribute('title', txt.textContent); b.setAttribute('aria-label', txt.textContent); }
+    });
     // botão de wake lock (rótulo depende do estado, não só do data-i18n)
     if (typeof atualizarBotaoWake === 'function') atualizarBotaoWake();
     // dropdown de perfis (placeholder é traduzido) — preserva a seleção atual
@@ -1924,9 +1981,6 @@
     }
     // diário de fornadas (intro + botão + fichas dependem do idioma)
     document.getElementById('diarioIntro').innerHTML = t('diarioIntro');
-    const diarioWrap = document.getElementById('diarioWrap');
-    document.getElementById('diarioToggle').textContent =
-      diarioWrap.classList.contains('show') ? t('btnOcultarDiario') : t('btnMostrarDiario');
     if (typeof renderDiario === 'function') renderDiario();
     // selects de mês reconstroem com nomes traduzidos (se já populados)
     if (typeof repopularMeses === 'function') repopularMeses();
@@ -2237,33 +2291,40 @@
   function saveWrap(id, aberto) {
     try { localStorage.setItem('pizzaOpen_' + id, aberto ? '1' : '0'); } catch (e) {}
   }
+  // Reflete no cabeçalho o estado aberto/fechado: classe .open, aria-expanded e o chevron.
+  function setHeadState(headId, aberto) {
+    const head = document.getElementById(headId);
+    if (!head) return;
+    head.classList.toggle('open', aberto);
+    head.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+    const cw = head.querySelector('.chevron-wrap');
+    if (cw && !cw.innerHTML) cw.innerHTML = CHEVRON;   // injeta o chevron uma vez
+  }
   // Restaura o estado de um bloco. Sem preferência salva => ABERTO por padrão.
-  function restoreWrap(wrapId, btnId, txtOcultar, txtMostrar) {
+  function restoreWrap(wrapId, headId) {
     let pref = null;
     try { pref = localStorage.getItem('pizzaOpen_' + wrapId); } catch (e) {}
     const aberto = (pref === null) ? true : (pref === '1');
     const wrap = document.getElementById(wrapId);
-    const btn = document.getElementById(btnId);
     if (!wrap) return;
     wrap.classList.toggle('show', aberto);
-    if (btn) btn.textContent = aberto ? t(txtOcultar) : t(txtMostrar);
+    setHeadState(headId, aberto);
   }
   // Abre/fecha todos os blocos conforme a preferência (chamado no init e na troca de idioma).
   function restoreWraps() {
-    restoreWrap('ddtWrap', 'ddtToggle', 'btnOcultarDDT', 'btnMostrarDDT');
-    restoreWrap('mixWrap', 'mixToggle', 'btnOcultarMix', 'btnMostrarMix');
-    restoreWrap('fornoWrap', 'fornoToggle', 'btnOcultarForno', 'btnMostrarForno');
-    restoreWrap('timelineWrap', 'tlToggle', 'btnOcultarCrono', 'btnMostrarCrono');
-    restoreWrap('velocidadesWrap', 'velToggle', 'btnOcultarVel', 'btnMostrarVel');
-    restoreWrap('diarioWrap', 'diarioToggle', 'btnOcultarDiario', 'btnMostrarDiario');
+    restoreWrap('ddtWrap', 'ddtToggle');
+    restoreWrap('mixWrap', 'mixToggle');
+    restoreWrap('fornoWrap', 'fornoToggle');
+    restoreWrap('timelineWrap', 'tlToggle');
+    restoreWrap('velocidadesWrap', 'velToggle');
+    restoreWrap('diarioWrap', 'diarioToggle');
   }
 
   function toggleDDT() {
     const wrap = document.getElementById('ddtWrap');
-    const btn = document.getElementById('ddtToggle');
     const show = !wrap.classList.contains('show');
     wrap.classList.toggle('show', show);
-    btn.textContent = show ? t('btnOcultarDDT') : t('btnMostrarDDT');
+    setHeadState('ddtToggle', show);
     saveWrap('ddtWrap', show);
     if (show) render();
   }
@@ -2546,10 +2607,9 @@
 
   function toggleTimeline() {
     const wrap = document.getElementById('timelineWrap');
-    const btn = document.getElementById('tlToggle');
     const show = !wrap.classList.contains('show');
     wrap.classList.toggle('show', show);
-    btn.textContent = show ? t('btnOcultarCrono') : t('btnMostrarCrono');
+    setHeadState('tlToggle', show);
     saveWrap('timelineWrap', show);
   }
 
@@ -2565,10 +2625,9 @@
 
   function toggleVelocidades() {
     const wrap = document.getElementById('velocidadesWrap');
-    const btn = document.getElementById('velToggle');
     const show = !wrap.classList.contains('show');
     wrap.classList.toggle('show', show);
-    btn.textContent = show ? t('btnOcultarVel') : t('btnMostrarVel');
+    setHeadState('velToggle', show);
     saveWrap('velocidadesWrap', show);
   }
 
@@ -2643,16 +2702,16 @@
       const alarmando = ativa && mixState.alarme;
       let btns;
       if (alarmando) {
-        // etapa terminou e o alarme está tocando: botão para silenciar
-        btns = `<button class="alarme-btn" onclick="mixPararAlarme()">${t('mixPararAlarme')}</button>`;
+        // etapa terminou e o alarme está tocando: botão para silenciar (sino + texto)
+        btns = `<button class="alarme-btn" onclick="mixPararAlarme()">${ICO.sino}<span>${t('mixPararAlarme')}</span></button>`;
       } else if (!ativa || (!rodando && restante === seg)) {
-        btns = `<button class="primary" onclick="mixStart(${i})">${t('mixStart')}</button>`;
+        btns = `<button class="primary icon-btn" onclick="mixStart(${i})" aria-label="${t('mixStart')}" title="${t('mixStart')}">${ICO.play}</button>`;
       } else if (rodando) {
-        btns = `<button onclick="mixPause()">${t('mixPause')}</button>
-                <button onclick="mixReset(${i})">${t('mixReset')}</button>`;
+        btns = `<button class="icon-btn" onclick="mixPause()" aria-label="${t('mixPause')}" title="${t('mixPause')}">${ICO.pause}</button>
+                <button class="icon-btn" onclick="mixReset(${i})" aria-label="${t('mixReset')}" title="${t('mixReset')}">${ICO.reset}</button>`;
       } else {
-        btns = `<button class="primary" onclick="mixStart(${i})">${t('mixResume')}</button>
-                <button onclick="mixReset(${i})">${t('mixReset')}</button>`;
+        btns = `<button class="primary icon-btn" onclick="mixStart(${i})" aria-label="${t('mixResume')}" title="${t('mixResume')}">${ICO.play}</button>
+                <button class="icon-btn" onclick="mixReset(${i})" aria-label="${t('mixReset')}" title="${t('mixReset')}">${ICO.reset}</button>`;
       }
 
       html += `
@@ -2740,10 +2799,9 @@
 
   function toggleMix() {
     const wrap = document.getElementById('mixWrap');
-    const btn = document.getElementById('mixToggle');
     const show = !wrap.classList.contains('show');
     wrap.classList.toggle('show', show);
-    btn.textContent = show ? t('btnOcultarMix') : t('btnMostrarMix');
+    setHeadState('mixToggle', show);
     saveWrap('mixWrap', show);
     if (show) renderMix();
   }
@@ -2801,15 +2859,25 @@
     document.getElementById('preaqClock').textContent = mmss(preaq.restante);
     const btn = document.getElementById('preaqBtn');
     const timer = document.getElementById('preaqTimer');
+    const resetBtn = document.getElementById('preaqResetBtn');
+    resetBtn.innerHTML = ICO.reset;
+    resetBtn.setAttribute('aria-label', t('mixReset'));
+    resetBtn.setAttribute('title', t('mixReset'));
+    // reset só aparece fora do estado inicial (rodando, pausado ou alarme)
+    const preaqInicial = !preaq.rodando && !preaq.alarme && preaq.restante === PREAQ_SEG;
+    resetBtn.style.display = preaqInicial ? 'none' : '';
     if (preaq.alarme) {
       timer.classList.add('alarme');
-      btn.textContent = t('mixPararAlarme');
+      btn.innerHTML = `${ICO.sino}<span>${t('mixPararAlarme')}</span>`;
       btn.className = 'alarme-btn';
+      btn.removeAttribute('aria-label'); btn.removeAttribute('title');
       btn.setAttribute('onclick', 'preaqPararAlarme()');
     } else {
       timer.classList.remove('alarme');
-      btn.textContent = preaq.rodando ? t('mixPause') : t('mixStart');
-      btn.className = 'primary';
+      const lbl = preaq.rodando ? t('mixPause') : t('mixStart');
+      btn.innerHTML = preaq.rodando ? ICO.pause : ICO.play;
+      btn.className = 'primary icon-btn';
+      btn.setAttribute('aria-label', lbl); btn.setAttribute('title', lbl);
       btn.setAttribute('onclick', 'preaqToggle()');
     }
   }
@@ -2857,15 +2925,25 @@
     document.getElementById('coccaoClock').textContent = mmss(s);
     const btn = document.getElementById('coccaoBtn');
     const timer = document.getElementById('coccaoTimer');
+    const resetBtn = document.getElementById('coccaoResetBtn');
+    resetBtn.innerHTML = ICO.reset;
+    resetBtn.setAttribute('aria-label', t('mixReset'));
+    resetBtn.setAttribute('title', t('mixReset'));
+    // reset só aparece fora do estado inicial (rodando, pausado ou alarme)
+    const coccaoInicial = !coccao.rodando && !coccao.alarme && coccao.seg === 0;
+    resetBtn.style.display = coccaoInicial ? 'none' : '';
     if (coccao.alarme) {
       timer.classList.add('alarme');
-      btn.textContent = t('mixPararAlarme');
+      btn.innerHTML = `${ICO.sino}<span>${t('mixPararAlarme')}</span>`;
       btn.className = 'alarme-btn';
+      btn.removeAttribute('aria-label'); btn.removeAttribute('title');
       btn.setAttribute('onclick', 'coccaoPararAlarme()');
     } else {
       timer.classList.remove('alarme');
-      btn.textContent = coccao.rodando ? t('mixPause') : t('mixStart');
-      btn.className = 'primary';
+      const lbl = coccao.rodando ? t('mixPause') : t('mixStart');
+      btn.innerHTML = coccao.rodando ? ICO.pause : ICO.play;
+      btn.className = 'primary icon-btn';
+      btn.setAttribute('aria-label', lbl); btn.setAttribute('title', lbl);
       btn.setAttribute('onclick', 'coccaoToggle()');
     }
 
@@ -2890,10 +2968,9 @@
 
   function toggleForno() {
     const wrap = document.getElementById('fornoWrap');
-    const btn = document.getElementById('fornoToggle');
     const show = !wrap.classList.contains('show');
     wrap.classList.toggle('show', show);
-    btn.textContent = show ? t('btnOcultarForno') : t('btnMostrarForno');
+    setHeadState('fornoToggle', show);
     saveWrap('fornoWrap', show);
     if (show) { atualizarPreaq(); atualizarCoccao(); }
   }
@@ -3054,7 +3131,7 @@
           ${f.nota ? `<div class="f-nota">${escapeHtml(f.nota)}</div>` : ''}
           <div class="f-btns">
             ${usarBtn}
-            <button onclick="excluirFornada(${f.ts})">${t('fExcluir')}</button>
+            <button class="icon-fixed-btn" onclick="excluirFornada(${f.ts})">${ICO.lixeira}<span>${t('fExcluir')}</span></button>
           </div>
         </details>`;
     }).join('');
@@ -3062,10 +3139,9 @@
 
   function toggleDiario() {
     const wrap = document.getElementById('diarioWrap');
-    const btn = document.getElementById('diarioToggle');
     const show = !wrap.classList.contains('show');
     wrap.classList.toggle('show', show);
-    btn.textContent = show ? t('btnOcultarDiario') : t('btnMostrarDiario');
+    setHeadState('diarioToggle', show);
     saveWrap('diarioWrap', show);
     if (show) renderDiario();
   }
@@ -3583,6 +3659,18 @@
     if (wakeDesejado) requestWakeLock();
     atualizarBotaoWake();
   })();
+
+  // Acessibilidade: Enter/Espaço nos cabeçalhos colapsáveis (role=button)
+  document.querySelectorAll('.card-head').forEach(head => {
+    head.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); head.click(); }
+    });
+  });
+
+  // Injeta o ícone de impressora nos botões de imprimir (variante conforme data-ico)
+  document.querySelectorAll('.print-ico').forEach(el => {
+    if (!el.innerHTML) el.innerHTML = ICO[el.getAttribute('data-ico')] || ICO.impressora;
+  });
 
   restoreWraps();    // abre/fecha os blocos conforme a preferência salva (padrão: aberto)
   aplicarIdioma();   // aplica textos estáticos + dinâmicos (chama render e renderVelocidades)
