@@ -170,14 +170,23 @@
     font-weight: 700;
     cursor: pointer;
     white-space: nowrap;
-    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
   }
   .tab-btn:hover { background: var(--orange-light); border-color: var(--orange); }
   .tab-btn.active { background: var(--orange); color: #fff; border-color: var(--orange); }
-  /* Telas estreitas: compacta as abas para os 5 rótulos caberem numa linha */
+  .tab-ico { width: 18px; height: 18px; flex: none; }
+  /* o ícone de Preparo (bowl) usa só a metade de cima do viewBox -> aumenta p/ igualar */
+  .tab-ico-preparo { width: 22px; height: 22px; }
+  /* Telas estreitas: mostra só o ícone (o texto some) e centra as abas */
   @media (max-width: 560px) {
-    .tabs { gap: 4px; }
-    .tab-btn { padding: 8px 4px; font-size: 0.74rem; }
+    .tabs { gap: 6px; }
+    .tab-btn { padding: 10px 4px; }
+    .tab-btn .tab-txt { display: none; }
+    .tab-ico { width: 22px; height: 22px; }
+    .tab-ico-preparo { width: 26px; height: 26px; }
   }
   /* Só a aba ativa é exibida */
   .tab-panel { display: none; }
@@ -1162,11 +1171,36 @@
 
   <!-- Barra de abas -->
   <nav class="tabs" id="tabs">
-    <button class="tab-btn" data-tab="receita" onclick="setTab('receita')" data-i18n="tabReceita">Receita</button>
-    <button class="tab-btn" data-tab="preparo" onclick="setTab('preparo')" data-i18n="tabPreparo">Preparo</button>
-    <button class="tab-btn" data-tab="cronograma" onclick="setTab('cronograma')" data-i18n="tabCronograma">Cronograma</button>
-    <button class="tab-btn" data-tab="diario" onclick="setTab('diario')" data-i18n="tabDiario">Diário</button>
-    <button class="tab-btn" data-tab="referencia" onclick="setTab('referencia')" data-i18n="tabReferencia">Referência</button>
+    <button class="tab-btn" data-tab="receita" onclick="setTab('receita')" title="Receita" aria-label="Receita">
+      <svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6 3h9l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/><path d="M8 12h8"/><path d="M8 16h8"/>
+      </svg>
+      <span class="tab-txt" data-i18n="tabReceita">Receita</span>
+    </button>
+    <button class="tab-btn" data-tab="preparo" onclick="setTab('preparo')" title="Preparo" aria-label="Preparo">
+      <svg class="tab-ico tab-ico-preparo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 10h18"/><path d="M4 10a8 8 0 0 0 16 0"/><path d="M15.5 10l2.5-6"/>
+      </svg>
+      <span class="tab-txt" data-i18n="tabPreparo">Preparo</span>
+    </button>
+    <button class="tab-btn" data-tab="cronograma" onclick="setTab('cronograma')" title="Cronograma" aria-label="Cronograma">
+      <svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+      </svg>
+      <span class="tab-txt" data-i18n="tabCronograma">Cronograma</span>
+    </button>
+    <button class="tab-btn" data-tab="diario" onclick="setTab('diario')" title="Diário" aria-label="Diário">
+      <svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 6c-1.5-1.2-3.5-2-6-2H3v14h3c2.5 0 4.5.8 6 2"/><path d="M12 6c1.5-1.2 3.5-2 6-2h3v14h-3c-2.5 0-4.5.8-6 2z"/><path d="M12 6v14"/>
+      </svg>
+      <span class="tab-txt" data-i18n="tabDiario">Diário</span>
+    </button>
+    <button class="tab-btn" data-tab="referencia" onclick="setTab('referencia')" title="Referência" aria-label="Referência">
+      <svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>
+      </svg>
+      <span class="tab-txt" data-i18n="tabReferencia">Referência</span>
+    </button>
   </nav>
 
   <!-- ABA: Receita -->
