@@ -44,6 +44,12 @@ zerar).
   ingredientes, quantidades (que escalam com o nº de discos) e passo a passo.
 - **Lista de compras** — Ingredientes de massa e molho, já escalados pelo nº de discos,
   agrupados para conferir na hora de comprar. Com botão de imprimir.
+- **Custo por pizza** — Você informa o preço de cada ingrediente na unidade de compra
+  (farinhas/sal/fermento por kg; tomate por lata; alho por cabeça; manjericão por maço; azeite
+  por litro) e o app calcula o **custo total** da produção e o **custo por panetto**, escalando
+  com as quantidades de massa e molho. Preços salvos no aparelho, botão "Restaurar preços padrão".
+  Tem **histórico de preços**: salve um registro datado a cada compra para acompanhar a
+  oscilação, restaurar preços antigos ou excluir registros (no estilo do diário).
 - **Alertas de produção** — Avisa hidratação alta (≥71%) e faixa de carga da cuba da Halo Core
   (abaixo de ~700 g a espiral não pega; acima de 2500 g sobrecarrega o motor).
 - **Perfis de massa salvos** — Salva/carrega configurações nomeadas de produção (localStorage).
@@ -56,6 +62,11 @@ zerar).
   (Iniciar/Pausar/Zerar) e **alarme contínuo** que toca até você tocar em "Parar alarme".
 - **Guia de cocção — Fornetto Slim** — Timer de **pré-aquecimento** (40 min a 390°C) e de
   **cocção** (janela ideal 90–140 s) com barra de progresso e alarme contínuo, para não queimar.
+- **Modo "mão na massa"** — Botão no topo abre um passo a passo em **tela cheia**, uma fase por
+  vez (poolish → massa final → maturação → bolear → assar), com fonte e botões grandes para usar
+  na bancada. Mostra as quantidades reais e a temperatura da água, e reaproveita os **mesmos
+  timers** de mistura e de forno nos passos correspondentes. Liga a tela sempre ligada
+  automaticamente enquanto está aberto.
 - **Cronograma passo a passo** — Planeja de trás pra frente a partir do início do poolish +
   hora de assar + duração do appretto. Prioriza poolish de ~20h, usa a maturação em bloco como
   amortecedor e alerta sobre horários incômodos (madrugada), appretto longo e maturação fora de
@@ -122,6 +133,12 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   quantities (scaling with the number of pizzas) and step-by-step instructions.
 - **Shopping list** — Dough and sauce ingredients, already scaled by the number of pizzas,
   grouped for easy checking while shopping. With a print button.
+- **Cost per pizza** — You enter each ingredient's price by its purchase unit (flour/salt/yeast
+  per kg; tomatoes per can; garlic per head; basil per bunch; olive oil per liter) and the app
+  computes the **total batch cost** and the **cost per dough ball**, scaling with the dough and
+  sauce quantities. Prices saved on the device, "Reset default prices" button. Includes a
+  **price history**: save a dated record on each shopping trip to track fluctuations, restore
+  old prices or delete records (bake-log style).
 - **Batch alerts** — Warns about high hydration (≥71%) and the Halo Core bowl load range (below
   ~700 g the spiral won't grab; above 2500 g it overloads the motor).
 - **Saved dough profiles** — Save/load named production settings (localStorage).
@@ -133,6 +150,11 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   (Start/Pause/Reset) and a **continuous alarm** that rings until you tap "Stop alarm".
 - **Baking guide — Fornetto Slim** — **Preheat** timer (40 min at 390°C) and **baking** timer
   (ideal 90–140 s window) with a progress bar and continuous alarm, so you never burn it.
+- **Hands-on mode** — A top button opens a **full-screen** step-by-step, one phase at a time
+  (poolish → final dough → maturation → balling → baking), with large text and buttons for use
+  at the bench. It shows the real quantities and the water temperature, and reuses the **same
+  timers** for mixing and the oven in the matching steps. Keeps the screen on automatically
+  while open.
 - **Step-by-step schedule** — Plans backwards from poolish start + baking time + appretto length.
   Prefers ~20h poolish, uses bulk maturation as the buffer, and warns about awkward hours,
   long appretto and out-of-range maturation. Brazilian date format.
