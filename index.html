@@ -215,8 +215,16 @@
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
-  /* Barra "expandir/recolher tudo" (age na aba ativa) */
-  .collapse-bar { display: flex; justify-content: flex-end; margin: -8px 0 14px; }
+  /* Barra "expandir/recolher tudo" (age na aba ativa) + botão global (todas as abas) */
+  .collapse-bar { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin: -8px 0 14px; }
+  /* botão global: só o ícone de chevron duplo */
+  .collapse-global-btn { padding: 5px 9px; }
+  .collapse-global-btn .cg-ico {
+    width: 16px; height: 16px; display: inline-flex; color: var(--orange);
+    transition: transform 0.2s ease;
+  }
+  /* quando os cards estão abertos (ação = recolher), aponta para cima */
+  .collapse-global-btn.expanded .cg-ico { transform: rotate(180deg); }
   .collapse-all-btn {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 5px 10px;
@@ -976,6 +984,62 @@
   .fornada .f-atrito { font-weight: 700; color: var(--orange); }
   @media print { #diarioCard { display: none !important; } }
 
+  /* Galeria de fotos da fornada */
+  .fornada .f-fotos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: 8px;
+    margin: 10px 0 0;
+  }
+  .fornada .f-foto {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .fornada .f-foto img {
+    width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer;
+  }
+  .fornada .f-foto-x {
+    position: absolute; top: 3px; right: 3px;
+    width: 22px; height: 22px; padding: 0;
+    border-radius: 50%; border: none;
+    background: rgba(0,0,0,0.55); color: #fff;
+    font-size: 1rem; line-height: 1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fornada .f-foto-x:hover { background: #c0392b; }
+
+  /* Lightbox (foto ampliada em tela cheia) */
+  #fotoLightbox {
+    display: none;
+    position: fixed; inset: 0; z-index: 1100;
+    background: rgba(0,0,0,0.92);
+    align-items: center; justify-content: center;
+  }
+  #fotoLightbox.show { display: flex; }
+  #fotoLightbox img {
+    max-width: 94vw; max-height: 86vh;
+    object-fit: contain; border-radius: 6px;
+  }
+  .lb-btn {
+    position: absolute; z-index: 1;
+    width: 48px; height: 48px; border-radius: 50%;
+    border: none; background: rgba(255,255,255,0.15); color: #fff;
+    font-size: 1.6rem; line-height: 1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .lb-btn:hover { background: rgba(255,255,255,0.3); }
+  #lbFechar { top: 16px; right: 16px; font-size: 1.8rem; }
+  #lbPrev { left: 12px; top: 50%; transform: translateY(-50%); }
+  #lbProx { right: 12px; top: 50%; transform: translateY(-50%); }
+  #lbContador {
+    position: absolute; bottom: 16px; left: 0; right: 0;
+    text-align: center; color: #fff; font-size: 0.85rem; opacity: 0.85;
+  }
+  @media print { #fotoLightbox { display: none !important; } }
+
   /* Molho — The Ultimate Sauce */
   /* última linha da tabela com borda pontilhada; o passo a passo não repete a linha */
   #molhoTbody tr:last-child td { border-bottom: 1px dashed var(--line); }
@@ -1091,11 +1155,24 @@
   .preco-snap[open] > .preco-snap-top { margin-bottom: 8px; }
   .preco-snap .ps-data { font-weight: 700; color: var(--dark); font-size: 0.95rem; }
   .preco-snap .ps-resumo { font-size: 0.82rem; color: var(--gray); }
-  .preco-snap .ps-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 2px 14px;
-    margin: 8px 0 0; font-size: 0.84rem;
+  /* histórico: 2 pares (nome+valor) por linha -> 4 colunas, 4 linhas, fonte menor.
+     O font-size/padding vão nos TD (o seletor global "th, td" tem valor explícito
+     que venceria a herança da tabela). */
+  .preco-snap .ps-tabela {
+    width: 100%; border-collapse: collapse; margin: 8px 0 0;
   }
-  .preco-snap .ps-grid span b { color: var(--dark); font-variant-numeric: tabular-nums; }
+  .preco-snap .ps-tabela td {
+    padding: 2px 0; font-size: 0.72rem; border-bottom: none;
+  }
+  .preco-snap .ps-tabela .ps-nome { color: #444; padding-right: 4px; }
+  /* separação entre o 1º par (col 1-2) e o 2º par (col 3-4) */
+  .preco-snap .ps-tabela .ps-nome:nth-child(3) { padding-left: 16px; }
+  .preco-snap .ps-tabela .ps-val {
+    text-align: right; font-weight: 700; color: var(--dark);
+    font-variant-numeric: tabular-nums; white-space: nowrap; padding-right: 6px;
+  }
+  /* a 2ª coluna de valor (última) sem padding à direita */
+  .preco-snap .ps-tabela .ps-val:last-child { padding-right: 0; }
   .preco-snap .ps-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
   .preco-snap .ps-btns button { padding: 5px 12px; font-size: 0.8rem; }
 
@@ -1581,10 +1658,13 @@
     </button>
   </nav>
 
-  <!-- Barra: expandir/recolher todos os cards da aba ativa -->
+  <!-- Barra: expandir/recolher cards da aba ativa (1º) e de TODAS as abas (2º) -->
   <div class="collapse-bar">
     <button id="collapseAllBtn" class="collapse-all-btn" onclick="toggleAllCards()">
       <span class="ca-ico"></span><span id="collapseAllTxt" data-i18n="expandirTudo">Expandir tudo</span>
+    </button>
+    <button id="collapseGlobalBtn" class="collapse-all-btn collapse-global-btn" onclick="toggleAllCardsGlobal()">
+      <span class="cg-ico"></span>
     </button>
   </div>
 
@@ -1941,6 +2021,18 @@
   </div>
 </div>
 
+<!-- Lightbox de fotos do diário (foto ampliada em tela cheia) -->
+<div id="fotoLightbox" role="dialog" aria-modal="true" aria-label="Foto">
+  <button class="lb-btn" id="lbFechar" onclick="fecharLightbox()" aria-label="Fechar">&times;</button>
+  <button class="lb-btn" id="lbPrev" onclick="lightboxNav(-1)" aria-label="Anterior">‹</button>
+  <img id="lbImg" src="" alt="">
+  <button class="lb-btn" id="lbProx" onclick="lightboxNav(1)" aria-label="Próxima">›</button>
+  <div id="lbContador"></div>
+</div>
+
+<!-- input de arquivo (oculto) reaproveitado para adicionar fotos ao diário -->
+<input type="file" id="fotoInput" accept="image/*" multiple style="display:none">
+
 <script>
   // ===== Ícones SVG dos timers (traço/fill único, herdam currentColor) =====
   const SVG_ATTRS = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
@@ -1963,10 +2055,14 @@
     recarregar: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v4h-4"/></svg>`,
     borracha: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M8 20H5l-2-2a2 2 0 0 1 0-2.8l9-9a2 2 0 0 1 2.8 0l4 4a2 2 0 0 1 0 2.8L13 20z"/><path d="M8 20h13"/><path d="M9 11l6 6"/></svg>`,
     // mão aberta (Modo mão na massa)
-    maos: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V11"/><path d="M11 11V4.5a1.5 1.5 0 0 1 3 0V11"/><path d="M14 11V5.5a1.5 1.5 0 0 1 3 0V13"/><path d="M17 8.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1.5a6 6 0 0 1-4.6-2.2L5 15.5a1.6 1.6 0 0 1 2.3-2.2L8.5 15"/></svg>`
+    maos: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V11"/><path d="M11 11V4.5a1.5 1.5 0 0 1 3 0V11"/><path d="M14 11V5.5a1.5 1.5 0 0 1 3 0V13"/><path d="M17 8.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1.5a6 6 0 0 1-4.6-2.2L5 15.5a1.6 1.6 0 0 1 2.3-2.2L8.5 15"/></svg>`,
+    // câmera (adicionar foto ao diário)
+    camera: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L19 6h0a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.2"/></svg>`
   };
   // Chevron dos cabeçalhos colapsáveis (gira via CSS quando .card-head.open)
   const CHEVRON = `<svg class="chevron" ${SVG_ATTRS}><path d="M6 9l6 6 6-6"/></svg>`;
+  // chevron duplo (botão "todas as abas")
+  const CHEVRON_DUPLO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:100%;height:100%"><path d="M6 6l6 6 6-6"/><path d="M6 13l6 6 6-6"/></svg>`;
 
   // ===== Glossário napolitano ===== [termo, definição]
   const GLOSSARIO = {
@@ -2038,9 +2134,11 @@
       tabReceita: 'Receita', tabPreparo: 'Preparo', tabCronograma: 'Cronograma',
       tabDiario: 'Diário', tabReferencia: 'Referência',
       expandirTudo: 'Expandir tudo', recolherTudo: 'Recolher tudo',
+      expandirTudoGeral: 'Expandir todos os cards de todas as abas',
+      recolherTudoGeral: 'Recolher todos os cards de todas as abas',
       // Modo "mão na massa" (passo a passo em tela cheia)
       maoNaMassa: 'Mão na massa',
-      mnmAnterior: 'Anterior', mnmProximo: 'Próximo', mnmConcluir: 'Concluir',
+      mnmAnterior: 'Anterior', mnmProximo: 'Próximo', mnmConcluir: 'Concluir', mnmSair: 'Sair',
       mnmProgresso: (n, total) => `Passo ${n} de ${total}`,
       mnmFaseLabel: (n, total) => `Fase ${n}/${total}`,
       mnmBoxQtd: 'Quantidades para esta produção',
@@ -2117,7 +2215,7 @@
       custoPorPizzaLbl: 'Preço por pizza',
       // nomes curtos no grid do histórico (tabela enxuta)
       custoCurtoAlma: 'Farinha AI', custoCurtoIntegral: 'Farinha Int', custoCurtoSal: 'Sal', custoCurtoFermento: 'Fermento',
-      custoCurtoTomate: 'Tomate pelado', custoCurtoAlho: 'Alho', custoCurtoManjericao: 'Manjericão', custoCurtoAzeite: 'Azeite',
+      custoCurtoTomate: 'Tomate', custoCurtoAlho: 'Alho', custoCurtoManjericao: 'Manjericão', custoCurtoAzeite: 'Azeite',
       precoRestaurar: 'Restaurar', precoExcluir: 'Excluir',
       precoExcluirConfirm: 'Excluir este registro de preços?',
       ajusteProducao: 'Ajuste a produção',
@@ -2225,6 +2323,10 @@
       btnMostrarDiario: 'Mostrar diário', btnOcultarDiario: 'Ocultar diário',
       btnRegistrarFornada: 'Registrar fornada',
       btnExportarDiario: 'Exportar / compartilhar', btnImportarDiario: 'Importar',
+      // Galeria de fotos da fornada
+      btnAddFoto: 'Adicionar foto', fotoRemover: 'Remover foto',
+      fotoRemoverConfirm: 'Remover esta foto?',
+      fotoErroEspaco: 'Não foi possível salvar a foto: o armazenamento do aparelho está cheio. Remova algumas fotos e tente de novo (as fotos ficam salvas só neste aparelho).',
       diarioIntro: 'Registre cada fornada com as temperaturas e a <b>massa final medida</b>. O app calcula o atrito real da Halo Core em cada uma e a média — use para calibrar a temperatura da água. Dados salvos só neste aparelho; exporte para levar a outro celular.',
       diarioVazio: 'Nenhuma fornada registrada ainda. Toque em "Registrar fornada" ao final de uma produção.',
       diarioContagemLbl: (n) => `${n} fornada${n === 1 ? '' : 's'}`,
@@ -2238,6 +2340,7 @@
       fLabelForno: 'Forno', fLabelAtrito: 'Atrito calc.',
       fUsarAtrito: 'Usar este atrito', fExcluir: 'Excluir',
       fExcluirConfirm: 'Excluir esta fornada?',
+      fExcluirConfirmFotos: (n) => `Excluir esta fornada? As ${n} foto${n === 1 ? '' : 's'} anexada${n === 1 ? '' : 's'} também ${n === 1 ? 'será removida' : 'serão removidas'}.`,
       // médias
       medTitulo: 'Médias para calibração',
       medAtrito: (v, n) => `Atrito médio da Halo Core: <b>${v}°C</b> (de ${n} fornada${n === 1 ? '' : 's'} com massa medida).`,
@@ -2306,9 +2409,11 @@
       tabReceita: 'Recipe', tabPreparo: 'Prep', tabCronograma: 'Schedule',
       tabDiario: 'Log', tabReferencia: 'Reference',
       expandirTudo: 'Expand all', recolherTudo: 'Collapse all',
+      expandirTudoGeral: 'Expand every card in all tabs',
+      recolherTudoGeral: 'Collapse every card in all tabs',
       // Hands-on mode (full-screen step-by-step)
       maoNaMassa: 'Hands-on',
-      mnmAnterior: 'Back', mnmProximo: 'Next', mnmConcluir: 'Finish',
+      mnmAnterior: 'Back', mnmProximo: 'Next', mnmConcluir: 'Finish', mnmSair: 'Exit',
       mnmProgresso: (n, total) => `Step ${n} of ${total}`,
       mnmFaseLabel: (n, total) => `Phase ${n}/${total}`,
       mnmBoxQtd: 'Quantities for this batch',
@@ -2483,6 +2588,10 @@
       btnMostrarDiario: 'Show log', btnOcultarDiario: 'Hide log',
       btnRegistrarFornada: 'Log a bake',
       btnExportarDiario: 'Export / share', btnImportarDiario: 'Import',
+      // Bake photo gallery
+      btnAddFoto: 'Add photo', fotoRemover: 'Remove photo',
+      fotoRemoverConfirm: 'Remove this photo?',
+      fotoErroEspaco: 'Could not save the photo: device storage is full. Remove some photos and try again (photos are stored only on this device).',
       diarioIntro: 'Log each bake with the temperatures and the <b>measured final dough temp</b>. The app computes the real Halo Core friction for each one and the average — use it to calibrate the water temperature. Data is stored only on this device; export it to move to another phone.',
       diarioVazio: 'No bakes logged yet. Tap "Log a bake" at the end of a batch.',
       diarioContagemLbl: (n) => `${n} bake${n === 1 ? '' : 's'}`,
@@ -2494,6 +2603,7 @@
       fLabelForno: 'Oven', fLabelAtrito: 'Calc. friction',
       fUsarAtrito: 'Use this friction', fExcluir: 'Delete',
       fExcluirConfirm: 'Delete this bake?',
+      fExcluirConfirmFotos: (n) => `Delete this bake? The ${n} attached photo${n === 1 ? '' : 's'} will also be removed.`,
       medTitulo: 'Averages for calibration',
       medAtrito: (v, n) => `Average Halo Core friction: <b>${v}°C</b> (from ${n} bake${n === 1 ? '' : 's'} with measured dough).`,
       medSemDados: 'Log bakes with the measured dough temp to compute the average friction.',
@@ -2589,6 +2699,22 @@
     // botão "mão na massa": mantém title/aria-label (texto some no mobile)
     const mnmB = document.getElementById('mnmBtn');
     if (mnmB) { mnmB.setAttribute('title', t('maoNaMassa')); mnmB.setAttribute('aria-label', t('maoNaMassa')); }
+    // tooltips (title/aria-label) que ficam ocultos ou sem texto no mobile:
+    // sincroniza com o idioma atual a partir das chaves i18n.
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      const tab = b.getAttribute('data-tab');
+      const chave = { receita: 'tabReceita', preparo: 'tabPreparo', cronograma: 'tabCronograma', diario: 'tabDiario', referencia: 'tabReferencia' }[tab];
+      if (chave) { b.setAttribute('title', t(chave)); b.setAttribute('aria-label', t(chave)); }
+    });
+    const sairB = document.getElementById('mnmSair');
+    if (sairB) { sairB.setAttribute('title', t('mnmSair')); sairB.setAttribute('aria-label', t('mnmSair')); }
+    // botão wake: title acompanha o estado/idioma (o rótulo some no mobile)
+    const wakeB = document.getElementById('wakeToggle');
+    if (wakeB) {
+      const wlabel = document.getElementById('wakeLabel');
+      const txt = (wlabel && wlabel.textContent) ? wlabel.textContent : t('wakeOff');
+      wakeB.setAttribute('title', txt); wakeB.setAttribute('aria-label', txt);
+    }
     // dropdown de perfis (placeholder é traduzido) — preserva a seleção atual
     if (typeof popularPerfis === 'function') {
       const selPerfil = document.getElementById('perfilSelect');
@@ -3190,16 +3316,19 @@
     html += '<div class="custo-hist-lista">' + lista.map(s => {
       const precos = Object.assign({}, CUSTO_PADRAO, s.precos);
       const c = custoDosPrecos(precos, discos, r);
-      const grid = CUSTO_CHAVES.map(k =>
-        `<span>${nomeChave[k]}: <b>${moeda} ${moneyFmt(precos[k])}</b></span>`
-      ).join('');
+      // 2 pares (nome + valor) por linha -> 4 linhas para os 8 itens
+      const cel = (k) => `<td class="ps-nome">${nomeChave[k]}</td><td class="ps-val">${moeda} ${moneyFmt(precos[k])}</td>`;
+      let linhas = '';
+      for (let i = 0; i < CUSTO_CHAVES.length; i += 2) {
+        linhas += `<tr>${cel(CUSTO_CHAVES[i])}${cel(CUSTO_CHAVES[i + 1])}</tr>`;
+      }
       return `
         <details class="preco-snap">
           <summary class="preco-snap-top">
             <span class="ps-data">${dataHoraCurta(s.ts)}</span>
             <span class="ps-resumo">${t('custoPorPizzaLbl')} ${moeda} ${moneyFmt(c.porPizza)}</span>
           </summary>
-          <div class="ps-grid">${grid}</div>
+          <table class="ps-tabela"><tbody>${linhas}</tbody></table>
           <div class="ps-btns">
             <button onclick="restaurarPrecos(${s.ts})">${t('precoRestaurar')}</button>
             <button class="icon-fixed-btn" onclick="excluirPrecoSnap(${s.ts})">${ICO.lixeira}<span>${t('precoExcluir')}</span></button>
@@ -3314,6 +3443,39 @@
     txt.textContent = algumAberto ? t('recolherTudo') : t('expandirTudo');
     btn.classList.toggle('expanded', algumAberto);
     if (ico && !ico.innerHTML) ico.innerHTML = CHEVRON;
+    atualizarCollapseGlobal();
+  }
+
+  // Todos os cards de TODAS as abas (achatado a partir de CARDS_POR_ABA)
+  function todosOsCards() {
+    return Object.values(CARDS_POR_ABA).reduce((acc, arr) => acc.concat(arr), []);
+  }
+
+  // Expande/recolhe TODOS os cards de TODAS as abas de uma vez
+  function toggleAllCardsGlobal() {
+    const cards = todosOsCards();
+    const algumAberto = cards.some(([w]) => document.getElementById(w).classList.contains('show'));
+    const querAbrir = !algumAberto;   // se algum aberto -> recolhe todos; senão -> abre todos
+    cards.forEach(([w, fn]) => {
+      const aberto = document.getElementById(w).classList.contains('show');
+      if (aberto !== querAbrir) fn();
+    });
+    atualizarCollapseAll();
+  }
+
+  // Atualiza o ícone/tooltip do botão global conforme o estado geral dos cards
+  function atualizarCollapseGlobal() {
+    const btn = document.getElementById('collapseGlobalBtn');
+    if (!btn) return;
+    const ico = btn.querySelector('.cg-ico');
+    if (ico && !ico.innerHTML) ico.innerHTML = CHEVRON_DUPLO;
+    const algumAberto = todosOsCards().some(([w]) => {
+      const el = document.getElementById(w); return el && el.classList.contains('show');
+    });
+    btn.classList.toggle('expanded', algumAberto);
+    const tip = algumAberto ? t('recolherTudoGeral') : t('expandirTudoGeral');
+    btn.setAttribute('title', tip);
+    btn.setAttribute('aria-label', tip);
   }
 
   (function initTab() {
@@ -4158,7 +4320,11 @@
   }
 
   function excluirFornada(ts) {
-    if (!confirm(t('fExcluirConfirm'))) return;
+    const f = lerDiario().find(x => x.ts === ts);
+    const nFotos = (f && Array.isArray(f.fotos)) ? f.fotos.length : 0;
+    // se houver fotos, avisa que elas também serão apagadas
+    const msg = nFotos ? t('fExcluirConfirmFotos', nFotos) : t('fExcluirConfirm');
+    if (!confirm(msg)) return;
     gravarDiario(lerDiario().filter(f => f.ts !== ts));
     renderDiario();
   }
@@ -4228,13 +4394,158 @@
             ${atritoHtml}
           </div>
           ${f.nota ? `<div class="f-nota">${escapeHtml(f.nota)}</div>` : ''}
+          ${renderFotosFornada(f)}
           <div class="f-btns">
+            <button class="icon-label-btn" title="${t('btnAddFoto')}" aria-label="${t('btnAddFoto')}" onclick="adicionarFotos(${f.ts})">${ICO.camera}<span class="btn-txt">${t('btnAddFoto')}</span></button>
             ${usarBtn}
             <button class="icon-fixed-btn" onclick="excluirFornada(${f.ts})">${ICO.lixeira}<span>${t('fExcluir')}</span></button>
           </div>
         </details>`;
     }).join('');
   }
+
+  // Grade de miniaturas das fotos de uma fornada (vazia se não houver)
+  function renderFotosFornada(f) {
+    const fotos = Array.isArray(f.fotos) ? f.fotos : [];
+    if (!fotos.length) return '';
+    const thumbs = fotos.map((src, i) =>
+      `<div class="f-foto">
+        <img src="${src}" alt="foto ${i + 1}" loading="lazy" onclick="abrirLightbox(${f.ts}, ${i})">
+        <button class="f-foto-x" title="${t('fotoRemover')}" aria-label="${t('fotoRemover')}" onclick="removerFoto(${f.ts}, ${i})">&times;</button>
+      </div>`
+    ).join('');
+    return `<div class="f-fotos">${thumbs}</div>`;
+  }
+
+  // ===== Fotos das fornadas (galeria por ficha) =====
+  // Guardadas como dataURL JPEG comprimido dentro de f.fotos (array), no mesmo
+  // localStorage do diário — então exportar/importar já leva as fotos junto.
+  const FOTO_MAX_LADO = 1000;   // maior lado (px) após redimensionar
+  const FOTO_QUALIDADE = 0.7;   // qualidade do JPEG
+  let fotoAlvoTs = null;        // fornada que vai receber as fotos selecionadas
+
+  // Redimensiona/comprime um File de imagem -> dataURL JPEG (Promise)
+  function comprimirImagem(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('read'));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('img'));
+        img.onload = () => {
+          let { width, height } = img;
+          if (width > height && width > FOTO_MAX_LADO) {
+            height = Math.round(height * FOTO_MAX_LADO / width); width = FOTO_MAX_LADO;
+          } else if (height >= width && height > FOTO_MAX_LADO) {
+            width = Math.round(width * FOTO_MAX_LADO / height); height = FOTO_MAX_LADO;
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width; canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', FOTO_QUALIDADE));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Dispara o seletor de arquivos para a fornada indicada
+  function adicionarFotos(ts) {
+    fotoAlvoTs = ts;
+    const inp = document.getElementById('fotoInput');
+    inp.value = '';        // permite reselecionar o mesmo arquivo depois
+    inp.click();
+  }
+
+  // Ao escolher arquivos: comprime todos e anexa à fornada alvo
+  document.getElementById('fotoInput').addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length || fotoAlvoTs == null) return;
+    const ts = fotoAlvoTs;
+    let novas = [];
+    for (const f of files) {
+      if (!f.type.startsWith('image/')) continue;
+      try { novas.push(await comprimirImagem(f)); } catch (err) { /* ignora a que falhar */ }
+    }
+    if (!novas.length) return;
+
+    const lista = lerDiario();
+    const fornada = lista.find(x => x.ts === ts);
+    if (!fornada) return;
+    if (!Array.isArray(fornada.fotos)) fornada.fotos = [];
+    fornada.fotos = fornada.fotos.concat(novas);
+
+    // localStorage pode estourar (fotos são grandes); avisa e desfaz se falhar
+    try {
+      localStorage.setItem('pizzaDiario', JSON.stringify(lista));
+    } catch (err) {
+      alert(t('fotoErroEspaco'));
+      return;   // não regrava; a fornada em memória não persiste
+    }
+    renderDiario();
+    // reabre a ficha que recebeu as fotos (renderDiario recria os <details>)
+    reabrirFornada(ts);
+  }, false);
+
+  // Remove a i-ésima foto de uma fornada
+  function removerFoto(ts, i) {
+    if (!confirm(t('fotoRemoverConfirm'))) return;
+    const lista = lerDiario();
+    const fornada = lista.find(x => x.ts === ts);
+    if (!fornada || !Array.isArray(fornada.fotos)) return;
+    fornada.fotos.splice(i, 1);
+    gravarDiario(lista);
+    renderDiario();
+    reabrirFornada(ts);
+  }
+
+  // Reabre a ficha (details) de uma fornada após um re-render
+  function reabrirFornada(ts) {
+    const lista = lerDiario();
+    const idx = lista.slice().sort((a, b) => b.ts - a.ts).findIndex(f => f.ts === ts);
+    if (idx < 0) return;
+    const cards = document.querySelectorAll('#diarioLista .fornada');
+    if (cards[idx]) cards[idx].open = true;
+  }
+
+  // ===== Lightbox (foto ampliada) =====
+  let lbFotos = [];   // fotos da fornada aberta no lightbox
+  let lbIdx = 0;
+
+  function abrirLightbox(ts, i) {
+    const fornada = lerDiario().find(x => x.ts === ts);
+    if (!fornada || !Array.isArray(fornada.fotos) || !fornada.fotos.length) return;
+    lbFotos = fornada.fotos;
+    lbIdx = i;
+    document.getElementById('fotoLightbox').classList.add('show');
+    document.body.classList.add('mnm-aberto');   // trava o scroll do fundo
+    atualizarLightbox();
+  }
+  function atualizarLightbox() {
+    document.getElementById('lbImg').src = lbFotos[lbIdx] || '';
+    document.getElementById('lbContador').textContent = `${lbIdx + 1} / ${lbFotos.length}`;
+    const varias = lbFotos.length > 1;
+    document.getElementById('lbPrev').style.display = varias ? '' : 'none';
+    document.getElementById('lbProx').style.display = varias ? '' : 'none';
+  }
+  function lightboxNav(dir) {
+    if (!lbFotos.length) return;
+    lbIdx = (lbIdx + dir + lbFotos.length) % lbFotos.length;
+    atualizarLightbox();
+  }
+  function fecharLightbox() {
+    document.getElementById('fotoLightbox').classList.remove('show');
+    document.body.classList.remove('mnm-aberto');
+    document.getElementById('lbImg').src = '';
+  }
+  // teclado no lightbox: Esc fecha, setas navegam
+  document.addEventListener('keydown', (e) => {
+    if (!document.getElementById('fotoLightbox').classList.contains('show')) return;
+    if (e.key === 'Escape') fecharLightbox();
+    else if (e.key === 'ArrowLeft') lightboxNav(-1);
+    else if (e.key === 'ArrowRight') lightboxNav(1);
+  });
 
   function toggleDiario() {
     const wrap = document.getElementById('diarioWrap');
@@ -4267,6 +4578,7 @@
         f.massa != null ? `massa ${f.massa}` : null,
         f.forno != null ? `${f.forno}s` : null,
         atr != null ? `atrito ${Math.round(atr)}` : null,
+        (Array.isArray(f.fotos) && f.fotos.length) ? `${f.fotos.length} foto(s)` : null,
         f.nota ? `"${f.nota}"` : null
       ].filter(Boolean);
       linhas.push('- ' + partes.join(' · '));
@@ -4712,17 +5024,21 @@
   function atualizarBotaoWake() {
     const btn = document.getElementById('wakeToggle');
     const label = document.getElementById('wakeLabel');
+    // mantém o tooltip (title/aria-label) igual ao rótulo — no mobile o texto some
+    const setTip = (txt) => { btn.setAttribute('title', txt); btn.setAttribute('aria-label', txt); };
     if (!wakeSuportado) {
       btn.disabled = true;
       btn.classList.remove('on');
       btn.setAttribute('aria-pressed', 'false');
       label.textContent = t('wakeIndisponivel');
+      setTip(t('wakeIndisponivel'));
       return;
     }
     const ativo = wakeDesejado && wakeLock !== null;
     btn.classList.toggle('on', ativo);
     btn.setAttribute('aria-pressed', ativo ? 'true' : 'false');
     label.textContent = ativo ? t('wakeOn') : t('wakeOff');
+    setTip(ativo ? t('wakeOn') : t('wakeOff'));
   }
 
   async function requestWakeLock() {
