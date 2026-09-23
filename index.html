@@ -8,6 +8,8 @@
 <!-- PWA -->
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#cc5500">
+<!-- força esquema claro: evita que o Android use fundo escuro na splash/janela -->
+<meta name="color-scheme" content="light">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -17,6 +19,7 @@
 
 <style>
   :root {
+    color-scheme: light;   /* impede o SO/UA de aplicar fundo escuro */
     --orange: #cc5500;
     --orange-light: #fff3e0;
     --dark: #2b2118;
@@ -25,6 +28,8 @@
     --green: #2e8c6a;
     --bg: #faf7f2;
   }
+
+  html { background: #faf7f2; }   /* fundo claro no primeiro paint (antes do body) */
 
   * { box-sizing: border-box; }
 
