@@ -111,7 +111,13 @@
     .lang-switcher { justify-content: center; }
     /* folga entre os botões (acima) e o subtítulo "Pizza Napolitana..." */
     header p { margin-top: 14px; }
+    /* No celular o botão "Mão na massa" fica só com o ícone (o texto some),
+       para não empurrar as bandeiras/idiomas para uma segunda linha. */
+    #mnmBtnLabel { display: none; }
+    #mnmBtn { padding: 6px 10px; }
   }
+  /* ícone do botão mão na massa (herda a cor do texto do wake-btn) */
+  #mnmBtn .btn-ico { width: 17px; height: 17px; }
 
   /* Botão "manter tela ligada" (Wake Lock) — fica na linha do seletor de idioma */
   .wake-btn {
@@ -191,6 +197,24 @@
   /* Só a aba ativa é exibida */
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
+
+  /* Barra "expandir/recolher tudo" (age na aba ativa) */
+  .collapse-bar { display: flex; justify-content: flex-end; margin: -8px 0 14px; }
+  .collapse-all-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 10px;
+    border: 1px solid var(--line); border-radius: 8px;
+    background: #fff; color: var(--gray);
+    font-size: 0.78rem; font-weight: 600; cursor: pointer;
+  }
+  .collapse-all-btn:hover { background: var(--orange-light); border-color: var(--orange); color: var(--orange); }
+  .collapse-all-btn .ca-ico {
+    width: 15px; height: 15px; display: inline-flex; color: var(--orange);
+    transition: transform 0.2s ease;
+  }
+  /* quando o estado é "recolher tudo" (cards abertos), a seta aponta para cima */
+  .collapse-all-btn.expanded .ca-ico { transform: rotate(180deg); }
+  @media print { .collapse-bar { display: none !important; } }
 
   .card {
     background: #fff;
@@ -641,8 +665,10 @@
   /* respiro entre o cabeçalho e a intro quando ela é o 1º elemento do bloco */
   #ddtWrap > .ddt-intro:first-child, #fornoWrap > .ddt-intro:first-child,
   #molhoWrap > .ddt-intro:first-child { margin-top: 10px; }
-  /* respiro nos wraps que começam direto com tabela (ingredientes / divisão) */
+  /* respiro nos wraps que começam direto com conteúdo/botões (sem intro) */
   #ingWrap, #divWrap { padding-top: 10px; }
+  #timelineWrap { padding-top: 10px; }
+  #velocidadesWrap, #glossarioWrap, #troubleWrap { padding-top: 10px; }
   .ddt-intro b { color: var(--dark); }
   /* Telas grandes: as 4 caixas de temperatura numa linha (4 colunas);
      o atrito (último campo, slider) ocupa a linha inteira abaixo. */
@@ -970,6 +996,169 @@
   .compras-item .c-nome { flex: 1; }
   .compras-item .c-qtd { font-weight: 700; color: var(--dark); font-variant-numeric: tabular-nums; white-space: nowrap; }
 
+  /* Calculadora de custo por pizza */
+  #custoWrap { display: none; }
+  #custoWrap.show { display: block; padding-top: 10px; }
+  .custo-grupo { margin-top: 16px; }
+  .custo-grupo:first-child { margin-top: 0; }
+  .custo-grupo-tit {
+    font-weight: 700; color: var(--orange);
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  /* linha de preço: nome do ingrediente + campo de preço com unidade */
+  .custo-linha {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 0; border-bottom: 1px solid var(--line);
+  }
+  .custo-linha .cl-nome { flex: 1; font-size: 0.92rem; }
+  .custo-linha .cl-preco {
+    display: flex; align-items: center; gap: 6px; white-space: nowrap;
+  }
+  .custo-linha .cl-moeda { color: var(--gray); font-size: 0.85rem; }
+  .custo-linha input[type="number"] {
+    width: 82px; padding: 6px 8px; font-size: 0.92rem;
+  }
+  .custo-linha .cl-unidade { color: var(--gray); font-size: 0.8rem; min-width: 62px; }
+  /* subtotal de cada grupo (massa/molho), alinhado à direita */
+  .custo-subtotal {
+    display: flex; justify-content: space-between;
+    margin-top: 8px; font-size: 0.86rem; color: var(--gray);
+  }
+  .custo-subtotal b { color: var(--dark); font-variant-numeric: tabular-nums; }
+  /* resultado destacado: custo total + custo por panetto */
+  .custo-result {
+    margin-top: 20px;
+    padding: 16px 18px;
+    background: var(--orange-light);
+    border: 1px solid var(--orange);
+    border-radius: 10px;
+    text-align: center;
+  }
+  .custo-result .cap { font-size: 0.82rem; color: var(--gray); }
+  .custo-result .big {
+    font-size: 2rem; font-weight: 800; color: var(--orange);
+    line-height: 1.1; font-variant-numeric: tabular-nums;
+  }
+  .custo-result .custo-total {
+    margin-top: 10px; font-size: 0.92rem; color: var(--dark);
+  }
+  .custo-result .custo-total b { color: var(--orange); font-variant-numeric: tabular-nums; }
+
+  /* Histórico de preços (snapshots datados, estilo do diário) */
+  .custo-hist { margin-top: 18px; }
+  .custo-hist-tit {
+    font-weight: 700; color: var(--orange);
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .custo-hist-vazio { font-size: 0.88rem; color: var(--gray); font-style: italic; }
+  .custo-hist-lista { display: flex; flex-direction: column; gap: 10px; }
+  .preco-snap {
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--orange);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .preco-snap-top {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 8px; flex-wrap: wrap;
+    cursor: pointer; list-style: none; user-select: none;
+  }
+  .preco-snap-top::-webkit-details-marker { display: none; }
+  .preco-snap-top::after {
+    content: "▸"; margin-left: auto; color: var(--orange);
+    font-size: 0.9rem; transition: transform 0.15s;
+  }
+  .preco-snap[open] > .preco-snap-top::after { transform: rotate(90deg); }
+  .preco-snap[open] > .preco-snap-top { margin-bottom: 8px; }
+  .preco-snap .ps-data { font-weight: 700; color: var(--dark); font-size: 0.95rem; }
+  .preco-snap .ps-resumo { font-size: 0.82rem; color: var(--gray); }
+  .preco-snap .ps-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px 14px;
+    margin: 8px 0 0; font-size: 0.84rem;
+  }
+  .preco-snap .ps-grid span b { color: var(--dark); font-variant-numeric: tabular-nums; }
+  .preco-snap .ps-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .preco-snap .ps-btns button { padding: 5px 12px; font-size: 0.8rem; }
+
+  /* ===== Modo "mão na massa" (overlay tela cheia, passo a passo) ===== */
+  #mnmOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: var(--bg);
+    flex-direction: column;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  #mnmOverlay.show { display: flex; }
+  body.mnm-aberto { overflow: hidden; }   /* trava o scroll do fundo */
+
+  .mnm-topo {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line);
+    flex: none;
+  }
+  .mnm-fase {
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--orange); font-weight: 700;
+  }
+  .mnm-sair {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid var(--line); background: #fff; color: var(--dark);
+    font-size: 1.3rem; line-height: 1; cursor: pointer; flex: none; padding: 0;
+  }
+  .mnm-sair:hover { background: var(--orange-light); border-color: var(--orange); }
+
+  /* corpo rolável com o conteúdo do passo */
+  .mnm-corpo {
+    flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding: 22px 20px; max-width: 720px; width: 100%; margin: 0 auto;
+  }
+  .mnm-titulo {
+    font-size: 1.7rem; font-weight: 800; color: var(--dark);
+    margin: 0 0 14px; line-height: 1.15;
+  }
+  .mnm-lead { font-size: 1.05rem; line-height: 1.5; color: #333; margin: 0 0 16px; }
+  .mnm-lead b { color: var(--dark); }
+  /* caixa de quantidades/destaques dentro do passo */
+  .mnm-box {
+    background: var(--orange-light); border: 1px solid var(--orange);
+    border-radius: 12px; padding: 14px 16px; margin: 0 0 16px;
+  }
+  .mnm-box .mnm-box-tit {
+    font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.5px;
+    font-weight: 700; color: var(--orange); margin-bottom: 8px;
+  }
+  .mnm-qtd-linha {
+    display: flex; justify-content: space-between; gap: 12px;
+    padding: 4px 0; font-size: 1rem;
+  }
+  .mnm-qtd-linha b { color: var(--orange); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .mnm-lista { margin: 0; padding-left: 22px; }
+  .mnm-lista li { font-size: 0.98rem; line-height: 1.45; margin-bottom: 6px; color: #333; }
+  /* slot onde os blocos reusados (mistura/forno) são inseridos */
+  .mnm-slot { margin: 4px 0 0; }
+
+  /* rodapé de navegação */
+  .mnm-rodape {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 14px 20px; border-top: 1px solid var(--line);
+    flex: none; max-width: 720px; width: 100%; margin: 0 auto;
+  }
+  .mnm-nav-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 22px; border-radius: 10px; font-size: 1.05rem; font-weight: 700;
+    border: 1px solid var(--line); background: #fff; color: var(--dark); cursor: pointer;
+  }
+  .mnm-nav-btn.primary { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .mnm-nav-btn.primary:hover { background: #b34a00; }
+  .mnm-nav-btn:disabled { opacity: 0.4; cursor: default; }
+  .mnm-progresso { font-size: 0.9rem; color: var(--gray); font-weight: 600; text-align: center; }
+  @media print { #mnmOverlay { display: none !important; } }
+
   /* Painel de planejamento do cronograma */
   .plan-ctrl {
     margin: 4px 0 14px;
@@ -1079,6 +1268,8 @@
     #troubleCard { display: none !important; }
     /* Lista de compras: sai só no seu próprio modo (print-compras) */
     #comprasCard { display: none !important; }
+    /* Calculadora de custo: ferramenta de tela, nunca impressa */
+    #custoCard { display: none !important; }
 
     /* Cards interativos (temperatura da água, guia de mistura, timers do forno)
        nunca são impressos — são ferramentas de tela, não fazem parte da ficha. */
@@ -1241,6 +1432,10 @@
     <div class="header-top">
       <h1><img src="icon-512.png" alt="Ícone Pizza"> <span data-i18n="appTitle">PizzaCalc</span></h1>
       <div class="lang-switcher">
+        <button id="mnmBtn" class="wake-btn" onclick="abrirMaoNaMassa()" title="Modo mão na massa">
+          <span class="print-ico" data-ico="maos"></span>
+          <span id="mnmBtnLabel" data-i18n="maoNaMassa">Mão na massa</span>
+        </button>
         <button id="wakeToggle" class="wake-btn" onclick="toggleWakeLock()" aria-pressed="false" title="Manter tela ligada">
           <span class="wake-dot"></span>
           <span id="wakeLabel" data-i18n="wakeOff">Manter tela ligada</span>
@@ -1365,6 +1560,13 @@
     </button>
   </nav>
 
+  <!-- Barra: expandir/recolher todos os cards da aba ativa -->
+  <div class="collapse-bar">
+    <button id="collapseAllBtn" class="collapse-all-btn" onclick="toggleAllCards()">
+      <span class="ca-ico"></span><span id="collapseAllTxt" data-i18n="expandirTudo">Expandir tudo</span>
+    </button>
+  </div>
+
   <!-- ABA: Receita -->
   <div class="tab-panel" data-tab="receita">
 
@@ -1427,12 +1629,32 @@
       <h2 style="margin:0" data-i18n="comprasTitulo">Lista de compras</h2>
       <span class="chevron-wrap"></span>
     </div>
-    <div class="btns" style="margin-top:12px">
-      <button class="print-btn" onclick="imprimirCompras()"><span class="print-ico"></span><span class="btn-txt" data-i18n="btnImprimirCompras">Imprimir lista</span></button>
-    </div>
     <div id="comprasWrap">
+      <div class="btns" style="margin:0 0 12px">
+        <button class="print-btn" onclick="imprimirCompras()"><span class="print-ico"></span><span class="btn-txt" data-i18n="btnImprimirCompras">Imprimir lista</span></button>
+      </div>
       <p class="ddt-intro" id="comprasIntro"></p>
       <div id="comprasLista"></div>
+    </div>
+  </div>
+
+  <!-- Calculadora de custo por pizza -->
+  <div class="card" id="custoCard">
+    <div class="timeline-head card-head" id="custoToggle" onclick="toggleCusto()" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="custoTitulo">Custo por pizza</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="custoWrap">
+      <p class="ddt-intro" id="custoIntro"></p>
+      <div id="custoPrecos"></div>
+      <div class="custo-result" id="custoResult"></div>
+      <div class="btns" style="margin-top:16px">
+        <button class="icon-label-btn" onclick="salvarHistoricoPrecos()"><span class="print-ico" data-ico="disquete"></span><span class="btn-txt" data-i18n="btnSalvarPrecos">Salvar preços</span></button>
+        <button onclick="resetCusto()" data-i18n="btnResetCusto">Restaurar preços padrão</button>
+      </div>
+
+      <!-- Histórico de preços (snapshots datados) -->
+      <div class="custo-hist" id="custoHist"></div>
     </div>
   </div>
 
@@ -1444,7 +1666,7 @@
   <!-- Temperatura da água (DDT) -->
   <div class="card" id="ddtCard">
     <div class="timeline-head card-head" id="ddtToggle" onclick="toggleDDT()" role="button" tabindex="0" aria-expanded="true">
-      <h2 style="margin:0" data-i18n="ddtTitulo">Temperatura da água (Halo Core)</h2>
+      <h2 style="margin:0" data-i18n="ddtTitulo">Temperatura da água — Halo Core</h2>
       <span class="chevron-wrap"></span>
     </div>
     <div id="ddtWrap">
@@ -1557,12 +1779,12 @@
       <h2 style="margin:0" data-i18n="diarioTitulo">Diário de fornadas</h2>
       <span class="chevron-wrap"></span>
     </div>
-    <div class="btns" style="margin-top:12px">
-      <button class="icon-label-btn" onclick="registrarFornada()"><span class="print-ico" data-ico="livroMais"></span><span class="btn-txt" data-i18n="btnRegistrarFornada">Registrar fornada</span></button>
-    </div>
     <div id="diarioWrap">
       <span class="progress progress-sub" id="diarioContagem"></span>
       <p class="ddt-intro" id="diarioIntro"></p>
+      <div class="btns" style="margin:0 0 14px">
+        <button class="icon-label-btn" onclick="registrarFornada()"><span class="print-ico" data-ico="livroMais"></span><span class="btn-txt" data-i18n="btnRegistrarFornada">Registrar fornada</span></button>
+      </div>
 
       <!-- Médias / calibração -->
       <div class="diario-medias" id="diarioMedias"></div>
@@ -1587,15 +1809,14 @@
   <div class="card" id="timelineCard">
     <div class="timeline-head card-head" id="tlToggle" onclick="toggleTimeline()" role="button" tabindex="0" aria-expanded="true">
       <h2 style="margin:0" data-i18n="cronogramaTitulo">Cronograma passo a passo</h2>
-      <span class="progress" id="tlProgress"></span>
       <span class="chevron-wrap"></span>
     </div>
-    <div class="btns" style="margin-top:12px">
-      <button class="icon-fixed-btn" onclick="carregarCronogramaPadrao()"><span class="print-ico" data-ico="recarregar"></span><span data-i18n="btnCarregarPadrao">Carregar cronograma padrão</span></button>
-      <button class="print-btn" onclick="imprimirCronograma()"><span class="print-ico"></span><span class="btn-txt" data-i18n="btnImprimirCrono">Imprimir cronograma</span></button>
-      <button class="icon-fixed-btn" id="tlReset" onclick="resetTimeline()" style="display:none"><span class="print-ico" data-ico="borracha"></span><span data-i18n="btnLimpar">Limpar marcações</span></button>
-    </div>
     <div id="timelineWrap">
+      <div class="btns" style="margin:0 0 14px">
+        <button class="icon-fixed-btn" onclick="carregarCronogramaPadrao()"><span class="print-ico" data-ico="recarregar"></span><span data-i18n="btnCarregarPadrao">Carregar cronograma padrão</span></button>
+        <button class="print-btn" onclick="imprimirCronograma()"><span class="print-ico"></span><span class="btn-txt" data-i18n="btnImprimirCrono">Imprimir cronograma</span></button>
+        <button class="icon-fixed-btn" id="tlReset" onclick="resetTimeline()" style="display:none"><span class="print-ico" data-ico="borracha"></span><span data-i18n="btnLimpar">Limpar marcações</span></button>
+      </div>
       <div class="plan-ctrl">
         <div class="plan-row plan-row-data">
           <label data-i18n="inicioPoolish">Início do poolish:</label>
@@ -1635,13 +1856,13 @@
   <!-- Tabela de velocidades da Halo Core -->
   <div class="card" id="velocidadesCard">
     <div class="timeline-head card-head" id="velToggle" onclick="toggleVelocidades()" role="button" tabindex="0" aria-expanded="true">
-      <h2 style="margin:0" data-i18n="velTitulo">Tabela de velocidades — Ooni Halo Core</h2>
+      <h2 style="margin:0" data-i18n="velTitulo">Tabela de velocidades — Halo Core</h2>
       <span class="chevron-wrap"></span>
     </div>
-    <div class="btns" style="margin-top:12px">
-      <button class="print-btn" onclick="imprimirVelocidades()"><span class="print-ico"></span><span class="btn-txt" data-i18n="btnImprimirVel">Imprimir tabela</span></button>
-    </div>
     <div id="velocidadesWrap">
+      <div class="btns" style="margin:0 0 12px">
+        <button class="print-btn" onclick="imprimirVelocidades()"><span class="print-ico"></span><span class="btn-txt" data-i18n="btnImprimirVel">Imprimir tabela</span></button>
+      </div>
       <p class="vel-intro" id="velIntro"></p>
       <table class="vel-table">
         <thead>
@@ -1658,10 +1879,10 @@
       <h2 style="margin:0" data-i18n="glossarioTitulo">Glossário napolitano</h2>
       <span class="chevron-wrap"></span>
     </div>
-    <div class="btns" style="margin-top:12px">
-      <button class="print-btn" onclick="imprimirGlossario()"><span class="print-ico"></span><span class="btn-txt" data-i18n="btnImprimirGlossario">Imprimir glossário</span></button>
-    </div>
     <div id="glossarioWrap">
+      <div class="btns" style="margin:0 0 12px">
+        <button class="print-btn" onclick="imprimirGlossario()"><span class="print-ico"></span><span class="btn-txt" data-i18n="btnImprimirGlossario">Imprimir glossário</span></button>
+      </div>
       <dl class="glossario" id="glossarioLista"></dl>
     </div>
   </div>
@@ -1685,6 +1906,20 @@
   </footer>
 </div>
 
+<!-- Modo "mão na massa" (overlay tela cheia, passo a passo guiado) -->
+<div id="mnmOverlay" role="dialog" aria-modal="true" aria-label="Modo mão na massa">
+  <div class="mnm-topo">
+    <span class="mnm-fase" id="mnmFase"></span>
+    <button class="mnm-sair" id="mnmSair" onclick="fecharMaoNaMassa()" aria-label="Sair" title="Sair">&times;</button>
+  </div>
+  <div class="mnm-corpo" id="mnmCorpo"></div>
+  <div class="mnm-rodape">
+    <button class="mnm-nav-btn" id="mnmAnterior" onclick="mnmAnterior()">◀ <span data-i18n="mnmAnterior">Anterior</span></button>
+    <span class="mnm-progresso" id="mnmProgresso"></span>
+    <button class="mnm-nav-btn primary" id="mnmProximo" onclick="mnmProximo()"><span data-i18n="mnmProximo">Próximo</span> ▶</button>
+  </div>
+</div>
+
 <script>
   // ===== Ícones SVG dos timers (traço/fill único, herdam currentColor) =====
   const SVG_ATTRS = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
@@ -1705,7 +1940,9 @@
     importar: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/></svg>`,
     lixeira: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><path d="M10 11v6M14 11v6"/></svg>`,
     recarregar: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v4h-4"/></svg>`,
-    borracha: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M8 20H5l-2-2a2 2 0 0 1 0-2.8l9-9a2 2 0 0 1 2.8 0l4 4a2 2 0 0 1 0 2.8L13 20z"/><path d="M8 20h13"/><path d="M9 11l6 6"/></svg>`
+    borracha: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M8 20H5l-2-2a2 2 0 0 1 0-2.8l9-9a2 2 0 0 1 2.8 0l4 4a2 2 0 0 1 0 2.8L13 20z"/><path d="M8 20h13"/><path d="M9 11l6 6"/></svg>`,
+    // mão aberta (Modo mão na massa)
+    maos: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V11"/><path d="M11 11V4.5a1.5 1.5 0 0 1 3 0V11"/><path d="M14 11V5.5a1.5 1.5 0 0 1 3 0V13"/><path d="M17 8.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1.5a6 6 0 0 1-4.6-2.2L5 15.5a1.6 1.6 0 0 1 2.3-2.2L8.5 15"/></svg>`
   };
   // Chevron dos cabeçalhos colapsáveis (gira via CSS quando .card-head.open)
   const CHEVRON = `<svg class="chevron" ${SVG_ATTRS}><path d="M6 9l6 6 6-6"/></svg>`;
@@ -1779,6 +2016,39 @@
       // Abas de navegação
       tabReceita: 'Receita', tabPreparo: 'Preparo', tabCronograma: 'Cronograma',
       tabDiario: 'Diário', tabReferencia: 'Referência',
+      expandirTudo: 'Expandir tudo', recolherTudo: 'Recolher tudo',
+      // Modo "mão na massa" (passo a passo em tela cheia)
+      maoNaMassa: 'Mão na massa',
+      mnmAnterior: 'Anterior', mnmProximo: 'Próximo', mnmConcluir: 'Concluir',
+      mnmProgresso: (n, total) => `Passo ${n} de ${total}`,
+      mnmFaseLabel: (n, total) => `Fase ${n}/${total}`,
+      mnmBoxQtd: 'Quantidades para esta produção',
+      // Passo 1 — Poolish
+      mnmP1Tit: 'Poolish',
+      mnmP1Lead: 'Prepare o pré-fermento com <b>antecedência</b> (padrão ~20h antes de assar). Misture só os ingredientes do poolish e deixe fermentar.',
+      mnmP1I1: '2h fora da geladeira + o restante na geladeira a 4°C.',
+      mnmP1I2: 'Bowl da Halo Core com a tampa fechada e o furo de ventilação aberto.',
+      mnmP1I3: 'Quando dobrar de volume e ficar borbulhante, está pronto.',
+      // Passo 2 — Massa final
+      mnmP2Tit: 'Massa final — Halo Core',
+      mnmP2Lead: 'Bata a massa final na masseira seguindo as etapas abaixo, com os timers. Use a <b>água na temperatura calculada</b> para chegar em 19–23°C.',
+      mnmP2Agua: 'Temperatura da água',
+      mnmP2SemAgua: 'Abra a aba Preparo para calcular a temperatura da água.',
+      // Passo 3 — Maturação
+      mnmP3Tit: 'Maturação em geladeira',
+      mnmP3Lead: 'Leve a massa à geladeira para a maturação em bloco — o principal descanso, que desenvolve sabor e estrutura.',
+      mnmP3I1: 'Bowl fechado com filme em contato + tampa.',
+      mnmP3I2: 'Vai para a geladeira ~30 min após a massa final.',
+      mnmP3I3: 'Deixe maturar entre 12h e 48h (o cronograma calcula o tempo exato).',
+      // Passo 4 — Bolear + appretto
+      mnmP4Tit: 'Bolear + Appretto',
+      mnmP4Lead: 'Divida a massa em panetti e deixe a segunda fermentação (appretto) fora da geladeira até a hora de assar.',
+      mnmP4I1: 'Temperatura ambiente < 22°C: até ~4h.',
+      mnmP4I2: 'Temperatura ambiente > 25°C: 2,5h a 3h.',
+      mnmP4I3: 'Quando os panetti dobrarem de volume, estão prontos.',
+      // Passo 5 — Assar
+      mnmP5Tit: 'Assar — Fornetto Slim',
+      mnmP5Lead: 'Pré-aqueça o forno e asse cada pizza na janela ideal. Use os timers abaixo.',
       // Molho — The Ultimate Sauce
       molhoTitulo: 'Molho — The Ultimate Sauce',
       molhoIntro: 'Molho rústico de tomate pelado, cru (sem cozinhar). Quantidades escalam com o nº de discos.',
@@ -1804,6 +2074,31 @@
       btnImprimirCompras: 'Imprimir lista',
       comprasIntro: 'Ingredientes para <b>{discos} disco(s)</b>, já escalados. Massa e molho.',
       comprasGrupoMassa: 'Massa', comprasGrupoMolho: 'Molho (The Ultimate Sauce)',
+      // Custo por pizza
+      custoTitulo: 'Custo por pizza',
+      custoIntro: 'Informe o preço dos ingredientes na unidade de compra. O app calcula o custo da produção de <b>{discos} disco(s)</b> e o <b>custo por panetto</b>. Os preços ficam salvos neste aparelho.',
+      custoMoeda: 'R$',
+      custoGrupoMassa: 'Massa', custoGrupoMolho: 'Molho (The Ultimate Sauce)',
+      custoUnidKg: '/ kg', custoUnidLata: '/ lata (400 g)', custoUnidCabeca: '/ cabeça',
+      custoUnidMaco: '/ maço', custoUnidLitro: '/ litro',
+      custoSubtotal: 'Subtotal',
+      custoPorPizzaCap: 'Custo por pizza (panetto)',
+      custoTotalLbl: (v) => `Custo total da produção: <b>${v}</b>`,
+      // itens de custo (nome exibido)
+      custoTomate: 'Tomate pelado (lata 400 g)', custoAlho: 'Alho (cabeça)',
+      custoManjericao: 'Manjericão (maço)', custoAzeite: 'Azeite extra virgem (litro)',
+      custoAlhoNota: 'cabeça ≈ 10 dentes', custoManjNota: 'maço ≈ 40 folhas',
+      btnResetCusto: 'Restaurar preços padrão',
+      // Histórico de preços
+      btnSalvarPrecos: 'Salvar preços',
+      custoHistTit: 'Histórico de preços',
+      custoHistVazio: 'Nenhum preço salvo ainda. Ajuste os preços acima e toque em "Salvar preços" para acompanhar a oscilação.',
+      custoPorPizzaLbl: 'Preço por pizza',
+      // nomes curtos no grid do histórico (tabela enxuta)
+      custoCurtoAlma: 'Farinha AI', custoCurtoIntegral: 'Farinha Int', custoCurtoSal: 'Sal', custoCurtoFermento: 'Fermento',
+      custoCurtoTomate: 'Tomate pelado', custoCurtoAlho: 'Alho', custoCurtoManjericao: 'Manjericão', custoCurtoAzeite: 'Azeite',
+      precoRestaurar: 'Restaurar', precoExcluir: 'Excluir',
+      precoExcluirConfirm: 'Excluir este registro de preços?',
       ajusteProducao: 'Ajuste a produção',
       numDiscos: 'Número de discos',
       unitDiscos: 'discos',
@@ -1833,7 +2128,7 @@
       btnLimpar: 'Limpar marcações',
       inicioPoolish: 'Início do poolish:', horaAssar: 'Hora de assar:', as: 'às',
       duracaoAppretto: 'Duração do appretto',
-      velTitulo: 'Tabela de velocidades — Ooni Halo Core',
+      velTitulo: 'Tabela de velocidades — Halo Core',
       glossarioTitulo: 'Glossário napolitano',
       troubleTitulo: 'Solução de problemas',
       troubleIntro: 'Problemas comuns na napolitana, causas prováveis e como ajustar. Toque em cada item para expandir.',
@@ -1857,7 +2152,7 @@
       capacidade: (g, max) => `🚫 <b>Massa total (${g} g) acima da capacidade da Halo Core (${max} g).</b> Reduza o número de discos ou o peso por panetto para caber na masseira. Bater um volume acima do limite sobrecarrega o motor e prejudica o desenvolvimento do glúten.`,
       loteMin: (g, min) => `⚠️ <b>Lote pequeno (${g} g).</b> Abaixo de ~${min} g a massa fica baixa demais na cuba e a espiral não "pega" bem o gancho, sovando de forma irregular. Considere aumentar o número de discos ou misturar à mão.`,
       // DDT — temperatura da água
-      ddtTitulo: 'Temperatura da água (Halo Core)',
+      ddtTitulo: 'Temperatura da água — Halo Core',
       btnMostrarDDT: 'Mostrar temperatura', btnOcultarDDT: 'Ocultar temperatura',
       ddtIntro: 'A Halo Core aquece a massa pelo atrito da espiral, mas o <b>poolish</b> sai da geladeira frio e puxa a temperatura para baixo. Por isso usamos a regra de 4 fatores: <b>água = (massa desejada × 4) − (farinha + ambiente + atrito + poolish)</b>. Alvo da massa final: <b>19–23°C</b>.',
       ddtAmbiente: 'Ambiente',
@@ -1989,6 +2284,34 @@
       // Navigation tabs
       tabReceita: 'Recipe', tabPreparo: 'Prep', tabCronograma: 'Schedule',
       tabDiario: 'Log', tabReferencia: 'Reference',
+      expandirTudo: 'Expand all', recolherTudo: 'Collapse all',
+      // Hands-on mode (full-screen step-by-step)
+      maoNaMassa: 'Hands-on',
+      mnmAnterior: 'Back', mnmProximo: 'Next', mnmConcluir: 'Finish',
+      mnmProgresso: (n, total) => `Step ${n} of ${total}`,
+      mnmFaseLabel: (n, total) => `Phase ${n}/${total}`,
+      mnmBoxQtd: 'Quantities for this batch',
+      mnmP1Tit: 'Poolish',
+      mnmP1Lead: 'Prepare the pre-ferment <b>ahead of time</b> (default ~20h before baking). Mix only the poolish ingredients and let it ferment.',
+      mnmP1I1: '2h at room temperature + the rest in the fridge at 4°C.',
+      mnmP1I2: 'Halo Core bowl with the lid closed and the vent hole open.',
+      mnmP1I3: 'When it doubles in volume and turns bubbly, it is ready.',
+      mnmP2Tit: 'Final dough — Halo Core',
+      mnmP2Lead: 'Mix the final dough on the mixer following the steps below, with the timers. Use the <b>water at the calculated temperature</b> to reach 19–23°C.',
+      mnmP2Agua: 'Water temperature',
+      mnmP2SemAgua: 'Open the Prep tab to compute the water temperature.',
+      mnmP3Tit: 'Cold maturation',
+      mnmP3Lead: 'Move the dough to the fridge for bulk maturation — the main rest, which develops flavor and structure.',
+      mnmP3I1: 'Bowl closed with film in contact + lid.',
+      mnmP3I2: 'Goes to the fridge ~30 min after the final dough.',
+      mnmP3I3: 'Let it mature between 12h and 48h (the schedule computes the exact time).',
+      mnmP4Tit: 'Balling + Appretto',
+      mnmP4Lead: 'Divide the dough into balls and let the second fermentation (appretto) at room temperature until baking time.',
+      mnmP4I1: 'Room temperature < 22°C: up to ~4h.',
+      mnmP4I2: 'Room temperature > 25°C: 2.5h to 3h.',
+      mnmP4I3: 'When the balls double in volume, they are ready.',
+      mnmP5Tit: 'Bake — Fornetto Slim',
+      mnmP5Lead: 'Preheat the oven and bake each pizza in the ideal window. Use the timers below.',
       // Sauce — The Ultimate Sauce
       molhoTitulo: 'Sauce — The Ultimate Sauce',
       molhoIntro: 'Rustic raw (uncooked) peeled-tomato sauce. Quantities scale with the number of pizzas.',
@@ -2013,6 +2336,30 @@
       btnImprimirCompras: 'Print list',
       comprasIntro: 'Ingredients for <b>{discos} pizza(s)</b>, already scaled. Dough and sauce.',
       comprasGrupoMassa: 'Dough', comprasGrupoMolho: 'Sauce (The Ultimate Sauce)',
+      // Cost per pizza
+      custoTitulo: 'Cost per pizza',
+      custoIntro: 'Enter the price of each ingredient by its purchase unit. The app computes the cost of a <b>{discos} pizza(s)</b> batch and the <b>cost per dough ball</b>. Prices are saved on this device.',
+      custoMoeda: '$',
+      custoGrupoMassa: 'Dough', custoGrupoMolho: 'Sauce (The Ultimate Sauce)',
+      custoUnidKg: '/ kg', custoUnidLata: '/ can (400 g)', custoUnidCabeca: '/ head',
+      custoUnidMaco: '/ bunch', custoUnidLitro: '/ liter',
+      custoSubtotal: 'Subtotal',
+      custoPorPizzaCap: 'Cost per pizza (dough ball)',
+      custoTotalLbl: (v) => `Total batch cost: <b>${v}</b>`,
+      custoTomate: 'Peeled tomatoes (400 g can)', custoAlho: 'Garlic (head)',
+      custoManjericao: 'Basil (bunch)', custoAzeite: 'Extra virgin olive oil (liter)',
+      custoAlhoNota: 'head ≈ 10 cloves', custoManjNota: 'bunch ≈ 40 leaves',
+      btnResetCusto: 'Reset default prices',
+      // Price history
+      btnSalvarPrecos: 'Save prices',
+      custoHistTit: 'Price history',
+      custoHistVazio: 'No prices saved yet. Adjust the prices above and tap "Save prices" to track fluctuations.',
+      custoPorPizzaLbl: 'Price per pizza',
+      // short names in the history grid (lean table)
+      custoCurtoAlma: 'AI flour', custoCurtoIntegral: 'WM flour', custoCurtoSal: 'Salt', custoCurtoFermento: 'Yeast',
+      custoCurtoTomate: 'Peeled tomatoes', custoCurtoAlho: 'Garlic', custoCurtoManjericao: 'Basil', custoCurtoAzeite: 'Olive oil',
+      precoRestaurar: 'Restore', precoExcluir: 'Delete',
+      precoExcluirConfirm: 'Delete this price record?',
       ajusteProducao: 'Adjust the batch',
       numDiscos: 'Number of pizzas',
       unitDiscos: 'pizzas',
@@ -2042,7 +2389,7 @@
       btnLimpar: 'Clear checks',
       inicioPoolish: 'Poolish start:', horaAssar: 'Baking time:', as: 'at',
       duracaoAppretto: 'Appretto duration',
-      velTitulo: 'Speed table — Ooni Halo Core',
+      velTitulo: 'Speed table — Halo Core',
       glossarioTitulo: 'Neapolitan glossary',
       troubleTitulo: 'Troubleshooting',
       troubleIntro: 'Common Neapolitan issues, likely causes and how to fix them. Tap each item to expand.',
@@ -2063,7 +2410,7 @@
       capacidade: (g, max) => `🚫 <b>Total dough (${g} g) above the Halo Core capacity (${max} g).</b> Reduce the number of pizzas or the weight per ball to fit the mixer. Mixing above the limit overloads the motor and hurts gluten development.`,
       loteMin: (g, min) => `⚠️ <b>Small batch (${g} g).</b> Below ~${min} g the dough sits too low in the bowl and the spiral hook can't grab it properly, kneading unevenly. Consider increasing the number of pizzas or mixing by hand.`,
       // DDT — water temperature
-      ddtTitulo: 'Water temperature (Halo Core)',
+      ddtTitulo: 'Water temperature — Halo Core',
       btnMostrarDDT: 'Show temperature', btnOcultarDDT: 'Hide temperature',
       ddtIntro: 'The Halo Core warms the dough through the spiral friction, but the <b>poolish</b> comes out of the fridge cold and pulls the temperature down. So we use the 4-factor rule: <b>water = (desired dough × 4) − (flour + room + friction + poolish)</b>. Final-dough target: <b>19–23°C</b>.',
       ddtAmbiente: 'Room',
@@ -2218,6 +2565,9 @@
     });
     // botão de wake lock (rótulo depende do estado, não só do data-i18n)
     if (typeof atualizarBotaoWake === 'function') atualizarBotaoWake();
+    // botão "mão na massa": mantém title/aria-label (texto some no mobile)
+    const mnmB = document.getElementById('mnmBtn');
+    if (mnmB) { mnmB.setAttribute('title', t('maoNaMassa')); mnmB.setAttribute('aria-label', t('maoNaMassa')); }
     // dropdown de perfis (placeholder é traduzido) — preserva a seleção atual
     if (typeof popularPerfis === 'function') {
       const selPerfil = document.getElementById('perfilSelect');
@@ -2232,6 +2582,7 @@
     if (typeof renderGlossario === 'function') renderGlossario();
     if (typeof renderTrouble === 'function') renderTrouble();
     document.getElementById('troubleIntro').innerHTML = t('troubleIntro');
+    if (typeof atualizarCollapseAll === 'function') atualizarCollapseAll();
     render();
   }
 
@@ -2463,6 +2814,9 @@
 
     // Lista de compras (massa + molho, já escalados)
     renderCompras(r, discos);
+
+    // Custo por pizza (deriva das quantidades de massa + molho e dos preços)
+    renderCusto(r, discos);
   }
 
   // ===== Lista de compras =====
@@ -2522,6 +2876,317 @@
     };
     window.addEventListener('afterprint', limpar);
     window.print();
+  }
+
+  // ===== Calculadora de custo por pizza =====
+  // Preços na UNIDADE DE COMPRA (farinhas/sal por kg; fermento por kg; tomate
+  // por lata de 400 g; alho por cabeça ≈ 10 dentes; manjericão por maço ≈ 40
+  // folhas; azeite por litro). O custo escala com as quantidades já calculadas.
+  const CUSTO_ALHO_DENTES_CABECA = 10;   // dentes por cabeça
+  const CUSTO_MANJ_FOLHAS_MACO = 40;     // folhas por maço
+  const CUSTO_AZEITE_ML = 15;            // ml de azeite por produção (rústico, "a gosto")
+
+  // Preços padrão (referência aproximada em BRL). O usuário ajusta e o app salva.
+  const CUSTO_PADRAO = {
+    alma: 9.0,       // R$/kg
+    integral: 12.0,  // R$/kg
+    sal: 3.0,        // R$/kg
+    fermento: 120.0, // R$/kg (fermento seco é caro por kg, mas usa-se pouco)
+    tomate: 8.0,     // R$/lata 400 g
+    alho: 4.0,       // R$/cabeça
+    manjericao: 4.0, // R$/maço
+    azeite: 40.0     // R$/litro
+  };
+
+  function lerPrecos() {
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem('pizzaCustoPrecos')); } catch (e) {}
+    return Object.assign({}, CUSTO_PADRAO, (saved && typeof saved === 'object') ? saved : {});
+  }
+  function gravarPrecos(p) {
+    try { localStorage.setItem('pizzaCustoPrecos', JSON.stringify(p)); } catch (e) {}
+  }
+
+  // Formata dinheiro no idioma atual (vírgula/ponto), 2 casas
+  function moneyFmt(v) {
+    const n = (isNaN(v) || v < 0) ? 0 : v;
+    const s = n.toFixed(2);
+    return LANG === 'en' ? s : s.replace('.', ',');
+  }
+
+  // Lê o preço digitado num input do card de custo (id custoP_<chave>)
+  function precoInput(chave, fallback) {
+    const el = document.getElementById('custoP_' + chave);
+    if (!el) return fallback;
+    const v = parseFloat(String(el.value).replace(',', '.'));
+    return isNaN(v) ? fallback : v;
+  }
+
+  function renderCusto(r, discos) {
+    const precos = lerPrecos();
+    const moeda = t('custoMoeda');
+
+    // Uma linha de preço editável: nome + campo + unidade
+    const linha = (chave, nome, unidade, nota) =>
+      `<div class="custo-linha">
+        <span class="cl-nome">${nome}${nota ? ` <span style="color:var(--gray);font-weight:400;font-size:0.8rem">(${nota})</span>` : ''}</span>
+        <span class="cl-preco">
+          <span class="cl-moeda">${moeda}</span>
+          <input type="number" id="custoP_${chave}" min="0" step="0.01" value="${precos[chave]}" inputmode="decimal">
+          <span class="cl-unidade">${unidade}</span>
+        </span>
+      </div>`;
+
+    // Fonte da verdade dos preços: o localStorage (via lerPrecos), NÃO os inputs
+    // do DOM. Os inputs são reconstruídos abaixo a partir de `precos`; ler o DOM
+    // aqui pegaria o valor antigo (bug: restaurar preço só aplicava na 2ª vez).
+
+    // ---- Custos da MASSA (quantidades em gramas -> preço por kg) ----
+    const custoAlma = (r.alma / 1000) * precos.alma;
+    const custoIntegral = (r.integral / 1000) * precos.integral;
+    const custoSal = (r.sal / 1000) * precos.sal;
+    const custoFermento = (r.fermento / 1000) * precos.fermento;
+    const subMassa = custoAlma + custoIntegral + custoSal + custoFermento;
+
+    // ---- Custos do MOLHO (mesma escala do renderMolho: base 4 discos) ----
+    const fator = discos / MOLHO_BASE_DISCOS;
+    const tomateG = MOLHO_TOMATE_G * fator;                 // g de tomate
+    const alhoDentes = MOLHO_ALHO_DENTES * fator;           // dentes
+    const manjFolhas = ((MOLHO_MANJ_MIN + MOLHO_MANJ_MAX) / 2) * fator;  // folhas (média da faixa)
+    const custoTomate = (tomateG / 400) * precos.tomate;    // lata = 400 g
+    const custoAlho = (alhoDentes / CUSTO_ALHO_DENTES_CABECA) * precos.alho;
+    const custoManj = (manjFolhas / CUSTO_MANJ_FOLHAS_MACO) * precos.manjericao;
+    const custoAzeite = (CUSTO_AZEITE_ML / 1000) * precos.azeite;  // litro = 1000 ml
+    const subMolho = custoTomate + custoAlho + custoManj + custoAzeite;
+
+    const total = subMassa + subMolho;
+    const porPizza = discos > 0 ? total / discos : 0;
+
+    // Intro
+    document.getElementById('custoIntro').innerHTML =
+      t('custoIntro').replace('{discos}', String(discos));
+
+    // Grupos de preços editáveis
+    document.getElementById('custoPrecos').innerHTML =
+      `<div class="custo-grupo">
+        <div class="custo-grupo-tit">${t('custoGrupoMassa')}</div>
+        ${linha('alma', t('ingFarinhaAlma'), t('custoUnidKg'))}
+        ${linha('integral', t('ingFarinhaIntegral'), t('custoUnidKg'))}
+        ${linha('sal', t('ingSal'), t('custoUnidKg'))}
+        ${linha('fermento', t('ingFermento'), t('custoUnidKg'))}
+        <div class="custo-subtotal"><span>${t('custoSubtotal')}</span><b>${moeda} ${moneyFmt(subMassa)}</b></div>
+      </div>
+      <div class="custo-grupo">
+        <div class="custo-grupo-tit">${t('custoGrupoMolho')}</div>
+        ${linha('tomate', t('custoTomate'), t('custoUnidLata'))}
+        ${linha('alho', t('custoAlho'), t('custoUnidCabeca'), t('custoAlhoNota'))}
+        ${linha('manjericao', t('custoManjericao'), t('custoUnidMaco'), t('custoManjNota'))}
+        ${linha('azeite', t('custoAzeite'), t('custoUnidLitro'))}
+        <div class="custo-subtotal"><span>${t('custoSubtotal')}</span><b>${moeda} ${moneyFmt(subMolho)}</b></div>
+      </div>`;
+
+    // Resultado destacado
+    document.getElementById('custoResult').innerHTML =
+      `<div class="cap">${t('custoPorPizzaCap')}</div>
+       <div class="big">${moeda} ${moneyFmt(porPizza)}</div>
+       <div class="custo-total">${t('custoTotalLbl', moeda + ' ' + moneyFmt(total))}</div>`;
+
+    // Histórico de preços salvos
+    renderHistPrecos();
+  }
+
+  function toggleCusto() {
+    const wrap = document.getElementById('custoWrap');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    setHeadState('custoToggle', show);
+    saveWrap('custoWrap', show);
+    if (show) render();
+  }
+
+  // Salva os preços digitados e recalcula (chamado pelos inputs via delegação)
+  function salvarCustoPrecos() {
+    const chaves = ['alma', 'integral', 'sal', 'fermento', 'tomate', 'alho', 'manjericao', 'azeite'];
+    const p = {};
+    const atual = lerPrecos();
+    chaves.forEach(k => { p[k] = precoInput(k, atual[k]); });
+    gravarPrecos(p);
+  }
+
+  // Restaura os preços padrão
+  function resetCusto() {
+    gravarPrecos(Object.assign({}, CUSTO_PADRAO));
+    render();
+  }
+
+  // Enquanto o usuário digita um preço, salva e recalcula sem re-renderizar o
+  // card inteiro (evita perder o foco do input). A delegação fica no container.
+  document.getElementById('custoPrecos').addEventListener('input', (e) => {
+    if (e.target && e.target.id && e.target.id.indexOf('custoP_') === 0) {
+      salvarCustoPrecos();
+      atualizarCustoTotais();
+    }
+  });
+
+  // Recalcula só os subtotais/resultado a partir dos inputs atuais (sem redesenhar
+  // os campos, preservando o foco enquanto se digita).
+  function atualizarCustoTotais() {
+    const discos = clamp(parseInt(discosNum.value) || 2, 2, 10);
+    const r = calcular(
+      discos,
+      clamp(parseInt(pesoNum.value) || 260, 260, 320),
+      clamp(parseInt(hidraNum.value) || 60, 60, 85) / 100
+    );
+    const precos = lerPrecos();
+    const moeda = t('custoMoeda');
+
+    const subMassa = (r.alma / 1000) * precoInput('alma', precos.alma)
+      + (r.integral / 1000) * precoInput('integral', precos.integral)
+      + (r.sal / 1000) * precoInput('sal', precos.sal)
+      + (r.fermento / 1000) * precoInput('fermento', precos.fermento);
+
+    const fator = discos / MOLHO_BASE_DISCOS;
+    const tomateG = MOLHO_TOMATE_G * fator;
+    const alhoDentes = MOLHO_ALHO_DENTES * fator;
+    const manjFolhas = ((MOLHO_MANJ_MIN + MOLHO_MANJ_MAX) / 2) * fator;
+    const subMolho = (tomateG / 400) * precoInput('tomate', precos.tomate)
+      + (alhoDentes / CUSTO_ALHO_DENTES_CABECA) * precoInput('alho', precos.alho)
+      + (manjFolhas / CUSTO_MANJ_FOLHAS_MACO) * precoInput('manjericao', precos.manjericao)
+      + (CUSTO_AZEITE_ML / 1000) * precoInput('azeite', precos.azeite);
+
+    const total = subMassa + subMolho;
+    const porPizza = discos > 0 ? total / discos : 0;
+
+    const subs = document.querySelectorAll('#custoPrecos .custo-subtotal b');
+    if (subs[0]) subs[0].textContent = `${moeda} ${moneyFmt(subMassa)}`;
+    if (subs[1]) subs[1].textContent = `${moeda} ${moneyFmt(subMolho)}`;
+    document.getElementById('custoResult').innerHTML =
+      `<div class="cap">${t('custoPorPizzaCap')}</div>
+       <div class="big">${moeda} ${moneyFmt(porPizza)}</div>
+       <div class="custo-total">${t('custoTotalLbl', moeda + ' ' + moneyFmt(total))}</div>`;
+  }
+
+  // ===== Histórico de preços (snapshots datados, estilo do diário) =====
+  // Cada registro guarda os 8 preços + timestamp. Permite acompanhar a
+  // oscilação, restaurar um conjunto salvo e excluir registros.
+  const CUSTO_CHAVES = ['alma', 'integral', 'sal', 'fermento', 'tomate', 'alho', 'manjericao', 'azeite'];
+
+  function lerHistPrecos() {
+    try {
+      const raw = localStorage.getItem('pizzaCustoHistorico');
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function gravarHistPrecos(lista) {
+    try { localStorage.setItem('pizzaCustoHistorico', JSON.stringify(lista)); } catch (e) {}
+  }
+
+  // Custo total + por pizza dos preços informados, para a produção atual (referência)
+  function custoDosPrecos(precos, discos, r) {
+    const subMassa = (r.alma / 1000) * precos.alma
+      + (r.integral / 1000) * precos.integral
+      + (r.sal / 1000) * precos.sal
+      + (r.fermento / 1000) * precos.fermento;
+    const fator = discos / MOLHO_BASE_DISCOS;
+    const tomateG = MOLHO_TOMATE_G * fator;
+    const alhoDentes = MOLHO_ALHO_DENTES * fator;
+    const manjFolhas = ((MOLHO_MANJ_MIN + MOLHO_MANJ_MAX) / 2) * fator;
+    const subMolho = (tomateG / 400) * precos.tomate
+      + (alhoDentes / CUSTO_ALHO_DENTES_CABECA) * precos.alho
+      + (manjFolhas / CUSTO_MANJ_FOLHAS_MACO) * precos.manjericao
+      + (CUSTO_AZEITE_ML / 1000) * precos.azeite;
+    const total = subMassa + subMolho;
+    return { total, porPizza: discos > 0 ? total / discos : 0 };
+  }
+
+  // Salva um snapshot dos preços atuais com data/hora
+  function salvarHistoricoPrecos() {
+    salvarCustoPrecos();                 // garante que os preços atuais estão gravados
+    const precos = lerPrecos();
+    const snap = { ts: Date.now(), precos: {} };
+    CUSTO_CHAVES.forEach(k => { snap.precos[k] = precos[k]; });
+    const lista = lerHistPrecos();
+    lista.push(snap);
+    gravarHistPrecos(lista);
+    renderHistPrecos();
+  }
+
+  // Restaura os preços de um snapshot nos campos e recalcula (sem confirmação:
+  // a ação é reversível — basta restaurar outro registro ou "Restaurar padrão")
+  function restaurarPrecos(ts) {
+    const snap = lerHistPrecos().find(s => s.ts === ts);
+    if (!snap) return;
+    const precos = Object.assign({}, CUSTO_PADRAO, snap.precos);
+    gravarPrecos(precos);
+    render();
+  }
+
+  function excluirPrecoSnap(ts) {
+    if (!confirm(t('precoExcluirConfirm'))) return;
+    gravarHistPrecos(lerHistPrecos().filter(s => s.ts !== ts));
+    renderHistPrecos();
+  }
+
+  // Data/hora curta pt/en: dd/mm/aaaa HH:MM
+  function dataHoraCurta(ts) {
+    const d = new Date(ts);
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mi = String(d.getMinutes()).padStart(2, '0');
+    return `${dd}/${mm}/${d.getFullYear()} ${hh}:${mi}`;
+  }
+
+  function renderHistPrecos() {
+    const box = document.getElementById('custoHist');
+    if (!box) return;
+    const lista = lerHistPrecos().slice().sort((a, b) => b.ts - a.ts);   // mais recente primeiro
+    const moeda = t('custoMoeda');
+
+    // Config atual (para calcular total/por pizza de cada snapshot como referência)
+    const discos = clamp(parseInt(discosNum.value) || 2, 2, 10);
+    const r = calcular(
+      discos,
+      clamp(parseInt(pesoNum.value) || 260, 260, 320),
+      clamp(parseInt(hidraNum.value) || 60, 60, 85) / 100
+    );
+
+    let html = `<div class="custo-hist-tit">${t('custoHistTit')}</div>`;
+    if (!lista.length) {
+      html += `<div class="custo-hist-vazio">${t('custoHistVazio')}</div>`;
+      box.innerHTML = html;
+      return;
+    }
+
+    // Nomes curtos só para o grid do histórico (tabela enxuta, referência)
+    const nomeChave = {
+      alma: t('custoCurtoAlma'), integral: t('custoCurtoIntegral'), sal: t('custoCurtoSal'),
+      fermento: t('custoCurtoFermento'), tomate: t('custoCurtoTomate'), alho: t('custoCurtoAlho'),
+      manjericao: t('custoCurtoManjericao'), azeite: t('custoCurtoAzeite')
+    };
+
+    html += '<div class="custo-hist-lista">' + lista.map(s => {
+      const precos = Object.assign({}, CUSTO_PADRAO, s.precos);
+      const c = custoDosPrecos(precos, discos, r);
+      const grid = CUSTO_CHAVES.map(k =>
+        `<span>${nomeChave[k]}: <b>${moeda} ${moneyFmt(precos[k])}</b></span>`
+      ).join('');
+      return `
+        <details class="preco-snap">
+          <summary class="preco-snap-top">
+            <span class="ps-data">${dataHoraCurta(s.ts)}</span>
+            <span class="ps-resumo">${t('custoPorPizzaLbl')} ${moeda} ${moneyFmt(c.porPizza)}</span>
+          </summary>
+          <div class="ps-grid">${grid}</div>
+          <div class="ps-btns">
+            <button onclick="restaurarPrecos(${s.ts})">${t('precoRestaurar')}</button>
+            <button class="icon-fixed-btn" onclick="excluirPrecoSnap(${s.ts})">${ICO.lixeira}<span>${t('precoExcluir')}</span></button>
+          </div>
+        </details>`;
+    }).join('') + '</div>';
+
+    box.innerHTML = html;
   }
 
   // ===== Molho — The Ultimate Sauce =====
@@ -2589,7 +3254,47 @@
       b.classList.toggle('active', b.getAttribute('data-tab') === nome));
     document.querySelectorAll('.tab-panel').forEach(p =>
       p.classList.toggle('active', p.getAttribute('data-tab') === nome));
+    abaAtiva = nome;
+    if (typeof atualizarCollapseAll === 'function') atualizarCollapseAll();
   }
+  // Cards colapsáveis por aba: [wrapId, toggleFn]
+  const CARDS_POR_ABA = {
+    receita: [['ingWrap', toggleIng], ['divWrap', toggleDiv], ['molhoWrap', toggleMolho], ['comprasWrap', toggleCompras], ['custoWrap', toggleCusto]],
+    preparo: [['ddtWrap', toggleDDT], ['mixWrap', toggleMix], ['fornoWrap', toggleForno]],
+    cronograma: [['timelineWrap', toggleTimeline]],
+    diario: [['diarioWrap', toggleDiario]],
+    referencia: [['velocidadesWrap', toggleVelocidades], ['glossarioWrap', toggleGlossario], ['troubleWrap', toggleTrouble]]
+  };
+  let abaAtiva = 'receita';
+
+  // Expande ou recolhe todos os cards da aba ativa (alterna conforme o estado atual)
+  function toggleAllCards() {
+    const cards = CARDS_POR_ABA[abaAtiva] || [];
+    // se algum card está aberto, o clique recolhe todos; senão, abre todos
+    const algumAberto = cards.some(([w]) => document.getElementById(w).classList.contains('show'));
+    const querAbrir = !algumAberto;
+    cards.forEach(([w, fn]) => {
+      const aberto = document.getElementById(w).classList.contains('show');
+      if (aberto !== querAbrir) fn();   // só alterna os que não estão no estado desejado
+    });
+    atualizarCollapseAll();
+  }
+
+  // Ajusta o rótulo/ícone do botão conforme o estado dos cards da aba ativa
+  function atualizarCollapseAll() {
+    const cards = CARDS_POR_ABA[abaAtiva] || [];
+    const btn = document.getElementById('collapseAllBtn');
+    const txt = document.getElementById('collapseAllTxt');
+    const ico = btn.querySelector('.ca-ico');
+    if (!cards.length) { btn.style.display = 'none'; return; }
+    btn.style.display = '';
+    const algumAberto = cards.some(([w]) => document.getElementById(w).classList.contains('show'));
+    // se algum aberto -> ação é "recolher tudo"; senão -> "expandir tudo"
+    txt.textContent = algumAberto ? t('recolherTudo') : t('expandirTudo');
+    btn.classList.toggle('expanded', algumAberto);
+    if (ico && !ico.innerHTML) ico.innerHTML = CHEVRON;
+  }
+
   (function initTab() {
     // Sempre inicia na aba Receita ao abrir/recarregar (não restaura a última).
     setTab('receita');
@@ -2608,6 +3313,7 @@
     head.setAttribute('aria-expanded', aberto ? 'true' : 'false');
     const cw = head.querySelector('.chevron-wrap');
     if (cw && !cw.innerHTML) cw.innerHTML = CHEVRON;   // injeta o chevron uma vez
+    if (typeof atualizarCollapseAll === 'function') atualizarCollapseAll();
   }
   // Restaura o estado de um bloco. Sem preferência salva => ABERTO por padrão.
   function restoreWrap(wrapId, headId) {
@@ -2625,6 +3331,7 @@
     restoreWrap('divWrap', 'divToggle');
     restoreWrap('molhoWrap', 'molhoToggle');
     restoreWrap('comprasWrap', 'comprasToggle');
+    restoreWrap('custoWrap', 'custoToggle');
     restoreWrap('ddtWrap', 'ddtToggle');
     restoreWrap('mixWrap', 'mixToggle');
     restoreWrap('fornoWrap', 'fornoToggle');
@@ -2798,9 +3505,8 @@
     const fimEl = document.getElementById('fimPrevisto');
     if (fimEl) fimEl.textContent = plano ? formatDateTime(plano.assar) : '—';
 
-    // Progresso
+    // Botão "limpar marcações" só aparece se houver etapa marcada
     const n = doneSteps.length;
-    document.getElementById('tlProgress').innerHTML = t('progresso', n, CRONOGRAMA.length);
     document.getElementById('tlReset').style.display = n > 0 ? '' : 'none';
   }
 
@@ -4057,6 +4763,160 @@
   // Injeta o ícone de impressora nos botões de imprimir (variante conforme data-ico)
   document.querySelectorAll('.print-ico').forEach(el => {
     if (!el.innerHTML) el.innerHTML = ICO[el.getAttribute('data-ico')] || ICO.impressora;
+  });
+
+  // ===== Modo "mão na massa" (overlay tela cheia, passo a passo guiado) =====
+  // Reusa os MESMOS timers de mistura (#mixSteps) e forno (#preaqTimer/#coccaoTimer):
+  // move fisicamente esses blocos para dentro do passo enquanto o modo está ativo
+  // e os devolve ao lugar original ao sair/trocar de passo (sem duplicar lógica).
+  const MNM_PASSOS = ['poolish', 'massa', 'maturacao', 'bolear', 'assar'];
+  let mnmIdx = 0;
+  let mnmWakeAntes = false;   // estado do wake lock antes de entrar (para restaurar)
+
+  // Guarda a "casa" de cada bloco reusado para devolvê-lo depois
+  const mnmCasas = {};
+  function mnmGuardarCasa(id) {
+    if (mnmCasas[id]) return;
+    const el = document.getElementById(id);
+    if (el && el.parentNode) mnmCasas[id] = el.parentNode;
+  }
+  // Devolve todos os blocos reusados às suas casas originais
+  function mnmDevolverBlocos() {
+    ['mixSteps', 'preaqTimer', 'coccaoTimer'].forEach(id => {
+      const el = document.getElementById(id);
+      const casa = mnmCasas[id];
+      if (el && casa && el.parentNode !== casa) casa.appendChild(el);
+    });
+  }
+
+  function abrirMaoNaMassa() {
+    // memoriza as casas dos blocos que serão movidos
+    ['mixSteps', 'preaqTimer', 'coccaoTimer'].forEach(mnmGuardarCasa);
+    mnmIdx = 0;
+    document.body.classList.add('mnm-aberto');
+    document.getElementById('mnmOverlay').classList.add('show');
+    // liga o wake lock automaticamente (memoriza o estado para restaurar ao sair)
+    mnmWakeAntes = wakeDesejado;
+    if (wakeSuportado && !wakeDesejado) {
+      wakeDesejado = true;
+      requestWakeLock();
+    }
+    mnmRenderPasso();
+  }
+
+  function fecharMaoNaMassa() {
+    mnmDevolverBlocos();                 // blocos reusados voltam para as abas
+    document.getElementById('mnmOverlay').classList.remove('show');
+    document.body.classList.remove('mnm-aberto');
+    // restaura o wake lock ao estado anterior (se o modo o ligou)
+    if (wakeSuportado && !mnmWakeAntes && wakeDesejado) {
+      wakeDesejado = false;
+      releaseWakeLock();
+    }
+  }
+
+  function mnmProximo() {
+    if (mnmIdx < MNM_PASSOS.length - 1) { mnmIdx++; mnmRenderPasso(); }
+    else fecharMaoNaMassa();
+  }
+  function mnmAnterior() {
+    if (mnmIdx > 0) { mnmIdx--; mnmRenderPasso(); }
+  }
+
+  function mnmRenderPasso() {
+    // ao trocar de passo, devolve quaisquer blocos reusados às casas antes de remontar
+    mnmDevolverBlocos();
+
+    const total = MNM_PASSOS.length;
+    const passo = MNM_PASSOS[mnmIdx];
+    const corpo = document.getElementById('mnmCorpo');
+
+    // dados de produção atuais (mesma fonte da calculadora)
+    const discos = clamp(parseInt(discosNum.value) || 2, 2, 10);
+    const peso = clamp(parseInt(pesoNum.value) || 260, 260, 320);
+    const hidra = clamp(parseInt(hidraNum.value) || 60, 60, 85) / 100;
+    const r = calcular(discos, peso, hidra);
+
+    const lista = (keys) => `<ul class="mnm-lista">${keys.map(k => `<li>${t(k)}</li>`).join('')}</ul>`;
+    const qLinha = (nome, val) => `<div class="mnm-qtd-linha"><span>${nome}</span><b>${val}</b></div>`;
+
+    let titKey, leadKey, html = '';
+
+    if (passo === 'poolish') {
+      titKey = 'mnmP1Tit'; leadKey = 'mnmP1Lead';
+      html = `<div class="mnm-box">
+          <div class="mnm-box-tit">${t('mnmBoxQtd')}</div>
+          ${qLinha(t('ingFarinhaAlma'), fmt(r.poolish.farinha))}
+          ${qLinha(t('ingAgua'), fmt(r.poolish.agua))}
+          ${qLinha(t('ingFermento'), fmt(r.poolish.fermento))}
+        </div>
+        ${lista(['mnmP1I1', 'mnmP1I2', 'mnmP1I3'])}`;
+    } else if (passo === 'massa') {
+      titKey = 'mnmP2Tit'; leadKey = 'mnmP2Lead';
+      const agua = ddtAguaCalculada();
+      const aguaHtml = (agua != null && !isNaN(agua))
+        ? `<div class="mnm-box"><div class="mnm-box-tit">${t('mnmP2Agua')}</div>
+             ${qLinha(t('ddtAguaLabel'), String(agua).replace('.', ',') + ' °C')}</div>`
+        : `<div class="mnm-box"><div class="mnm-box-tit">${t('mnmP2Agua')}</div>
+             <div style="font-size:0.92rem;color:var(--gray)">${t('mnmP2SemAgua')}</div></div>`;
+      // quantidades da massa final
+      const qtdHtml = `<div class="mnm-box"><div class="mnm-box-tit">${t('mnmBoxQtd')}</div>
+          ${qLinha(t('divPoolishTodo'), fmt(r.poolish.farinha + r.poolish.agua + r.poolish.fermento))}
+          ${qLinha(t('ingFarinhaAlma'), fmt(r.final.alma))}
+          ${qLinha(t('ingFarinhaIntegral'), fmt(r.final.integral))}
+          ${qLinha(t('divAguaGelada'), fmt(r.final.agua))}
+          ${qLinha(t('ingSal'), fmt(r.final.sal))}
+          ${qLinha(t('ingFermento'), fmt(r.final.fermento))}
+        </div>`;
+      html = aguaHtml + qtdHtml + `<div class="mnm-slot" id="mnmSlotMix"></div>`;
+    } else if (passo === 'maturacao') {
+      titKey = 'mnmP3Tit'; leadKey = 'mnmP3Lead';
+      html = lista(['mnmP3I1', 'mnmP3I2', 'mnmP3I3']);
+    } else if (passo === 'bolear') {
+      titKey = 'mnmP4Tit'; leadKey = 'mnmP4Lead';
+      html = `<div class="mnm-box"><div class="mnm-box-tit">${t('mnmBoxQtd')}</div>
+          ${qLinha(t('pesoPanetto'), `${discos} × ${fmt(peso)}`)}
+        </div>
+        ${lista(['mnmP4I1', 'mnmP4I2', 'mnmP4I3'])}`;
+    } else if (passo === 'assar') {
+      titKey = 'mnmP5Tit'; leadKey = 'mnmP5Lead';
+      html = `<div class="mnm-slot" id="mnmSlotForno"></div>`;
+    }
+
+    corpo.innerHTML =
+      `<h2 class="mnm-titulo">${t(titKey)}</h2>
+       <p class="mnm-lead">${t(leadKey)}</p>
+       ${html}`;
+
+    // move os blocos reusados para os slots deste passo
+    if (passo === 'massa') {
+      const slot = document.getElementById('mnmSlotMix');
+      const mix = document.getElementById('mixSteps');
+      if (slot && mix) { slot.appendChild(mix); renderMix(); }
+    } else if (passo === 'assar') {
+      const slot = document.getElementById('mnmSlotForno');
+      const preaq = document.getElementById('preaqTimer');
+      const cocc = document.getElementById('coccaoTimer');
+      if (slot && preaq) slot.appendChild(preaq);
+      if (slot && cocc) slot.appendChild(cocc);
+      atualizarPreaq(); atualizarCoccao();
+    }
+
+    // cabeçalho, progresso e botões
+    document.getElementById('mnmFase').textContent = t('mnmFaseLabel', mnmIdx + 1, total);
+    document.getElementById('mnmProgresso').textContent = t('mnmProgresso', mnmIdx + 1, total);
+    document.getElementById('mnmAnterior').disabled = (mnmIdx === 0);
+    const proxTxt = document.querySelector('#mnmProximo [data-i18n]');
+    if (proxTxt) proxTxt.textContent = (mnmIdx === total - 1) ? t('mnmConcluir') : t('mnmProximo');
+    // rola o corpo para o topo ao trocar de passo
+    document.getElementById('mnmCorpo').scrollTop = 0;
+  }
+
+  // Fecha o modo com a tecla Esc
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.getElementById('mnmOverlay').classList.contains('show')) {
+      fecharMaoNaMassa();
+    }
   });
 
   restoreWraps();    // abre/fecha os blocos conforme a preferência salva (padrão: aberto)
