@@ -64,8 +64,9 @@ zerar).
   **cocção** (janela ideal 90–140 s) com barra de progresso e alarme contínuo, para não queimar.
 - **Modo "mão na massa"** — Botão no topo abre um passo a passo em **tela cheia**, uma fase por
   vez (poolish → massa final → maturação → bolear → assar), com fonte e botões grandes para usar
-  na bancada. Mostra as quantidades reais e a temperatura da água, e reaproveita os **mesmos
-  timers** de mistura e de forno nos passos correspondentes. Liga a tela sempre ligada
+  na bancada. Mostra as quantidades reais, a temperatura da água e os **horários calculados pelo
+  cronograma** em cada passo (início, assar previsto, maturação, appretto…). Reaproveita os
+  **mesmos timers** de mistura e de forno nos passos correspondentes. Liga a tela sempre ligada
   automaticamente enquanto está aberto.
 - **Cronograma passo a passo** — Planeja de trás pra frente a partir do início do poolish +
   hora de assar + duração do appretto. Prioriza poolish de ~20h, usa a maturação em bloco como
@@ -154,7 +155,8 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   (ideal 90–140 s window) with a progress bar and continuous alarm, so you never burn it.
 - **Hands-on mode** — A top button opens a **full-screen** step-by-step, one phase at a time
   (poolish → final dough → maturation → balling → baking), with large text and buttons for use
-  at the bench. It shows the real quantities and the water temperature, and reuses the **same
+  at the bench. It shows the real quantities, the water temperature and the **times computed by
+  the schedule** on each step (start, planned bake, maturation, appretto…). It reuses the **same
   timers** for mixing and the oven in the matching steps. Keeps the screen on automatically
   while open.
 - **Step-by-step schedule** — Plans backwards from poolish start + baking time + appretto length.
