@@ -70,6 +70,8 @@
     gap: 8px;
     flex-wrap: wrap;
   }
+  /* grupos internos: ações (mão/tela ligada) e bandeiras */
+  .top-actions, .lang-flags { display: flex; align-items: center; gap: 8px; }
   .lang-btn {
     display: inline-flex;
     align-items: center;
@@ -108,13 +110,23 @@
       align-items: center;
       text-align: center;
     }
-    .lang-switcher { justify-content: center; }
     /* folga entre os botões (acima) e o subtítulo "Pizza Napolitana..." */
     header p { margin-top: 14px; }
-    /* No celular o botão "Mão na massa" fica só com o ícone (o texto some),
-       para não empurrar as bandeiras/idiomas para uma segunda linha. */
-    #mnmBtnLabel { display: none; }
-    #mnmBtn { padding: 6px 10px; }
+    /* No celular: ações (mão + tela ligada) coladas à ESQUERDA e bandeiras à
+       DIREITA, ocupando a largura toda, numa linha só. */
+    .lang-switcher { width: 100%; flex-wrap: nowrap; justify-content: space-between; gap: 6px; }
+    /* botões de ação (mão + tela ligada) ficam compactos e do MESMO tamanho:
+       retangulares com laterais arredondadas (pill), como as bandeiras. */
+    #mnmBtnLabel, #wakeLabel { display: none; }
+    /* mão, bolinha e bandeiras: TODOS com 34px de altura (pills idênticos) */
+    #mnmBtn, #wakeToggle, .lang-btn {
+      height: 34px; box-sizing: border-box;
+    }
+    #mnmBtn, #wakeToggle {
+      padding: 0 14px; gap: 0; justify-content: center;
+      min-width: 52px;   /* mesma largura para os dois pills (ícone vs bolinha) */
+    }
+    .lang-btn { padding: 0 10px; }
   }
   /* ícone do botão mão na massa (herda a cor do texto do wake-btn) */
   #mnmBtn .btn-ico { width: 17px; height: 17px; }
@@ -1432,37 +1444,41 @@
     <div class="header-top">
       <h1><img src="icon-512.png" alt="Ícone Pizza"> <span data-i18n="appTitle">PizzaCalc</span></h1>
       <div class="lang-switcher">
-        <button id="mnmBtn" class="wake-btn" onclick="abrirMaoNaMassa()" title="Modo mão na massa">
-          <span class="print-ico" data-ico="maos"></span>
-          <span id="mnmBtnLabel" data-i18n="maoNaMassa">Mão na massa</span>
-        </button>
-        <button id="wakeToggle" class="wake-btn" onclick="toggleWakeLock()" aria-pressed="false" title="Manter tela ligada">
-          <span class="wake-dot"></span>
-          <span id="wakeLabel" data-i18n="wakeOff">Manter tela ligada</span>
-        </button>
-        <button class="lang-btn" data-lang="pt" onclick="setLang('pt')" title="Português">
-          <svg class="flag" viewBox="0 0 28 20" aria-hidden="true">
-            <rect width="28" height="20" fill="#009c3b"/>
-            <path d="M14 2 L26 10 L14 18 L2 10 Z" fill="#ffdf00"/>
-            <circle cx="14" cy="10" r="4.2" fill="#002776"/>
-          </svg>
-          PT
-        </button>
-        <button class="lang-btn" data-lang="en" onclick="setLang('en')" title="English">
-          <svg class="flag" viewBox="0 0 28 20" aria-hidden="true">
-            <rect width="28" height="20" fill="#b22234"/>
-            <g fill="#fff">
-              <rect y="1.54" width="28" height="1.54"/>
-              <rect y="4.62" width="28" height="1.54"/>
-              <rect y="7.69" width="28" height="1.54"/>
-              <rect y="10.77" width="28" height="1.54"/>
-              <rect y="13.85" width="28" height="1.54"/>
-              <rect y="16.92" width="28" height="1.54"/>
-            </g>
-            <rect width="11.2" height="10.77" fill="#3c3b6e"/>
-          </svg>
-          EN
-        </button>
+        <div class="top-actions">
+          <button id="mnmBtn" class="wake-btn" onclick="abrirMaoNaMassa()" title="Modo mão na massa">
+            <span class="print-ico" data-ico="maos"></span>
+            <span id="mnmBtnLabel" data-i18n="maoNaMassa">Mão na massa</span>
+          </button>
+          <button id="wakeToggle" class="wake-btn" onclick="toggleWakeLock()" aria-pressed="false" title="Manter tela ligada">
+            <span class="wake-dot"></span>
+            <span id="wakeLabel" data-i18n="wakeOff">Manter tela ligada</span>
+          </button>
+        </div>
+        <div class="lang-flags">
+          <button class="lang-btn" data-lang="pt" onclick="setLang('pt')" title="Português">
+            <svg class="flag" viewBox="0 0 28 20" aria-hidden="true">
+              <rect width="28" height="20" fill="#009c3b"/>
+              <path d="M14 2 L26 10 L14 18 L2 10 Z" fill="#ffdf00"/>
+              <circle cx="14" cy="10" r="4.2" fill="#002776"/>
+            </svg>
+            PT
+          </button>
+          <button class="lang-btn" data-lang="en" onclick="setLang('en')" title="English">
+            <svg class="flag" viewBox="0 0 28 20" aria-hidden="true">
+              <rect width="28" height="20" fill="#b22234"/>
+              <g fill="#fff">
+                <rect y="1.54" width="28" height="1.54"/>
+                <rect y="4.62" width="28" height="1.54"/>
+                <rect y="7.69" width="28" height="1.54"/>
+                <rect y="10.77" width="28" height="1.54"/>
+                <rect y="13.85" width="28" height="1.54"/>
+                <rect y="16.92" width="28" height="1.54"/>
+              </g>
+              <rect width="11.2" height="10.77" fill="#3c3b6e"/>
+            </svg>
+            EN
+          </button>
+        </div>
       </div>
     </div>
     <p data-i18n="appSubtitle">Pizza Napolitana — Venturelli 95/5 • Hidratação 67% • Poolish</p>
