@@ -73,8 +73,10 @@ zerar).
   faixa. Datas em formato brasileiro.
 - **Diário de fornadas** — Registra cada produção (temperaturas, massa final medida, tempo de
   forno, observações). Calcula o **atrito real** de cada fornada e a **média** — que pode ser
-  aplicada na calculadora de água, fechando o ciclo de calibração. Exporta/compartilha (JSON +
-  resumo) e importa para migrar entre aparelhos.
+  aplicada na calculadora de água, fechando o ciclo de calibração. Cada fornada aceita **várias
+  fotos** (glúten, panetto, borda, fundo…), adicionadas pela ficha, com miniaturas e visualização
+  ampliada; as fotos são comprimidas no aparelho. Exporta/compartilha (JSON + resumo, com as
+  fotos) e importa para migrar entre aparelhos.
 - **Tabela de velocidades da Halo Core** — As 20 velocidades com potência, RPM e equivalência
   industrial.
 - **Glossário napolitano** — Termos da técnica (poolish, biga, puntata, staglio, appretto,
@@ -160,7 +162,9 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   long appretto and out-of-range maturation. Brazilian date format.
 - **Bake log** — Logs each batch (temperatures, measured final dough temp, baking time, notes).
   Computes the **real friction** per bake and the **average** — which can be applied to the water
-  calculator, closing the calibration loop. Export/share (JSON + summary) and import to move
+  calculator, closing the calibration loop. Each bake can hold **several photos** (gluten, dough
+  ball, crust, base…), added from the entry, with thumbnails and a full-screen viewer; photos are
+  compressed on the device. Export/share (JSON + summary, including photos) and import to move
   between devices.
 - **Halo Core speed table** — All 20 speeds with power, RPM and industrial equivalence.
 - **Neapolitan glossary** — Technique terms (poolish, biga, puntata, staglio, appretto,
