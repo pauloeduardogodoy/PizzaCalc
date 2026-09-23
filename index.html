@@ -2148,6 +2148,12 @@
       mnmProgresso: (n, total) => `Passo ${n} de ${total}`,
       mnmFaseLabel: (n, total) => `Fase ${n}/${total}`,
       mnmBoxQtd: 'Quantidades para esta produção',
+      // Horários do cronograma dentro do modo mão na massa
+      mnmCronoTit: 'Horário (do seu cronograma)',
+      mnmCronoSemPlano: 'Defina o início do poolish e a hora de assar na aba Cronograma para ver os horários aqui.',
+      mnmCronoAssarPrev: 'Assar previsto', mnmCronoTotal: 'Tempo total até assar',
+      mnmCronoGeladeira: 'À geladeira', mnmCronoMaturacao: 'Maturação em bloco',
+      mnmCronoAssar: 'Assar',
       // Passo 1 — Poolish
       mnmP1Tit: 'Poolish',
       mnmP1Lead: 'Prepare o pré-fermento com <b>antecedência</b> (padrão ~20h antes de assar). Misture só os ingredientes do poolish e deixe fermentar.',
@@ -2423,6 +2429,12 @@
       mnmProgresso: (n, total) => `Step ${n} of ${total}`,
       mnmFaseLabel: (n, total) => `Phase ${n}/${total}`,
       mnmBoxQtd: 'Quantities for this batch',
+      // Schedule times inside hands-on mode
+      mnmCronoTit: 'Time (from your schedule)',
+      mnmCronoSemPlano: 'Set the poolish start and the baking time on the Schedule tab to see the times here.',
+      mnmCronoAssarPrev: 'Baking planned', mnmCronoTotal: 'Total time to bake',
+      mnmCronoGeladeira: 'To the fridge', mnmCronoMaturacao: 'Bulk maturation',
+      mnmCronoAssar: 'Bake',
       mnmP1Tit: 'Poolish',
       mnmP1Lead: 'Prepare the pre-ferment <b>ahead of time</b> (default ~20h before baking). Mix only the poolish ingredients and let it ferment.',
       mnmP1I1: '2h at room temperature + the rest in the fridge at 4°C.',
@@ -5205,6 +5217,10 @@
     const lista = (keys) => `<ul class="mnm-lista">${keys.map(k => `<li>${t(k)}</li>`).join('')}</ul>`;
     const qLinha = (nome, val) => `<div class="mnm-qtd-linha"><span>${nome}</span><b>${val}</b></div>`;
 
+    // Caixa de horários do cronograma real (do planejarCronograma); vazia se não houver plano
+    const plano = (typeof planejarCronograma === 'function') ? planejarCronograma() : null;
+    const boxCrono = mnmBoxCronograma(passo, plano);
+
     let titKey, leadKey, html = '';
 
     if (passo === 'poolish') {
@@ -5251,6 +5267,7 @@
     corpo.innerHTML =
       `<h2 class="mnm-titulo">${t(titKey)}</h2>
        <p class="mnm-lead">${t(leadKey)}</p>
+       ${boxCrono}
        ${html}`;
 
     // move os blocos reusados para os slots deste passo
@@ -5275,6 +5292,38 @@
     if (proxTxt) proxTxt.textContent = (mnmIdx === total - 1) ? t('mnmConcluir') : t('mnmProximo');
     // rola o corpo para o topo ao trocar de passo
     document.getElementById('mnmCorpo').scrollTop = 0;
+  }
+
+  // Monta a caixa de HORÁRIOS do cronograma real para um passo do modo mão na massa.
+  // Usa o mesmo planejarCronograma() do cronograma. Sem plano -> aviso discreto.
+  function mnmBoxCronograma(passo, plano) {
+    const linha = (rot, dt) =>
+      `<div class="mnm-qtd-linha"><span>${rot}</span><b>${formatDateTime(dt)}</b></div>`;
+
+    if (!plano) {
+      return `<div class="mnm-box"><div class="mnm-box-tit">${t('mnmCronoTit')}</div>
+        <div style="font-size:0.92rem;color:var(--gray)">${t('mnmCronoSemPlano')}</div></div>`;
+    }
+
+    let linhas = '';
+    if (passo === 'poolish') {
+      linhas = linha(t('atInicio'), plano.inicio)
+        + `<div class="mnm-qtd-linha"><span>${t('mnmCronoAssarPrev')}</span><b>${formatDateTime(plano.assar)}</b></div>`
+        + `<div class="mnm-qtd-linha"><span>${t('mnmCronoTotal')}</span><b>${durLabel(plano.totalH)}</b></div>`;
+    } else if (passo === 'massa') {
+      linhas = linha(t('atMassa'), plano.massaFinal);
+    } else if (passo === 'maturacao') {
+      linhas = linha(t('mnmCronoGeladeira'), plano.geladeira)
+        + linha(t('atBolear'), plano.bolear)
+        + `<div class="mnm-qtd-linha"><span>${t('mnmCronoMaturacao')}</span><b>${durLabel(plano.maturacaoH)}</b></div>`;
+    } else if (passo === 'bolear') {
+      linhas = linha(t('atBolear'), plano.bolear)
+        + `<div class="mnm-qtd-linha"><span>${t('duracaoAppretto')}</span><b>${durLabel(plano.apprettoH)}</b></div>`
+        + linha(t('mnmCronoAssar'), plano.assar);
+    } else if (passo === 'assar') {
+      linhas = linha(t('mnmCronoAssar'), plano.assar);
+    }
+    return `<div class="mnm-box"><div class="mnm-box-tit">${t('mnmCronoTit')}</div>${linhas}</div>`;
   }
 
   // Fecha o modo com a tecla Esc
