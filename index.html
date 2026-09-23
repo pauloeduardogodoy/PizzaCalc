@@ -2901,6 +2901,9 @@
     const hidra = clamp(parseInt(hidraNum.value) || 60, 60, 85) / 100;
     const r = calcular(discos, peso, hidra);
 
+    // Persiste os controles de produção (para não voltar ao padrão no reload)
+    if (typeof salvarProducao === 'function') salvarProducao();
+
     // Summary
     document.getElementById('discosVal').textContent = discos;
     document.getElementById('pesoVal').textContent = peso;
@@ -4799,6 +4802,24 @@
   pesoNum.addEventListener('input', () => syncFromNum(pesoNum, pesoRange));
   hidraRange.addEventListener('input', () => syncFromRange(hidraRange, hidraNum));
   hidraNum.addEventListener('input', () => syncFromNum(hidraNum, hidraRange));
+
+  // Persistência dos controles de produção (discos/peso/hidratação): salva a
+  // cada mudança e restaura ao abrir, para não voltar ao padrão a cada reload.
+  function salvarProducao() {
+    try {
+      localStorage.setItem('pizzaProducao', JSON.stringify({
+        discos: discosNum.value, peso: pesoNum.value, hidra: hidraNum.value
+      }));
+    } catch (e) {}
+  }
+  (function initProducao() {
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem('pizzaProducao')); } catch (e) {}
+    if (!saved) return;
+    if (saved.discos != null) { discosNum.value = saved.discos; discosRange.value = clamp(parseInt(saved.discos) || 6, parseInt(discosRange.min), parseInt(discosRange.max)); }
+    if (saved.peso != null) { pesoNum.value = saved.peso; pesoRange.value = clamp(parseInt(saved.peso) || 280, parseInt(pesoRange.min), parseInt(pesoRange.max)); }
+    if (saved.hidra != null) { hidraNum.value = saved.hidra; hidraRange.value = clamp(parseInt(saved.hidra) || 67, parseInt(hidraRange.min), parseInt(hidraRange.max)); }
+  })();
 
   // ===== Controles da calculadora de temperatura da água (DDT) =====
   const ddtAmbiente = document.getElementById('ddtAmbiente');
