@@ -839,6 +839,9 @@
     .print-btn, .icon-label-btn { padding: 8px 12px; }
     /* fonte menor p/ "Receita padrão" caber na linha com as 2 impressoras */
     .btn-receita-padrao { font-size: 0.78rem; padding: 8px 10px; }
+    /* botões de excluir (lixeira): só o ícone no celular (lixeira é intuitiva) */
+    .del-btn .del-txt { display: none; }
+    .del-btn { padding: 8px 12px; }
   }
   /* Botões com ícone + texto SEMPRE (não colapsam no mobile) */
   .icon-fixed-btn { display: inline-flex; align-items: center; gap: 7px; }
@@ -1608,7 +1611,7 @@
         <select id="perfilSelect" onchange="carregarPerfil(this.value)"></select>
         <div class="perfis-botoes">
           <button class="icon-label-btn" onclick="salvarPerfil()"><span class="print-ico" data-ico="disquete"></span><span class="btn-txt" data-i18n="btnSalvarPerfil">Salvar perfil</span></button>
-          <button class="icon-fixed-btn" id="perfilExcluir" onclick="excluirPerfil()"><span class="print-ico" data-ico="lixeira"></span><span data-i18n="btnExcluirPerfil">Excluir</span></button>
+          <button class="icon-fixed-btn del-btn" id="perfilExcluir" title="Excluir" onclick="excluirPerfil()"><span class="print-ico" data-ico="lixeira"></span><span class="del-txt" data-i18n="btnExcluirPerfil">Excluir</span></button>
         </div>
       </div>
     </div>
@@ -2711,6 +2714,11 @@
     });
     const sairB = document.getElementById('mnmSair');
     if (sairB) { sairB.setAttribute('title', t('mnmSair')); sairB.setAttribute('aria-label', t('mnmSair')); }
+    // botões de excluir (lixeira): title/aria-label a partir do texto (some no mobile)
+    document.querySelectorAll('.del-btn').forEach(b => {
+      const txt = b.querySelector('.del-txt');
+      if (txt) { b.setAttribute('title', txt.textContent); b.setAttribute('aria-label', txt.textContent); }
+    });
     // botão wake: title acompanha o estado/idioma (o rótulo some no mobile)
     const wakeB = document.getElementById('wakeToggle');
     if (wakeB) {
@@ -3334,7 +3342,7 @@
           <table class="ps-tabela"><tbody>${linhas}</tbody></table>
           <div class="ps-btns">
             <button onclick="restaurarPrecos(${s.ts})">${t('precoRestaurar')}</button>
-            <button class="icon-fixed-btn" onclick="excluirPrecoSnap(${s.ts})">${ICO.lixeira}<span>${t('precoExcluir')}</span></button>
+            <button class="icon-fixed-btn del-btn" title="${t('precoExcluir')}" aria-label="${t('precoExcluir')}" onclick="excluirPrecoSnap(${s.ts})">${ICO.lixeira}<span class="del-txt">${t('precoExcluir')}</span></button>
           </div>
         </details>`;
     }).join('') + '</div>';
@@ -4402,7 +4410,7 @@
             <button class="icon-label-btn" title="${t('btnTirarFoto')}" aria-label="${t('btnTirarFoto')}" onclick="tirarFoto(${f.ts})">${ICO.camera}<span class="btn-txt">${t('btnTirarFoto')}</span></button>
             <button class="icon-label-btn" title="${t('btnAddFoto')}" aria-label="${t('btnAddFoto')}" onclick="adicionarFotos(${f.ts})">${ICO.imagem}<span class="btn-txt">${t('btnAddFoto')}</span></button>
             ${usarBtn}
-            <button class="icon-fixed-btn" onclick="excluirFornada(${f.ts})">${ICO.lixeira}<span>${t('fExcluir')}</span></button>
+            <button class="icon-fixed-btn del-btn" title="${t('fExcluir')}" aria-label="${t('fExcluir')}" onclick="excluirFornada(${f.ts})">${ICO.lixeira}<span class="del-txt">${t('fExcluir')}</span></button>
           </div>
         </details>`;
     }).join('');
