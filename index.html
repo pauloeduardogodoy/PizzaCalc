@@ -2030,8 +2030,9 @@
   <div id="lbContador"></div>
 </div>
 
-<!-- input de arquivo (oculto) reaproveitado para adicionar fotos ao diário -->
+<!-- inputs de arquivo (ocultos): galeria (múltiplas) e câmera (uma foto) -->
 <input type="file" id="fotoInput" accept="image/*" multiple style="display:none">
+<input type="file" id="fotoInputCam" accept="image/*" capture="environment" style="display:none">
 
 <script>
   // ===== Ícones SVG dos timers (traço/fill único, herdam currentColor) =====
@@ -2056,8 +2057,10 @@
     borracha: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M8 20H5l-2-2a2 2 0 0 1 0-2.8l9-9a2 2 0 0 1 2.8 0l4 4a2 2 0 0 1 0 2.8L13 20z"/><path d="M8 20h13"/><path d="M9 11l6 6"/></svg>`,
     // mão aberta (Modo mão na massa)
     maos: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V11"/><path d="M11 11V4.5a1.5 1.5 0 0 1 3 0V11"/><path d="M14 11V5.5a1.5 1.5 0 0 1 3 0V13"/><path d="M17 8.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1.5a6 6 0 0 1-4.6-2.2L5 15.5a1.6 1.6 0 0 1 2.3-2.2L8.5 15"/></svg>`,
-    // câmera (adicionar foto ao diário)
-    camera: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L19 6h0a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.2"/></svg>`
+    // câmera (tirar foto na hora)
+    camera: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L19 6h0a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.2"/></svg>`,
+    // imagem/galeria (adicionar fotos existentes)
+    imagem: `<svg class="btn-ico" ${SVG_ATTRS}><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg>`
   };
   // Chevron dos cabeçalhos colapsáveis (gira via CSS quando .card-head.open)
   const CHEVRON = `<svg class="chevron" ${SVG_ATTRS}><path d="M6 9l6 6 6-6"/></svg>`;
@@ -2324,7 +2327,7 @@
       btnRegistrarFornada: 'Registrar fornada',
       btnExportarDiario: 'Exportar / compartilhar', btnImportarDiario: 'Importar',
       // Galeria de fotos da fornada
-      btnAddFoto: 'Adicionar foto', fotoRemover: 'Remover foto',
+      btnTirarFoto: 'Tirar foto', btnAddFoto: 'Galeria', fotoRemover: 'Remover foto',
       fotoRemoverConfirm: 'Remover esta foto?',
       fotoErroEspaco: 'Não foi possível salvar a foto: o armazenamento do aparelho está cheio. Remova algumas fotos e tente de novo (as fotos ficam salvas só neste aparelho).',
       diarioIntro: 'Registre cada fornada com as temperaturas e a <b>massa final medida</b>. O app calcula o atrito real da Halo Core em cada uma e a média — use para calibrar a temperatura da água. Dados salvos só neste aparelho; exporte para levar a outro celular.',
@@ -2338,7 +2341,7 @@
       fLabelProd: 'Produção', fLabelAmbiente: 'Ambiente', fLabelFarinha: 'Farinha',
       fLabelPoolish: 'Poolish', fLabelAgua: 'Água', fLabelMassa: 'Massa medida',
       fLabelForno: 'Forno', fLabelAtrito: 'Atrito calc.',
-      fUsarAtrito: 'Usar este atrito', fExcluir: 'Excluir',
+      fUsarAtrito: 'Usar atrito', fExcluir: 'Excluir',
       fExcluirConfirm: 'Excluir esta fornada?',
       fExcluirConfirmFotos: (n) => `Excluir esta fornada? As ${n} foto${n === 1 ? '' : 's'} anexada${n === 1 ? '' : 's'} também ${n === 1 ? 'será removida' : 'serão removidas'}.`,
       // médias
@@ -2589,7 +2592,7 @@
       btnRegistrarFornada: 'Log a bake',
       btnExportarDiario: 'Export / share', btnImportarDiario: 'Import',
       // Bake photo gallery
-      btnAddFoto: 'Add photo', fotoRemover: 'Remove photo',
+      btnTirarFoto: 'Take photo', btnAddFoto: 'Gallery', fotoRemover: 'Remove photo',
       fotoRemoverConfirm: 'Remove this photo?',
       fotoErroEspaco: 'Could not save the photo: device storage is full. Remove some photos and try again (photos are stored only on this device).',
       diarioIntro: 'Log each bake with the temperatures and the <b>measured final dough temp</b>. The app computes the real Halo Core friction for each one and the average — use it to calibrate the water temperature. Data is stored only on this device; export it to move to another phone.',
@@ -4396,7 +4399,8 @@
           ${f.nota ? `<div class="f-nota">${escapeHtml(f.nota)}</div>` : ''}
           ${renderFotosFornada(f)}
           <div class="f-btns">
-            <button class="icon-label-btn" title="${t('btnAddFoto')}" aria-label="${t('btnAddFoto')}" onclick="adicionarFotos(${f.ts})">${ICO.camera}<span class="btn-txt">${t('btnAddFoto')}</span></button>
+            <button class="icon-label-btn" title="${t('btnTirarFoto')}" aria-label="${t('btnTirarFoto')}" onclick="tirarFoto(${f.ts})">${ICO.camera}<span class="btn-txt">${t('btnTirarFoto')}</span></button>
+            <button class="icon-label-btn" title="${t('btnAddFoto')}" aria-label="${t('btnAddFoto')}" onclick="adicionarFotos(${f.ts})">${ICO.imagem}<span class="btn-txt">${t('btnAddFoto')}</span></button>
             ${usarBtn}
             <button class="icon-fixed-btn" onclick="excluirFornada(${f.ts})">${ICO.lixeira}<span>${t('fExcluir')}</span></button>
           </div>
@@ -4450,17 +4454,25 @@
     });
   }
 
-  // Dispara o seletor de arquivos para a fornada indicada
+  // Abre a GALERIA (várias fotos) para a fornada indicada
   function adicionarFotos(ts) {
     fotoAlvoTs = ts;
     const inp = document.getElementById('fotoInput');
     inp.value = '';        // permite reselecionar o mesmo arquivo depois
     inp.click();
   }
+  // Abre a CÂMERA (uma foto na hora) para a fornada indicada.
+  // No Android o atributo 'capture' é ignorado quando o input tem 'multiple',
+  // por isso a câmera usa um input próprio, sem 'multiple'.
+  function tirarFoto(ts) {
+    fotoAlvoTs = ts;
+    const inp = document.getElementById('fotoInputCam');
+    inp.value = '';
+    inp.click();
+  }
 
-  // Ao escolher arquivos: comprime todos e anexa à fornada alvo
-  document.getElementById('fotoInput').addEventListener('change', async (e) => {
-    const files = Array.from(e.target.files || []);
+  // Comprime os arquivos escolhidos e anexa à fornada alvo (galeria ou câmera)
+  async function processarFotosSelecionadas(files) {
     if (!files.length || fotoAlvoTs == null) return;
     const ts = fotoAlvoTs;
     let novas = [];
@@ -4486,6 +4498,14 @@
     renderDiario();
     // reabre a ficha que recebeu as fotos (renderDiario recria os <details>)
     reabrirFornada(ts);
+  }
+
+  // Os dois inputs (galeria e câmera) usam o mesmo processamento
+  document.getElementById('fotoInput').addEventListener('change', (e) => {
+    processarFotosSelecionadas(Array.from(e.target.files || []));
+  }, false);
+  document.getElementById('fotoInputCam').addEventListener('change', (e) => {
+    processarFotosSelecionadas(Array.from(e.target.files || []));
   }, false);
 
   // Remove a i-ésima foto de uma fornada
