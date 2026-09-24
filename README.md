@@ -28,8 +28,9 @@ com base no equipamento real de casa. A receita de referência (fonte da verdade
 
 ### Funcionalidades
 
-O app é organizado em **abas** (Receita · Preparo · Cronograma · Diário · Referência) com
-ícones; no celular as abas mostram só o ícone. Os controles de produção ficam sempre visíveis
+O app é organizado em **abas** (Receita · Preparo · Cronograma · Diário · Referência · Ajuda) com
+ícones; no celular as abas mostram só o ícone. A aba **Ajuda** traz um guia rápido de como usar
+cada parte do app. Os controles de produção ficam sempre visíveis
 no topo. Cada card recolhível (água, mistura, cocção, cronograma, diário, velocidades)
 **expande/recolhe ao clicar no cabeçalho** (com um chevron que gira), abre por padrão e
 **lembra se você o deixou aberto ou fechado** entre sessões. O app sempre inicia na aba Receita.
@@ -56,6 +57,9 @@ zerar).
   diário; afeta só o fermento.
 - **Alertas de produção** — Avisa hidratação alta (≥71%) e faixa de carga da cuba da Halo Core
   (abaixo de ~700 g a espiral não pega; acima de 2500 g sobrecarrega o motor).
+- **Dicas contextuais** — Orientações leves que aparecem conforme a configuração (hidratação,
+  temperatura ambiente do card de água e tamanho do lote): massa mole em ambiente quente,
+  fermentação lenta/acelerada, lote perto do limite da cuba, massa firme em hidratação baixa.
 - **Perfis de massa salvos** — Salva/carrega configurações nomeadas de produção (localStorage).
 - **Calculadora de temperatura da água (DDT)** — Card recolhível. Regra de 4 fatores,
   considerando que o **poolish** sai da geladeira frio: `água = (massa desejada × 4) −
@@ -82,8 +86,12 @@ zerar).
   fotos** (glúten, panetto, borda, fundo…), adicionadas pela ficha, com miniaturas e visualização
   ampliada; as fotos são comprimidas no aparelho. Cada fornada pode ser **marcada como favorita**
   (com destaque) e tem um botão **"Repetir"** que recarrega discos/peso/hidratação dela nos
-  controles de produção. Exporta/compartilha (JSON + resumo, com as fotos) e importa para migrar
-  entre aparelhos.
+  controles de produção. Traz **Insights**: mini-gráficos (SVG) da evolução do atrito, da
+  temperatura da massa e do tempo de forno ao longo das fornadas, com médias e faixas ideais.
+  Exporta/compartilha (JSON + resumo, com as fotos) e importa para migrar entre aparelhos.
+- **Farinhas** — Base editável de farinhas (marca, tipo, força W, proteína) na aba Referência.
+  Cada fornada do diário pode vincular **uma ou mais** farinhas com o **percentual** de cada
+  (blend), com aviso se a soma não fechar 100%. Vai junto no export/import.
 - **Tabela de velocidades da Halo Core** — As 20 velocidades com potência, RPM e equivalência
   industrial.
 - **Glossário napolitano** — Termos da técnica (poolish, biga, puntata, staglio, appretto,
@@ -127,8 +135,9 @@ based on real home equipment. Reference recipe (source of truth):
 
 ### Features
 
-The app is organized into **tabs** (Recipe · Prep · Schedule · Log · Reference) with icons;
-on mobile the tabs show the icon only. The production controls stay visible at the top. Each
+The app is organized into **tabs** (Recipe · Prep · Schedule · Log · Reference · Help) with icons;
+on mobile the tabs show the icon only. The **Help** tab has a quick guide on how to use each part
+of the app. The production controls stay visible at the top. Each
 collapsible card (water, mixing, baking, schedule, log, speeds) **expands/collapses when you
 tap its header** (with a rotating chevron), opens by default and **remembers whether you left
 it open or closed** across sessions. The app always starts on the Recipe tab. Buttons use
@@ -153,6 +162,9 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   (colder → more yeast). It's an estimate to calibrate with the log; affects only the yeast.
 - **Batch alerts** — Warns about high hydration (≥71%) and the Halo Core bowl load range (below
   ~700 g the spiral won't grab; above 2500 g it overloads the motor).
+- **Contextual tips** — Light guidance that appears based on the configuration (hydration, the
+  room temperature from the water card, and batch size): soft dough in a warm room, slow/fast
+  fermentation, batch near the bowl limit, firm dough at low hydration.
 - **Saved dough profiles** — Save/load named production settings (localStorage).
 - **Water temperature calculator (DDT)** — Collapsible card. 4-factor rule, accounting for the
   cold **poolish** from the fridge: `water = (desired dough × 4) − (flour + room + friction +
@@ -177,7 +189,12 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   ball, crust, base…), added from the entry, with thumbnails and a full-screen viewer; photos are
   compressed on the device. Each bake can be **starred as a favorite** (highlighted) and has a
   **Repeat** button that reloads its pizzas/weight/hydration into the production controls.
-  Export/share (JSON + summary, including photos) and import to move between devices.
+  It includes **Insights**: mini charts (SVG) of the friction, dough temperature and oven time
+  trends across bakes, with averages and ideal ranges. Export/share (JSON + summary, including
+  photos) and import to move between devices.
+- **Flours** — An editable flour database (brand, type, W strength, protein) on the Reference
+  tab. Each bake in the log can link **one or more** flours with each one's **percentage**
+  (blend), with a warning if they don't add up to 100%. Included in export/import.
 - **Halo Core speed table** — All 20 speeds with power, RPM and industrial equivalence.
 - **Neapolitan glossary** — Technique terms (poolish, biga, puntata, staglio, appretto,
   panetto, maturation, cornicione, leopard spots…) with definitions. Print button.
