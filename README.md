@@ -50,6 +50,10 @@ zerar).
   com as quantidades de massa e molho. Preços salvos no aparelho, botão "Restaurar preços padrão".
   Tem **histórico de preços**: salve um registro datado a cada compra para acompanhar a
   oscilação, restaurar preços antigos ou excluir registros (no estilo do diário).
+- **Ajuste de fermento pela temperatura** — Um interruptor (desligado por padrão) que ajusta a
+  % de fermento conforme a **temperatura ambiente** informada no card de água, por uma curva
+  Q10 ancorada em 0,1% a 21°C (mais frio → mais fermento). É uma estimativa para calibrar pelo
+  diário; afeta só o fermento.
 - **Alertas de produção** — Avisa hidratação alta (≥71%) e faixa de carga da cuba da Halo Core
   (abaixo de ~700 g a espiral não pega; acima de 2500 g sobrecarrega o motor).
 - **Perfis de massa salvos** — Salva/carrega configurações nomeadas de produção (localStorage).
@@ -76,8 +80,10 @@ zerar).
   forno, observações). Calcula o **atrito real** de cada fornada e a **média** — que pode ser
   aplicada na calculadora de água, fechando o ciclo de calibração. Cada fornada aceita **várias
   fotos** (glúten, panetto, borda, fundo…), adicionadas pela ficha, com miniaturas e visualização
-  ampliada; as fotos são comprimidas no aparelho. Exporta/compartilha (JSON + resumo, com as
-  fotos) e importa para migrar entre aparelhos.
+  ampliada; as fotos são comprimidas no aparelho. Cada fornada pode ser **marcada como favorita**
+  (com destaque) e tem um botão **"Repetir"** que recarrega discos/peso/hidratação dela nos
+  controles de produção. Exporta/compartilha (JSON + resumo, com as fotos) e importa para migrar
+  entre aparelhos.
 - **Tabela de velocidades da Halo Core** — As 20 velocidades com potência, RPM e equivalência
   industrial.
 - **Glossário napolitano** — Termos da técnica (poolish, biga, puntata, staglio, appretto,
@@ -142,6 +148,9 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   sauce quantities. Prices saved on the device, "Reset default prices" button. Includes a
   **price history**: save a dated record on each shopping trip to track fluctuations, restore
   old prices or delete records (bake-log style).
+- **Yeast adjustment by temperature** — A toggle (off by default) that adjusts the yeast % from
+  the **room temperature** entered in the water card, via a Q10 curve anchored at 0.1% at 21°C
+  (colder → more yeast). It's an estimate to calibrate with the log; affects only the yeast.
 - **Batch alerts** — Warns about high hydration (≥71%) and the Halo Core bowl load range (below
   ~700 g the spiral won't grab; above 2500 g it overloads the motor).
 - **Saved dough profiles** — Save/load named production settings (localStorage).
@@ -166,8 +175,9 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   Computes the **real friction** per bake and the **average** — which can be applied to the water
   calculator, closing the calibration loop. Each bake can hold **several photos** (gluten, dough
   ball, crust, base…), added from the entry, with thumbnails and a full-screen viewer; photos are
-  compressed on the device. Export/share (JSON + summary, including photos) and import to move
-  between devices.
+  compressed on the device. Each bake can be **starred as a favorite** (highlighted) and has a
+  **Repeat** button that reloads its pizzas/weight/hydration into the production controls.
+  Export/share (JSON + summary, including photos) and import to move between devices.
 - **Halo Core speed table** — All 20 speeds with power, RPM and industrial equivalence.
 - **Neapolitan glossary** — Technique terms (poolish, biga, puntata, staglio, appretto,
   panetto, maturation, cornicione, leopard spots…) with definitions. Print button.
