@@ -749,6 +749,20 @@
   #velocidadesWrap, #glossarioWrap, #troubleWrap { padding-top: 10px; }
   .ddt-intro b { color: var(--dark); }
 
+  /* Aba Ajuda (cards colapsáveis com passos curtos) */
+  .ajuda-wrap { display: none; }
+  .ajuda-wrap.show { display: block; padding-top: 10px; }
+  .ajuda-conteudo { font-size: 0.9rem; color: #444; line-height: 1.5; }
+  .ajuda-conteudo p { margin: 0 0 8px; }
+  .ajuda-conteudo p:last-child { margin-bottom: 0; }
+  .ajuda-conteudo b { color: var(--dark); }
+  .ajuda-conteudo ul, .ajuda-conteudo ol { margin: 6px 0 8px; padding-left: 20px; }
+  .ajuda-conteudo li { margin-bottom: 5px; }
+  .ajuda-conteudo .aj-dica {
+    display: block; margin-top: 8px; padding: 8px 10px;
+    background: var(--orange-light); border-radius: 8px; font-size: 0.86rem;
+  }
+
   /* Base de farinhas (tabela editável) */
   #farinhasWrap { display: none; }
   #farinhasWrap.show { display: block; padding-top: 10px; }
@@ -1518,6 +1532,8 @@
     #troubleCard { display: none !important; }
     /* Base de farinhas: material de tela, nunca impressa */
     #farinhasCard { display: none !important; }
+    /* Aba Ajuda: material de tela, nunca impressa */
+    .tab-panel[data-tab="ajuda"] { display: none !important; }
     /* Lista de compras: sai só no seu próprio modo (print-compras) */
     #comprasCard { display: none !important; }
     /* Calculadora de custo: ferramenta de tela, nunca impressa */
@@ -1829,6 +1845,12 @@
         <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>
       </svg>
       <span class="tab-txt" data-i18n="tabReferencia">Referência</span>
+    </button>
+    <button class="tab-btn" data-tab="ajuda" onclick="setTab('ajuda')" title="Ajuda" aria-label="Ajuda">
+      <svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 4.5 1.5c0 1.5-2 2-2 3"/><path d="M12 17h.01"/>
+      </svg>
+      <span class="tab-txt" data-i18n="tabAjuda">Ajuda</span>
     </button>
   </nav>
 
@@ -2215,6 +2237,67 @@
 
   </div><!-- /ABA Referência -->
 
+  <!-- ABA: Ajuda -->
+  <div class="tab-panel" data-tab="ajuda">
+
+  <div class="card" id="ajudaComecarCard">
+    <div class="timeline-head card-head" id="ajComecarToggle" onclick="toggleAjuda('ajComecar')" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="ajComecarTit">Começando</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="ajComecarWrap" class="ajuda-wrap"><div class="ajuda-conteudo" data-i18n="ajComecar"></div></div>
+  </div>
+
+  <div class="card" id="ajudaReceitaCard">
+    <div class="timeline-head card-head" id="ajReceitaToggle" onclick="toggleAjuda('ajReceita')" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="ajReceitaTit">Aba Receita</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="ajReceitaWrap" class="ajuda-wrap"><div class="ajuda-conteudo" data-i18n="ajReceita"></div></div>
+  </div>
+
+  <div class="card" id="ajudaPreparoCard">
+    <div class="timeline-head card-head" id="ajPreparoToggle" onclick="toggleAjuda('ajPreparo')" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="ajPreparoTit">Aba Preparo</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="ajPreparoWrap" class="ajuda-wrap"><div class="ajuda-conteudo" data-i18n="ajPreparo"></div></div>
+  </div>
+
+  <div class="card" id="ajudaCronogramaCard">
+    <div class="timeline-head card-head" id="ajCronogramaToggle" onclick="toggleAjuda('ajCronograma')" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="ajCronogramaTit">Aba Cronograma</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="ajCronogramaWrap" class="ajuda-wrap"><div class="ajuda-conteudo" data-i18n="ajCronograma"></div></div>
+  </div>
+
+  <div class="card" id="ajudaDiarioCard">
+    <div class="timeline-head card-head" id="ajDiarioToggle" onclick="toggleAjuda('ajDiario')" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="ajDiarioTit">Aba Diário</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="ajDiarioWrap" class="ajuda-wrap"><div class="ajuda-conteudo" data-i18n="ajDiario"></div></div>
+  </div>
+
+  <div class="card" id="ajudaReferenciaCard">
+    <div class="timeline-head card-head" id="ajReferenciaToggle" onclick="toggleAjuda('ajReferencia')" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="ajReferenciaTit">Aba Referência</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="ajReferenciaWrap" class="ajuda-wrap"><div class="ajuda-conteudo" data-i18n="ajReferencia"></div></div>
+  </div>
+
+  <div class="card" id="ajudaDicasCard">
+    <div class="timeline-head card-head" id="ajDicasToggle" onclick="toggleAjuda('ajDicas')" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="ajDicasTit">Dicas de uso</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="ajDicasWrap" class="ajuda-wrap"><div class="ajuda-conteudo" data-i18n="ajDicas"></div></div>
+  </div>
+
+  </div><!-- /ABA Ajuda -->
+
   <footer id="footer" data-i18n="footer">
     Baseado no cronograma validado • Maturação ~53h • Ooni Halo Core • Fornetto Slim 390°C
   </footer>
@@ -2357,8 +2440,23 @@
       wakeIndisponivel: 'Tela sempre ligada (indisponível neste navegador)',
       // Abas de navegação
       tabReceita: 'Receita', tabPreparo: 'Preparo', tabCronograma: 'Cronograma',
-      tabDiario: 'Diário', tabReferencia: 'Referência',
+      tabDiario: 'Diário', tabReferencia: 'Referência', tabAjuda: 'Ajuda',
       expandirTudo: 'Expandir cards', recolherTudo: 'Recolher cards',
+      // Aba Ajuda — títulos e conteúdo (curto, por tema)
+      ajComecarTit: 'Começando',
+      ajComecar: '<p>O app é dividido em <b>abas</b> (embaixo do título). O fluxo básico:</p><ol><li><b>Receita</b> — ajuste discos, peso e hidratação.</li><li><b>Preparo</b> — calcule a água e siga os guias com timer.</li><li><b>Cronograma</b> — defina os horários; o app calcula o resto.</li><li><b>Diário</b> — registre cada fornada para calibrar as próximas.</li></ol><p>Cada card <b>abre e fecha</b> ao tocar no título. O app <b>salva tudo</b> neste aparelho.</p>',
+      ajReceitaTit: 'Aba Receita',
+      ajReceita: '<p>Ajuste <b>nº de discos</b>, <b>peso por panetto</b> e <b>hidratação</b> no topo — todo o resto recalcula sozinho.</p><ul><li><b>Ingredientes</b> e <b>Divisão por etapa</b>: as quantidades (poolish + massa final).</li><li><b>Molho</b>, <b>Lista de compras</b> e <b>Custo por pizza</b>: escalam com o nº de discos.</li><li><b>Perfis</b>: salve configurações que você repete.</li><li><b>Ajustar fermento pela temperatura</b>: opcional, usa a temperatura do card de água.</li></ul>',
+      ajPreparoTit: 'Aba Preparo',
+      ajPreparo: '<ul><li><b>Temperatura da água</b>: informe ambiente/farinha/poolish e o app diz a água (e o gelo) para a massa sair a 19–23°C.</li><li><b>Guia de mistura</b>: as 6 etapas na Halo Core, cada uma com timer e alarme.</li><li><b>Guia de cocção</b>: timer de pré-aquecimento e de assar, com a janela ideal marcada.</li></ul>',
+      ajCronogramaTit: 'Aba Cronograma',
+      ajCronograma: '<p>Defina o <b>início do poolish</b> e a <b>hora de assar</b> (e a duração do appretto). O app planeja de trás pra frente e mostra cada etapa com data/hora.</p><p>Fique de olho nos <b>alertas</b>: horário incômodo (madrugada), maturação fora de faixa ou appretto longo.</p>',
+      ajDiarioTit: 'Aba Diário',
+      ajDiario: '<ul><li><b>Registrar fornada</b>: guarda a produção, as temperaturas e a massa medida.</li><li>O app calcula o <b>atrito real</b> da masseira e a média — aplique no card de água para calibrar.</li><li><b>Fotos</b>, <b>favoritar</b> (estrela) e <b>Repetir</b> (recarrega a receita daquela fornada).</li><li><b>Insights</b>: gráficos de atrito, temperatura da massa e tempo de forno.</li></ul>',
+      ajReferenciaTit: 'Aba Referência',
+      ajReferencia: '<ul><li><b>Farinhas</b>: cadastre suas farinhas (marca, tipo, W, proteína) e vincule às fornadas.</li><li><b>Tabela de velocidades</b> da Halo Core.</li><li><b>Glossário</b> napolitano e <b>Solução de problemas</b>.</li></ul>',
+      ajDicasTit: 'Dicas de uso',
+      ajDicas: '<ul><li><b>Mão na massa</b> (botão no topo): passo a passo em tela cheia para usar na bancada.</li><li><b>Manter tela ligada</b>: impede a tela do celular de apagar durante o preparo.</li><li><b>PT/EN</b>: troque o idioma nas bandeiras.</li><li><b>Imprimir</b>: receita, cronograma, lista de compras e tabela têm botões próprios.</li><li><b>Instalar</b>: no celular, "Adicionar à tela inicial" para usar como app, offline.</li></ul><span class="aj-dica">Botões <b>Expandir/Recolher cards</b> agem na aba atual; o <b>chevron duplo</b> ao lado age em todas as abas.</span>',
       expandirTudoGeral: 'Expandir todos os cards de todas as abas',
       recolherTudoGeral: 'Recolher todos os cards de todas as abas',
       // Modo "mão na massa" (passo a passo em tela cheia)
@@ -2666,8 +2764,23 @@
       wakeIndisponivel: 'Keep screen on (not supported in this browser)',
       // Navigation tabs
       tabReceita: 'Recipe', tabPreparo: 'Prep', tabCronograma: 'Schedule',
-      tabDiario: 'Log', tabReferencia: 'Reference',
+      tabDiario: 'Log', tabReferencia: 'Reference', tabAjuda: 'Help',
       expandirTudo: 'Expand cards', recolherTudo: 'Collapse cards',
+      // Help tab — titles and content (short, by theme)
+      ajComecarTit: 'Getting started',
+      ajComecar: '<p>The app is split into <b>tabs</b> (below the title). The basic flow:</p><ol><li><b>Recipe</b> — set pizzas, weight and hydration.</li><li><b>Prep</b> — compute the water and follow the timed guides.</li><li><b>Schedule</b> — set the times; the app works out the rest.</li><li><b>Log</b> — record each bake to calibrate the next ones.</li></ol><p>Each card <b>opens/closes</b> when you tap its title. The app <b>saves everything</b> on this device.</p>',
+      ajReceitaTit: 'Recipe tab',
+      ajReceita: '<p>Set <b>number of pizzas</b>, <b>weight per ball</b> and <b>hydration</b> at the top — everything else recalculates.</p><ul><li><b>Ingredients</b> and <b>Breakdown by stage</b>: the quantities (poolish + final dough).</li><li><b>Sauce</b>, <b>Shopping list</b> and <b>Cost per pizza</b>: scale with the number of pizzas.</li><li><b>Profiles</b>: save setups you repeat.</li><li><b>Adjust yeast to temperature</b>: optional, uses the room temp from the water card.</li></ul>',
+      ajPreparoTit: 'Prep tab',
+      ajPreparo: '<ul><li><b>Water temperature</b>: enter room/flour/poolish and the app gives the water (and ice) for a 19–23°C dough.</li><li><b>Mixing guide</b>: the 6 Halo Core steps, each with a timer and alarm.</li><li><b>Baking guide</b>: preheat and bake timers, with the ideal window marked.</li></ul>',
+      ajCronogramaTit: 'Schedule tab',
+      ajCronograma: '<p>Set the <b>poolish start</b> and the <b>baking time</b> (and appretto length). The app plans backwards and shows each step with date/time.</p><p>Watch the <b>alerts</b>: awkward hours (late night), out-of-range maturation or long appretto.</p>',
+      ajDiarioTit: 'Log tab',
+      ajDiario: '<ul><li><b>Log a bake</b>: saves the batch, temperatures and measured dough temp.</li><li>The app computes the mixer\'s <b>real friction</b> and the average — apply it to the water card to calibrate.</li><li><b>Photos</b>, <b>favorite</b> (star) and <b>Repeat</b> (reloads that bake\'s recipe).</li><li><b>Insights</b>: charts of friction, dough temp and oven time.</li></ul>',
+      ajReferenciaTit: 'Reference tab',
+      ajReferencia: '<ul><li><b>Flours</b>: register your flours (brand, type, W, protein) and link them to bakes.</li><li>Halo Core <b>speed table</b>.</li><li>Neapolitan <b>glossary</b> and <b>troubleshooting</b>.</li></ul>',
+      ajDicasTit: 'Usage tips',
+      ajDicas: '<ul><li><b>Hands-on</b> (top button): a full-screen step-by-step for the bench.</li><li><b>Keep screen on</b>: stops the phone screen turning off during prep.</li><li><b>PT/EN</b>: switch language with the flags.</li><li><b>Print</b>: recipe, schedule, shopping list and table have their own buttons.</li><li><b>Install</b>: on mobile, "Add to Home screen" to use it as an app, offline.</li></ul><span class="aj-dica"><b>Expand/Collapse cards</b> acts on the current tab; the <b>double chevron</b> next to it acts on all tabs.</span>',
       expandirTudoGeral: 'Expand every card in all tabs',
       recolherTudoGeral: 'Collapse every card in all tabs',
       // Hands-on mode (full-screen step-by-step)
@@ -3997,7 +4110,16 @@
     preparo: [['ddtWrap', toggleDDT], ['mixWrap', toggleMix], ['fornoWrap', toggleForno]],
     cronograma: [['timelineWrap', toggleTimeline]],
     diario: [['diarioWrap', toggleDiario], ['insightsWrap', toggleInsights]],
-    referencia: [['velocidadesWrap', toggleVelocidades], ['glossarioWrap', toggleGlossario], ['troubleWrap', toggleTrouble], ['farinhasWrap', toggleFarinhas]]
+    referencia: [['velocidadesWrap', toggleVelocidades], ['glossarioWrap', toggleGlossario], ['troubleWrap', toggleTrouble], ['farinhasWrap', toggleFarinhas]],
+    ajuda: [
+      ['ajComecarWrap', () => toggleAjuda('ajComecar')],
+      ['ajReceitaWrap', () => toggleAjuda('ajReceita')],
+      ['ajPreparoWrap', () => toggleAjuda('ajPreparo')],
+      ['ajCronogramaWrap', () => toggleAjuda('ajCronograma')],
+      ['ajDiarioWrap', () => toggleAjuda('ajDiario')],
+      ['ajReferenciaWrap', () => toggleAjuda('ajReferencia')],
+      ['ajDicasWrap', () => toggleAjuda('ajDicas')]
+    ]
   };
   let abaAtiva = 'receita';
 
@@ -4109,6 +4231,8 @@
     restoreWrap('farinhasWrap', 'farinhasToggle');
     restoreWrap('diarioWrap', 'diarioToggle');
     restoreWrap('insightsWrap', 'insightsToggle');
+    ['ajComecar', 'ajReceita', 'ajPreparo', 'ajCronograma', 'ajDiario', 'ajReferencia', 'ajDicas']
+      .forEach(p => restoreWrap(p + 'Wrap', p + 'Toggle'));
   }
 
   function toggleIng() {
@@ -5287,6 +5411,16 @@
     setHeadState('insightsToggle', show);
     saveWrap('insightsWrap', show);
     if (show) renderInsights();
+  }
+
+  // ===== Aba Ajuda (cards colapsáveis genéricos) =====
+  // prefix ex.: 'ajComecar' -> wrap #ajComecarWrap, cabeçalho #ajComecarToggle
+  function toggleAjuda(prefix) {
+    const wrap = document.getElementById(prefix + 'Wrap');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    setHeadState(prefix + 'Toggle', show);
+    saveWrap(prefix + 'Wrap', show);
   }
 
   // ===== Exportar / compartilhar / importar =====
