@@ -506,6 +506,21 @@
   .alert-box.show { display: block; }
   .alert-box b { color: #a8200e; }
 
+  /* Dicas contextuais (orientações leves conforme a configuração) */
+  .dicas-ctx { display: none; margin-top: 16px; }
+  .dicas-ctx.show { display: flex; flex-direction: column; gap: 8px; }
+  .dica-ctx {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 10px 12px;
+    background: var(--orange-light);
+    border: 1px solid var(--line); border-left: 4px solid var(--orange);
+    border-radius: 8px;
+    font-size: 0.84rem; color: #444; line-height: 1.45;
+  }
+  .dica-ctx .dica-ico { flex: none; width: 16px; height: 16px; color: var(--orange); margin-top: 1px; }
+  .dica-ctx b { color: var(--dark); }
+  @media print { .dicas-ctx { display: none !important; } }
+
   .btns { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
   button {
     border: 1px solid var(--line);
@@ -733,6 +748,39 @@
   #timelineWrap { padding-top: 10px; }
   #velocidadesWrap, #glossarioWrap, #troubleWrap { padding-top: 10px; }
   .ddt-intro b { color: var(--dark); }
+
+  /* Base de farinhas (tabela editável) */
+  #farinhasWrap { display: none; }
+  #farinhasWrap.show { display: block; padding-top: 10px; }
+  .farinhas-tabela-wrap { overflow-x: auto; }
+  .farinhas-tabela { width: 100%; border-collapse: collapse; }
+  .farinhas-tabela th {
+    text-align: center; padding: 6px 6px; border-bottom: 1px solid var(--line);
+    font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--gray); font-weight: 600; white-space: nowrap;
+  }
+  .farinhas-tabela td { padding: 5px 6px; border-bottom: 1px solid var(--line); }
+  .farinhas-tabela input, .farinhas-tabela select {
+    width: 100%; min-width: 48px; padding: 6px 8px;
+    border: 1px solid var(--line); border-radius: 8px;
+    font-size: 0.88rem; color: var(--dark); background: #fff;
+  }
+  .farinhas-tabela input:focus, .farinhas-tabela select:focus {
+    outline: 2px solid var(--orange); border-color: var(--orange);
+  }
+  /* larguras relativas: nome maior; Tipo com folga; W e proteína estreitos */
+  .farinhas-tabela th:nth-child(1), .farinhas-tabela td:nth-child(1) { width: 36%; }
+  .farinhas-tabela th:nth-child(2), .farinhas-tabela td:nth-child(2) { width: 32%; }
+  .farinhas-tabela th:nth-child(3), .farinhas-tabela td:nth-child(3) { width: 10%; }
+  .farinhas-tabela th:nth-child(4), .farinhas-tabela td:nth-child(4) { width: 14%; }
+  .farinhas-tabela td.far-x { width: 8%; text-align: center; }
+  .far-del {
+    border: none; background: none; cursor: pointer; padding: 4px;
+    color: var(--gray); display: inline-flex;
+  }
+  .far-del:hover { color: #c0392b; }
+  .far-del .btn-ico { width: 16px; height: 16px; }
+  .farinhas-vazio { font-size: 0.88rem; color: var(--gray); font-style: italic; padding: 8px 0; }
   /* Telas grandes: as 4 caixas de temperatura numa linha (4 colunas);
      o atrito (último campo, slider) ocupa a linha inteira abaixo. */
   .ddt-grid {
@@ -983,6 +1031,26 @@
     margin-top: 10px; padding: 6px 12px; font-size: 0.82rem;
   }
   .diario-vazio { font-size: 0.88rem; color: var(--gray); font-style: italic; }
+
+  /* Insights do diário (card próprio, colapsável) */
+  #insightsWrap { display: none; }
+  #insightsWrap.show { display: block; padding-top: 10px; }
+  .insights-tit {
+    font-weight: 700; color: var(--orange);
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .insights-vazio { font-size: 0.88rem; color: var(--gray); font-style: italic; }
+  .insight-graf { margin-bottom: 16px; }
+  .insight-graf:last-child { margin-bottom: 0; }
+  .insight-graf-tit { font-size: 0.86rem; font-weight: 600; color: var(--dark); margin-bottom: 4px; }
+  .insight-svg {
+    width: 100%; height: 90px; display: block;
+    border: 1px solid var(--line); border-radius: 8px; background: #fff;
+  }
+  .insight-stats { font-size: 0.8rem; color: var(--gray); margin-top: 5px; line-height: 1.5; }
+  .insight-stats b { color: var(--dark); font-variant-numeric: tabular-nums; }
+  @media print { #insightsCard, .diario-insights { display: none !important; } }
   .diario-lista { display: flex; flex-direction: column; gap: 10px; }
   .fornada {
     border: 1px solid var(--line);
@@ -991,7 +1059,7 @@
     padding: 12px 14px;
   }
   .fornada-top {
-    display: flex; align-items: baseline; justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     gap: 8px; flex-wrap: wrap;
     cursor: pointer;
     list-style: none;          /* remove o marcador padrão do summary */
@@ -1022,6 +1090,37 @@
   }
   .fornada .f-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
   .fornada .f-btns button { padding: 5px 12px; font-size: 0.8rem; }
+  /* "Repetir" numa segunda linha, logo abaixo dos demais botões */
+  .fornada .f-btns-repetir { margin-top: 8px; }
+  /* resumo das farinhas vinculadas no grid da ficha */
+  .fornada .f-farinhas { margin-top: 8px; font-size: 0.84rem; color: #444; line-height: 1.5; }
+  .fornada .f-far-lbl { color: var(--gray); }
+  .fornada .f-far-item { margin-right: 8px; white-space: nowrap; }
+  .fornada .f-far-item b { color: var(--orange); font-variant-numeric: tabular-nums; }
+  /* editor inline de farinhas (blend) */
+  .f-editor-farinha {
+    margin-top: 10px; padding: 10px 12px;
+    background: var(--orange-light); border-radius: 10px;
+  }
+  .f-far-linhas { display: flex; flex-direction: column; gap: 8px; }
+  .f-far-linha { display: flex; align-items: center; gap: 8px; }
+  .f-far-linha select {
+    flex: 1; min-width: 0; padding: 6px 8px;
+    border: 1px solid var(--line); border-radius: 8px; font-size: 0.86rem;
+    color: var(--dark); background: #fff;
+  }
+  .f-far-pct { display: inline-flex; align-items: center; gap: 3px; color: var(--gray); font-size: 0.86rem; flex: none; }
+  .f-far-pct input {
+    width: 56px; padding: 6px 8px; text-align: center;
+    border: 1px solid var(--line); border-radius: 8px; font-size: 0.86rem;
+    color: var(--dark); font-variant-numeric: tabular-nums;
+  }
+  .f-far-aviso {
+    margin-top: 8px; font-size: 0.82rem; color: #7a5200;
+    background: #fff6e5; border: 1px solid #e0a020; border-left: 4px solid #e0a020;
+    border-radius: 8px; padding: 6px 10px;
+  }
+  .f-far-vazio, .f-far .f-far-vazio { font-size: 0.86rem; color: var(--gray); font-style: italic; }
   .fornada .f-atrito { font-weight: 700; color: var(--orange); }
   /* estrela de favorita no cabeçalho da ficha */
   .fornada .f-fav {
@@ -1417,6 +1516,8 @@
     #glossarioCard { display: none !important; }
     /* Solução de problemas: material de tela (some por padrão; volta no print-glossario? não) */
     #troubleCard { display: none !important; }
+    /* Base de farinhas: material de tela, nunca impressa */
+    #farinhasCard { display: none !important; }
     /* Lista de compras: sai só no seu próprio modo (print-compras) */
     #comprasCard { display: none !important; }
     /* Calculadora de custo: ferramenta de tela, nunca impressa */
@@ -1692,6 +1793,9 @@
     <div class="warn-box" id="hidraWarn"></div>
     <div class="warn-box" id="loteWarn"></div>
     <div class="alert-box" id="capacidadeAlert"></div>
+
+    <!-- Dicas contextuais (aparecem conforme a configuração) -->
+    <div class="dicas-ctx" id="dicasCtx"></div>
   </div>
 
   <!-- Barra de abas -->
@@ -1971,6 +2075,17 @@
     </div>
   </div>
 
+  <!-- Insights (gráficos do diário) -->
+  <div class="card" id="insightsCard">
+    <div class="timeline-head card-head" id="insightsToggle" onclick="toggleInsights()" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="insightsTitulo">Insights</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="insightsWrap">
+      <div class="diario-insights" id="diarioInsights"></div>
+    </div>
+  </div>
+
   </div><!-- /ABA Diário -->
 
   <!-- ABA: Cronograma -->
@@ -2023,6 +2138,34 @@
 
   <!-- ABA: Referência -->
   <div class="tab-panel" data-tab="referencia">
+
+  <!-- Base de farinhas (tabela editável) -->
+  <div class="card" id="farinhasCard">
+    <div class="timeline-head card-head" id="farinhasToggle" onclick="toggleFarinhas()" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="farinhasTitulo">Farinhas</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="farinhasWrap">
+      <p class="ddt-intro" id="farinhasIntro"></p>
+      <div class="farinhas-tabela-wrap">
+        <table class="farinhas-tabela">
+          <thead>
+            <tr>
+              <th data-i18n="farThNome">Marca / nome</th>
+              <th data-i18n="farThTipo">Tipo</th>
+              <th data-i18n="farThW">W</th>
+              <th data-i18n="farThProt">Proteína</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="farinhasTbody"></tbody>
+        </table>
+      </div>
+      <div class="btns" style="margin:12px 0 0">
+        <button class="icon-label-btn" onclick="addFarinha()"><span class="print-ico" data-ico="mais"></span><span class="btn-txt" data-i18n="btnAddFarinha">Adicionar farinha</span></button>
+      </div>
+    </div>
+  </div>
 
   <!-- Tabela de velocidades da Halo Core -->
   <div class="card" id="velocidadesCard">
@@ -2133,7 +2276,13 @@
     imagem: `<svg class="btn-ico" ${SVG_ATTRS}><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg>`,
     // estrela (favoritar fornada) — contorno e preenchida
     estrela: `<svg class="fav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 17.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.9z"/></svg>`,
-    estrelaCheia: `<svg class="fav-ico" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 17.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.9z"/></svg>`
+    estrelaCheia: `<svg class="fav-ico" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 17.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.9z"/></svg>`,
+    // sinal de + (adicionar)
+    mais: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M12 5v14M5 12h14"/></svg>`,
+    // espiga de trigo (vincular farinha) — talo + grãos em losango ao longo dele
+    trigo: `<svg class="btn-ico" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round" aria-hidden="true"><path d="M12 21c0-3-1.6-4.6-4.6-4.6C7.4 19.4 9 21 12 21zM12 21c0-3 1.6-4.6 4.6-4.6C16.6 19.4 15 21 12 21z" fill="none" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="12" cy="4" rx="1.5" ry="2.4"/><ellipse cx="12" cy="8.2" rx="1.5" ry="2.4"/><ellipse cx="12" cy="12.4" rx="1.5" ry="2.4"/><ellipse cx="9.1" cy="6.6" rx="1.3" ry="2.1" transform="rotate(-32 9.1 6.6)"/><ellipse cx="14.9" cy="6.6" rx="1.3" ry="2.1" transform="rotate(32 14.9 6.6)"/><ellipse cx="9.1" cy="10.8" rx="1.3" ry="2.1" transform="rotate(-32 9.1 10.8)"/><ellipse cx="14.9" cy="10.8" rx="1.3" ry="2.1" transform="rotate(32 14.9 10.8)"/><path d="M12 14.5V21" fill="none" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+    // lâmpada (dica contextual)
+    dica: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:100%;height:100%"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.2 1 2.5h6c0-1.3.3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>`
   };
   // Chevron dos cabeçalhos colapsáveis (gira via CSS quando .card-head.open)
   const CHEVRON = `<svg class="chevron" ${SVG_ATTRS}><path d="M6 9l6 6 6-6"/></svg>`;
@@ -2335,6 +2484,15 @@
       glossarioTitulo: 'Glossário napolitano',
       troubleTitulo: 'Solução de problemas',
       troubleIntro: 'Problemas comuns na napolitana, causas prováveis e como ajustar. Toque em cada item para expandir.',
+      // Base de farinhas
+      farinhasTitulo: 'Farinhas',
+      farinhasIntro: 'Cadastre as farinhas que você usa (marca, tipo, força W e proteína). Depois é possível vincular uma ou mais a cada fornada no diário. Salvo neste aparelho.',
+      farinhasVazio: 'Nenhuma farinha cadastrada. Toque em "Adicionar farinha".',
+      farThNome: 'Marca / nome', farThTipo: 'Tipo', farThW: 'W', farThProt: 'Proteína',
+      btnAddFarinha: 'Adicionar farinha',
+      farExcluirConfirm: 'Excluir esta farinha?',
+      farTipo_00: '00', farTipo_0: '0', farTipo_1: '1', farTipo_2: '2',
+      farTipo_integral: 'Integral', farTipo_semolina: 'Semolina', farTipo_outro: 'Outro',
       troubleCausa: 'Causa provável', troubleFix: 'Como ajustar',
       btnMostrarVel: 'Mostrar tabela de velocidades', btnOcultarVel: 'Ocultar tabela de velocidades',
       btnImprimirVel: 'Imprimir tabela',
@@ -2354,6 +2512,12 @@
       hidraAlta: (p) => `⚠️ <b>Hidratação alta (${p}%).</b> Acima de 70% a massa fica mais mole e pegajosa, exigindo mais força na sova e técnica de dobras (stretch &amp; fold) para ganhar estrutura. O manuseio na abertura também fica mais delicado. Considere usar água bem gelada e polvilhar bem a bancada.`,
       capacidade: (g, max) => `🚫 <b>Massa total (${g} g) acima da capacidade da Halo Core (${max} g).</b> Reduza o número de discos ou o peso por panetto para caber na masseira. Bater um volume acima do limite sobrecarrega o motor e prejudica o desenvolvimento do glúten.`,
       loteMin: (g, min) => `⚠️ <b>Lote pequeno (${g} g).</b> Abaixo de ~${min} g a massa fica baixa demais na cuba e a espiral não "pega" bem o gancho, sovando de forma irregular. Considere aumentar o número de discos ou misturar à mão.`,
+      // Dicas contextuais
+      dicaHidraQuente: '<b>Massa mais mole e fermentação rápida.</b> Use água bem gelada e capriche nas dobras (stretch &amp; fold).',
+      dicaFrio: '<b>Ambiente frio: fermentação lenta.</b> A massa pode precisar de mais tempo de maturação/appretto.',
+      dicaQuente: '<b>Ambiente quente: fermentação acelerada.</b> Considere menos fermento (veja o ajuste por temperatura) ou reduzir os tempos.',
+      dicaLote: '<b>Lote perto do limite da cuba.</b> Bata em velocidade mais baixa para não sobrecarregar o motor da Halo Core.',
+      dicaHidraBaixa: '<b>Massa mais firme/seca.</b> Pode exigir mais água na sova ou um tempo para a farinha hidratar.',
       // DDT — temperatura da água
       ddtTitulo: 'Temperatura da água — Halo Core',
       btnMostrarDDT: 'Mostrar temperatura', btnOcultarDDT: 'Ocultar temperatura',
@@ -2421,7 +2585,11 @@
       // rótulos dos campos na ficha
       fLabelProd: 'Prod.', fLabelAmbiente: 'Ambiente', fLabelFarinha: 'Farinha',
       fLabelPoolish: 'Poolish', fLabelAgua: 'Água', fLabelMassa: 'Massa medida',
-      fLabelForno: 'Forno', fLabelAtrito: 'Atrito calc.',
+      fLabelForno: 'Forno', fLabelAtrito: 'Atrito calc.', fLabelFarinhas: 'Farinhas',
+      btnFarinha: 'Farinha', btnAddFarinhaVinc: 'Adicionar farinha',
+      farVincSelecione: '— selecione —',
+      farVincSemBase: 'Nenhuma farinha cadastrada. Cadastre em Referência → Farinhas primeiro.',
+      farVincSoma: (s) => `A soma dos percentuais é ${s}% (o ideal é 100%).`,
       fUsarAtrito: 'Usar atrito', fExcluir: 'Excluir',
       btnRepetir: 'Repetir', favoritaAdd: 'Marcar como favorita', favoritaRem: 'Desmarcar favorita',
       fExcluirConfirm: 'Excluir esta fornada?',
@@ -2432,6 +2600,12 @@
       medSemDados: 'Registre fornadas com a massa medida para calcular o atrito médio.',
       medUsarBtn: 'Aplicar atrito médio no cálculo da água',
       medAplicado: (v) => `Atrito ${v}°C aplicado ao card de temperatura da água.`,
+      // Insights (gráficos)
+      insightsTitulo: 'Insights',
+      insightsVazio: 'Registre fornadas com massa medida, tempo de forno ou temperaturas para ver os gráficos de evolução.',
+      insAtrito: 'Atrito da Halo Core', insMassa: 'Temperatura da massa', insForno: 'Tempo de forno',
+      insMedia: 'Média', insMin: 'Mín', insMax: 'Máx',
+      insNaFaixa: (n, tot, a, b) => `${n}/${tot} na faixa ${a}–${b}`,
       // exportar / importar
       exportPrompt: 'Copie os dados abaixo (JSON) para backup ou para enviar. Para compartilhar num app, use o botão do sistema.',
       exportResumoTit: 'Resumo do diário de fornadas',
@@ -2612,6 +2786,15 @@
       glossarioTitulo: 'Neapolitan glossary',
       troubleTitulo: 'Troubleshooting',
       troubleIntro: 'Common Neapolitan issues, likely causes and how to fix them. Tap each item to expand.',
+      // Flour database
+      farinhasTitulo: 'Flours',
+      farinhasIntro: 'Register the flours you use (brand, type, W strength and protein). Then you can link one or more to each bake in the log. Stored on this device.',
+      farinhasVazio: 'No flours registered. Tap "Add flour".',
+      farThNome: 'Brand / name', farThTipo: 'Type', farThW: 'W', farThProt: 'Protein',
+      btnAddFarinha: 'Add flour',
+      farExcluirConfirm: 'Delete this flour?',
+      farTipo_00: '00', farTipo_0: '0', farTipo_1: '1', farTipo_2: '2',
+      farTipo_integral: 'Wholemeal', farTipo_semolina: 'Semolina', farTipo_outro: 'Other',
       troubleCausa: 'Likely cause', troubleFix: 'How to fix',
       btnMostrarVel: 'Show speed table', btnOcultarVel: 'Hide speed table',
       btnImprimirVel: 'Print table',
@@ -2628,6 +2811,12 @@
       hidraAlta: (p) => `⚠️ <b>High hydration (${p}%).</b> Above 70% the dough gets softer and stickier, requiring more kneading force and stretch &amp; fold technique to build structure. Shaping is also more delicate. Consider using very cold water and flouring the bench well.`,
       capacidade: (g, max) => `🚫 <b>Total dough (${g} g) above the Halo Core capacity (${max} g).</b> Reduce the number of pizzas or the weight per ball to fit the mixer. Mixing above the limit overloads the motor and hurts gluten development.`,
       loteMin: (g, min) => `⚠️ <b>Small batch (${g} g).</b> Below ~${min} g the dough sits too low in the bowl and the spiral hook can't grab it properly, kneading unevenly. Consider increasing the number of pizzas or mixing by hand.`,
+      // Contextual tips
+      dicaHidraQuente: '<b>Softer dough and faster fermentation.</b> Use very cold water and do plenty of stretch &amp; folds.',
+      dicaFrio: '<b>Cold room: slow fermentation.</b> The dough may need more maturation/appretto time.',
+      dicaQuente: '<b>Warm room: faster fermentation.</b> Consider less yeast (see the temperature adjustment) or shorter times.',
+      dicaLote: '<b>Batch near the bowl limit.</b> Mix at a lower speed to avoid overloading the Halo Core motor.',
+      dicaHidraBaixa: '<b>Firmer/drier dough.</b> It may need a bit more water while kneading or time for the flour to hydrate.',
       // DDT — water temperature
       ddtTitulo: 'Water temperature — Halo Core',
       btnMostrarDDT: 'Show temperature', btnOcultarDDT: 'Hide temperature',
@@ -2693,7 +2882,11 @@
       promptNota: 'Notes (crust, leopard spots, handling…) — optional:',
       fLabelProd: 'Batch', fLabelAmbiente: 'Room', fLabelFarinha: 'Flour',
       fLabelPoolish: 'Poolish', fLabelAgua: 'Water', fLabelMassa: 'Measured dough',
-      fLabelForno: 'Oven', fLabelAtrito: 'Calc. friction',
+      fLabelForno: 'Oven', fLabelAtrito: 'Calc. friction', fLabelFarinhas: 'Flours',
+      btnFarinha: 'Flour', btnAddFarinhaVinc: 'Add flour',
+      farVincSelecione: '— select —',
+      farVincSemBase: 'No flours registered. Add them in Reference → Flours first.',
+      farVincSoma: (s) => `The percentages add up to ${s}% (ideally 100%).`,
       fUsarAtrito: 'Use this friction', fExcluir: 'Delete',
       btnRepetir: 'Repeat', favoritaAdd: 'Mark as favorite', favoritaRem: 'Unmark favorite',
       fExcluirConfirm: 'Delete this bake?',
@@ -2703,6 +2896,12 @@
       medSemDados: 'Log bakes with the measured dough temp to compute the average friction.',
       medUsarBtn: 'Apply average friction to the water calc',
       medAplicado: (v) => `Friction ${v}°C applied to the water temperature card.`,
+      // Insights (charts)
+      insightsTitulo: 'Insights',
+      insightsVazio: 'Log bakes with measured dough temp, oven time or temperatures to see the trend charts.',
+      insAtrito: 'Halo Core friction', insMassa: 'Dough temperature', insForno: 'Oven time',
+      insMedia: 'Avg', insMin: 'Min', insMax: 'Max',
+      insNaFaixa: (n, tot, a, b) => `${n}/${tot} in the ${a}–${b} range`,
       exportPrompt: 'Copy the data below (JSON) for backup or to send. To share in an app, use the system button.',
       exportResumoTit: 'Bake log summary',
       importPrompt: 'Paste here the JSON exported from another device:',
@@ -2828,6 +3027,7 @@
     if (typeof renderGlossario === 'function') renderGlossario();
     if (typeof renderTrouble === 'function') renderTrouble();
     document.getElementById('troubleIntro').innerHTML = t('troubleIntro');
+    if (typeof renderFarinhas === 'function') renderFarinhas();
     if (typeof atualizarCollapseAll === 'function') atualizarCollapseAll();
     render();
   }
@@ -3118,6 +3318,30 @@
 
     // Custo por pizza (deriva das quantidades de massa + molho e dos preços)
     renderCusto(r, discos);
+
+    // Dicas contextuais (hidratação/ambiente/lote)
+    renderDicasContextuais(hidraPct, r.massaFinal);
+  }
+
+  // ===== Dicas contextuais =====
+  // Orientações leves que aparecem conforme a config atual. Gatilhos definidos com
+  // o usuário. A temperatura ambiente vem do card de água (DDT).
+  function renderDicasContextuais(hidraPct, massaTotal) {
+    const box = document.getElementById('dicasCtx');
+    if (!box) return;
+    const amb = (typeof fermTempAmbiente === 'function') ? fermTempAmbiente() : parseFloat(ddtAmbiente.value);
+    const dicas = [];
+
+    if (hidraPct > 70 && !isNaN(amb) && amb > 25) dicas.push(t('dicaHidraQuente'));
+    if (!isNaN(amb) && amb <= 16) dicas.push(t('dicaFrio'));
+    if (!isNaN(amb) && amb >= 28) dicas.push(t('dicaQuente'));
+    if (massaTotal >= 2200 && massaTotal <= 2500) dicas.push(t('dicaLote'));
+    if (hidraPct <= 62) dicas.push(t('dicaHidraBaixa'));
+
+    if (!dicas.length) { box.classList.remove('show'); box.innerHTML = ''; return; }
+    box.innerHTML = dicas.map(d =>
+      `<div class="dica-ctx"><span class="dica-ico">${ICO.dica}</span><span>${d}</span></div>`).join('');
+    box.classList.add('show');
   }
 
   // ===== Lista de compras =====
@@ -3177,6 +3401,212 @@
     };
     window.addEventListener('afterprint', limpar);
     window.print();
+  }
+
+  // ===== Base de farinhas (tabela editável, aba Referência) =====
+  // Cada farinha: { id, nome, tipo, w, proteina }. Persistida em localStorage
+  // (pizzaFarinhas). Reutilizada no diário (vincular farinhas à fornada).
+  const FARINHA_TIPOS = ['00', '0', '1', '2', 'integral', 'semolina', 'outro'];
+
+  function lerFarinhas() {
+    try {
+      const raw = localStorage.getItem('pizzaFarinhas');
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function gravarFarinhas(lista) {
+    try { localStorage.setItem('pizzaFarinhas', JSON.stringify(lista)); } catch (e) {}
+  }
+
+  // Nome legível de uma farinha (para exibir na ficha do diário / seletor)
+  function farinhaLabel(f) {
+    if (!f) return '';
+    const partes = [f.nome || '—'];
+    const extra = [];
+    if (f.tipo) extra.push(f.tipo);
+    if (f.w) extra.push('W' + f.w);
+    if (f.proteina) extra.push(f.proteina + '%');
+    return extra.length ? `${partes[0]} · ${extra.join(' · ')}` : partes[0];
+  }
+
+  function renderFarinhas() {
+    const tbody = document.getElementById('farinhasTbody');
+    if (!tbody) return;
+    document.getElementById('farinhasIntro').innerHTML = t('farinhasIntro');
+    const lista = lerFarinhas();
+    if (!lista.length) {
+      tbody.innerHTML = `<tr><td colspan="5"><div class="farinhas-vazio">${t('farinhasVazio')}</div></td></tr>`;
+      return;
+    }
+    const opts = (sel) => FARINHA_TIPOS.map(tp =>
+      `<option value="${tp}" ${tp === sel ? 'selected' : ''}>${t('farTipo_' + tp)}</option>`).join('');
+    tbody.innerHTML = lista.map(f => `
+      <tr>
+        <td><input type="text" value="${escapeHtml(f.nome || '')}" placeholder="${t('farThNome')}" oninput="editarFarinha(${f.id}, 'nome', this.value)"></td>
+        <td><select onchange="editarFarinha(${f.id}, 'tipo', this.value)">${opts(f.tipo)}</select></td>
+        <td><input type="number" min="0" step="10" value="${f.w != null ? f.w : ''}" placeholder="W" oninput="editarFarinha(${f.id}, 'w', this.value)"></td>
+        <td><input type="number" min="0" step="0.1" value="${f.proteina != null ? f.proteina : ''}" placeholder="%" oninput="editarFarinha(${f.id}, 'proteina', this.value)"></td>
+        <td class="far-x"><button class="far-del" title="${t('fExcluir')}" aria-label="${t('fExcluir')}" onclick="excluirFarinha(${f.id})">${ICO.lixeira}</button></td>
+      </tr>`).join('');
+  }
+
+  function addFarinha() {
+    const lista = lerFarinhas();
+    lista.push({ id: Date.now(), nome: '', tipo: '00', w: null, proteina: null });
+    gravarFarinhas(lista);
+    renderFarinhas();
+  }
+
+  // Edita um campo de uma farinha (sem re-renderizar a tabela, para não perder foco)
+  function editarFarinha(id, campo, valor) {
+    const lista = lerFarinhas();
+    const f = lista.find(x => x.id === id);
+    if (!f) return;
+    if (campo === 'w' || campo === 'proteina') {
+      const v = parseFloat(String(valor).replace(',', '.'));
+      f[campo] = isNaN(v) ? null : v;
+    } else {
+      f[campo] = valor;
+    }
+    gravarFarinhas(lista);
+  }
+
+  function excluirFarinha(id) {
+    if (!confirm(t('farExcluirConfirm'))) return;
+    gravarFarinhas(lerFarinhas().filter(x => x.id !== id));
+    renderFarinhas();
+  }
+
+  function toggleFarinhas() {
+    const wrap = document.getElementById('farinhasWrap');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    setHeadState('farinhasToggle', show);
+    saveWrap('farinhasWrap', show);
+    if (show) renderFarinhas();
+  }
+
+  // ===== Vínculo de farinhas na ficha do diário (blend com %) =====
+  // f.farinhas = [{ id, pct }]. Mostra resumo no grid + editor inline.
+  function renderFarinhasFornada(f) {
+    if (!Array.isArray(f.farinhas) || !f.farinhas.length) return '';
+    const base = lerFarinhas();
+    const itens = f.farinhas.map(v => {
+      const fa = base.find(x => x.id === v.id);
+      const nome = fa ? (fa.nome || '—') : '—';
+      const pctTxt = (v.pct != null && !isNaN(v.pct)) ? ` <b>${numFmt(v.pct)}%</b>` : '';
+      return `<span class="f-far-item">${escapeHtml(nome)}${pctTxt}</span>`;
+    }).join('');
+    return `<div class="f-farinhas"><span class="f-far-lbl">${t('fLabelFarinhas')}:</span> ${itens}</div>`;
+  }
+
+  // Abre/fecha o editor inline de farinhas de uma fornada
+  function toggleEditorFarinha(ts) {
+    const box = document.getElementById('editorFarinha_' + ts);
+    if (!box) return;
+    const abrir = box.style.display === 'none';
+    if (abrir) {
+      box.style.display = '';
+      renderEditorFarinha(ts);
+    } else {
+      // ao fechar, re-renderiza a lista para o resumo "Farinhas: …" refletir as mudanças
+      box.style.display = 'none';
+      renderDiario();
+      reabrirFornada(ts);
+    }
+  }
+
+  // Renderiza o editor: linhas [select farinha][%][remover] + adicionar + aviso de soma
+  function renderEditorFarinha(ts) {
+    const box = document.getElementById('editorFarinha_' + ts);
+    if (!box) return;
+    const base = lerFarinhas();
+    const f = lerDiario().find(x => x.ts === ts);
+    const vinc = (f && Array.isArray(f.farinhas)) ? f.farinhas : [];
+
+    if (!base.length) {
+      box.innerHTML = `<div class="f-far-vazio">${t('farVincSemBase')}</div>`;
+      return;
+    }
+
+    const opts = (selId) => `<option value="">${t('farVincSelecione')}</option>` +
+      base.map(fa => `<option value="${fa.id}" ${fa.id === selId ? 'selected' : ''}>${escapeHtml(farinhaLabel(fa))}</option>`).join('');
+
+    const linhas = vinc.map((v, i) => `
+      <div class="f-far-linha">
+        <select onchange="setFarinhaVinc(${ts}, ${i}, 'id', this.value)">${opts(v.id)}</select>
+        <span class="f-far-pct"><input type="number" min="0" max="100" step="1" value="${v.pct != null ? v.pct : ''}" placeholder="%" oninput="setFarinhaVinc(${ts}, ${i}, 'pct', this.value)">%</span>
+        <button class="far-del" title="${t('fotoRemover')}" aria-label="${t('fotoRemover')}" onclick="removerFarinhaVinc(${ts}, ${i})">${ICO.lixeira}</button>
+      </div>`).join('');
+
+    // aviso leve se a soma dos % não fechar 100
+    const soma = vinc.reduce((s, v) => s + (v.pct != null && !isNaN(v.pct) ? v.pct : 0), 0);
+    const aviso = (vinc.length && soma !== 100)
+      ? `<div class="f-far-aviso">${t('farVincSoma', numFmt(soma))}</div>` : '';
+
+    box.innerHTML =
+      `<div class="f-far-linhas">${linhas}</div>
+       ${aviso}
+       <div class="btns" style="margin:8px 0 0">
+         <button class="icon-label-btn" onclick="addFarinhaVinc(${ts})"><span class="print-ico" data-ico="mais"></span><span class="btn-txt">${t('btnAddFarinhaVinc')}</span></button>
+       </div>`;
+    // injeta o ícone "+" (o innerHTML novo não passou pela injeção inicial)
+    box.querySelectorAll('.print-ico').forEach(el => { if (!el.innerHTML) el.innerHTML = ICO[el.getAttribute('data-ico')] || ''; });
+  }
+
+  function addFarinhaVinc(ts) {
+    const lista = lerDiario();
+    const f = lista.find(x => x.ts === ts);
+    if (!f) return;
+    if (!Array.isArray(f.farinhas)) f.farinhas = [];
+    f.farinhas.push({ id: null, pct: null });
+    gravarDiario(lista);
+    renderEditorFarinha(ts);
+  }
+
+  // Altera um campo (id/pct) de uma linha do blend
+  function setFarinhaVinc(ts, i, campo, valor) {
+    const lista = lerDiario();
+    const f = lista.find(x => x.ts === ts);
+    if (!f || !Array.isArray(f.farinhas) || !f.farinhas[i]) return;
+    if (campo === 'pct') {
+      const v = parseFloat(String(valor).replace(',', '.'));
+      f.farinhas[i].pct = isNaN(v) ? null : v;
+    } else if (campo === 'id') {
+      const v = parseInt(valor);
+      f.farinhas[i].id = isNaN(v) ? null : v;
+    }
+    gravarDiario(lista);
+    // atualiza só o resumo no grid e o aviso de soma, sem recriar os campos (mantém foco)
+    atualizarResumoFarinhaFicha(ts);
+  }
+
+  function removerFarinhaVinc(ts, i) {
+    const lista = lerDiario();
+    const f = lista.find(x => x.ts === ts);
+    if (!f || !Array.isArray(f.farinhas)) return;
+    f.farinhas.splice(i, 1);
+    gravarDiario(lista);
+    renderEditorFarinha(ts);
+    atualizarResumoFarinhaFicha(ts);
+  }
+
+  // Atualiza o resumo "Farinhas: …" na ficha e o aviso de soma sem re-render total
+  function atualizarResumoFarinhaFicha(ts) {
+    const f = lerDiario().find(x => x.ts === ts);
+    if (!f) return;
+    // aviso de soma (se o editor estiver aberto)
+    const box = document.getElementById('editorFarinha_' + ts);
+    if (box && box.style.display !== 'none') {
+      const vinc = Array.isArray(f.farinhas) ? f.farinhas : [];
+      const soma = vinc.reduce((s, v) => s + (v.pct != null && !isNaN(v.pct) ? v.pct : 0), 0);
+      let av = box.querySelector('.f-far-aviso');
+      if (vinc.length && soma !== 100) {
+        if (!av) { av = document.createElement('div'); av.className = 'f-far-aviso'; box.querySelector('.f-far-linhas').after(av); }
+        av.textContent = t('farVincSoma', numFmt(soma));
+      } else if (av) { av.remove(); }
+    }
   }
 
   // ===== Calculadora de custo por pizza =====
@@ -3566,8 +3996,8 @@
     receita: [['ingWrap', toggleIng], ['divWrap', toggleDiv], ['molhoWrap', toggleMolho], ['comprasWrap', toggleCompras], ['custoWrap', toggleCusto]],
     preparo: [['ddtWrap', toggleDDT], ['mixWrap', toggleMix], ['fornoWrap', toggleForno]],
     cronograma: [['timelineWrap', toggleTimeline]],
-    diario: [['diarioWrap', toggleDiario]],
-    referencia: [['velocidadesWrap', toggleVelocidades], ['glossarioWrap', toggleGlossario], ['troubleWrap', toggleTrouble]]
+    diario: [['diarioWrap', toggleDiario], ['insightsWrap', toggleInsights]],
+    referencia: [['velocidadesWrap', toggleVelocidades], ['glossarioWrap', toggleGlossario], ['troubleWrap', toggleTrouble], ['farinhasWrap', toggleFarinhas]]
   };
   let abaAtiva = 'receita';
 
@@ -3676,7 +4106,9 @@
     restoreWrap('velocidadesWrap', 'velToggle');
     restoreWrap('glossarioWrap', 'glossarioToggle');
     restoreWrap('troubleWrap', 'troubleToggle');
+    restoreWrap('farinhasWrap', 'farinhasToggle');
     restoreWrap('diarioWrap', 'diarioToggle');
+    restoreWrap('insightsWrap', 'insightsToggle');
   }
 
   function toggleIng() {
@@ -4580,17 +5012,104 @@
             ${linha(t('fLabelForno'), f.forno, 's')}
             ${atritoHtml}
           </div>
+          ${renderFarinhasFornada(f)}
           ${f.nota ? `<div class="f-nota">${escapeHtml(f.nota)}</div>` : ''}
           ${renderFotosFornada(f)}
+          <div class="f-editor-farinha" id="editorFarinha_${f.ts}" style="display:none"></div>
           <div class="f-btns">
             <button class="icon-label-btn" title="${t('btnTirarFoto')}" aria-label="${t('btnTirarFoto')}" onclick="tirarFoto(${f.ts})">${ICO.camera}<span class="btn-txt">${t('btnTirarFoto')}</span></button>
             <button class="icon-label-btn" title="${t('btnAddFoto')}" aria-label="${t('btnAddFoto')}" onclick="adicionarFotos(${f.ts})">${ICO.imagem}<span class="btn-txt">${t('btnAddFoto')}</span></button>
-            <button class="icon-fixed-btn del-btn" title="${t('fExcluir')}" aria-label="${t('fExcluir')}" onclick="excluirFornada(${f.ts})">${ICO.lixeira}<span class="del-txt">${t('fExcluir')}</span></button>
             ${usarBtn}
+            <button class="icon-fixed-btn del-btn" title="${t('fExcluir')}" aria-label="${t('fExcluir')}" onclick="excluirFornada(${f.ts})">${ICO.lixeira}<span class="del-txt">${t('fExcluir')}</span></button>
+          </div>
+          <div class="f-btns f-btns-repetir">
+            <button class="icon-fixed-btn" title="${t('btnFarinha')}" aria-label="${t('btnFarinha')}" onclick="toggleEditorFarinha(${f.ts})">${ICO.trigo}<span>${t('btnFarinha')}</span></button>
             <button class="icon-fixed-btn" title="${t('btnRepetir')}" aria-label="${t('btnRepetir')}" onclick="repetirFornada(${f.ts})">${ICO.recarregar}<span>${t('btnRepetir')}</span></button>
           </div>
         </details>`;
     }).join('');
+
+    renderInsights();
+  }
+
+  // ===== Insights do diário (mini-gráficos SVG + estatísticas) =====
+  // Plota atrito, temperatura da massa e tempo de forno por ORDEM das fornadas
+  // (1ª, 2ª, 3ª…), sem bibliotecas. Cada gráfico usa só as fornadas que têm o dado.
+  function renderInsights() {
+    const box = document.getElementById('diarioInsights');
+    if (!box) return;
+    // fornadas em ordem cronológica (mais antiga -> mais recente)
+    const lista = lerDiario().slice().sort((a, b) => a.ts - b.ts);
+
+    // séries: valor por fornada (na ordem); null quando o dado não existe
+    const serieAtrito = lista.map(f => { const a = atritoDaFornada(f); return a != null ? Math.round(a) : null; });
+    const serieMassa = lista.map(f => (f.massa != null && !isNaN(f.massa)) ? f.massa : null);
+    const serieForno = lista.map(f => (f.forno != null && !isNaN(f.forno)) ? f.forno : null);
+
+    const temAlgum = [serieAtrito, serieMassa, serieForno].some(s => s.filter(v => v != null).length >= 1);
+    if (!temAlgum) {
+      box.innerHTML = `<div class="insights-vazio">${t('insightsVazio')}</div>`;
+      return;
+    }
+
+    const graf = (titulo, serie, unidade, cor, faixa) => {
+      const pts = serie.map((v, i) => ({ i, v })).filter(p => p.v != null);
+      if (pts.length < 1) return '';
+      const vals = pts.map(p => p.v);
+      const media = vals.reduce((a, b) => a + b, 0) / vals.length;
+      const min = Math.min(...vals), max = Math.max(...vals);
+      const nfmt = (x) => numFmt(Math.round(x * 10) / 10);
+      // estatísticas
+      let stats = `${t('insMedia')}: <b>${nfmt(media)}${unidade}</b> · ${t('insMin')}: <b>${nfmt(min)}${unidade}</b> · ${t('insMax')}: <b>${nfmt(max)}${unidade}</b>`;
+      if (faixa) {
+        const naFaixa = vals.filter(v => v >= faixa[0] && v <= faixa[1]).length;
+        stats += ` · ${t('insNaFaixa', naFaixa, vals.length, faixa[0], faixa[1])}`;
+      }
+      return `<div class="insight-graf">
+        <div class="insight-graf-tit">${titulo}</div>
+        ${svgLinha(serie, cor, faixa)}
+        <div class="insight-stats">${stats}</div>
+      </div>`;
+    };
+
+    box.innerHTML =
+      graf(t('insAtrito'), serieAtrito, '°C', '#cc5500', null) +
+      graf(t('insMassa'), serieMassa, '°C', '#2e8c6a', [19, 23]) +
+      graf(t('insForno'), serieForno, 's', '#5a63c0', [90, 140]);
+  }
+
+  // Gera um mini-gráfico de linha em SVG a partir de uma série (valores ou null).
+  // Pontos ausentes (null) não são plotados; a linha conecta os pontos válidos.
+  function svgLinha(serie, cor, faixa) {
+    const W = 320, H = 90, PL = 6, PR = 6, PT = 8, PB = 8;
+    const idxs = serie.map((v, i) => ({ i, v })).filter(p => p.v != null);
+    if (!idxs.length) return '';
+    const n = serie.length;
+    const vals = idxs.map(p => p.v);
+    let lo = Math.min(...vals), hi = Math.max(...vals);
+    // inclui a faixa ideal no domínio, se houver, e evita divisão por zero
+    if (faixa) { lo = Math.min(lo, faixa[0]); hi = Math.max(hi, faixa[1]); }
+    if (hi === lo) { hi = lo + 1; lo = lo - 1; }
+    const pad = (hi - lo) * 0.12; lo -= pad; hi += pad;
+    const x = (i) => PL + (n <= 1 ? (W - PL - PR) / 2 : (i / (n - 1)) * (W - PL - PR));
+    const y = (v) => PT + (1 - (v - lo) / (hi - lo)) * (H - PT - PB);
+
+    // banda da faixa ideal
+    let banda = '';
+    if (faixa) {
+      const y1 = y(faixa[1]), y2 = y(faixa[0]);
+      banda = `<rect x="${PL}" y="${y1.toFixed(1)}" width="${(W - PL - PR).toFixed(1)}" height="${(y2 - y1).toFixed(1)}" fill="${cor}" opacity="0.10"/>`;
+    }
+    // linha conectando pontos válidos
+    const linePts = idxs.map(p => `${x(p.i).toFixed(1)},${y(p.v).toFixed(1)}`).join(' ');
+    const linha = idxs.length > 1
+      ? `<polyline points="${linePts}" fill="none" stroke="${cor}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>` : '';
+    // pontos
+    const dots = idxs.map(p => `<circle cx="${x(p.i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="2.6" fill="${cor}"/>`).join('');
+
+    return `<svg class="insight-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-hidden="true">
+      ${banda}${linha}${dots}
+    </svg>`;
   }
 
   // Grade de miniaturas das fotos de uma fornada (vazia se não houver)
@@ -4761,6 +5280,15 @@
     if (show) renderDiario();
   }
 
+  function toggleInsights() {
+    const wrap = document.getElementById('insightsWrap');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    setHeadState('insightsToggle', show);
+    saveWrap('insightsWrap', show);
+    if (show) renderInsights();
+  }
+
   // ===== Exportar / compartilhar / importar =====
   // Monta um resumo legível em texto (com as médias) + o JSON completo.
   function montarExport() {
@@ -4783,14 +5311,28 @@
         f.massa != null ? `massa ${f.massa}` : null,
         f.forno != null ? `${f.forno}s` : null,
         atr != null ? `atrito ${Math.round(atr)}` : null,
+        farinhasResumoTexto(f),
         (Array.isArray(f.fotos) && f.fotos.length) ? `${f.fotos.length} foto(s)` : null,
         f.nota ? `"${f.nota}"` : null
       ].filter(Boolean);
       linhas.push('- ' + partes.join(' · '));
     });
     const resumo = linhas.join('\n');
-    const json = JSON.stringify({ app: 'pizza-diario', v: 1, fornadas: lista }, null, 2);
+    // Exporta as fornadas E a base de farinhas cadastradas (para migrar tudo)
+    const json = JSON.stringify({ app: 'pizza-diario', v: 1, fornadas: lista, farinhas: lerFarinhas() }, null, 2);
     return { resumo, json };
+  }
+
+  // Resumo textual das farinhas vinculadas a uma fornada (ex.: "Alma 95% · Integral 5%")
+  function farinhasResumoTexto(f) {
+    if (!Array.isArray(f.farinhas) || !f.farinhas.length) return null;
+    const base = lerFarinhas();
+    const partes = f.farinhas.map(v => {
+      const fa = base.find(x => x.id === v.id);
+      const nome = fa ? (fa.nome || '—') : '—';
+      return v.pct != null ? `${nome} ${v.pct}%` : nome;
+    });
+    return partes.join(' + ');
   }
 
   async function exportarDiario() {
@@ -4826,7 +5368,17 @@
       if (f && f.ts != null && !existentes.has(f.ts)) { atual.push(f); add++; }
     });
     gravarDiario(atual);
+    // Mescla a base de farinhas (se veio no JSON), evitando duplicar por id
+    if (dados && Array.isArray(dados.farinhas)) {
+      const atualF = lerFarinhas();
+      const idsF = new Set(atualF.map(x => x.id));
+      dados.farinhas.forEach(fa => {
+        if (fa && fa.id != null && !idsF.has(fa.id)) atualF.push(fa);
+      });
+      gravarFarinhas(atualF);
+    }
     renderDiario();
+    if (typeof renderFarinhas === 'function') renderFarinhas();
     alert(t('importOk', add));
   }
 
