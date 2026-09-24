@@ -362,6 +362,44 @@
     padding-top: 16px;
   }
 
+  /* Ajuste do fermento pela temperatura ambiente */
+  .ferm-temp {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+  /* rótulo + switch: label à esquerda, chave deslizante à direita (estilo Android) */
+  .ferm-temp-toggle {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    font-size: 0.85rem; font-weight: 400; color: var(--gray);
+    cursor: pointer; user-select: none;
+  }
+  .ferm-temp-toggle .ft-label { flex: 1; }
+  /* Switch (chave deslizante) — o checkbox real fica invisível por cima do trilho */
+  .switch { position: relative; flex: none; width: 38px; height: 22px; }
+  .switch input {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    margin: 0; opacity: 0; cursor: pointer; z-index: 1;
+  }
+  .switch-track {
+    position: absolute; inset: 0;
+    background: #cfc7bb; border-radius: 999px;
+    transition: background 0.2s ease;
+  }
+  .switch-knob {
+    position: absolute; top: 3px; left: 3px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+    transition: transform 0.2s ease;
+  }
+  .switch input:checked + .switch-track { background: var(--orange); }
+  .switch input:checked + .switch-track .switch-knob { transform: translateX(16px); }
+  .switch input:focus-visible + .switch-track { outline: 2px solid var(--orange); outline-offset: 2px; }
+  /* nota do fermento: estilo padrão .fixed-note — só um respiro no topo
+     (o negrito já é laranja pela regra global .fixed-note b). */
+  .ferm-temp .fixed-note { margin-top: 10px; }
+  @media print { .ferm-temp { display: none !important; } }
+
   /* Telas estreitas: seletor de perfil em linha cheia; botões na linha seguinte */
   @media (max-width: 640px) {
     .perfis-row { flex-direction: column; align-items: stretch; }
@@ -429,7 +467,7 @@
     padding-top: 12px;
     border-top: 1px dashed var(--line);
   }
-  .fixed-note b { color: var(--green); }
+  .fixed-note b { color: var(--orange); }
 
   footer {
     text-align: center;
@@ -677,7 +715,7 @@
   .trouble .t-causa { font-size: 0.86rem; color: #444; line-height: 1.45; margin: 0 0 6px; }
   .trouble .t-causa b, .trouble .t-fix b { color: var(--dark); }
   .trouble .t-fix { font-size: 0.86rem; color: #444; line-height: 1.45; margin: 0; }
-  .trouble .t-fix b { color: var(--green); }
+  .trouble .t-fix b { color: var(--orange); }
 
   /* Cards colapsáveis da aba Receita (ingredientes, divisão, molho) */
   #ingWrap, #divWrap, #molhoWrap { display: none; }
@@ -985,6 +1023,22 @@
   .fornada .f-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
   .fornada .f-btns button { padding: 5px 12px; font-size: 0.8rem; }
   .fornada .f-atrito { font-weight: 700; color: var(--orange); }
+  /* estrela de favorita no cabeçalho da ficha */
+  .fornada .f-fav {
+    flex: none; order: -1;               /* fica antes da data */
+    width: 30px; height: 30px; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: none; background: none; cursor: pointer;
+    color: var(--gray);
+  }
+  .fornada .f-fav.on { color: var(--orange); }
+  .fornada .f-fav .fav-ico { width: 20px; height: 20px; display: block; }
+  /* destaque da ficha favorita (sem reordenar) */
+  .fornada.favorita {
+    border-left-width: 4px;
+    border-color: var(--orange);
+    background: color-mix(in srgb, var(--orange) 5%, #fff);
+  }
   @media print { #diarioCard { display: none !important; } }
 
   /* Galeria de fotos da fornada */
@@ -1604,6 +1658,19 @@
       <span><span data-i18n="hidratacao">Hidratação</span>: <b id="hidraResumo">67%</b></span>
       <span><span data-i18n="salLbl">Sal</span>: <b>2,5%</b></span>
     </div>
+
+    <!-- Ajuste do fermento pela temperatura ambiente (Q10) -->
+    <div class="ferm-temp">
+      <label class="ferm-temp-toggle">
+        <span class="ft-label" data-i18n="fermTempLabel">Ajustar fermento pela temperatura ambiente</span>
+        <span class="switch">
+          <input type="checkbox" id="fermTempToggle" onchange="toggleFermTemp()">
+          <span class="switch-track"><span class="switch-knob"></span></span>
+        </span>
+      </label>
+      <div class="fixed-note" id="fermTempNota" style="display:none"></div>
+    </div>
+
     <!-- Perfis de massa salvos -->
     <div class="perfis">
       <label for="perfilSelect" data-i18n="perfisLabel">Perfis salvos</label>
@@ -2063,7 +2130,10 @@
     // câmera (tirar foto na hora)
     camera: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L19 6h0a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.2"/></svg>`,
     // imagem/galeria (adicionar fotos existentes)
-    imagem: `<svg class="btn-ico" ${SVG_ATTRS}><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg>`
+    imagem: `<svg class="btn-ico" ${SVG_ATTRS}><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg>`,
+    // estrela (favoritar fornada) — contorno e preenchida
+    estrela: `<svg class="fav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 17.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.9z"/></svg>`,
+    estrelaCheia: `<svg class="fav-ico" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 17.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.9z"/></svg>`
   };
   // Chevron dos cabeçalhos colapsáveis (gira via CSS quando .card-head.open)
   const CHEVRON = `<svg class="chevron" ${SVG_ATTRS}><path d="M6 9l6 6 6-6"/></svg>`;
@@ -2139,7 +2209,7 @@
       // Abas de navegação
       tabReceita: 'Receita', tabPreparo: 'Preparo', tabCronograma: 'Cronograma',
       tabDiario: 'Diário', tabReferencia: 'Referência',
-      expandirTudo: 'Expandir tudo', recolherTudo: 'Recolher tudo',
+      expandirTudo: 'Expandir cards', recolherTudo: 'Recolher cards',
       expandirTudoGeral: 'Expandir todos os cards de todas as abas',
       recolherTudoGeral: 'Recolher todos os cards de todas as abas',
       // Modo "mão na massa" (passo a passo em tela cheia)
@@ -2238,6 +2308,8 @@
       massaTotalLbl: 'Massa total',
       farinhaTotalLbl: 'Farinha total',
       salLbl: 'Sal',
+      fermTempLabel: 'Ajustar fermento pela temperatura ambiente',
+      fermTempNota: (tamb, fpct) => `Fermento ajustado para <b>${fpct}</b> com base em <b>${tamb}°C</b> de ambiente (informado no card "Temperatura da água", aba Preparo). Estimativa (Q10 ≈ 2 a cada 10°C) ancorada em 0,1% a 21°C — <b>calibre pelo seu diário de fornadas</b>.`,
       btnReceitaPadrao: 'Receita padrão (6 × 280g · 67%)',
       btnImprimirReceita: 'Imprimir receita',
       btnImprimirTudo: 'Imprimir tudo',
@@ -2347,10 +2419,11 @@
       promptTempoForno: 'Tempo de cocção que funcionou (segundos) — opcional:',
       promptNota: 'Observações (borda, leopard spots, manuseio…) — opcional:',
       // rótulos dos campos na ficha
-      fLabelProd: 'Produção', fLabelAmbiente: 'Ambiente', fLabelFarinha: 'Farinha',
+      fLabelProd: 'Prod.', fLabelAmbiente: 'Ambiente', fLabelFarinha: 'Farinha',
       fLabelPoolish: 'Poolish', fLabelAgua: 'Água', fLabelMassa: 'Massa medida',
       fLabelForno: 'Forno', fLabelAtrito: 'Atrito calc.',
       fUsarAtrito: 'Usar atrito', fExcluir: 'Excluir',
+      btnRepetir: 'Repetir', favoritaAdd: 'Marcar como favorita', favoritaRem: 'Desmarcar favorita',
       fExcluirConfirm: 'Excluir esta fornada?',
       fExcluirConfirmFotos: (n) => `Excluir esta fornada? As ${n} foto${n === 1 ? '' : 's'} anexada${n === 1 ? '' : 's'} também ${n === 1 ? 'será removida' : 'serão removidas'}.`,
       // médias
@@ -2420,7 +2493,7 @@
       // Navigation tabs
       tabReceita: 'Recipe', tabPreparo: 'Prep', tabCronograma: 'Schedule',
       tabDiario: 'Log', tabReferencia: 'Reference',
-      expandirTudo: 'Expand all', recolherTudo: 'Collapse all',
+      expandirTudo: 'Expand cards', recolherTudo: 'Collapse cards',
       expandirTudoGeral: 'Expand every card in all tabs',
       recolherTudoGeral: 'Collapse every card in all tabs',
       // Hands-on mode (full-screen step-by-step)
@@ -2512,6 +2585,8 @@
       massaTotalLbl: 'Total dough',
       farinhaTotalLbl: 'Total flour',
       salLbl: 'Salt',
+      fermTempLabel: 'Adjust yeast to room temperature',
+      fermTempNota: (tamb, fpct) => `Yeast adjusted to <b>${fpct}</b> based on <b>${tamb}°C</b> room temperature (entered in the "Water temperature" card, Prep tab). Estimate (Q10 ≈ 2 per 10°C) anchored at 0.1% at 21°C — <b>calibrate with your bake log</b>.`,
       btnReceitaPadrao: 'Default recipe (6 × 280g · 67%)',
       btnImprimirReceita: 'Print recipe',
       btnImprimirTudo: 'Print all',
@@ -2620,6 +2695,7 @@
       fLabelPoolish: 'Poolish', fLabelAgua: 'Water', fLabelMassa: 'Measured dough',
       fLabelForno: 'Oven', fLabelAtrito: 'Calc. friction',
       fUsarAtrito: 'Use this friction', fExcluir: 'Delete',
+      btnRepetir: 'Repeat', favoritaAdd: 'Mark as favorite', favoritaRem: 'Unmark favorite',
       fExcluirConfirm: 'Delete this bake?',
       fExcluirConfirmFotos: (n) => `Delete this bake? The ${n} attached photo${n === 1 ? '' : 's'} will also be removed.`,
       medTitulo: 'Averages for calibration',
@@ -2860,20 +2936,66 @@
   }
   function pct(p) { return (p * 100).toFixed(p < 0.01 ? 2 : (p < 0.1 ? 1 : 0)).replace('.', ',') + '%'; }
 
+  // ===== Ajuste do fermento pela temperatura ambiente (Q10) =====
+  // Princípio: a atividade da levedura ~dobra a cada 10°C (Q10≈2). Ancorado no
+  // valor validado (0,1% a 21°C, a temperatura padrão do card DDT):
+  //   fator = 2^((21 − Tambiente) / 10)   (mais frio → mais fermento, e vice-versa)
+  // É uma ESTIMATIVA (ponto de partida) — calibrar pelo diário de fornadas.
+  const FERM_TEMP_REF = 21;        // °C de referência (âncora = 0,1%)
+  const FERM_PCT_MIN = 0.0004;     // teto de segurança (0,04%)
+  const FERM_PCT_MAX = 0.0025;     // teto de segurança (0,25%)
+
+  // Está ligado o ajuste pela temperatura?
+  function fermTempAtivo() {
+    const el = document.getElementById('fermTempToggle');
+    return !!(el && el.checked);
+  }
+  // Temperatura ambiente informada no card DDT (fallback: referência)
+  function fermTempAmbiente() {
+    const el = document.getElementById('ddtAmbiente');
+    const v = el ? parseFloat(el.value) : NaN;
+    return isNaN(v) ? FERM_TEMP_REF : v;
+  }
+  // Fração de fermento a usar agora (ajustada ou padrão)
+  function fermentoAjustado() {
+    if (!fermTempAtivo()) return PCT.fermento;
+    const tamb = fermTempAmbiente();
+    const fator = Math.pow(2, (FERM_TEMP_REF - tamb) / 10);
+    return Math.max(FERM_PCT_MIN, Math.min(FERM_PCT_MAX, PCT.fermento * fator));
+  }
+
+  // Liga/desliga o ajuste, persiste e recalcula
+  function toggleFermTemp() {
+    try { localStorage.setItem('pizzaFermTemp', fermTempAtivo() ? '1' : '0'); } catch (e) {}
+    render();
+  }
+  // Mostra/esconde e preenche a nota explicativa (recebe a fração já calculada)
+  function atualizarFermTempNota(fPct) {
+    const nota = document.getElementById('fermTempNota');
+    if (!nota) return;
+    if (!fermTempAtivo()) { nota.style.display = 'none'; return; }
+    const tamb = fermTempAmbiente();
+    nota.style.display = '';
+    nota.innerHTML = t('fermTempNota', tamb, pct(fPct));
+  }
+
   // ===== Cálculo =====
   // hidra = fração de hidratação (ex.: 0.67 para 67%)
-  function calcular(discos, peso, hidra) {
+  // fermentoPct = fração de fermento (padrão PCT.fermento = 0,1%); pode vir ajustada
+  // pela temperatura ambiente (ver fermentoAjustado()).
+  function calcular(discos, peso, hidra, fermentoPct) {
+    const fPct = (typeof fermentoPct === 'number' && !isNaN(fermentoPct)) ? fermentoPct : PCT.fermento;
     const massaFinal = discos * peso;                    // massa que sai em bolas
     const massaTeorica = massaFinal * (1 + LOSS);        // compensa perda
     // massaTeorica = farinha * (1 + agua + sal + fermento)
-    const somaPct = 1 + hidra + PCT.sal + PCT.fermento;
+    const somaPct = 1 + hidra + PCT.sal + fPct;
     const farinha = massaTeorica / somaPct;
 
     const alma = farinha * PCT.almaItaliana;
     const integral = farinha * PCT.integral;
     const agua = farinha * hidra;
     const sal = farinha * PCT.sal;
-    const fermento = farinha * PCT.fermento;
+    const fermento = farinha * fPct;
 
     // Poolish
     const poolishFarinha = farinha * POOLISH_FLOUR_FRAC;   // toda de Alma Italiana
@@ -2899,10 +3021,14 @@
     const discos = clamp(parseInt(discosNum.value) || 2, 2, 10);
     const peso = clamp(parseInt(pesoNum.value) || 260, 260, 320);
     const hidra = clamp(parseInt(hidraNum.value) || 60, 60, 85) / 100;
-    const r = calcular(discos, peso, hidra);
+    const fPct = fermentoAjustado();
+    const r = calcular(discos, peso, hidra, fPct);
 
     // Persiste os controles de produção (para não voltar ao padrão no reload)
     if (typeof salvarProducao === 'function') salvarProducao();
+
+    // Nota do ajuste de fermento pela temperatura (só quando ligado)
+    atualizarFermTempNota(fPct);
 
     // Summary
     document.getElementById('discosVal').textContent = discos;
@@ -2944,13 +3070,15 @@
       warnLote.classList.remove('show');
     }
 
-    // Tabela principal
+    // Tabela principal — a % do fermento reflete a fração REAL usada (pode estar
+    // ajustada pela temperatura), derivada dos gramas sobre a farinha.
+    const fermentoPctReal = r.farinha > 0 ? (r.fermento / r.farinha) : PCT.fermento;
     const rows = [
       [t('ingFarinhaAlma'), PCT.almaItaliana, r.alma],
       [t('ingFarinhaIntegral'), PCT.integral, r.integral],
       [t('ingAgua'), r.hidra, r.agua],
       [t('ingSal'), PCT.sal, r.sal],
-      [t('ingFermento'), PCT.fermento, r.fermento],
+      [t('ingFermento'), fermentoPctReal, r.fermento],
     ];
     let html = '';
     for (const [nome, p, val] of rows) {
@@ -4345,6 +4473,36 @@
     return Math.round((alvo * 4 - (farinha + ambiente + atrito + poolishT)) * 10) / 10;
   }
 
+  // Marca/desmarca a fornada como favorita (destaque; não reordena a lista)
+  function alternarFavorita(ts) {
+    const lista = lerDiario();
+    const f = lista.find(x => x.ts === ts);
+    if (!f) return;
+    f.favorita = !f.favorita;
+    gravarDiario(lista);
+    renderDiario();
+    reabrirFornada(ts);   // preserva o estado aberto/fechado da ficha
+  }
+
+  // "Repetir": recarrega discos/peso/hidratação desta fornada nos controles de
+  // produção (temperaturas do DDT e datas do cronograma não entram) e leva ao topo.
+  function repetirFornada(ts) {
+    const f = lerDiario().find(x => x.ts === ts);
+    if (!f) return;
+    setPreset(
+      clamp(parseInt(f.discos) || 6, 2, 10),
+      clamp(parseInt(f.peso) || 280, 260, 320),
+      clamp(parseInt(f.hidra) || 67, 60, 85)
+    );
+    // desmarca perfil selecionado (a config passou a vir da fornada)
+    const sel = document.getElementById('perfilSelect');
+    if (sel) sel.value = '';
+    const btnEx = document.getElementById('perfilExcluir');
+    if (btnEx) btnEx.disabled = true;
+    // rola até o card de produção (topo)
+    document.querySelector('.controls-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   function excluirFornada(ts) {
     const f = lerDiario().find(x => x.ts === ts);
     const nFotos = (f && Array.isArray(f.fotos)) ? f.fotos.length : 0;
@@ -4404,9 +4562,12 @@
         : '';
       const usarBtn = atr != null
         ? `<button onclick="aplicarAtrito(${atr})">${t('fUsarAtrito')}</button>` : '';
+      const fav = !!f.favorita;
+      const estrela = `<button class="f-fav ${fav ? 'on' : ''}" title="${t(fav ? 'favoritaRem' : 'favoritaAdd')}" aria-label="${t(fav ? 'favoritaRem' : 'favoritaAdd')}" aria-pressed="${fav}" onclick="event.stopPropagation(); alternarFavorita(${f.ts})">${fav ? ICO.estrelaCheia : ICO.estrela}</button>`;
       return `
-        <details class="fornada">
+        <details class="fornada ${fav ? 'favorita' : ''}">
           <summary class="fornada-top">
+            ${estrela}
             <span class="f-data">${dataCurta(f.ts)}</span>
             <span class="f-config">${t('fLabelProd')}: ${f.discos} × ${f.peso}g · ${f.hidra}%</span>
           </summary>
@@ -4424,8 +4585,9 @@
           <div class="f-btns">
             <button class="icon-label-btn" title="${t('btnTirarFoto')}" aria-label="${t('btnTirarFoto')}" onclick="tirarFoto(${f.ts})">${ICO.camera}<span class="btn-txt">${t('btnTirarFoto')}</span></button>
             <button class="icon-label-btn" title="${t('btnAddFoto')}" aria-label="${t('btnAddFoto')}" onclick="adicionarFotos(${f.ts})">${ICO.imagem}<span class="btn-txt">${t('btnAddFoto')}</span></button>
-            ${usarBtn}
             <button class="icon-fixed-btn del-btn" title="${t('fExcluir')}" aria-label="${t('fExcluir')}" onclick="excluirFornada(${f.ts})">${ICO.lixeira}<span class="del-txt">${t('fExcluir')}</span></button>
+            ${usarBtn}
+            <button class="icon-fixed-btn" title="${t('btnRepetir')}" aria-label="${t('btnRepetir')}" onclick="repetirFornada(${f.ts})">${ICO.recarregar}<span>${t('btnRepetir')}</span></button>
           </div>
         </details>`;
     }).join('');
@@ -4812,6 +4974,14 @@
       }));
     } catch (e) {}
   }
+  // Restaura o toggle de ajuste de fermento pela temperatura (desligado por padrão)
+  (function initFermTemp() {
+    let saved = '0';
+    try { saved = localStorage.getItem('pizzaFermTemp') || '0'; } catch (e) {}
+    const el = document.getElementById('fermTempToggle');
+    if (el) el.checked = (saved === '1');
+  })();
+
   (function initProducao() {
     let saved = null;
     try { saved = JSON.parse(localStorage.getItem('pizzaProducao')); } catch (e) {}
