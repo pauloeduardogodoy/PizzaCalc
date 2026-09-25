@@ -531,6 +531,20 @@
   .dica-ctx b { color: var(--dark); }
   @media print { .dicas-ctx { display: none !important; } }
 
+  /* Ajuste de hidratação assistido (seletor de estilo abaixo do slider) */
+  .hidra-assist { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+  .hidra-assist .ha-label { font-size: 0.8rem; color: var(--gray); font-weight: 600; }
+  .ha-estilos { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ha-btn {
+    padding: 4px 10px; font-size: 0.8rem; font-weight: 600;
+    border: 1px solid var(--line); background: #fff; color: var(--dark);
+    border-radius: 999px; cursor: pointer;
+  }
+  .ha-btn:hover { background: var(--orange-light); border-color: var(--orange); }
+  .ha-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+  .ha-nota { flex-basis: 100%; font-size: 0.78rem; color: var(--gray); line-height: 1.4; }
+  @media print { .hidra-assist { display: none !important; } }
+
   .btns { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
   button {
     border: 1px solid var(--line);
@@ -741,6 +755,47 @@
   .trouble .t-causa b, .trouble .t-fix b { color: var(--dark); }
   .trouble .t-fix { font-size: 0.86rem; color: #444; line-height: 1.45; margin: 0; }
   .trouble .t-fix b { color: var(--orange); }
+
+  /* Biblioteca de recheios / combinações (referência estática) */
+  #recheiosWrap { display: none; }
+  #recheiosWrap.show { display: block; padding-top: 10px; }
+  .recheios-lista { display: flex; flex-direction: column; gap: 10px; }
+  .recheio {
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--orange);
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+  .recheio > summary {
+    cursor: pointer; list-style: none; user-select: none;
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 700; font-size: 0.95rem; color: var(--dark);
+  }
+  .recheio > summary::-webkit-details-marker { display: none; }
+  .recheio > summary::after {
+    content: "▸"; margin-left: auto; color: var(--orange);
+    font-size: 0.9rem; transition: transform 0.15s;
+  }
+  .recheio[open] > summary::after { transform: rotate(90deg); }
+  .recheio[open] > summary { margin-bottom: 8px; }
+  .recheio .r-ingr { font-size: 0.86rem; color: #444; line-height: 1.45; margin: 0 0 6px; }
+  .recheio .r-montagem { font-size: 0.86rem; color: #444; line-height: 1.45; margin: 0; }
+  .recheio .r-ingr b, .recheio .r-montagem b { color: var(--dark); }
+  .recheios-barra { display: flex; justify-content: flex-end; align-items: center; margin: 0 0 12px; }
+  .recheios-toggle-all {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 10px;
+    border: 1px solid var(--line); border-radius: 8px;
+    background: #fff; color: var(--gray);
+    font-size: 0.78rem; font-weight: 600; cursor: pointer;
+  }
+  .recheios-toggle-all:hover { background: var(--orange-light); border-color: var(--orange); color: var(--orange); }
+  .recheios-toggle-all .rta-ico {
+    width: 15px; height: 15px; display: inline-flex; color: var(--orange);
+    transition: transform 0.2s ease;
+  }
+  .recheios-toggle-all.expanded .rta-ico { transform: rotate(180deg); }
+  @media print { .recheios-barra { display: none !important; } }
 
   /* Cards colapsáveis da aba Receita (ingredientes, divisão, molho) */
   #ingWrap, #divWrap, #molhoWrap { display: none; }
@@ -1780,6 +1835,17 @@
           <input type="number" id="hidraNum" min="60" max="85" step="1" value="67">
           <span class="unit">%</span>
         </div>
+        <!-- Ajuste de hidratação assistido: escolher o estilo move o slider -->
+        <div class="hidra-assist">
+          <span class="ha-label" data-i18n="haLabel">Estilo da borda:</span>
+          <div class="ha-estilos" id="haEstilos" role="group">
+            <button type="button" class="ha-btn" data-estilo="crocante" onclick="aplicarEstiloHidra('crocante')" data-i18n="haCrocante">Crocante</button>
+            <button type="button" class="ha-btn" data-estilo="equilibrado" onclick="aplicarEstiloHidra('equilibrado')" data-i18n="haEquilibrado">Equilibrada</button>
+            <button type="button" class="ha-btn" data-estilo="macio" onclick="aplicarEstiloHidra('macio')" data-i18n="haMacio">Macia</button>
+            <button type="button" class="ha-btn" data-estilo="canotto" onclick="aplicarEstiloHidra('canotto')" data-i18n="haCanotto">Canotto</button>
+          </div>
+          <span class="ha-nota" id="haNota"></span>
+        </div>
       </div>
     </div>
     <div class="summary">
@@ -2218,6 +2284,23 @@
     </div>
   </div>
 
+  <!-- Recheios / combinações (referência estática) -->
+  <div class="card" id="recheiosCard">
+    <div class="timeline-head card-head" id="recheiosToggle" onclick="toggleRecheios()" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="recheiosTitulo">Recheios</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="recheiosWrap">
+      <p class="ddt-intro" id="recheiosIntro"></p>
+      <div class="recheios-barra">
+        <button type="button" class="recheios-toggle-all" id="recheiosToggleAll" onclick="toggleTodosRecheios()">
+          <span class="rta-ico"></span><span id="recheiosToggleAllTxt" data-i18n="recheiosExpandir">Expandir todas</span>
+        </button>
+      </div>
+      <div class="recheios-lista" id="recheiosLista"></div>
+    </div>
+  </div>
+
   <!-- Tabela de velocidades da Halo Core -->
   <div class="card" id="velocidadesCard">
     <div class="timeline-head card-head" id="velToggle" onclick="toggleVelocidades()" role="button" tabindex="0" aria-expanded="true">
@@ -2336,7 +2419,7 @@
   </div><!-- /ABA Ajuda -->
 
   <footer id="footer" data-i18n="footer">
-    Baseado no cronograma validado • Maturação ~53h<br>Ooni Halo Core • Fornetto Slim 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.3.0</span>
+    Baseado no cronograma validado • Maturação ~53h<br>Ooni Halo Core • Fornetto Slim 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.6.1</span>
   </footer>
 </div>
 
@@ -2465,6 +2548,36 @@
     ]
   };
 
+  // ===== Biblioteca de recheios / combinações ===== [nome, ingredientes, montagem]
+  const RECHEIOS = {
+    pt: [
+      ['Calabresa', 'Molho de tomate, queijo muçarela, linguiça calabresa fatiada, azeitonas pretas.', 'Espalhe o molho, cubra com a muçarela, distribua a calabresa fatiada e finalize com as azeitonas pretas. Leve ao forno.'],
+      ['Muçarela', 'Molho de tomate, queijo muçarela, azeitonas.', 'Espalhe o molho, cubra com a muçarela e distribua as azeitonas. Leve ao forno.'],
+      ['Frango com Catupiry', 'Molho de tomate, queijo muçarela, frango desfiado e temperado, requeijão cremoso Catupiry.', 'Espalhe o molho, cubra com a muçarela, distribua o frango desfiado e finalize com pontos de Catupiry. Leve ao forno.'],
+      ['Marguerita', 'Molho de tomate, queijo muçarela, folhas de manjericão fresco e queijo parmesão ralado.', 'Espalhe o molho e cubra com a muçarela. Asse; o manjericão fresco e o parmesão ralado entram <b>ao sair do forno</b>.'],
+      ['Quatro Queijos', 'Molho de tomate, queijo muçarela, queijo provolone, queijo gorgonzola e requeijão cremoso tipo Catupiry.', 'Espalhe o molho e distribua os queijos: muçarela, provolone, o gorgonzola em pedaços pequenos (é forte) e pontos de Catupiry. Leve ao forno.'],
+      ['Pepperoni', 'Molho de tomate, queijo muçarela, fatias de salame pepperoni.', 'Espalhe o molho, cubra com a muçarela e distribua as fatias de pepperoni. Asse até a borda dourar e o pepperoni soltar a gordura.'],
+      ['Napolitana', 'Molho de tomate, queijo muçarela, rodelas de tomate fresco, queijo parmesão ralado.', 'Espalhe o molho, cubra com a muçarela e disponha as rodelas de tomate fresco. Asse; o parmesão ralado entra <b>ao sair do forno</b>.'],
+      ['Lombo', 'Molho de tomate, queijo muçarela, lombo canadense defumado fatiado, e requeijão cremoso Catupiry.', 'Espalhe o molho, cubra com a muçarela, distribua o lombo canadense fatiado e finalize com pontos de Catupiry. Leve ao forno.'],
+      ['Brócolis com Bacon', 'Molho de tomate, queijo muçarela, brócolis cozido, cubos ou fatias de bacon fritos e requeijão cremoso Catupiry.', 'Espalhe o molho, cubra com a muçarela, distribua o brócolis cozido e o bacon frito e finalize com pontos de Catupiry. Leve ao forno.'],
+      ['Palmito', 'Molho de tomate, queijo muçarela, palmito em rodelas, azeitonas.', 'Espalhe o molho, cubra com a muçarela, distribua o palmito em rodelas e as azeitonas. Leve ao forno.'],
+      ['Corn & Bacon', 'Molho de tomate, queijo muçarela, milho verde cozido, cubos ou fatias de bacon crocante, requeijão cremoso Catupiry.', 'Espalhe o molho, cubra com a muçarela, distribua o milho verde e o bacon crocante e finalize com pontos de Catupiry. Leve ao forno.']
+    ],
+    en: [
+      ['Calabresa (sausage)', 'Tomato sauce, mozzarella, sliced calabresa sausage, black olives.', 'Spread the sauce, cover with mozzarella, scatter the sliced sausage and finish with the black olives. Bake.'],
+      ['Mozzarella', 'Tomato sauce, mozzarella, olives.', 'Spread the sauce, cover with mozzarella and scatter the olives. Bake.'],
+      ['Chicken & Catupiry', 'Tomato sauce, mozzarella, seasoned shredded chicken, Catupiry (creamy cheese).', 'Spread the sauce, cover with mozzarella, scatter the shredded chicken and finish with dollops of Catupiry. Bake.'],
+      ['Margherita', 'Tomato sauce, mozzarella, fresh basil leaves and grated parmesan.', 'Spread the sauce and cover with mozzarella. Bake; the fresh basil and grated parmesan go on <b>after the oven</b>.'],
+      ['Four Cheese', 'Tomato sauce, mozzarella, provolone, gorgonzola and Catupiry (creamy cheese).', 'Spread the sauce and add the cheeses: mozzarella, provolone, gorgonzola in small pieces (it is strong) and dollops of Catupiry. Bake.'],
+      ['Pepperoni', 'Tomato sauce, mozzarella, pepperoni salami slices.', 'Spread the sauce, cover with mozzarella and scatter the pepperoni slices. Bake until the crust browns and the pepperoni renders its fat.'],
+      ['Napolitana', 'Tomato sauce, mozzarella, fresh tomato slices, grated parmesan.', 'Spread the sauce, cover with mozzarella and arrange the fresh tomato slices. Bake; the grated parmesan goes on <b>after the oven</b>.'],
+      ['Pork loin', 'Tomato sauce, mozzarella, sliced smoked Canadian pork loin, and Catupiry (creamy cheese).', 'Spread the sauce, cover with mozzarella, scatter the sliced pork loin and finish with dollops of Catupiry. Bake.'],
+      ['Broccoli & Bacon', 'Tomato sauce, mozzarella, cooked broccoli, fried bacon cubes or strips and Catupiry (creamy cheese).', 'Spread the sauce, cover with mozzarella, scatter the cooked broccoli and fried bacon and finish with dollops of Catupiry. Bake.'],
+      ['Palmito (heart of palm)', 'Tomato sauce, mozzarella, sliced heart of palm, olives.', 'Spread the sauce, cover with mozzarella, scatter the sliced heart of palm and the olives. Bake.'],
+      ['Corn & Bacon', 'Tomato sauce, mozzarella, cooked sweet corn, crispy bacon cubes or strips, Catupiry (creamy cheese).', 'Spread the sauce, cover with mozzarella, scatter the corn and crispy bacon and finish with dollops of Catupiry. Bake.']
+    ]
+  };
+
   // ===== Internacionalização (PT padrão / EN) =====
   let LANG = 'pt';
 
@@ -2491,11 +2604,11 @@
       ajDiarioTit: 'Aba Diário',
       ajDiario: '<ul><li><b>Registrar fornada</b>: guarda a produção, as temperaturas e a massa medida.</li><li>O app calcula o <b>atrito real</b> da masseira e a média — aplique no card de água para calibrar.</li><li><b>Fotos</b>, <b>favoritar</b> (estrela) e <b>Repetir</b> (recarrega a receita daquela fornada).</li><li><b>Insights</b>: gráficos de atrito, temperatura da massa e tempo de forno.</li></ul>',
       ajReferenciaTit: 'Aba Referência',
-      ajReferencia: '<ul><li><b>Farinhas</b>: cadastre suas farinhas (marca, tipo, W, proteína) e vincule às fornadas.</li><li><b>Tabela de velocidades</b> da Halo Core.</li><li><b>Glossário</b> napolitano e <b>Solução de problemas</b>.</li></ul>',
+      ajReferencia: '<ul><li><b>Farinhas</b>: cadastre suas farinhas (marca, tipo, W, proteína) e vincule às fornadas.</li><li><b>Recheios</b>: combinações clássicas com ingredientes e montagem.</li><li><b>Tabela de velocidades</b> da Halo Core.</li><li><b>Glossário</b> napolitano e <b>Solução de problemas</b>.</li></ul>',
       ajDicasTit: 'Dicas de uso',
       ajDicas: '<ul><li><b>Mão na massa</b> (botão no topo): passo a passo em tela cheia para usar na bancada.</li><li><b>Manter tela ligada</b>: impede a tela do celular de apagar durante o preparo.</li><li><b>PT/EN</b>: troque o idioma nas bandeiras.</li><li><b>Imprimir</b>: receita, cronograma, lista de compras e tabela têm botões próprios.</li><li><b>Instalar</b>: no celular, "Adicionar à tela inicial" para usar como app, offline.</li></ul><span class="aj-dica">Botões <b>Expandir/Recolher cards</b> agem na aba atual; o <b>chevron duplo</b> ao lado age em todas as abas.</span>',
       ajSobreTit: 'Sobre',
-      ajSobre: '<p><b>PizzaCalc</b> — Calculadora e guia de produção de pizza tipo napolitana usando 30% de poolish.</p><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: © 2026 · Versão: 1.3.0</p><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem">Ooni Halo Core e Fornetto Slim são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> — Calculadora e guia de produção de pizza tipo napolitana usando 30% de poolish.</p><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: © 2026 · Versão: 1.6.1</p><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem">Ooni Halo Core e Fornetto Slim são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
       // Backup completo
       backupTitulo: 'Backup completo',
       backupIntro: 'Salve <b>tudo</b> num arquivo: perfis, farinhas, preços, diário (com fotos), configuração e idioma. Use para <b>trocar de aparelho</b> ou fazer backup antes de limpar o navegador. Importar <b>substitui</b> os dados atuais.',
@@ -2629,6 +2742,10 @@
       glossarioTitulo: 'Glossário napolitano',
       troubleTitulo: 'Solução de problemas',
       troubleIntro: 'Problemas comuns na napolitana, causas prováveis e como ajustar. Toque em cada item para expandir.',
+      recheiosTitulo: 'Recheios',
+      recheiosIntro: 'Combinações clássicas para montar sobre a massa (além do molho). Toque em cada uma para ver os ingredientes e a montagem. Quantidades a gosto.',
+      recheiosIngred: 'Ingredientes', recheiosMontagem: 'Montagem',
+      recheiosExpandir: 'Expandir todas', recheiosRecolher: 'Recolher todas',
       // Base de farinhas
       farinhasTitulo: 'Farinhas',
       farinhasIntro: 'Cadastre as farinhas que você usa (marca, tipo, força W e proteína). Depois é possível vincular uma ou mais a cada fornada no diário. Salvo neste aparelho.',
@@ -2643,7 +2760,7 @@
       btnImprimirVel: 'Imprimir tabela',
       btnImprimirGlossario: 'Imprimir glossário',
       thVel: 'Vel.', thPotencia: 'Potência', thUso: 'Uso / equivalente industrial',
-      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni Halo Core • Fornetto Slim 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.3.0</span>',
+      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni Halo Core • Fornetto Slim 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.6.1</span>',
       velIntro: 'Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b> (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).',
       comoFunciona: '<b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e recalcula a água total. O <b>poolish</b> sempre usa 30% da farinha total, 100% de hidratação e metade do fermento — a água restante entra na massa final. Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.',
       progresso: (n, t) => `<b>${n}</b> de ${t} etapas`,
@@ -2663,6 +2780,13 @@
       dicaQuente: '<b>Ambiente quente: fermentação acelerada.</b> Considere menos fermento (veja o ajuste por temperatura) ou reduzir os tempos.',
       dicaLote: '<b>Lote perto do limite da cuba.</b> Bata em velocidade mais baixa para não sobrecarregar o motor da Halo Core.',
       dicaHidraBaixa: '<b>Massa mais firme/seca.</b> Pode exigir mais água na sova ou um tempo para a farinha hidratar.',
+      // Ajuste de hidratação assistido
+      haLabel: 'Estilo da borda:',
+      haCrocante: 'Crocante', haEquilibrado: 'Equilibrada', haMacio: 'Macia', haCanotto: 'Canotto',
+      ha_crocante: 'crocante', ha_equilibrado: 'equilibrada', ha_macio: 'macia', ha_canotto: 'canotto',
+      haNotaSimples: (estilo, p) => `Borda ${estilo}: ${p}% de hidratação.`,
+      haNotaTemp: (estilo, p, aj) => `Borda ${estilo}: ${p}% (ajustado em ${aj} pela temperatura ambiente).`,
+      haNotaManual: 'Escolha um estilo de borda para sugerir a hidratação, ou ajuste no controle acima.',
       // DDT — temperatura da água
       ddtTitulo: 'Temperatura da água — Halo Core',
       btnMostrarDDT: 'Mostrar temperatura', btnOcultarDDT: 'Ocultar temperatura',
@@ -2825,11 +2949,11 @@
       ajDiarioTit: 'Log tab',
       ajDiario: '<ul><li><b>Log a bake</b>: saves the batch, temperatures and measured dough temp.</li><li>The app computes the mixer\'s <b>real friction</b> and the average — apply it to the water card to calibrate.</li><li><b>Photos</b>, <b>favorite</b> (star) and <b>Repeat</b> (reloads that bake\'s recipe).</li><li><b>Insights</b>: charts of friction, dough temp and oven time.</li></ul>',
       ajReferenciaTit: 'Reference tab',
-      ajReferencia: '<ul><li><b>Flours</b>: register your flours (brand, type, W, protein) and link them to bakes.</li><li>Halo Core <b>speed table</b>.</li><li>Neapolitan <b>glossary</b> and <b>troubleshooting</b>.</li></ul>',
+      ajReferencia: '<ul><li><b>Flours</b>: register your flours (brand, type, W, protein) and link them to bakes.</li><li><b>Toppings</b>: classic combinations with ingredients and assembly.</li><li>Halo Core <b>speed table</b>.</li><li>Neapolitan <b>glossary</b> and <b>troubleshooting</b>.</li></ul>',
       ajDicasTit: 'Usage tips',
       ajDicas: '<ul><li><b>Hands-on</b> (top button): a full-screen step-by-step for the bench.</li><li><b>Keep screen on</b>: stops the phone screen turning off during prep.</li><li><b>PT/EN</b>: switch language with the flags.</li><li><b>Print</b>: recipe, schedule, shopping list and table have their own buttons.</li><li><b>Install</b>: on mobile, "Add to Home screen" to use it as an app, offline.</li></ul><span class="aj-dica"><b>Expand/Collapse cards</b> acts on the current tab; the <b>double chevron</b> next to it acts on all tabs.</span>',
       ajSobreTit: 'About',
-      ajSobre: '<p><b>PizzaCalc</b> — Calculator and production guide for Neapolitan-style pizza using 30% poolish.</p><p>Developed by <b>Paulo Godoy</b></p><p>Year: © 2026 · Version: 1.3.0</p><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem">Ooni Halo Core and Fornetto Slim are trademarks of their respective owners, cited only as equipment reference.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> — Calculator and production guide for Neapolitan-style pizza using 30% poolish.</p><p>Developed by <b>Paulo Godoy</b></p><p>Year: © 2026 · Version: 1.6.1</p><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem">Ooni Halo Core and Fornetto Slim are trademarks of their respective owners, cited only as equipment reference.</p>',
       // Full backup
       backupTitulo: 'Full backup',
       backupIntro: 'Save <b>everything</b> to a file: profiles, flours, prices, log (with photos), settings and language. Use it to <b>move to another device</b> or back up before clearing the browser. Importing <b>replaces</b> the current data.',
@@ -2956,6 +3080,10 @@
       glossarioTitulo: 'Neapolitan glossary',
       troubleTitulo: 'Troubleshooting',
       troubleIntro: 'Common Neapolitan issues, likely causes and how to fix them. Tap each item to expand.',
+      recheiosTitulo: 'Toppings',
+      recheiosIntro: 'Classic combinations to build on top of the dough (beyond the sauce). Tap each one for ingredients and assembly. Amounts to taste.',
+      recheiosIngred: 'Ingredients', recheiosMontagem: 'Assembly',
+      recheiosExpandir: 'Expand all', recheiosRecolher: 'Collapse all',
       // Flour database
       farinhasTitulo: 'Flours',
       farinhasIntro: 'Register the flours you use (brand, type, W strength and protein). Then you can link one or more to each bake in the log. Stored on this device.',
@@ -2970,7 +3098,7 @@
       btnImprimirVel: 'Print table',
       btnImprimirGlossario: 'Print glossary',
       thVel: 'Speed', thPotencia: 'Power', thUso: 'Use / industrial equivalent',
-      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni Halo Core • Fornetto Slim 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.3.0</span>',
+      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni Halo Core • Fornetto Slim 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.6.1</span>',
       velIntro: 'Spiral mixer with rotating bowl (60–300 RPM). Since the industrial mixer is also a spiral, the comparison is direct by hook RPM: <b>industrial 1st speed ≈ 100 RPM</b> (speed 4) and <b>2nd speed ≈ 200 RPM</b> (speed 12).',
       comoFunciona: '<b>How it works:</b> Quantities scale proportionally, keeping the recipe ratios (flour 95% Alma + 5% Integral, salt 2.5%, yeast 0.1%). <b>Hydration</b> is adjustable and recalculates the total water. The <b>poolish</b> always uses 30% of the total flour, 100% hydration and half the yeast — the remaining water goes into the final dough. A ~1% dough loss during handling is accounted for in the reverse calculation.',
       progresso: (n, t) => `<b>${n}</b> of ${t} steps`,
@@ -2987,6 +3115,13 @@
       dicaQuente: '<b>Warm room: faster fermentation.</b> Consider less yeast (see the temperature adjustment) or shorter times.',
       dicaLote: '<b>Batch near the bowl limit.</b> Mix at a lower speed to avoid overloading the Halo Core motor.',
       dicaHidraBaixa: '<b>Firmer/drier dough.</b> It may need a bit more water while kneading or time for the flour to hydrate.',
+      // Assisted hydration
+      haLabel: 'Crust style:',
+      haCrocante: 'Crispy', haEquilibrado: 'Balanced', haMacio: 'Soft', haCanotto: 'Canotto',
+      ha_crocante: 'crispy', ha_equilibrado: 'balanced', ha_macio: 'soft', ha_canotto: 'canotto',
+      haNotaSimples: (estilo, p) => `${estilo.charAt(0).toUpperCase() + estilo.slice(1)} crust: ${p}% hydration.`,
+      haNotaTemp: (estilo, p, aj) => `${estilo.charAt(0).toUpperCase() + estilo.slice(1)} crust: ${p}% (adjusted by ${aj} for room temperature).`,
+      haNotaManual: 'Pick a crust style to suggest the hydration, or set it in the control above.',
       // DDT — water temperature
       ddtTitulo: 'Water temperature — Halo Core',
       btnMostrarDDT: 'Show temperature', btnOcultarDDT: 'Hide temperature',
@@ -3198,6 +3333,8 @@
     if (typeof renderTrouble === 'function') renderTrouble();
     document.getElementById('troubleIntro').innerHTML = t('troubleIntro');
     if (typeof renderFarinhas === 'function') renderFarinhas();
+    if (typeof renderRecheios === 'function') renderRecheios();
+    { const ri = document.getElementById('recheiosIntro'); if (ri) ri.innerHTML = t('recheiosIntro'); }
     { const b = document.getElementById('backupIntro'); if (b) b.innerHTML = t('backupIntro'); }
     if (typeof atualizarCollapseAll === 'function') atualizarCollapseAll();
     render();
@@ -3492,6 +3629,9 @@
 
     // Dicas contextuais (hidratação/ambiente/lote)
     renderDicasContextuais(hidraPct, r.massaFinal);
+
+    // Ajuste de hidratação assistido (marca o estilo ativo + nota)
+    renderHidraAssist(hidraPct);
   }
 
   // ===== Dicas contextuais =====
@@ -3513,6 +3653,60 @@
     box.innerHTML = dicas.map(d =>
       `<div class="dica-ctx"><span class="dica-ico">${ICO.dica}</span><span>${d}</span></div>`).join('');
     box.classList.add('show');
+  }
+
+  // ===== Ajuste de hidratação assistido =====
+  // Cada estilo tem uma hidratação-base; a sugestão soma um ajuste pela
+  // temperatura ambiente (ambiente frio → +água; quente → −água, para
+  // compensar o manuseio) e é limitada à faixa do slider (60–85%).
+  const HIDRA_ESTILOS = { crocante: 62, equilibrado: 67, macio: 72, canotto: 78 };
+  const HIDRA_MIN = 60, HIDRA_MAX = 85;
+
+  function ajusteHidraTemp() {
+    const amb = (typeof fermTempAmbiente === 'function') ? fermTempAmbiente() : parseFloat(ddtAmbiente.value);
+    if (isNaN(amb)) return 0;
+    return clamp(Math.round((21 - amb) / 6), -3, 3);   // frio +água, quente −água
+  }
+  function hidraSugerida(estilo) {
+    const base = HIDRA_ESTILOS[estilo];
+    if (base == null) return null;
+    return clamp(base + ajusteHidraTemp(), HIDRA_MIN, HIDRA_MAX);
+  }
+
+  // Escolher um estilo move o slider de hidratação para a sugestão e recalcula.
+  function aplicarEstiloHidra(estilo) {
+    const alvo = hidraSugerida(estilo);
+    if (alvo == null) return;
+    hidraNum.value = alvo;
+    hidraRange.value = clamp(alvo, parseInt(hidraRange.min), parseInt(hidraRange.max));
+    try { localStorage.setItem('pizzaHidratacaoEstilo', estilo); } catch (e) {}
+    render();
+  }
+
+  // Marca o botão do estilo cujo valor sugerido bate com a hidratação atual e
+  // preenche a nota (estilo + ajuste de temperatura, se houver).
+  function renderHidraAssist(hidraPct) {
+    const box = document.getElementById('haEstilos');
+    if (!box) return;
+    const ajuste = ajusteHidraTemp();
+    let ativo = null;
+    box.querySelectorAll('.ha-btn').forEach(b => {
+      const est = b.getAttribute('data-estilo');
+      const bate = hidraSugerida(est) === hidraPct;
+      b.classList.toggle('active', bate);
+      if (bate) ativo = est;
+    });
+    const nota = document.getElementById('haNota');
+    if (nota) {
+      if (ativo) {
+        const nomeEstilo = t('ha_' + ativo);
+        nota.textContent = ajuste === 0
+          ? t('haNotaSimples', nomeEstilo, hidraPct)
+          : t('haNotaTemp', nomeEstilo, hidraPct, ajuste > 0 ? '+' + ajuste : String(ajuste));
+      } else {
+        nota.textContent = t('haNotaManual');
+      }
+    }
   }
 
   // ===== Lista de compras =====
@@ -4194,7 +4388,7 @@
     preparo: [['ddtWrap', toggleDDT], ['mixWrap', toggleMix], ['fornoWrap', toggleForno]],
     cronograma: [['timelineWrap', toggleTimeline]],
     diario: [['diarioWrap', toggleDiario], ['insightsWrap', toggleInsights], ['backupWrap', toggleBackup]],
-    referencia: [['velocidadesWrap', toggleVelocidades], ['glossarioWrap', toggleGlossario], ['troubleWrap', toggleTrouble], ['farinhasWrap', toggleFarinhas]],
+    referencia: [['velocidadesWrap', toggleVelocidades], ['glossarioWrap', toggleGlossario], ['troubleWrap', toggleTrouble], ['farinhasWrap', toggleFarinhas], ['recheiosWrap', toggleRecheios]],
     ajuda: [
       ['ajComecarWrap', () => toggleAjuda('ajComecar')],
       ['ajReceitaWrap', () => toggleAjuda('ajReceita')],
@@ -4314,6 +4508,7 @@
     restoreWrap('glossarioWrap', 'glossarioToggle');
     restoreWrap('troubleWrap', 'troubleToggle');
     restoreWrap('farinhasWrap', 'farinhasToggle');
+    restoreWrap('recheiosWrap', 'recheiosToggle');
     restoreWrap('diarioWrap', 'diarioToggle');
     restoreWrap('insightsWrap', 'insightsToggle');
     ['ajComecar', 'ajReceita', 'ajPreparo', 'ajCronograma', 'ajDiario', 'ajReferencia', 'ajDicas', 'ajSobre']
@@ -4686,6 +4881,57 @@
     wrap.classList.toggle('show', show);
     setHeadState('troubleToggle', show);
     saveWrap('troubleWrap', show);
+  }
+
+  // ===== Biblioteca de recheios / combinações (estática) =====
+  function renderRecheios() {
+    const itens = (RECHEIOS[LANG] || RECHEIOS.pt).slice()
+      .sort((a, b) => a[0].localeCompare(b[0], LANG === 'en' ? 'en' : 'pt', { sensitivity: 'base' }));
+    const lista = document.getElementById('recheiosLista');
+    lista.innerHTML = itens.map(
+      ([nome, ingr, montagem]) => `
+        <details class="recheio">
+          <summary>${nome}</summary>
+          <p class="r-ingr"><b>${t('recheiosIngred')}:</b> ${ingr}</p>
+          <p class="r-montagem"><b>${t('recheiosMontagem')}:</b> ${montagem}</p>
+        </details>`
+    ).join('');
+    // Atualiza o botão de expandir/recolher quando uma receita é aberta/fechada
+    lista.querySelectorAll('details.recheio').forEach(d =>
+      d.addEventListener('toggle', atualizarRecheiosToggleAll));
+    atualizarRecheiosToggleAll();
+  }
+  function toggleRecheios() {
+    const wrap = document.getElementById('recheiosWrap');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    setHeadState('recheiosToggle', show);
+    saveWrap('recheiosWrap', show);
+  }
+
+  // Expande/recolhe TODAS as receitas (os <details>) de uma vez.
+  function toggleTodosRecheios() {
+    const lista = document.getElementById('recheiosLista');
+    if (!lista) return;
+    const itens = lista.querySelectorAll('details.recheio');
+    const algumAberto = Array.from(itens).some(d => d.open);
+    const abrir = !algumAberto;   // se algum aberto -> recolhe; senão -> abre
+    itens.forEach(d => { d.open = abrir; });
+    atualizarRecheiosToggleAll();
+  }
+
+  // Sincroniza o rótulo/ícone do botão "expandir/recolher todas" com o estado.
+  function atualizarRecheiosToggleAll() {
+    const lista = document.getElementById('recheiosLista');
+    const btn = document.getElementById('recheiosToggleAll');
+    const txt = document.getElementById('recheiosToggleAllTxt');
+    if (!lista || !btn || !txt) return;
+    const itens = lista.querySelectorAll('details.recheio');
+    const algumAberto = Array.from(itens).some(d => d.open);
+    txt.textContent = algumAberto ? t('recheiosRecolher') : t('recheiosExpandir');
+    btn.classList.toggle('expanded', algumAberto);
+    const ico = btn.querySelector('.rta-ico');
+    if (ico && !ico.innerHTML) ico.innerHTML = CHEVRON;
   }
 
   // ===== Alarme sonoro (Web Audio) — compartilhado pelos timers =====
