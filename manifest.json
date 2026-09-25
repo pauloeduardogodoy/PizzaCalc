@@ -1,7 +1,7 @@
 {
   "name": "PizzaCalc — Pizza Napolitana",
   "short_name": "PizzaCalc",
-  "description": "Calculadora de ingredientes e cronograma para pizza napolitana com poolish.",
+  "description": "Calculadora de ingredientes, cronograma e guia de produção para pizza napolitana com poolish.",
   "start_url": "./",
   "id": "./",
   "scope": "./",
@@ -11,6 +11,8 @@
   "background_color": "#faf7f2",
   "theme_color": "#cc5500",
   "lang": "pt-BR",
+  "dir": "ltr",
+  "categories": ["food", "lifestyle", "utilities"],
   "icons": [
     {
       "src": "./icon-192.png",
@@ -21,12 +23,6 @@
     {
       "src": "./icon-512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./icon-background.png",
-      "sizes": "612x612",
       "type": "image/png",
       "purpose": "any"
     },
