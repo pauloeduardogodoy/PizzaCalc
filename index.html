@@ -475,6 +475,16 @@
     color: var(--gray);
     margin-top: 24px;
   }
+  /* linha de crédito (autoria) separada por um traço fino */
+  .footer-cred {
+    display: block;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+    max-width: 220px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
   .warn-box {
     display: none;
@@ -762,6 +772,9 @@
     display: block; margin-top: 8px; padding: 8px 10px;
     background: var(--orange-light); border-radius: 8px; font-size: 0.86rem;
   }
+  /* Card de backup completo */
+  #backupWrap { display: none; }
+  #backupWrap.show { display: block; padding-top: 10px; }
 
   /* Base de farinhas (tabela editável) */
   #farinhasWrap { display: none; }
@@ -1532,8 +1545,8 @@
     #troubleCard { display: none !important; }
     /* Base de farinhas: material de tela, nunca impressa */
     #farinhasCard { display: none !important; }
-    /* Aba Ajuda: material de tela, nunca impressa */
-    .tab-panel[data-tab="ajuda"] { display: none !important; }
+    /* Aba Ajuda (inclui backup): material de tela, nunca impressa */
+    .tab-panel[data-tab="ajuda"], #backupCard { display: none !important; }
     /* Lista de compras: sai só no seu próprio modo (print-compras) */
     #comprasCard { display: none !important; }
     /* Calculadora de custo: ferramenta de tela, nunca impressa */
@@ -2108,6 +2121,22 @@
     </div>
   </div>
 
+  <!-- Backup completo (exportar/importar todo o estado) -->
+  <div class="card" id="backupCard">
+    <div class="timeline-head card-head" id="backupToggle" onclick="toggleBackup()" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="backupTitulo">Backup completo</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="backupWrap">
+      <p class="ddt-intro" id="backupIntro"></p>
+      <div class="btns" style="margin:0">
+        <button class="icon-label-btn" onclick="exportarTudo()"><span class="print-ico" data-ico="exportar"></span><span class="btn-txt" data-i18n="btnBackupExportar">Exportar tudo</span></button>
+        <button class="icon-label-btn" onclick="importarTudo()"><span class="print-ico" data-ico="importar"></span><span class="btn-txt" data-i18n="btnBackupImportar">Importar tudo</span></button>
+      </div>
+    </div>
+  </div>
+  <input type="file" id="backupInput" accept="application/json,.json" style="display:none">
+
   </div><!-- /ABA Diário -->
 
   <!-- ABA: Cronograma -->
@@ -2296,10 +2325,18 @@
     <div id="ajDicasWrap" class="ajuda-wrap"><div class="ajuda-conteudo" data-i18n="ajDicas"></div></div>
   </div>
 
+  <div class="card" id="ajudaSobreCard">
+    <div class="timeline-head card-head" id="ajSobreToggle" onclick="toggleAjuda('ajSobre')" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="ajSobreTit">Sobre</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="ajSobreWrap" class="ajuda-wrap"><div class="ajuda-conteudo" data-i18n="ajSobre"></div></div>
+  </div>
+
   </div><!-- /ABA Ajuda -->
 
   <footer id="footer" data-i18n="footer">
-    Baseado no cronograma validado • Maturação ~53h • Ooni Halo Core • Fornetto Slim 390°C
+    Baseado no cronograma validado • Maturação ~53h<br>Ooni Halo Core • Fornetto Slim 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.3.0</span>
   </footer>
 </div>
 
@@ -2457,6 +2494,16 @@
       ajReferencia: '<ul><li><b>Farinhas</b>: cadastre suas farinhas (marca, tipo, W, proteína) e vincule às fornadas.</li><li><b>Tabela de velocidades</b> da Halo Core.</li><li><b>Glossário</b> napolitano e <b>Solução de problemas</b>.</li></ul>',
       ajDicasTit: 'Dicas de uso',
       ajDicas: '<ul><li><b>Mão na massa</b> (botão no topo): passo a passo em tela cheia para usar na bancada.</li><li><b>Manter tela ligada</b>: impede a tela do celular de apagar durante o preparo.</li><li><b>PT/EN</b>: troque o idioma nas bandeiras.</li><li><b>Imprimir</b>: receita, cronograma, lista de compras e tabela têm botões próprios.</li><li><b>Instalar</b>: no celular, "Adicionar à tela inicial" para usar como app, offline.</li></ul><span class="aj-dica">Botões <b>Expandir/Recolher cards</b> agem na aba atual; o <b>chevron duplo</b> ao lado age em todas as abas.</span>',
+      ajSobreTit: 'Sobre',
+      ajSobre: '<p><b>PizzaCalc</b> — Calculadora e guia de produção de pizza tipo napolitana usando 30% de poolish.</p><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: © 2026 · Versão: 1.3.0</p><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem">Ooni Halo Core e Fornetto Slim são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
+      // Backup completo
+      backupTitulo: 'Backup completo',
+      backupIntro: 'Salve <b>tudo</b> num arquivo: perfis, farinhas, preços, diário (com fotos), configuração e idioma. Use para <b>trocar de aparelho</b> ou fazer backup antes de limpar o navegador. Importar <b>substitui</b> os dados atuais.',
+      btnBackupExportar: 'Exportar tudo', btnBackupImportar: 'Importar tudo',
+      backupImportConfirm: 'Importar vai SUBSTITUIR todos os dados atuais deste aparelho (perfis, farinhas, diário, etc.) pelos do arquivo. Continuar?',
+      backupImportOk: 'Backup importado. O app será recarregado.',
+      backupErro: 'Não foi possível ler o arquivo de backup. Verifique se é um arquivo exportado pelo PizzaCalc.',
+      backupExportFallback: 'Copie o conteúdo abaixo e salve como um arquivo .json:',
       expandirTudoGeral: 'Expandir todos os cards de todas as abas',
       recolherTudoGeral: 'Recolher todos os cards de todas as abas',
       // Modo "mão na massa" (passo a passo em tela cheia)
@@ -2501,7 +2548,7 @@
       molhoTitulo: 'Molho — The Ultimate Sauce',
       molhoIntro: 'Molho rústico de tomate pelado, cru (sem cozinhar). Quantidades escalam com o nº de discos.',
       molhoThIngred: 'Ingrediente', molhoThQtd: 'Quantidade',
-      molhoNota: 'Rende para <b>{discos} disco(s)</b>. Base da receita: 4 discos = 1 lata de 400 g de tomate pelado. Ajuste sal, azeite e manjericão a gosto.',
+      molhoNota: 'Rende para <b>{discos} disco(s)</b>. Base da receita: 4 discos = 1 lata de 400 g de tomate pelado. Sal, azeite, orégano e pimenta são pontos de partida — ajuste a gosto.',
       molhoPassosTit: 'Passo a passo',
       // ingredientes do molho [nome, quantidade-base-para-4-discos, unidade, escala?]
       molhoIngTomate: 'Tomate pelado italiano',
@@ -2510,8 +2557,8 @@
       molhoIngSal: 'Sal', molhoIngPimenta: 'Pimenta do reino',
       molhoQtdAlho: (d) => `${d} ${(d === '1' || /^[¼½¾]$/.test(d)) ? 'dente' : 'dentes'}`,
       molhoQtdManjericao: (min, max) => `${min}–${max} folhas`,
-      molhoQtdAzeite: 'a gosto', molhoQtdOregano: 'um punhado',
-      molhoQtdSal: 'uma pitada', molhoQtdPimenta: 'uma pitada',
+      molhoQtdSalG: (g) => `${g} g`,
+      molhoQtdAzeiteMl: (ml, colher) => `${ml} ml <span style="color:var(--gray);font-weight:400">(${colher} colher${colher === '1' ? '' : 'es'} de sopa)</span>`,
       molhoP1: 'Pique os tomates grosseiramente ou esprema-os com as mãos, para um molho rústico.',
       molhoP2: 'Amasse bem o alho.',
       molhoP3: 'Pique o manjericão grosseiramente ou rasgue as folhas com as mãos.',
@@ -2596,7 +2643,7 @@
       btnImprimirVel: 'Imprimir tabela',
       btnImprimirGlossario: 'Imprimir glossário',
       thVel: 'Vel.', thPotencia: 'Potência', thUso: 'Uso / equivalente industrial',
-      footer: 'Baseado no cronograma validado • Maturação ~53h • Ooni Halo Core • Fornetto Slim 390°C',
+      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni Halo Core • Fornetto Slim 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.3.0</span>',
       velIntro: 'Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b> (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).',
       comoFunciona: '<b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e recalcula a água total. O <b>poolish</b> sempre usa 30% da farinha total, 100% de hidratação e metade do fermento — a água restante entra na massa final. Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.',
       progresso: (n, t) => `<b>${n}</b> de ${t} etapas`,
@@ -2781,6 +2828,16 @@
       ajReferencia: '<ul><li><b>Flours</b>: register your flours (brand, type, W, protein) and link them to bakes.</li><li>Halo Core <b>speed table</b>.</li><li>Neapolitan <b>glossary</b> and <b>troubleshooting</b>.</li></ul>',
       ajDicasTit: 'Usage tips',
       ajDicas: '<ul><li><b>Hands-on</b> (top button): a full-screen step-by-step for the bench.</li><li><b>Keep screen on</b>: stops the phone screen turning off during prep.</li><li><b>PT/EN</b>: switch language with the flags.</li><li><b>Print</b>: recipe, schedule, shopping list and table have their own buttons.</li><li><b>Install</b>: on mobile, "Add to Home screen" to use it as an app, offline.</li></ul><span class="aj-dica"><b>Expand/Collapse cards</b> acts on the current tab; the <b>double chevron</b> next to it acts on all tabs.</span>',
+      ajSobreTit: 'About',
+      ajSobre: '<p><b>PizzaCalc</b> — Calculator and production guide for Neapolitan-style pizza using 30% poolish.</p><p>Developed by <b>Paulo Godoy</b></p><p>Year: © 2026 · Version: 1.3.0</p><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem">Ooni Halo Core and Fornetto Slim are trademarks of their respective owners, cited only as equipment reference.</p>',
+      // Full backup
+      backupTitulo: 'Full backup',
+      backupIntro: 'Save <b>everything</b> to a file: profiles, flours, prices, log (with photos), settings and language. Use it to <b>move to another device</b> or back up before clearing the browser. Importing <b>replaces</b> the current data.',
+      btnBackupExportar: 'Export all', btnBackupImportar: 'Import all',
+      backupImportConfirm: 'Importing will REPLACE all current data on this device (profiles, flours, log, etc.) with the file\'s. Continue?',
+      backupImportOk: 'Backup imported. The app will reload.',
+      backupErro: 'Could not read the backup file. Make sure it was exported by PizzaCalc.',
+      backupExportFallback: 'Copy the content below and save it as a .json file:',
       expandirTudoGeral: 'Expand every card in all tabs',
       recolherTudoGeral: 'Collapse every card in all tabs',
       // Hands-on mode (full-screen step-by-step)
@@ -2820,7 +2877,7 @@
       molhoTitulo: 'Sauce — The Ultimate Sauce',
       molhoIntro: 'Rustic raw (uncooked) peeled-tomato sauce. Quantities scale with the number of pizzas.',
       molhoThIngred: 'Ingredient', molhoThQtd: 'Quantity',
-      molhoNota: 'Yields for <b>{discos} pizza(s)</b>. Recipe base: 4 pizzas = one 400 g can of peeled tomatoes. Adjust salt, oil and basil to taste.',
+      molhoNota: 'Yields for <b>{discos} pizza(s)</b>. Recipe base: 4 pizzas = one 400 g can of peeled tomatoes. Salt, oil, oregano and pepper are starting points — adjust to taste.',
       molhoPassosTit: 'Step by step',
       molhoIngTomate: 'Italian peeled tomatoes',
       molhoIngAlho: 'Raw garlic', molhoIngManjericao: 'Fresh basil',
@@ -2828,8 +2885,8 @@
       molhoIngSal: 'Salt', molhoIngPimenta: 'Black pepper',
       molhoQtdAlho: (d) => `${d} ${(d === '1' || /^[¼½¾]$/.test(d)) ? 'clove' : 'cloves'}`,
       molhoQtdManjericao: (min, max) => `${min}–${max} leaves`,
-      molhoQtdAzeite: 'to taste', molhoQtdOregano: 'a handful',
-      molhoQtdSal: 'a pinch', molhoQtdPimenta: 'a pinch',
+      molhoQtdSalG: (g) => `${g} g`,
+      molhoQtdAzeiteMl: (ml, colher) => `${ml} ml <span style="color:var(--gray);font-weight:400">(${colher} tbsp)</span>`,
       molhoP1: 'Roughly chop the tomatoes or crush them by hand, for a rustic sauce.',
       molhoP2: 'Crush the garlic well.',
       molhoP3: 'Roughly chop the basil or tear the leaves by hand.',
@@ -2913,7 +2970,7 @@
       btnImprimirVel: 'Print table',
       btnImprimirGlossario: 'Print glossary',
       thVel: 'Speed', thPotencia: 'Power', thUso: 'Use / industrial equivalent',
-      footer: 'Based on the validated schedule • Maturation ~53h • Ooni Halo Core • Fornetto Slim 390°C',
+      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni Halo Core • Fornetto Slim 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.3.0</span>',
       velIntro: 'Spiral mixer with rotating bowl (60–300 RPM). Since the industrial mixer is also a spiral, the comparison is direct by hook RPM: <b>industrial 1st speed ≈ 100 RPM</b> (speed 4) and <b>2nd speed ≈ 200 RPM</b> (speed 12).',
       comoFunciona: '<b>How it works:</b> Quantities scale proportionally, keeping the recipe ratios (flour 95% Alma + 5% Integral, salt 2.5%, yeast 0.1%). <b>Hydration</b> is adjustable and recalculates the total water. The <b>poolish</b> always uses 30% of the total flour, 100% hydration and half the yeast — the remaining water goes into the final dough. A ~1% dough loss during handling is accounted for in the reverse calculation.',
       progresso: (n, t) => `<b>${n}</b> of ${t} steps`,
@@ -3141,6 +3198,7 @@
     if (typeof renderTrouble === 'function') renderTrouble();
     document.getElementById('troubleIntro').innerHTML = t('troubleIntro');
     if (typeof renderFarinhas === 'function') renderFarinhas();
+    { const b = document.getElementById('backupIntro'); if (b) b.innerHTML = t('backupIntro'); }
     if (typeof atualizarCollapseAll === 'function') atualizarCollapseAll();
     render();
   }
@@ -3477,14 +3535,18 @@
     const alhoDentes = Math.round(MOLHO_ALHO_DENTES * fator * 4) / 4;
     const manjMin = Math.round(MOLHO_MANJ_MIN * fator);
     const manjMax = Math.round(MOLHO_MANJ_MAX * fator);
+    const salG = Math.round(MOLHO_SAL_G * fator);
+    const azeiteMl = Math.round(MOLHO_AZEITE_ML * fator);
+    const oreganoG = MOLHO_OREGANO_G * fator;
+    const pimentaG = MOLHO_PIMENTA_G * fator;
     const molho = [
       [t('molhoIngTomate'), `${tomateG} g (${numFmt(latas)} lata${latas === 1 ? '' : 's'})`],
       [t('molhoIngAlho'), t('molhoQtdAlho', fracDente(alhoDentes))],
       [t('molhoIngManjericao'), t('molhoQtdManjericao', manjMin, manjMax)],
-      [t('molhoIngAzeite'), t('molhoQtdAzeite')],
-      [t('molhoIngOregano'), t('molhoQtdOregano')],
-      [t('molhoIngSal'), t('molhoQtdSal')],
-      [t('molhoIngPimenta'), t('molhoQtdPimenta')]
+      [t('molhoIngAzeite'), t('molhoQtdAzeiteMl', azeiteMl, colherSopa(azeiteMl))],
+      [t('molhoIngOregano'), molhoGramas(oreganoG)],
+      [t('molhoIngSal'), t('molhoQtdSalG', salG)],
+      [t('molhoIngPimenta'), molhoGramas(pimentaG)]
     ];
 
     document.getElementById('comprasIntro').innerHTML = t('comprasIntro').replace('{discos}', String(discos));
@@ -3728,7 +3790,7 @@
   // folhas; azeite por litro). O custo escala com as quantidades já calculadas.
   const CUSTO_ALHO_DENTES_CABECA = 10;   // dentes por cabeça
   const CUSTO_MANJ_FOLHAS_MACO = 40;     // folhas por maço
-  const CUSTO_AZEITE_ML = 15;            // ml de azeite por produção (rústico, "a gosto")
+  // (o azeite usa MOLHO_AZEITE_ML escalado pelo nº de discos)
 
   // Preços padrão (referência aproximada em BRL). O usuário ajusta e o app salva.
   const CUSTO_PADRAO = {
@@ -3797,10 +3859,11 @@
     const tomateG = MOLHO_TOMATE_G * fator;                 // g de tomate
     const alhoDentes = MOLHO_ALHO_DENTES * fator;           // dentes
     const manjFolhas = ((MOLHO_MANJ_MIN + MOLHO_MANJ_MAX) / 2) * fator;  // folhas (média da faixa)
+    const azeiteMl = MOLHO_AZEITE_ML * fator;               // azeite escala com os discos
     const custoTomate = (tomateG / 400) * precos.tomate;    // lata = 400 g
     const custoAlho = (alhoDentes / CUSTO_ALHO_DENTES_CABECA) * precos.alho;
     const custoManj = (manjFolhas / CUSTO_MANJ_FOLHAS_MACO) * precos.manjericao;
-    const custoAzeite = (CUSTO_AZEITE_ML / 1000) * precos.azeite;  // litro = 1000 ml
+    const custoAzeite = (azeiteMl / 1000) * precos.azeite;  // litro = 1000 ml
     const subMolho = custoTomate + custoAlho + custoManj + custoAzeite;
 
     const total = subMassa + subMolho;
@@ -3896,7 +3959,7 @@
     const subMolho = (tomateG / 400) * precoInput('tomate', precos.tomate)
       + (alhoDentes / CUSTO_ALHO_DENTES_CABECA) * precoInput('alho', precos.alho)
       + (manjFolhas / CUSTO_MANJ_FOLHAS_MACO) * precoInput('manjericao', precos.manjericao)
-      + (CUSTO_AZEITE_ML / 1000) * precoInput('azeite', precos.azeite);
+      + ((MOLHO_AZEITE_ML * fator) / 1000) * precoInput('azeite', precos.azeite);
 
     const total = subMassa + subMolho;
     const porPizza = discos > 0 ? total / discos : 0;
@@ -3939,7 +4002,7 @@
     const subMolho = (tomateG / 400) * precos.tomate
       + (alhoDentes / CUSTO_ALHO_DENTES_CABECA) * precos.alho
       + (manjFolhas / CUSTO_MANJ_FOLHAS_MACO) * precos.manjericao
-      + (CUSTO_AZEITE_ML / 1000) * precos.azeite;
+      + ((MOLHO_AZEITE_ML * fator) / 1000) * precos.azeite;
     const total = subMassa + subMolho;
     return { total, porPizza: discos > 0 ? total / discos : 0 };
   }
@@ -4037,18 +4100,35 @@
   }
 
   // ===== Molho — The Ultimate Sauce =====
-  // Base da receita: 4 discos. Tomate, alho e manjericão escalam com o nº de
-  // discos; azeite/orégano/sal/pimenta são "a gosto" e não mudam.
+  // Base da receita: 4 discos (= 1 lata de 400 g). Tomate, alho, manjericão, sal
+  // e azeite escalam com o nº de discos; orégano/pimenta seguem "a gosto".
   const MOLHO_BASE_DISCOS = 4;
   const MOLHO_TOMATE_G = 400;      // 1 lata de 400 g para 4 discos
   const MOLHO_ALHO_DENTES = 0.5;   // meio dente para 4 discos
   const MOLHO_MANJ_MIN = 10;       // 10–20 folhas para 4 discos
   const MOLHO_MANJ_MAX = 20;
+  const MOLHO_SAL_G = 4;           // ~4 g de sal para 4 discos (1 lata)
+  const MOLHO_AZEITE_ML = 15;      // ~15 ml (1 colher de sopa) para 4 discos (1 lata)
+  const MOLHO_OREGANO_G = 1;       // ~1 g de orégano para 4 discos (1 lata)
+  const MOLHO_PIMENTA_G = 0.5;     // ~0,5 g de pimenta do reino para 4 discos (1 lata)
 
   // Formata número em pt/en com vírgula/ponto e sem casas desnecessárias
   function numFmt(n) {
     const s = (Math.round(n * 100) / 100).toString();
     return LANG === 'en' ? s : s.replace('.', ',');
+  }
+
+  // Converte ml de azeite em nº de colheres de sopa (1 = ~15 ml), em múltiplos de ½
+  function colherSopa(ml) {
+    const c = Math.round((ml / 15) * 2) / 2;   // arredonda para 0,5 colher
+    return numFmt(c);
+  }
+
+  // Formata gramas do molho: 1 casa decimal abaixo de 1 g (ex.: "0,5 g"),
+  // inteiro a partir de 1 g (ex.: "1 g", "3 g"). Usa vírgula/ponto por idioma.
+  function molhoGramas(g) {
+    const v = g < 1 ? Math.round(g * 10) / 10 : Math.round(g);
+    return `${numFmt(v)} g`;
   }
 
   // Formata dentes de alho como fração (múltiplos de 1/4): "¼", "½", "¾", "1", "1 ¼"…
@@ -4065,23 +4145,27 @@
     const fator = discos / MOLHO_BASE_DISCOS;
 
     const tomateG = Math.round(MOLHO_TOMATE_G * fator);
-    const latas = Math.round((tomateG / 400) * 2) / 2;   // equivalente em latas de 400 g
-    const latasTxt = numFmt(latas);
 
     // Alho: arredonda para 1/4 de dente (prático de medir)
     const alhoDentes = Math.round(MOLHO_ALHO_DENTES * fator * 4) / 4;
     // Manjericão: escala a faixa 20–30 folhas, arredondando para inteiros
     const manjMin = Math.round(MOLHO_MANJ_MIN * fator);
     const manjMax = Math.round(MOLHO_MANJ_MAX * fator);
+    // Sal (g) e azeite (ml)
+    const salG = Math.round(MOLHO_SAL_G * fator);
+    const azeiteMl = Math.round(MOLHO_AZEITE_ML * fator);
+    // Orégano e pimenta (g, com 1 casa decimal abaixo de 1 g)
+    const oreganoG = MOLHO_OREGANO_G * fator;
+    const pimentaG = MOLHO_PIMENTA_G * fator;
 
     const rows = [
-      [t('molhoIngTomate'), `${tomateG} g <span style="color:var(--gray);font-weight:400">(${latasTxt} lata${latas === 1 ? '' : 's'})</span>`],
+      [t('molhoIngTomate'), `${tomateG} g`],
       [t('molhoIngAlho'), t('molhoQtdAlho', fracDente(alhoDentes))],
       [t('molhoIngManjericao'), t('molhoQtdManjericao', manjMin, manjMax)],
-      [t('molhoIngAzeite'), t('molhoQtdAzeite')],
-      [t('molhoIngOregano'), t('molhoQtdOregano')],
-      [t('molhoIngSal'), t('molhoQtdSal')],
-      [t('molhoIngPimenta'), t('molhoQtdPimenta')]
+      [t('molhoIngAzeite'), `${azeiteMl} ml`],
+      [t('molhoIngOregano'), molhoGramas(oreganoG)],
+      [t('molhoIngSal'), t('molhoQtdSalG', salG)],
+      [t('molhoIngPimenta'), molhoGramas(pimentaG)]
     ];
     document.getElementById('molhoTbody').innerHTML = rows.map(
       ([nome, qtd]) => `<tr><td>${nome}</td><td class="qty" style="font-weight:600">${qtd}</td></tr>`
@@ -4109,7 +4193,7 @@
     receita: [['ingWrap', toggleIng], ['divWrap', toggleDiv], ['molhoWrap', toggleMolho], ['comprasWrap', toggleCompras], ['custoWrap', toggleCusto]],
     preparo: [['ddtWrap', toggleDDT], ['mixWrap', toggleMix], ['fornoWrap', toggleForno]],
     cronograma: [['timelineWrap', toggleTimeline]],
-    diario: [['diarioWrap', toggleDiario], ['insightsWrap', toggleInsights]],
+    diario: [['diarioWrap', toggleDiario], ['insightsWrap', toggleInsights], ['backupWrap', toggleBackup]],
     referencia: [['velocidadesWrap', toggleVelocidades], ['glossarioWrap', toggleGlossario], ['troubleWrap', toggleTrouble], ['farinhasWrap', toggleFarinhas]],
     ajuda: [
       ['ajComecarWrap', () => toggleAjuda('ajComecar')],
@@ -4118,7 +4202,8 @@
       ['ajCronogramaWrap', () => toggleAjuda('ajCronograma')],
       ['ajDiarioWrap', () => toggleAjuda('ajDiario')],
       ['ajReferenciaWrap', () => toggleAjuda('ajReferencia')],
-      ['ajDicasWrap', () => toggleAjuda('ajDicas')]
+      ['ajDicasWrap', () => toggleAjuda('ajDicas')],
+      ['ajSobreWrap', () => toggleAjuda('ajSobre')]
     ]
   };
   let abaAtiva = 'receita';
@@ -4231,8 +4316,9 @@
     restoreWrap('farinhasWrap', 'farinhasToggle');
     restoreWrap('diarioWrap', 'diarioToggle');
     restoreWrap('insightsWrap', 'insightsToggle');
-    ['ajComecar', 'ajReceita', 'ajPreparo', 'ajCronograma', 'ajDiario', 'ajReferencia', 'ajDicas']
+    ['ajComecar', 'ajReceita', 'ajPreparo', 'ajCronograma', 'ajDiario', 'ajReferencia', 'ajDicas', 'ajSobre']
       .forEach(p => restoreWrap(p + 'Wrap', p + 'Toggle'));
+    restoreWrap('backupWrap', 'backupToggle');
   }
 
   function toggleIng() {
@@ -5514,6 +5600,89 @@
     renderDiario();
     if (typeof renderFarinhas === 'function') renderFarinhas();
     alert(t('importOk', add));
+  }
+
+  // ===== Backup completo (exportar/importar TODO o estado do app) =====
+  // Captura todas as chaves de localStorage que começam com "pizza" — cobre
+  // perfis, farinhas, preços+histórico, diário (com fotos), produção, DDT, plano,
+  // idioma, fermento e o estado de cada card (pizzaOpen_*). Futuro-proof.
+  function coletarEstado() {
+    const data = {};
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.indexOf('pizza') === 0) data[k] = localStorage.getItem(k);
+      }
+    } catch (e) {}
+    return data;
+  }
+
+  function exportarTudo() {
+    const backup = {
+      app: 'pizzacalc-backup',
+      v: 1,
+      exportadoEm: new Date().toISOString(),
+      data: coletarEstado()
+    };
+    const json = JSON.stringify(backup, null, 2);
+    // nome do arquivo com data (aaaa-mm-dd)
+    const d = new Date();
+    const nome = `pizzacalc-backup-${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}.json`;
+    try {
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = nome;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (e) {
+      // fallback: mostra o JSON para copiar manualmente
+      prompt(t('backupExportFallback'), json);
+    }
+  }
+
+  function importarTudo() {
+    document.getElementById('backupInput').value = '';
+    document.getElementById('backupInput').click();
+  }
+
+  document.getElementById('backupInput').addEventListener('change', (e) => {
+    const file = (e.target.files || [])[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      let backup;
+      try { backup = JSON.parse(reader.result); } catch (err) { alert(t('backupErro')); return; }
+      const data = (backup && backup.app === 'pizzacalc-backup' && backup.data && typeof backup.data === 'object')
+        ? backup.data : null;
+      if (!data) { alert(t('backupErro')); return; }
+      // importar SOBRESCREVE o estado atual — confirmar
+      if (!confirm(t('backupImportConfirm'))) return;
+      try {
+        // limpa as chaves atuais do app e grava as do backup
+        const remover = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && k.indexOf('pizza') === 0) remover.push(k);
+        }
+        remover.forEach(k => localStorage.removeItem(k));
+        Object.keys(data).forEach(k => {
+          if (k.indexOf('pizza') === 0) localStorage.setItem(k, data[k]);
+        });
+      } catch (err) { alert(t('backupErro')); return; }
+      alert(t('backupImportOk'));
+      location.reload();   // recarrega para aplicar todo o estado importado
+    };
+    reader.onerror = () => alert(t('backupErro'));
+    reader.readAsText(file);
+  }, false);
+
+  function toggleBackup() {
+    const wrap = document.getElementById('backupWrap');
+    const show = !wrap.classList.contains('show');
+    wrap.classList.toggle('show', show);
+    setHeadState('backupToggle', show);
+    saveWrap('backupWrap', show);
   }
 
   renderDiario();

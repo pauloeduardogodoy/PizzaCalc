@@ -42,7 +42,8 @@ zerar).
   (260–320 g) e hidratação (60–85%), mantendo as baker's percentages. Mostra a divisão
   poolish / massa final. Compensa ~1% de perda no manuseio.
 - **Molho — The Ultimate Sauce** — Receita de molho rústico de tomate pelado (cru), com
-  ingredientes, quantidades (que escalam com o nº de discos) e passo a passo.
+  ingredientes, quantidades (tomate, alho, manjericão, **sal, azeite, orégano e pimenta** — todos
+  escalam com o nº de discos) e passo a passo.
 - **Lista de compras** — Ingredientes de massa e molho, já escalados pelo nº de discos,
   agrupados para conferir na hora de comprar. Com botão de imprimir.
 - **Custo por pizza** — Você informa o preço de cada ingrediente na unidade de compra
@@ -61,6 +62,9 @@ zerar).
   temperatura ambiente do card de água e tamanho do lote): massa mole em ambiente quente,
   fermentação lenta/acelerada, lote perto do limite da cuba, massa firme em hidratação baixa.
 - **Perfis de massa salvos** — Salva/carrega configurações nomeadas de produção (localStorage).
+- **Backup completo** — Na aba Ajuda, exporta **todo** o estado do app (perfis, farinhas, preços,
+  diário com fotos, configuração e idioma) num arquivo JSON, e importa de volta — para migrar de
+  aparelho ou fazer backup antes de limpar o navegador.
 - **Calculadora de temperatura da água (DDT)** — Card recolhível. Regra de 4 fatores,
   considerando que o **poolish** sai da geladeira frio: `água = (massa desejada × 4) −
   (farinha + ambiente + atrito + poolish)`. Estima o gelo moído a usar. O **atrito** da Halo
@@ -148,7 +152,8 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   and hydration (60–85%), keeping baker's percentages. Shows the poolish / final-dough split.
   Accounts for ~1% handling loss.
 - **Sauce — The Ultimate Sauce** — Rustic raw peeled-tomato sauce recipe, with ingredients,
-  quantities (scaling with the number of pizzas) and step-by-step instructions.
+  quantities (tomatoes, garlic, basil, **salt, oil, oregano and pepper** — all scale with the
+  number of pizzas) and step-by-step instructions.
 - **Shopping list** — Dough and sauce ingredients, already scaled by the number of pizzas,
   grouped for easy checking while shopping. With a print button.
 - **Cost per pizza** — You enter each ingredient's price by its purchase unit (flour/salt/yeast
@@ -166,6 +171,9 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   room temperature from the water card, and batch size): soft dough in a warm room, slow/fast
   fermentation, batch near the bowl limit, firm dough at low hydration.
 - **Saved dough profiles** — Save/load named production settings (localStorage).
+- **Full backup** — On the Help tab, exports the app's **entire** state (profiles, flours, prices,
+  log with photos, settings and language) to a JSON file, and imports it back — to move to another
+  device or back up before clearing the browser.
 - **Water temperature calculator (DDT)** — Collapsible card. 4-factor rule, accounting for the
   cold **poolish** from the fridge: `water = (desired dough × 4) − (flour + room + friction +
   poolish)`. Estimates crushed ice. The Halo Core **friction** is calibratable (default 36°C,
