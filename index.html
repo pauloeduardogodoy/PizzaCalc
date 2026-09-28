@@ -20,6 +20,7 @@
 <style>
   :root {
     color-scheme: light;   /* impede o SO/UA de aplicar fundo escuro */
+    /* Cores de marca (mantêm-se em ambos os temas) */
     --orange: #cc5500;
     --orange-light: #fff3e0;
     --dark: #2b2118;
@@ -27,9 +28,32 @@
     --line: #e6ddd2;
     --green: #2e8c6a;
     --bg: #faf7f2;
+    /* Variáveis semânticas de superfície/texto (para o tema escuro trocar depois) */
+    --card-bg: #fff;          /* fundo de cards, botões, inputs, abas */
+    --surface-2: #faf7f2;     /* superfície alternativa (= bg no claro) */
+    --text: #2b2118;          /* texto principal (= --dark no claro) */
+    --text-soft: #444;        /* texto de corpo/descrições */
+    --text-muted: #6b6b6b;    /* texto secundário (= --gray no claro) */
+    --text-faint: #999;       /* texto/legendas apagadas */
+    --line-soft: #ccc;        /* bordas mais claras (inputs de gráficos etc.) */
+    --shadow: rgba(0,0,0,0.04);
+    /* Alertas / estados */
+    --danger: #c0392b;        /* vermelho de alerta/erro (borda, texto) */
+    --danger-strong: #a8200e; /* vermelho forte (negrito de alerta) */
+    --danger-deep: #8a1c12;   /* vermelho mais escuro */
+    --danger-bg: #fdecea;     /* fundo de campo/box de erro */
+    --warn-bg: #fff6e5;       /* fundo de aviso (âmbar claro) */
+    --warn-line: #e0a020;     /* borda/realce âmbar */
+    --warn-text: #7a5200;     /* texto âmbar escuro */
+    --warn-text2: #b36b00;    /* texto âmbar secundário */
+    --orange-deep: #b34a00;   /* laranja escuro (títulos/realces) */
+    /* Cor "noite/roxo" da etapa de maturação (usada em alertas do cronograma) */
+    --night: #5a63c0;
+    --night-bg: #eef0fb;
+    --night-text: #35408a;
   }
 
-  html { background: #faf7f2; }   /* fundo claro no primeiro paint (antes do body) */
+  html { background: var(--bg); }   /* fundo no primeiro paint (antes do body) */
 
   * { box-sizing: border-box; }
 
@@ -84,7 +108,7 @@
     padding: 6px 12px;
     border: 1px solid var(--line);
     border-radius: 20px;
-    background: #fff;
+    background: var(--card-bg);
     color: var(--dark);
     font-size: 0.85rem;
     font-weight: 700;
@@ -145,7 +169,7 @@
     padding: 6px 12px;
     border: 1px solid var(--line);
     border-radius: 20px;
-    background: #fff;
+    background: var(--card-bg);
     color: var(--gray);
     font-size: 0.82rem;
     font-weight: 600;
@@ -187,7 +211,7 @@
     padding: 9px 8px;
     border: 1px solid var(--line);
     border-radius: 8px;
-    background: #fff;
+    background: var(--card-bg);
     color: var(--gray);
     font-size: 0.86rem;
     font-weight: 700;
@@ -229,7 +253,7 @@
     display: inline-flex; align-items: center; gap: 6px;
     padding: 5px 10px;
     border: 1px solid var(--line); border-radius: 8px;
-    background: #fff; color: var(--gray);
+    background: var(--card-bg); color: var(--gray);
     font-size: 0.78rem; font-weight: 600; cursor: pointer;
   }
   .collapse-all-btn:hover { background: var(--orange-light); border-color: var(--orange); color: var(--orange); }
@@ -242,12 +266,12 @@
   @media print { .collapse-bar { display: none !important; } }
 
   .card {
-    background: #fff;
+    background: var(--card-bg);
     border: 1px solid var(--line);
     border-radius: 12px;
     padding: 20px 22px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    box-shadow: 0 1px 3px var(--shadow);
   }
 
   .card h2 {
@@ -346,7 +370,7 @@
     border-radius: 8px;
     font-size: 0.92rem;
     color: var(--dark);
-    background: #fff;
+    background: var(--card-bg);
   }
   .perfis-botoes {
     display: flex;
@@ -389,7 +413,7 @@
   .switch-knob {
     position: absolute; top: 3px; left: 3px;
     width: 16px; height: 16px; border-radius: 50%;
-    background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+    background: var(--card-bg); box-shadow: 0 1px 3px rgba(0,0,0,0.35);
     transition: transform 0.2s ease;
   }
   .switch input:checked + .switch-track { background: var(--orange); }
@@ -490,31 +514,31 @@
     display: none;
     margin-top: 16px;
     padding: 12px 14px;
-    background: #fff6e5;
-    border: 1px solid #e0a020;
-    border-left: 4px solid #e0a020;
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-line);
+    border-left: 4px solid var(--warn-line);
     border-radius: 8px;
     font-size: 0.86rem;
-    color: #7a5200;
+    color: var(--warn-text);
     line-height: 1.45;
   }
   .warn-box.show { display: block; }
-  .warn-box b { color: #b36b00; }
+  .warn-box b { color: var(--warn-text2); }
 
   .alert-box {
     display: none;
     margin-top: 16px;
     padding: 12px 14px;
-    background: #fdecea;
-    border: 1px solid #c0392b;
-    border-left: 4px solid #c0392b;
+    background: var(--danger-bg);
+    border: 1px solid var(--danger);
+    border-left: 4px solid var(--danger);
     border-radius: 8px;
     font-size: 0.86rem;
-    color: #8a1c12;
+    color: var(--danger-deep);
     line-height: 1.45;
   }
   .alert-box.show { display: block; }
-  .alert-box b { color: #a8200e; }
+  .alert-box b { color: var(--danger-strong); }
 
   /* Dicas contextuais (orientações leves conforme a configuração) */
   .dicas-ctx { display: none; margin-top: 16px; }
@@ -525,7 +549,7 @@
     background: var(--orange-light);
     border: 1px solid var(--line); border-left: 4px solid var(--orange);
     border-radius: 8px;
-    font-size: 0.84rem; color: #444; line-height: 1.45;
+    font-size: 0.84rem; color: var(--text-soft); line-height: 1.45;
   }
   .dica-ctx .dica-ico { flex: none; width: 16px; height: 16px; color: var(--orange); margin-top: 1px; }
   .dica-ctx b { color: var(--dark); }
@@ -537,7 +561,7 @@
   .ha-estilos { display: flex; flex-wrap: wrap; gap: 6px; }
   .ha-btn {
     padding: 4px 10px; font-size: 0.8rem; font-weight: 600;
-    border: 1px solid var(--line); background: #fff; color: var(--dark);
+    border: 1px solid var(--line); background: var(--card-bg); color: var(--dark);
     border-radius: 999px; cursor: pointer;
   }
   .ha-btn:hover { background: var(--orange-light); border-color: var(--orange); }
@@ -558,7 +582,7 @@
   .crono-lembretes .cl-antecedencia label { font-size: 0.84rem; color: var(--gray); font-weight: 600; }
   .crono-lembretes .cl-antecedencia select {
     padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px;
-    font-size: 0.86rem; color: var(--dark); background: #fff;
+    font-size: 0.86rem; color: var(--dark); background: var(--card-bg);
   }
   .crono-lembretes #notifBtn.ativo {
     background: var(--green); border-color: var(--green); color: #fff;
@@ -570,7 +594,7 @@
   .btns { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
   button {
     border: 1px solid var(--line);
-    background: #fff;
+    background: var(--card-bg);
     color: var(--dark);
     padding: 8px 16px;
     border-radius: 8px;
@@ -580,7 +604,7 @@
   }
   button:hover { background: var(--orange-light); border-color: var(--orange); }
   button.primary { background: var(--orange); color: #fff; border-color: var(--orange); }
-  button.primary:hover { background: #b34a00; }
+  button.primary:hover { background: var(--orange-deep); }
 
   /* ===== Timeline do cronograma ===== */
   .timeline-head {
@@ -630,9 +654,9 @@
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: #fff;
-    border: 2px solid var(--dotcolor, #999);
-    color: var(--dotcolor, #999);
+    background: var(--card-bg);
+    border: 2px solid var(--dotcolor, var(--text-faint));
+    color: var(--dotcolor, var(--text-faint));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -642,9 +666,9 @@
 
   .step .content {
     flex: 1;
-    background: #fff;
+    background: var(--card-bg);
     border: 1px solid var(--line);
-    border-left: 4px solid var(--dotcolor, #999);
+    border-left: 4px solid var(--dotcolor, var(--text-faint));
     border-radius: 10px;
     padding: 12px 14px;
     transition: opacity 0.2s;
@@ -671,8 +695,8 @@
     display: inline-block;
     font-size: 0.72rem;
     font-weight: 600;
-    color: var(--dotcolor, #999);
-    background: color-mix(in srgb, var(--dotcolor, #999) 12%, #fff);
+    color: var(--dotcolor, var(--text-faint));
+    background: color-mix(in srgb, var(--dotcolor, var(--text-faint)) 12%, #fff);
     padding: 1px 8px;
     border-radius: 20px;
     margin-left: 6px;
@@ -688,7 +712,7 @@
   }
   .step ul li {
     font-size: 0.86rem;
-    color: #444;
+    color: var(--text-soft);
     margin-bottom: 3px;
     line-height: 1.4;
   }
@@ -696,7 +720,7 @@
     margin-top: 8px;
     font-size: 0.84rem;
     font-weight: 600;
-    color: #a8200e;
+    color: var(--danger-strong);
   }
 
   /* checkbox de conclusão */
@@ -715,7 +739,7 @@
   .step.done .content { opacity: 0.55; }
   .step.done .title { text-decoration: line-through; }
   .step.done .dot {
-    background: var(--dotcolor, #999);
+    background: var(--dotcolor, var(--text-faint));
     color: #fff;
   }
 
@@ -749,7 +773,7 @@
   }
   .glossario dt:first-child { margin-top: 0; }
   .glossario dt .termo-it { color: var(--gray); font-weight: 400; font-style: italic; font-size: 0.85rem; }
-  .glossario dd { margin: 2px 0 0; font-size: 0.88rem; color: #444; line-height: 1.45; }
+  .glossario dd { margin: 2px 0 0; font-size: 0.88rem; color: var(--text-soft); line-height: 1.45; }
 
   /* Guia de solução de problemas */
   #troubleWrap { display: none; }
@@ -773,9 +797,9 @@
   }
   .trouble[open] > summary::after { transform: rotate(90deg); }
   .trouble[open] > summary { margin-bottom: 8px; }
-  .trouble .t-causa { font-size: 0.86rem; color: #444; line-height: 1.45; margin: 0 0 6px; }
+  .trouble .t-causa { font-size: 0.86rem; color: var(--text-soft); line-height: 1.45; margin: 0 0 6px; }
   .trouble .t-causa b, .trouble .t-fix b { color: var(--dark); }
-  .trouble .t-fix { font-size: 0.86rem; color: #444; line-height: 1.45; margin: 0; }
+  .trouble .t-fix { font-size: 0.86rem; color: var(--text-soft); line-height: 1.45; margin: 0; }
   .trouble .t-fix b { color: var(--orange); }
 
   /* Biblioteca de recheios / combinações (referência estática) */
@@ -800,15 +824,15 @@
   }
   .recheio[open] > summary::after { transform: rotate(90deg); }
   .recheio[open] > summary { margin-bottom: 8px; }
-  .recheio .r-ingr { font-size: 0.86rem; color: #444; line-height: 1.45; margin: 0 0 6px; }
-  .recheio .r-montagem { font-size: 0.86rem; color: #444; line-height: 1.45; margin: 0; }
+  .recheio .r-ingr { font-size: 0.86rem; color: var(--text-soft); line-height: 1.45; margin: 0 0 6px; }
+  .recheio .r-montagem { font-size: 0.86rem; color: var(--text-soft); line-height: 1.45; margin: 0; }
   .recheio .r-ingr b, .recheio .r-montagem b { color: var(--dark); }
   .recheios-barra { display: flex; justify-content: flex-end; align-items: center; margin: 0 0 12px; }
   .recheios-toggle-all {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 5px 10px;
     border: 1px solid var(--line); border-radius: 8px;
-    background: #fff; color: var(--gray);
+    background: var(--card-bg); color: var(--gray);
     font-size: 0.78rem; font-weight: 600; cursor: pointer;
   }
   .recheios-toggle-all:hover { background: var(--orange-light); border-color: var(--orange); color: var(--orange); }
@@ -839,7 +863,7 @@
   /* Aba Ajuda (cards colapsáveis com passos curtos) */
   .ajuda-wrap { display: none; }
   .ajuda-wrap.show { display: block; padding-top: 10px; }
-  .ajuda-conteudo { font-size: 0.9rem; color: #444; line-height: 1.5; }
+  .ajuda-conteudo { font-size: 0.9rem; color: var(--text-soft); line-height: 1.5; }
   .ajuda-conteudo p { margin: 0 0 8px; }
   .ajuda-conteudo p:last-child { margin-bottom: 0; }
   .ajuda-conteudo b { color: var(--dark); }
@@ -867,7 +891,7 @@
   .farinhas-tabela input, .farinhas-tabela select {
     width: 100%; min-width: 48px; padding: 6px 8px;
     border: 1px solid var(--line); border-radius: 8px;
-    font-size: 0.88rem; color: var(--dark); background: #fff;
+    font-size: 0.88rem; color: var(--dark); background: var(--card-bg);
   }
   .farinhas-tabela input:focus, .farinhas-tabela select:focus {
     outline: 2px solid var(--orange); border-color: var(--orange);
@@ -882,11 +906,11 @@
     border: none; background: none; cursor: pointer; padding: 4px;
     color: var(--gray); display: inline-flex;
   }
-  .far-del:hover { color: #c0392b; }
+  .far-del:hover { color: var(--danger); }
   .far-del .btn-ico { width: 16px; height: 16px; }
   .farinhas-vazio { font-size: 0.88rem; color: var(--gray); font-style: italic; padding: 8px 0; }
-  .farinhas-tabela input.dup { border-color: #c0392b; outline-color: #c0392b; background: #fdecea; }
-  .far-dup-msg { color: #c0392b; font-size: 0.72rem; line-height: 1.3; margin-top: 3px; }
+  .farinhas-tabela input.dup { border-color: var(--danger); outline-color: var(--danger); background: var(--danger-bg); }
+  .far-dup-msg { color: var(--danger); font-size: 0.72rem; line-height: 1.3; margin-top: 3px; }
   /* Telas grandes: as 4 caixas de temperatura numa linha (4 colunas);
      o atrito (último campo, slider) ocupa a linha inteira abaixo. */
   .ddt-grid {
@@ -969,7 +993,7 @@
     border-radius: 20px;
     margin-left: 6px;
   }
-  .mix-step .mdesc { font-size: 0.88rem; color: #444; margin: 6px 0 0; line-height: 1.4; }
+  .mix-step .mdesc { font-size: 0.88rem; color: var(--text-soft); margin: 6px 0 0; line-height: 1.4; }
   .mix-timer {
     display: flex;
     align-items: center;
@@ -989,9 +1013,9 @@
   .mix-optional { font-size: 0.78rem; color: var(--gray); font-style: italic; }
   /* Etapa concluída com alarme tocando: destaque pulsante + botão vermelho */
   .mix-step.alarme {
-    border-color: #c0392b;
-    border-left-color: #c0392b;
-    background: #fdecea;
+    border-color: var(--danger);
+    border-left-color: var(--danger);
+    background: var(--danger-bg);
     animation: mixPulse 1s ease-in-out infinite;
   }
   @keyframes mixPulse {
@@ -999,9 +1023,9 @@
     50% { box-shadow: 0 0 0 4px rgba(192, 57, 43, 0.18); }
   }
   .alarme-btn {
-    background: #c0392b !important;
+    background: var(--danger) !important;
     color: #fff !important;
-    border-color: #c0392b !important;
+    border-color: var(--danger) !important;
     font-weight: 700;
     padding: 8px 16px;
     font-size: 0.9rem;
@@ -1009,7 +1033,7 @@
     align-items: center;
     gap: 7px;
   }
-  .alarme-btn:hover { background: #a8200e !important; }
+  .alarme-btn:hover { background: var(--danger-strong) !important; }
   /* Botões de timer só com ícone (play/pause/zerar) */
   .icon-btn {
     display: inline-flex;
@@ -1073,9 +1097,9 @@
   .forno-timer.ready { border-left-color: var(--green); }
   /* Alarme tocando: destaque vermelho pulsante (sobrepõe running/ready) */
   .forno-timer.alarme {
-    border-color: #c0392b;
-    border-left-color: #c0392b;
-    background: #fdecea;
+    border-color: var(--danger);
+    border-left-color: var(--danger);
+    background: var(--danger-bg);
     animation: mixPulse 1s ease-in-out infinite;
   }
   .forno-top {
@@ -1114,7 +1138,7 @@
   .coccao-status { margin-top: 8px; font-size: 0.88rem; font-weight: 600; min-height: 1.2em; }
   .coccao-status.wait { color: var(--gray); }
   .coccao-status.ok { color: var(--green); }
-  .coccao-status.over { color: #c0392b; }
+  .coccao-status.over { color: var(--danger); }
 
   /* Diário de fornadas */
   #diarioWrap { display: none; }
@@ -1152,7 +1176,7 @@
   .insight-graf-tit { font-size: 0.86rem; font-weight: 600; color: var(--dark); margin-bottom: 4px; }
   .insight-svg {
     width: 100%; height: 90px; display: block;
-    border: 1px solid var(--line); border-radius: 8px; background: #fff;
+    border: 1px solid var(--line); border-radius: 8px; background: var(--card-bg);
   }
   .insight-stats { font-size: 0.8rem; color: var(--gray); margin-top: 5px; line-height: 1.5; }
   .insight-stats b { color: var(--dark); font-variant-numeric: tabular-nums; }
@@ -1191,7 +1215,7 @@
   }
   .fornada .f-grid span b { color: var(--dark); font-variant-numeric: tabular-nums; }
   .fornada .f-nota {
-    margin-top: 8px; font-size: 0.86rem; color: #444; line-height: 1.4;
+    margin-top: 8px; font-size: 0.86rem; color: var(--text-soft); line-height: 1.4;
     font-style: italic;
   }
   .fornada .f-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
@@ -1199,7 +1223,7 @@
   /* "Repetir" numa segunda linha, logo abaixo dos demais botões */
   .fornada .f-btns-repetir { margin-top: 8px; }
   /* resumo das farinhas vinculadas no grid da ficha */
-  .fornada .f-farinhas { margin-top: 8px; font-size: 0.84rem; color: #444; line-height: 1.5; }
+  .fornada .f-farinhas { margin-top: 8px; font-size: 0.84rem; color: var(--text-soft); line-height: 1.5; }
   .fornada .f-far-lbl { color: var(--gray); }
   .fornada .f-far-item { margin-right: 8px; white-space: nowrap; }
   .fornada .f-far-item b { color: var(--orange); font-variant-numeric: tabular-nums; }
@@ -1213,7 +1237,7 @@
   .f-far-linha select {
     flex: 1; min-width: 0; padding: 6px 8px;
     border: 1px solid var(--line); border-radius: 8px; font-size: 0.86rem;
-    color: var(--dark); background: #fff;
+    color: var(--dark); background: var(--card-bg);
   }
   .f-far-pct { display: inline-flex; align-items: center; gap: 3px; color: var(--gray); font-size: 0.86rem; flex: none; }
   .f-far-pct input {
@@ -1222,8 +1246,8 @@
     color: var(--dark); font-variant-numeric: tabular-nums;
   }
   .f-far-aviso {
-    margin-top: 8px; font-size: 0.82rem; color: #7a5200;
-    background: #fff6e5; border: 1px solid #e0a020; border-left: 4px solid #e0a020;
+    margin-top: 8px; font-size: 0.82rem; color: var(--warn-text);
+    background: var(--warn-bg); border: 1px solid var(--warn-line); border-left: 4px solid var(--warn-line);
     border-radius: 8px; padding: 6px 10px;
   }
   .f-far-vazio, .f-far .f-far-vazio { font-size: 0.86rem; color: var(--gray); font-style: italic; }
@@ -1271,7 +1295,7 @@
     font-size: 1rem; line-height: 1; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
   }
-  .fornada .f-foto-x:hover { background: #c0392b; }
+  .fornada .f-foto-x:hover { background: var(--danger); }
 
   /* Lightbox (foto ampliada em tela cheia) */
   #fotoLightbox {
@@ -1312,7 +1336,7 @@
     margin-bottom: 8px;
   }
   .molho-passos ol { margin: 0; padding-left: 20px; }
-  .molho-passos ol li { font-size: 0.9rem; color: #333; margin-bottom: 6px; line-height: 1.45; }
+  .molho-passos ol li { font-size: 0.9rem; color: var(--text); margin-bottom: 6px; line-height: 1.45; }
 
   /* Lista de compras */
   #comprasWrap { display: none; }
@@ -1426,7 +1450,7 @@
   .preco-snap .ps-tabela td {
     padding: 2px 0; font-size: 0.72rem; border-bottom: none;
   }
-  .preco-snap .ps-tabela .ps-nome { color: #444; padding-right: 4px; }
+  .preco-snap .ps-tabela .ps-nome { color: var(--text-soft); padding-right: 4px; }
   /* separação entre o 1º par (col 1-2) e o 2º par (col 3-4) */
   .preco-snap .ps-tabela .ps-nome:nth-child(3) { padding-left: 16px; }
   .preco-snap .ps-tabela .ps-val {
@@ -1463,7 +1487,7 @@
   .mnm-sair {
     display: inline-flex; align-items: center; justify-content: center;
     width: 40px; height: 40px; border-radius: 50%;
-    border: 1px solid var(--line); background: #fff; color: var(--dark);
+    border: 1px solid var(--line); background: var(--card-bg); color: var(--dark);
     font-size: 1.3rem; line-height: 1; cursor: pointer; flex: none; padding: 0;
   }
   .mnm-sair:hover { background: var(--orange-light); border-color: var(--orange); }
@@ -1477,7 +1501,7 @@
     font-size: 1.7rem; font-weight: 800; color: var(--dark);
     margin: 0 0 14px; line-height: 1.15;
   }
-  .mnm-lead { font-size: 1.05rem; line-height: 1.5; color: #333; margin: 0 0 16px; }
+  .mnm-lead { font-size: 1.05rem; line-height: 1.5; color: var(--text); margin: 0 0 16px; }
   .mnm-lead b { color: var(--dark); }
   /* caixa de quantidades/destaques dentro do passo */
   .mnm-box {
@@ -1494,7 +1518,7 @@
   }
   .mnm-qtd-linha b { color: var(--orange); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .mnm-lista { margin: 0; padding-left: 22px; }
-  .mnm-lista li { font-size: 0.98rem; line-height: 1.45; margin-bottom: 6px; color: #333; }
+  .mnm-lista li { font-size: 0.98rem; line-height: 1.45; margin-bottom: 6px; color: var(--text); }
   /* slot onde os blocos reusados (mistura/forno) são inseridos */
   .mnm-slot { margin: 4px 0 0; }
 
@@ -1507,10 +1531,10 @@
   .mnm-nav-btn {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 14px 22px; border-radius: 10px; font-size: 1.05rem; font-weight: 700;
-    border: 1px solid var(--line); background: #fff; color: var(--dark); cursor: pointer;
+    border: 1px solid var(--line); background: var(--card-bg); color: var(--dark); cursor: pointer;
   }
   .mnm-nav-btn.primary { background: var(--orange); color: #fff; border-color: var(--orange); }
-  .mnm-nav-btn.primary:hover { background: #b34a00; }
+  .mnm-nav-btn.primary:hover { background: var(--orange-deep); }
   .mnm-nav-btn:disabled { opacity: 0.4; cursor: default; }
   .mnm-progresso { font-size: 0.9rem; color: var(--gray); font-weight: 600; text-align: center; }
   @media print { #mnmOverlay { display: none !important; } }
@@ -1539,7 +1563,7 @@
     border-radius: 8px;
     font-size: 0.95rem;
     color: var(--dark);
-    background: #fff;
+    background: var(--card-bg);
   }
   .plan-ctrl input[type="range"] {
     flex: 1;
@@ -1576,13 +1600,13 @@
     border-left: 4px solid;
   }
   .crono-alert.warn {
-    background: #fff6e5; border: 1px solid #e0a020; border-left-color: #e0a020; color: #7a5200;
+    background: var(--warn-bg); border: 1px solid var(--warn-line); border-left-color: var(--warn-line); color: var(--warn-text);
   }
   .crono-alert.night {
-    background: #eef0fb; border: 1px solid #5a63c0; border-left-color: #5a63c0; color: #35408a;
+    background: var(--night-bg); border: 1px solid var(--night); border-left-color: var(--night); color: var(--night-text);
   }
   .crono-alert.bad {
-    background: #fdecea; border: 1px solid #c0392b; border-left-color: #c0392b; color: #8a1c12;
+    background: var(--danger-bg); border: 1px solid var(--danger); border-left-color: var(--danger); color: var(--danger-deep);
   }
   .crono-alert b { font-weight: 700; }
 
@@ -1591,7 +1615,7 @@
     display: block;
     font-size: 0.82rem;
     font-weight: 700;
-    color: var(--dotcolor, #999);
+    color: var(--dotcolor, var(--text-faint));
     margin-top: 2px;
   }
   .step .when .rel { color: var(--gray); font-weight: 400; }
@@ -1599,7 +1623,7 @@
   @media print {
     @page { size: A4 portrait; margin: 12mm; }
 
-    html, body { background: #fff; }
+    html, body { background: var(--card-bg); }
     body { padding: 0; font-size: 11px; }
     .wrap { max-width: 100%; }
 
@@ -1638,7 +1662,7 @@
     /* Compacta cards e evita quebras no meio */
     .card {
       box-shadow: none;
-      border-color: #ccc;
+      border-color: var(--line-soft);
       padding: 10px 14px;
       margin-bottom: 12px;
       break-inside: avoid;
@@ -2473,7 +2497,7 @@
   </div><!-- /ABA Ajuda -->
 
   <footer id="footer" data-i18n="footer">
-    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.9.12</span>
+    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.9.13</span>
   </footer>
 </div>
 
@@ -2666,7 +2690,7 @@
       ajDicasTit: 'Dicas de uso',
       ajDicas: '<ul><li><b>Mão na massa</b> (botão no topo): passo a passo em tela cheia para usar na bancada.</li><li><b>Manter tela ligada</b>: impede a tela do celular de apagar durante o preparo.</li><li><b>PT/EN</b>: troque o idioma nas bandeiras.</li><li><b>Imprimir</b>: receita, cronograma, lista de compras e tabela têm botões próprios.</li><li><b>Instalar</b>: no celular, "Adicionar à tela inicial" para usar como app, offline.</li></ul><span class="aj-dica">Botões <b>Expandir/Recolher cards</b> agem na aba atual; o <b>chevron duplo</b> ao lado age em todas as abas.</span>',
       ajSobreTit: 'Sobre',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da 🌾 farinha ao 🔥 forno.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: © 2026 · Versão: 1.9.12</p><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem">Ooni® Halo Core™ e Fornetto® Slim™ são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da 🌾 farinha ao 🔥 forno.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: © 2026 · Versão: 1.9.13</p><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem">Ooni® Halo Core™ e Fornetto® Slim™ são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
       // Backup completo
       backupTitulo: 'Backup completo',
       backupIntro: 'Salve <b>tudo</b> num arquivo: perfis, farinhas, preços, diário (com fotos), configuração e idioma. Use para <b>trocar de aparelho</b> ou fazer backup antes de limpar o navegador. Importar <b>substitui</b> os dados atuais.',
@@ -2841,7 +2865,7 @@
       btnImprimirVel: 'Imprimir tabela',
       btnImprimirGlossario: 'Imprimir glossário',
       thVel: 'Vel.', thPotencia: 'Potência', thUso: 'Uso / equivalente industrial',
-      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.9.12</span>',
+      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.9.13</span>',
       velIntro: 'Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b> (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).',
       comoFunciona: '<b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e recalcula a água total. O <b>poolish</b> é ajustável de 45% a 100% <b>da água total</b>, sempre a 100% de hidratação (mesma quantidade de água e farinha); o fermento acompanha essa fração. O restante da água e da farinha entra na massa final. Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.',
       progresso: (n, t) => `<b>${n}</b> de ${t} etapas`,
@@ -3034,7 +3058,7 @@
       ajDicasTit: 'Usage tips',
       ajDicas: '<ul><li><b>Hands-on</b> (top button): a full-screen step-by-step for the bench.</li><li><b>Keep screen on</b>: stops the phone screen turning off during prep.</li><li><b>PT/EN</b>: switch language with the flags.</li><li><b>Print</b>: recipe, schedule, shopping list and table have their own buttons.</li><li><b>Install</b>: on mobile, "Add to Home screen" to use it as an app, offline.</li></ul><span class="aj-dica"><b>Expand/Collapse cards</b> acts on the current tab; the <b>double chevron</b> next to it acts on all tabs.</span>',
       ajSobreTit: 'About',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from 🌾 flour to 🔥 oven.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><p>Developed by <b>Paulo Godoy</b></p><p>Year: © 2026 · Version: 1.9.12</p><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem">Ooni® Halo Core™ and Fornetto® Slim™ are trademarks of their respective owners, cited only as equipment reference.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from 🌾 flour to 🔥 oven.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><p>Developed by <b>Paulo Godoy</b></p><p>Year: © 2026 · Version: 1.9.13</p><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem">Ooni® Halo Core™ and Fornetto® Slim™ are trademarks of their respective owners, cited only as equipment reference.</p>',
       // Full backup
       backupTitulo: 'Full backup',
       backupIntro: 'Save <b>everything</b> to a file: profiles, flours, prices, log (with photos), settings and language. Use it to <b>move to another device</b> or back up before clearing the browser. Importing <b>replaces</b> the current data.',
@@ -3202,7 +3226,7 @@
       btnImprimirVel: 'Print table',
       btnImprimirGlossario: 'Print glossary',
       thVel: 'Speed', thPotencia: 'Power', thUso: 'Use / industrial equivalent',
-      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.9.12</span>',
+      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.9.13</span>',
       velIntro: 'Spiral mixer with rotating bowl (60–300 RPM). Since the industrial mixer is also a spiral, the comparison is direct by hook RPM: <b>industrial 1st speed ≈ 100 RPM</b> (speed 4) and <b>2nd speed ≈ 200 RPM</b> (speed 12).',
       comoFunciona: '<b>How it works:</b> Quantities scale proportionally, keeping the recipe ratios (flour 95% Alma + 5% Integral, salt 2.5%, yeast 0.1%). <b>Hydration</b> is adjustable and recalculates the total water. The <b>poolish</b> is adjustable from 45% to 100% <b>of the total water</b>, always at 100% hydration (equal water and flour); the yeast follows that fraction. The remaining water and flour go into the final dough. A ~1% dough loss during handling is accounted for in the reverse calculation.',
       progresso: (n, t) => `<b>${n}</b> of ${t} steps`,
@@ -3680,7 +3704,7 @@
     if (r.massaFinal > HALO_MAX) {
       alert.innerHTML = t('capacidade', Math.round(r.massaFinal), HALO_MAX);
       alert.classList.add('show');
-      massaEl.style.color = '#c0392b';
+      massaEl.style.color = 'var(--danger)';
     } else {
       alert.classList.remove('show');
       massaEl.style.color = '';
@@ -5468,7 +5492,7 @@
     // barra de progresso (0..COCCAO_BAR)
     const fill = document.getElementById('coccaoFill');
     fill.style.width = Math.min(100, (s / COCCAO_BAR) * 100) + '%';
-    fill.style.background = s > COCCAO_MAX ? '#c0392b' : 'var(--orange)';
+    fill.style.background = s > COCCAO_MAX ? 'var(--danger)' : 'var(--orange)';
 
     // status textual conforme a janela
     const status = document.getElementById('coccaoStatus');
@@ -5746,7 +5770,7 @@
     box.innerHTML =
       graf(t('insAtrito'), serieAtrito, '°C', '#cc5500', null) +
       graf(t('insMassa'), serieMassa, '°C', '#2e8c6a', [19, 23]) +
-      graf(t('insForno'), serieForno, 's', '#5a63c0', [90, 140]);
+      graf(t('insForno'), serieForno, 's', 'var(--night)', [90, 140]);
   }
 
   // Gera um mini-gráfico de linha em SVG a partir de uma série (valores ou null).
