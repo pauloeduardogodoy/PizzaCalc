@@ -1,7 +1,7 @@
 // Service Worker — cache offline da Calculadora de Massa
 // Estratégia: cache-first para os arquivos do app (tudo local, sem rede).
 
-const CACHE = 'pizza-massa-v199';
+const CACHE = 'pizza-massa-v200';
 const ASSETS = [
   './',
   './index.html',
@@ -65,6 +65,19 @@ self.addEventListener('fetch', (event) => {
           return resp;
         })
         .catch(() => cached);
+    })
+  );
+});
+
+// Ao tocar numa notificação (etapa do cronograma ou fim de timer): foca/abre o app.
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((cls) => {
+      for (const c of cls) {
+        if ('focus' in c) return c.focus();
+      }
+      if (self.clients.openWindow) return self.clients.openWindow('./');
     })
   );
 });
