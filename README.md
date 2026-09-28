@@ -22,7 +22,7 @@ com base no equipamento real de casa. A receita de referência (fonte da verdade
 - Farinha: **95% Alma Italiana + 5% Integral** (Venturelli)
 - Hidratação: **67%** (ajustável de 60% a 85%)
 - Sal: **2,5%** · Fermento seco: **0,1%**
-- **Poolish**: 30% da farinha, 100% de hidratação, metade do fermento
+- **Poolish**: 45%–100% da água (ajustável), 100% de hidratação, fermento proporcional
 - Rendimento de referência: **6 panetti × 280 g**
 - Forno: **Fornetto Slim a 390°C** · Masseira: **Ooni Halo Core**
 
@@ -39,8 +39,16 @@ mostram ícone + texto no desktop e só ícone no celular; os timers usam só í
 zerar).
 
 - **Calculadora de ingredientes** — Escala a receita por nº de discos (2–10), peso por panetto
-  (260–320 g) e hidratação (60–85%), mantendo as baker's percentages. Mostra a divisão
-  poolish / massa final. Compensa ~1% de perda no manuseio.
+  (260–320 g), hidratação (60–85%) e **fração de poolish (45–100% da água)**, mantendo as
+  baker's percentages. Mostra a divisão poolish / massa final. Compensa ~1% de perda no manuseio.
+- **Poolish ajustável** — Um controle define quanto da **água total** vai para o poolish
+  (45% a 100%), sempre a 100% de hidratação (mesma quantidade de água e farinha). O fermento
+  acompanha essa fração; o restante de água e farinha entra na massa final. A 100%, toda a água
+  vai ao poolish e só a farinha restante é adicionada no refresco.
+- **Hidratação assistida** — Abaixo do controle de hidratação, botões de estilo
+  (**crocante · equilibrado · macio · canotto**) que, ao serem tocados, movem o slider para
+  uma hidratação sugerida (62/67/72/78%), ajustada pela temperatura ambiente informada no card
+  de água (ambiente frio sugere um pouco mais de água; quente, um pouco menos).
 - **Molho — The Ultimate Sauce** — Receita de molho rústico de tomate pelado (cru), com
   ingredientes, quantidades (tomate, alho, manjericão, **sal, azeite, orégano e pimenta** — todos
   escalam com o nº de discos) e passo a passo.
@@ -74,6 +82,10 @@ zerar).
   (Iniciar/Pausar/Zerar) e **alarme contínuo** que toca até você tocar em "Parar alarme".
 - **Guia de cocção — Fornetto Slim** — Timer de **pré-aquecimento** (40 min a 390°C) e de
   **cocção** (janela ideal 90–140 s) com barra de progresso e alarme contínuo, para não queimar.
+- **Avisos dos timers no relógio** — Ao fim dos timers (etapa de mistura, forno pré-aquecido,
+  ponto ideal e limite da cocção), além do alarme sonoro o app **vibra** e dispara uma
+  **notificação do sistema** — que espelha no smartwatch pareado (se você ativou as notificações
+  no card Cronograma).
 - **Modo "mão na massa"** — Botão no topo abre um passo a passo em **tela cheia**, uma fase por
   vez (poolish → massa final → maturação → bolear → assar), com fonte e botões grandes para usar
   na bancada. Mostra as quantidades reais, a temperatura da água e os **horários calculados pelo
@@ -84,6 +96,11 @@ zerar).
   hora de assar + duração do appretto. Prioriza poolish de ~20h, usa a maturação em bloco como
   amortecedor e alerta sobre horários incômodos (madrugada), appretto longo e maturação fora de
   faixa. Datas em formato brasileiro.
+- **Lembretes do cronograma** — No card Cronograma: **notificações do navegador** para cada
+  etapa (poolish, massa, geladeira, appretto, assar), com aviso no horário e um lembrete
+  configurável (0/5/10/15 min antes) — aparecem também no smartwatch pareado, enquanto o app
+  está aberto. E **"Adicionar ao calendário"**, que exporta as 5 etapas num arquivo `.ics`
+  (com alarme), para lembretes que funcionam mesmo com o app fechado.
 - **Diário de fornadas** — Registra cada produção (temperaturas, massa final medida, tempo de
   forno, observações). Calcula o **atrito real** de cada fornada e a **média** — que pode ser
   aplicada na calculadora de água, fechando o ciclo de calibração. Cada fornada aceita **várias
@@ -98,6 +115,11 @@ zerar).
   (blend), com aviso se a soma não fechar 100%. Vai junto no export/import.
 - **Tabela de velocidades da Halo Core** — As 20 velocidades com potência, RPM e equivalência
   industrial.
+- **Recheios / combinações** — Biblioteca de referência (estática) na aba Referência com 11
+  combinações (Calabresa, Muçarela, Frango com Catupiry, Marguerita, Quatro Queijos, Pepperoni,
+  Napolitana, Lombo, Brócolis com Bacon, Palmito, Corn & Bacon), em ordem alfabética, cada uma
+  com ingredientes e montagem (o que vai antes e depois de assar). Botão para expandir/recolher
+  todas as receitas de uma vez.
 - **Glossário napolitano** — Termos da técnica (poolish, biga, puntata, staglio, appretto,
   panetto, maturação, cornicione, leopard spots…) com definições. Botão de imprimir.
 - **Solução de problemas** — Problemas comuns (massa rasga, encolhe, borda pálida, azeda…)
@@ -133,7 +155,7 @@ based on real home equipment. Reference recipe (source of truth):
 - Flour: **95% Alma Italiana + 5% wholemeal** (Venturelli)
 - Hydration: **67%** (adjustable 60%–85%)
 - Salt: **2.5%** · Dry yeast: **0.1%**
-- **Poolish**: 30% of the flour, 100% hydration, half the yeast
+- **Poolish**: 45%–100% of the water (adjustable), 100% hydration, proportional yeast
 - Reference yield: **6 dough balls × 280 g**
 - Oven: **Fornetto Slim at 390°C** · Mixer: **Ooni Halo Core**
 
@@ -148,9 +170,17 @@ it open or closed** across sessions. The app always starts on the Recipe tab. Bu
 icons: common actions (print, save, log, export/import) show icon + text on desktop and
 icon-only on mobile; timers use icons only (play/pause/reset).
 
-- **Ingredient calculator** — Scales by number of pizzas (2–10), weight per ball (260–320 g)
-  and hydration (60–85%), keeping baker's percentages. Shows the poolish / final-dough split.
-  Accounts for ~1% handling loss.
+- **Ingredient calculator** — Scales by number of pizzas (2–10), weight per ball (260–320 g),
+  hydration (60–85%) and **poolish fraction (45–100% of the water)**, keeping baker's
+  percentages. Shows the poolish / final-dough split. Accounts for ~1% handling loss.
+- **Adjustable poolish** — A control sets how much of the **total water** goes into the poolish
+  (45% to 100%), always at 100% hydration (equal water and flour). The yeast follows that
+  fraction; the remaining water and flour go into the final dough. At 100%, all the water goes
+  into the poolish and only the remaining flour is added at the refresh.
+- **Assisted hydration** — Below the hydration control, style buttons
+  (**crispy · balanced · soft · canotto**) that, when tapped, move the slider to a suggested
+  hydration (62/67/72/78%), adjusted by the room temperature from the water card (a cold room
+  suggests a bit more water; a warm one, a bit less).
 - **Sauce — The Ultimate Sauce** — Rustic raw peeled-tomato sauce recipe, with ingredients,
   quantities (tomatoes, garlic, basil, **salt, oil, oregano and pepper** — all scale with the
   number of pizzas) and step-by-step instructions.
@@ -182,6 +212,10 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   (Start/Pause/Reset) and a **continuous alarm** that rings until you tap "Stop alarm".
 - **Baking guide — Fornetto Slim** — **Preheat** timer (40 min at 390°C) and **baking** timer
   (ideal 90–140 s window) with a progress bar and continuous alarm, so you never burn it.
+- **Timer alerts on your watch** — When the timers end (mixing step, oven preheated, sweet spot
+  and end of the baking window), besides the audible alarm the app **vibrates** and fires a
+  **system notification** — which mirrors on a paired smartwatch (if you enabled notifications
+  in the Schedule card).
 - **Hands-on mode** — A top button opens a **full-screen** step-by-step, one phase at a time
   (poolish → final dough → maturation → balling → baking), with large text and buttons for use
   at the bench. It shows the real quantities, the water temperature and the **times computed by
@@ -191,6 +225,11 @@ icon-only on mobile; timers use icons only (play/pause/reset).
 - **Step-by-step schedule** — Plans backwards from poolish start + baking time + appretto length.
   Prefers ~20h poolish, uses bulk maturation as the buffer, and warns about awkward hours,
   long appretto and out-of-range maturation. Brazilian date format.
+- **Schedule reminders** — In the Schedule card: **browser notifications** for each stage
+  (poolish, dough, fridge, appretto, bake), on time plus a configurable lead reminder
+  (0/5/10/15 min before) — they also show on a paired smartwatch while the app is open. And
+  **"Add to calendar"**, which exports the 5 stages to an `.ics` file (with an alarm), for
+  reminders that work even with the app closed.
 - **Bake log** — Logs each batch (temperatures, measured final dough temp, baking time, notes).
   Computes the **real friction** per bake and the **average** — which can be applied to the water
   calculator, closing the calibration loop. Each bake can hold **several photos** (gluten, dough
@@ -204,6 +243,11 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   tab. Each bake in the log can link **one or more** flours with each one's **percentage**
   (blend), with a warning if they don't add up to 100%. Included in export/import.
 - **Halo Core speed table** — All 20 speeds with power, RPM and industrial equivalence.
+- **Toppings / combinations** — A static reference library on the Reference tab with 11
+  combinations (Calabresa sausage, Mozzarella, Chicken & Catupiry, Margherita, Four Cheese,
+  Pepperoni, Napolitana, Pork loin, Broccoli & Bacon, Heart of palm, Corn & Bacon), alphabetically
+  ordered, each with ingredients and assembly (what goes on before vs. after baking). A button
+  expands/collapses all recipes at once.
 - **Neapolitan glossary** — Technique terms (poolish, biga, puntata, staglio, appretto,
   panetto, maturation, cornicione, leopard spots…) with definitions. Print button.
 - **Troubleshooting** — Common issues (dough tears, shrinks, pale crust, too sour…) with
