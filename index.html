@@ -261,7 +261,7 @@
   /* Controles */
   .controls {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 18px;
   }
   @media (max-width: 640px) {
@@ -543,7 +543,29 @@
   .ha-btn:hover { background: var(--orange-light); border-color: var(--orange); }
   .ha-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; }
   .ha-nota { flex-basis: 100%; font-size: 0.78rem; color: var(--gray); line-height: 1.4; }
+  /* Telas grandes: botões de estilo da borda numa única linha (mantém a ordem
+     crocante → canotto, do menos ao mais hidratado). No celular seguem com wrap. */
+  @media (min-width: 641px) {
+    .ha-estilos { flex-wrap: nowrap; }
+    .ha-btn { white-space: nowrap; }
+  }
   @media print { .hidra-assist { display: none !important; } }
+
+  /* Lembretes do cronograma (notificações + calendário) */
+  .crono-lembretes { margin: 16px 0; }
+  .crono-lembretes .cl-linha { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .crono-lembretes .cl-antecedencia { display: inline-flex; align-items: center; gap: 6px; }
+  .crono-lembretes .cl-antecedencia label { font-size: 0.84rem; color: var(--gray); font-weight: 600; }
+  .crono-lembretes .cl-antecedencia select {
+    padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px;
+    font-size: 0.86rem; color: var(--dark); background: #fff;
+  }
+  .crono-lembretes #notifBtn.ativo {
+    background: var(--green); border-color: var(--green); color: #fff;
+  }
+  .crono-lembretes #notifBtn.ativo .btn-ico { color: #fff; }
+  .crono-lembretes .fixed-note { margin-top: 10px; }
+  @media print { .crono-lembretes { display: none !important; } }
 
   .btns { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
   button {
@@ -841,7 +863,7 @@
     font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px;
     color: var(--gray); font-weight: 600; white-space: nowrap;
   }
-  .farinhas-tabela td { padding: 5px 6px; border-bottom: 1px solid var(--line); }
+  .farinhas-tabela td { padding: 5px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
   .farinhas-tabela input, .farinhas-tabela select {
     width: 100%; min-width: 48px; padding: 6px 8px;
     border: 1px solid var(--line); border-radius: 8px;
@@ -863,6 +885,8 @@
   .far-del:hover { color: #c0392b; }
   .far-del .btn-ico { width: 16px; height: 16px; }
   .farinhas-vazio { font-size: 0.88rem; color: var(--gray); font-style: italic; padding: 8px 0; }
+  .farinhas-tabela input.dup { border-color: #c0392b; outline-color: #c0392b; background: #fdecea; }
+  .far-dup-msg { color: #c0392b; font-size: 0.72rem; line-height: 1.3; margin-top: 3px; }
   /* Telas grandes: as 4 caixas de temperatura numa linha (4 colunas);
      o atrito (último campo, slider) ocupa a linha inteira abaixo. */
   .ddt-grid {
@@ -1835,18 +1859,26 @@
           <input type="number" id="hidraNum" min="60" max="85" step="1" value="67">
           <span class="unit">%</span>
         </div>
-        <!-- Ajuste de hidratação assistido: escolher o estilo move o slider -->
-        <div class="hidra-assist">
-          <span class="ha-label" data-i18n="haLabel">Estilo da borda:</span>
-          <div class="ha-estilos" id="haEstilos" role="group">
-            <button type="button" class="ha-btn" data-estilo="crocante" onclick="aplicarEstiloHidra('crocante')" data-i18n="haCrocante">Crocante</button>
-            <button type="button" class="ha-btn" data-estilo="equilibrado" onclick="aplicarEstiloHidra('equilibrado')" data-i18n="haEquilibrado">Equilibrada</button>
-            <button type="button" class="ha-btn" data-estilo="macio" onclick="aplicarEstiloHidra('macio')" data-i18n="haMacio">Macia</button>
-            <button type="button" class="ha-btn" data-estilo="canotto" onclick="aplicarEstiloHidra('canotto')" data-i18n="haCanotto">Canotto</button>
-          </div>
-          <span class="ha-nota" id="haNota"></span>
+      </div>
+      <div class="control">
+        <label><span data-i18n="poolishLabel">Poolish</span>: <span class="val" id="poolishVal">45</span>%</label>
+        <div class="row-input">
+          <input type="range" id="poolishRange" min="45" max="100" step="5" value="45">
+          <input type="number" id="poolishNum" min="45" max="100" step="5" value="45">
+          <span class="unit">%</span>
         </div>
       </div>
+    </div>
+    <!-- Ajuste de hidratação assistido (fora do grid, largura total): escolher o estilo move o slider de hidratação -->
+    <div class="hidra-assist">
+      <span class="ha-label" data-i18n="haLabel">Estilo da borda:</span>
+      <div class="ha-estilos" id="haEstilos" role="group">
+        <button type="button" class="ha-btn" data-estilo="crocante" onclick="aplicarEstiloHidra('crocante')" data-i18n="haCrocante">Crocante</button>
+        <button type="button" class="ha-btn" data-estilo="equilibrado" onclick="aplicarEstiloHidra('equilibrado')" data-i18n="haEquilibrado">Equilibrada</button>
+        <button type="button" class="ha-btn" data-estilo="macio" onclick="aplicarEstiloHidra('macio')" data-i18n="haMacio">Macia</button>
+        <button type="button" class="ha-btn" data-estilo="canotto" onclick="aplicarEstiloHidra('canotto')" data-i18n="haCanotto">Canotto</button>
+      </div>
+      <span class="ha-nota" id="haNota"></span>
     </div>
     <div class="summary">
       <span><span data-i18n="massaTotalLbl">Massa total</span>: <b id="massaTotal">1680 g</b></span>
@@ -2245,6 +2277,28 @@
         </div>
       </div>
 
+      <!-- Lembretes do cronograma: notificações web + exportar para o calendário -->
+      <div class="crono-lembretes">
+        <div class="cl-linha">
+          <button type="button" class="icon-label-btn" id="notifBtn" onclick="toggleNotificacoes()">
+            <span class="print-ico" data-ico="sinoBtn"></span><span class="btn-txt" id="notifBtnTxt" data-i18n="notifAtivar">Ativar notificações</span>
+          </button>
+          <button type="button" class="icon-label-btn" onclick="exportarCalendario()">
+            <span class="print-ico" data-ico="calendario"></span><span class="btn-txt" data-i18n="calAdicionar">Adicionar ao calendário</span>
+          </button>
+          <span class="cl-antecedencia">
+            <label for="notifAntes" data-i18n="notifAntesLabel">Avisar antes:</label>
+            <select id="notifAntes" onchange="salvarNotifPrefs(); reagendarNotificacoes()">
+              <option value="0" data-i18n="notifNoHorario">No horário</option>
+              <option value="5">5 min</option>
+              <option value="10" selected>10 min</option>
+              <option value="15">15 min</option>
+            </select>
+          </span>
+        </div>
+        <div class="fixed-note" id="notifNota"></div>
+      </div>
+
       <div id="cronoAlerts"></div>
 
       <div class="timeline" id="timeline"></div>
@@ -2419,7 +2473,7 @@
   </div><!-- /ABA Ajuda -->
 
   <footer id="footer" data-i18n="footer">
-    Baseado no cronograma validado • Maturação ~53h<br>Ooni Halo Core • Fornetto Slim 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.6.1</span>
+    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.9.11</span>
   </footer>
 </div>
 
@@ -2485,7 +2539,11 @@
     // espiga de trigo (vincular farinha) — talo + grãos em losango ao longo dele
     trigo: `<svg class="btn-ico" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round" aria-hidden="true"><path d="M12 21c0-3-1.6-4.6-4.6-4.6C7.4 19.4 9 21 12 21zM12 21c0-3 1.6-4.6 4.6-4.6C16.6 19.4 15 21 12 21z" fill="none" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="12" cy="4" rx="1.5" ry="2.4"/><ellipse cx="12" cy="8.2" rx="1.5" ry="2.4"/><ellipse cx="12" cy="12.4" rx="1.5" ry="2.4"/><ellipse cx="9.1" cy="6.6" rx="1.3" ry="2.1" transform="rotate(-32 9.1 6.6)"/><ellipse cx="14.9" cy="6.6" rx="1.3" ry="2.1" transform="rotate(32 14.9 6.6)"/><ellipse cx="9.1" cy="10.8" rx="1.3" ry="2.1" transform="rotate(-32 9.1 10.8)"/><ellipse cx="14.9" cy="10.8" rx="1.3" ry="2.1" transform="rotate(32 14.9 10.8)"/><path d="M12 14.5V21" fill="none" stroke-width="1.6" stroke-linecap="round"/></svg>`,
     // lâmpada (dica contextual)
-    dica: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:100%;height:100%"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.2 1 2.5h6c0-1.3.3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>`
+    dica: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:100%;height:100%"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.2 1 2.5h6c0-1.3.3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>`,
+    // sino (notificações) — versão btn-ico
+    sinoBtn: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M6 8a6 6 0 0 1 12 0c0 7 3 5 3 9H3c0-4 3-2 3-9z"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg>`,
+    // calendário (adicionar ao calendário)
+    calendario: `<svg class="btn-ico" ${SVG_ATTRS}><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 2.5v4M16 2.5v4"/><path d="M12 13v4M10 15h4"/></svg>`
   };
   // Chevron dos cabeçalhos colapsáveis (gira via CSS quando .card-head.open)
   const CHEVRON = `<svg class="chevron" ${SVG_ATTRS}><path d="M6 9l6 6 6-6"/></svg>`;
@@ -2584,7 +2642,7 @@
   const I18N = {
     pt: {
       appTitle: 'PizzaCalc',
-      appSubtitle: 'Pizza Napolitana<br>Venturelli 95/5 • Hidratação 67% • Poolish 30%',
+      appSubtitle: 'Pizza Napolitana<br>Venturelli 95/5 • Hidratação 67% • Poolish 45%',
       wakeOff: 'Manter tela ligada',
       wakeOn: 'Tela sempre ligada',
       wakeIndisponivel: 'Tela sempre ligada (indisponível neste navegador)',
@@ -2608,7 +2666,7 @@
       ajDicasTit: 'Dicas de uso',
       ajDicas: '<ul><li><b>Mão na massa</b> (botão no topo): passo a passo em tela cheia para usar na bancada.</li><li><b>Manter tela ligada</b>: impede a tela do celular de apagar durante o preparo.</li><li><b>PT/EN</b>: troque o idioma nas bandeiras.</li><li><b>Imprimir</b>: receita, cronograma, lista de compras e tabela têm botões próprios.</li><li><b>Instalar</b>: no celular, "Adicionar à tela inicial" para usar como app, offline.</li></ul><span class="aj-dica">Botões <b>Expandir/Recolher cards</b> agem na aba atual; o <b>chevron duplo</b> ao lado age em todas as abas.</span>',
       ajSobreTit: 'Sobre',
-      ajSobre: '<p><b>PizzaCalc</b> — Calculadora e guia de produção de pizza tipo napolitana usando 30% de poolish.</p><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: © 2026 · Versão: 1.6.1</p><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem">Ooni Halo Core e Fornetto Slim são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da 🌾 farinha ao 🔥 forno.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: © 2026 · Versão: 1.9.11</p><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem">Ooni® Halo Core™ e Fornetto® Slim™ são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
       // Backup completo
       backupTitulo: 'Backup completo',
       backupIntro: 'Salve <b>tudo</b> num arquivo: perfis, farinhas, preços, diário (com fotos), configuração e idioma. Use para <b>trocar de aparelho</b> ou fazer backup antes de limpar o navegador. Importar <b>substitui</b> os dados atuais.',
@@ -2712,6 +2770,7 @@
       unitDiscos: 'discos',
       pesoPanetto: 'Peso por panetto',
       hidratacao: 'Hidratação',
+      poolishLabel: 'Poolish',
       massaTotalLbl: 'Massa total',
       farinhaTotalLbl: 'Farinha total',
       salLbl: 'Sal',
@@ -2728,6 +2787,7 @@
       perfilNomePrompt: 'Nome do perfil:',
       perfilNomePadrao: (d, p, h) => `${d} × ${p}g · ${h}%`,
       perfilExcluirConfirm: (nome) => `Excluir o perfil "${nome}"?`,
+      perfilSobrescrever: (nome) => `Já existe um perfil chamado "${nome}". Deseja sobrescrevê-lo?`,
       ingredientes: 'Ingredientes',
       thIngrediente: 'Ingrediente', thBakers: "%", thQuantidade: 'Quantidade',
       divisaoEtapa: 'Divisão por etapa',
@@ -2738,6 +2798,26 @@
       btnLimpar: 'Limpar marcações',
       inicioPoolish: 'Início do poolish:', horaAssar: 'Hora de assar:', as: 'às',
       duracaoAppretto: 'Duração do appretto',
+      // Lembretes do cronograma (notificações + calendário)
+      notifAtivar: 'Ativar notificações',
+      notifDesativar: 'Notificações ativas (tocar para desligar)',
+      notifAntesLabel: 'Avisar antes:',
+      notifNoHorario: 'No horário',
+      notifTituloAgora: '🍕 PizzaCalc — hora da etapa',
+      notifTituloAntes: (min) => `🍕 PizzaCalc — em ${min} min`,
+      // Avisos dos timers (mistura / forno / cocção)
+      notifTimerMix: '⏱️ Etapa de mistura concluída',
+      notifTimerPreaq: '🔥 Forno pré-aquecido!',
+      notifTimerCoccaoOk: '✅ Ponto ideal da pizza',
+      notifTimerCoccaoFim: '⚠️ Retire a pizza!',
+      notifNota: 'Avisos das etapas e dos timers (mistura/forno) no navegador — e no seu relógio, se pareado, com vibração. Funcionam enquanto o app estiver aberto. Para lembretes com o app fechado, use "Adicionar ao calendário".',
+      notifNotaAtivo: (n) => `Notificações ligadas para <b>${n}</b> etapa(s) e para os timers de mistura/forno. Mantenha o app aberto para recebê-las; para o app fechado, use o calendário.`,
+      notifSemSuporte: 'Este navegador não suporta notificações.',
+      notifNegada: 'Permissão de notificação negada. Você pode liberar nas configurações do site do navegador.',
+      calAdicionar: 'Adicionar ao calendário',
+      calPrefixo: 'Pizza',
+      calSemPlano: 'Defina o início do poolish e a hora de assar antes de exportar para o calendário.',
+      calErro: 'Não foi possível gerar o arquivo de calendário.',
       velTitulo: 'Tabela de velocidades — Halo Core',
       glossarioTitulo: 'Glossário napolitano',
       troubleTitulo: 'Solução de problemas',
@@ -2753,6 +2833,7 @@
       farThNome: 'Marca / nome', farThTipo: 'Tipo', farThW: 'W', farThProt: 'Proteína',
       btnAddFarinha: 'Adicionar farinha',
       farExcluirConfirm: 'Excluir esta farinha?',
+      farNomeDuplicadoInline: 'Nome repetido',
       farTipo_00: '00', farTipo_0: '0', farTipo_1: '1', farTipo_2: '2',
       farTipo_integral: 'Integral', farTipo_semolina: 'Semolina', farTipo_outro: 'Outro',
       troubleCausa: 'Causa provável', troubleFix: 'Como ajustar',
@@ -2760,15 +2841,15 @@
       btnImprimirVel: 'Imprimir tabela',
       btnImprimirGlossario: 'Imprimir glossário',
       thVel: 'Vel.', thPotencia: 'Potência', thUso: 'Uso / equivalente industrial',
-      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni Halo Core • Fornetto Slim 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.6.1</span>',
+      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.9.11</span>',
       velIntro: 'Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b> (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).',
-      comoFunciona: '<b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e recalcula a água total. O <b>poolish</b> sempre usa 30% da farinha total, 100% de hidratação e metade do fermento — a água restante entra na massa final. Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.',
+      comoFunciona: '<b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e recalcula a água total. O <b>poolish</b> é ajustável de 45% a 100% <b>da água total</b>, sempre a 100% de hidratação (mesma quantidade de água e farinha); o fermento acompanha essa fração. O restante da água e da farinha entra na massa final. Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.',
       progresso: (n, t) => `<b>${n}</b> de ${t} etapas`,
       // ingredientes (tabela)
       ingFarinhaAlma: 'Farinha Alma Italiana', ingFarinhaIntegral: 'Farinha Integral',
       ingAgua: 'Água', ingSal: 'Sal', ingFermento: 'Fermento biológico seco', ingMassaTotal: 'Massa total',
       // divisão por etapa
-      subPoolish: '1 · Poolish (30% da farinha · 100% hidratação)', subMassaFinal: '2 · Massa final',
+      subPoolish: (p) => `1 · Poolish (${p}% da água · 100% hidratação)`, subMassaFinal: '2 · Massa final',
       divAguaGelada: 'Água gelada', divFermentoSeco: 'Fermento seco', divPoolishTodo: 'Poolish (todo)',
       // alertas
       hidraAlta: (p) => `⚠️ <b>Hidratação alta (${p}%).</b> Acima de 70% a massa fica mais mole e pegajosa, exigindo mais força na sova e técnica de dobras (stretch &amp; fold) para ganhar estrutura. O manuseio na abertura também fica mais delicado. Considere usar água bem gelada e polvilhar bem a bancada.`,
@@ -2929,7 +3010,7 @@
     },
     en: {
       appTitle: 'PizzaCalc',
-      appSubtitle: 'Neapolitan Pizza<br>Venturelli 95/5 • 67% Hydration • Poolish 30%',
+      appSubtitle: 'Neapolitan Pizza<br>Venturelli 95/5 • 67% Hydration • Poolish 45%',
       wakeOff: 'Keep screen on',
       wakeOn: 'Screen stays on',
       wakeIndisponivel: 'Keep screen on (not supported in this browser)',
@@ -2953,7 +3034,7 @@
       ajDicasTit: 'Usage tips',
       ajDicas: '<ul><li><b>Hands-on</b> (top button): a full-screen step-by-step for the bench.</li><li><b>Keep screen on</b>: stops the phone screen turning off during prep.</li><li><b>PT/EN</b>: switch language with the flags.</li><li><b>Print</b>: recipe, schedule, shopping list and table have their own buttons.</li><li><b>Install</b>: on mobile, "Add to Home screen" to use it as an app, offline.</li></ul><span class="aj-dica"><b>Expand/Collapse cards</b> acts on the current tab; the <b>double chevron</b> next to it acts on all tabs.</span>',
       ajSobreTit: 'About',
-      ajSobre: '<p><b>PizzaCalc</b> — Calculator and production guide for Neapolitan-style pizza using 30% poolish.</p><p>Developed by <b>Paulo Godoy</b></p><p>Year: © 2026 · Version: 1.6.1</p><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem">Ooni Halo Core and Fornetto Slim are trademarks of their respective owners, cited only as equipment reference.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from 🌾 flour to 🔥 oven.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><p>Developed by <b>Paulo Godoy</b></p><p>Year: © 2026 · Version: 1.9.11</p><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem">Ooni® Halo Core™ and Fornetto® Slim™ are trademarks of their respective owners, cited only as equipment reference.</p>',
       // Full backup
       backupTitulo: 'Full backup',
       backupIntro: 'Save <b>everything</b> to a file: profiles, flours, prices, log (with photos), settings and language. Use it to <b>move to another device</b> or back up before clearing the browser. Importing <b>replaces</b> the current data.',
@@ -3050,6 +3131,7 @@
       unitDiscos: 'pizzas',
       pesoPanetto: 'Weight per dough ball',
       hidratacao: 'Hydration',
+      poolishLabel: 'Poolish',
       massaTotalLbl: 'Total dough',
       farinhaTotalLbl: 'Total flour',
       salLbl: 'Salt',
@@ -3066,6 +3148,7 @@
       perfilNomePrompt: 'Profile name:',
       perfilNomePadrao: (d, p, h) => `${d} × ${p}g · ${h}%`,
       perfilExcluirConfirm: (nome) => `Delete profile "${nome}"?`,
+      perfilSobrescrever: (nome) => `A profile named "${nome}" already exists. Overwrite it?`,
       ingredientes: 'Ingredients',
       thIngrediente: 'Ingredient', thBakers: "%", thQuantidade: 'Quantity',
       divisaoEtapa: 'Breakdown by stage',
@@ -3076,6 +3159,26 @@
       btnLimpar: 'Clear checks',
       inicioPoolish: 'Poolish start:', horaAssar: 'Baking time:', as: 'at',
       duracaoAppretto: 'Appretto duration',
+      // Schedule reminders (notifications + calendar)
+      notifAtivar: 'Enable notifications',
+      notifDesativar: 'Notifications on (tap to turn off)',
+      notifAntesLabel: 'Notify before:',
+      notifNoHorario: 'On time',
+      notifTituloAgora: '🍕 PizzaCalc — stage time',
+      notifTituloAntes: (min) => `🍕 PizzaCalc — in ${min} min`,
+      // Timer alerts (mixing / oven / baking)
+      notifTimerMix: '⏱️ Mixing step finished',
+      notifTimerPreaq: '🔥 Oven preheated!',
+      notifTimerCoccaoOk: '✅ Pizza sweet spot',
+      notifTimerCoccaoFim: '⚠️ Take the pizza out!',
+      notifNota: 'Stage and timer (mixing/oven) alerts in the browser — and on your watch, if paired, with vibration. They work while the app is open. For reminders with the app closed, use "Add to calendar".',
+      notifNotaAtivo: (n) => `Notifications on for <b>${n}</b> stage(s) and for the mixing/oven timers. Keep the app open to receive them; for the app closed, use the calendar.`,
+      notifSemSuporte: 'This browser does not support notifications.',
+      notifNegada: 'Notification permission denied. You can allow it in the browser site settings.',
+      calAdicionar: 'Add to calendar',
+      calPrefixo: 'Pizza',
+      calSemPlano: 'Set the poolish start and the baking time before exporting to the calendar.',
+      calErro: 'Could not generate the calendar file.',
       velTitulo: 'Speed table — Halo Core',
       glossarioTitulo: 'Neapolitan glossary',
       troubleTitulo: 'Troubleshooting',
@@ -3091,6 +3194,7 @@
       farThNome: 'Brand / name', farThTipo: 'Type', farThW: 'W', farThProt: 'Protein',
       btnAddFarinha: 'Add flour',
       farExcluirConfirm: 'Delete this flour?',
+      farNomeDuplicadoInline: 'Duplicate name',
       farTipo_00: '00', farTipo_0: '0', farTipo_1: '1', farTipo_2: '2',
       farTipo_integral: 'Wholemeal', farTipo_semolina: 'Semolina', farTipo_outro: 'Other',
       troubleCausa: 'Likely cause', troubleFix: 'How to fix',
@@ -3098,13 +3202,13 @@
       btnImprimirVel: 'Print table',
       btnImprimirGlossario: 'Print glossary',
       thVel: 'Speed', thPotencia: 'Power', thUso: 'Use / industrial equivalent',
-      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni Halo Core • Fornetto Slim 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.6.1</span>',
+      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.9.11</span>',
       velIntro: 'Spiral mixer with rotating bowl (60–300 RPM). Since the industrial mixer is also a spiral, the comparison is direct by hook RPM: <b>industrial 1st speed ≈ 100 RPM</b> (speed 4) and <b>2nd speed ≈ 200 RPM</b> (speed 12).',
-      comoFunciona: '<b>How it works:</b> Quantities scale proportionally, keeping the recipe ratios (flour 95% Alma + 5% Integral, salt 2.5%, yeast 0.1%). <b>Hydration</b> is adjustable and recalculates the total water. The <b>poolish</b> always uses 30% of the total flour, 100% hydration and half the yeast — the remaining water goes into the final dough. A ~1% dough loss during handling is accounted for in the reverse calculation.',
+      comoFunciona: '<b>How it works:</b> Quantities scale proportionally, keeping the recipe ratios (flour 95% Alma + 5% Integral, salt 2.5%, yeast 0.1%). <b>Hydration</b> is adjustable and recalculates the total water. The <b>poolish</b> is adjustable from 45% to 100% <b>of the total water</b>, always at 100% hydration (equal water and flour); the yeast follows that fraction. The remaining water and flour go into the final dough. A ~1% dough loss during handling is accounted for in the reverse calculation.',
       progresso: (n, t) => `<b>${n}</b> of ${t} steps`,
       ingFarinhaAlma: 'Alma Italiana flour', ingFarinhaIntegral: 'Wholemeal flour',
       ingAgua: 'Water', ingSal: 'Salt', ingFermento: 'Dry yeast', ingMassaTotal: 'Total dough',
-      subPoolish: '1 · Poolish (30% of flour · 100% hydration)', subMassaFinal: '2 · Final dough',
+      subPoolish: (p) => `1 · Poolish (${p}% of water · 100% hydration)`, subMassaFinal: '2 · Final dough',
       divAguaGelada: 'Cold water', divFermentoSeco: 'Dry yeast', divPoolishTodo: 'Poolish (all)',
       hidraAlta: (p) => `⚠️ <b>High hydration (${p}%).</b> Above 70% the dough gets softer and stickier, requiring more kneading force and stretch &amp; fold technique to build structure. Shaping is also more delicate. Consider using very cold water and flouring the bench well.`,
       capacidade: (g, max) => `🚫 <b>Total dough (${g} g) above the Halo Core capacity (${max} g).</b> Reduce the number of pizzas or the weight per ball to fit the mixer. Mixing above the limit overloads the motor and hurts gluten development.`,
@@ -3337,6 +3441,7 @@
     { const ri = document.getElementById('recheiosIntro'); if (ri) ri.innerHTML = t('recheiosIntro'); }
     { const b = document.getElementById('backupIntro'); if (b) b.innerHTML = t('backupIntro'); }
     if (typeof atualizarCollapseAll === 'function') atualizarCollapseAll();
+    if (typeof atualizarNotifUI === 'function') atualizarNotifUI();
     render();
   }
 
@@ -3365,10 +3470,13 @@
   const HALO_MIN = 700;
   const HALO_MAX = 2500;
 
-  // Poolish: 30% da farinha total, 100% hidratação, 50% do fermento
-  const POOLISH_FLOUR_FRAC = 0.30;
-  const POOLISH_HYDRATION = 1.00;
-  const POOLISH_FERMENT_FRAC = 0.50;
+  // Poolish (base ÁGUA): a fração P do poolish é a % da água total que vai para o
+  // pré-fermento, sempre 1:1 (100% de hidratação). Ajustável de 45% a 100%.
+  // O padrão 45% (~301 g de água/farinha a 67% de hidratação) reproduz a receita
+  // validada. O fermento no poolish acompanha a fração P.
+  const POOLISH_MIN_FRAC = 0.45;      // piso do slider (≈ receita atual)
+  const POOLISH_PADRAO_FRAC = 0.45;   // padrão
+  const POOLISH_STEP = 5;             // passo do slider (%)
 
   // ===== Cronograma (baseado nos docx validados) =====
   // Os horários (offsetH) são CALCULADOS dinamicamente a partir do plano
@@ -3491,8 +3599,13 @@
   // hidra = fração de hidratação (ex.: 0.67 para 67%)
   // fermentoPct = fração de fermento (padrão PCT.fermento = 0,1%); pode vir ajustada
   // pela temperatura ambiente (ver fermentoAjustado()).
-  function calcular(discos, peso, hidra, fermentoPct) {
+  // poolishPct = fração do poolish sobre a ÁGUA TOTAL (ex.: 0.45). O poolish é
+  // sempre 1:1 (100% de hidratação): leva P×água de água e igual de farinha.
+  // A massa final recebe o restante da água/farinha e o fermento acompanha P.
+  function calcular(discos, peso, hidra, fermentoPct, poolishPct) {
     const fPct = (typeof fermentoPct === 'number' && !isNaN(fermentoPct)) ? fermentoPct : PCT.fermento;
+    const pP = (typeof poolishPct === 'number' && !isNaN(poolishPct))
+      ? clampFloat(poolishPct, POOLISH_MIN_FRAC, 1) : POOLISH_PADRAO_FRAC;
     const massaFinal = discos * peso;                    // massa que sai em bolas
     const massaTeorica = massaFinal * (1 + LOSS);        // compensa perda
     // massaTeorica = farinha * (1 + agua + sal + fermento)
@@ -3505,13 +3618,13 @@
     const sal = farinha * PCT.sal;
     const fermento = farinha * fPct;
 
-    // Poolish
-    const poolishFarinha = farinha * POOLISH_FLOUR_FRAC;   // toda de Alma Italiana
-    const poolishAgua = poolishFarinha * POOLISH_HYDRATION;
-    const poolishFermento = fermento * POOLISH_FERMENT_FRAC;
+    // Poolish (base água): água = P×água total; farinha = igual (1:1); toda de Alma.
+    const poolishAgua = agua * pP;
+    const poolishFarinha = poolishAgua;                    // 100% de hidratação
+    const poolishFermento = fermento * pP;                 // fermento acompanha a fração
 
     // Massa final (o que sobra)
-    const massaAlma = alma - poolishFarinha;   // Alma restante
+    const massaAlma = alma - poolishFarinha;   // Alma restante (integral fica toda aqui)
     const massaIntegral = integral;            // toda a integral vai na massa final
     const massaAgua = agua - poolishAgua;
     const massaFermento = fermento - poolishFermento;
@@ -3519,6 +3632,7 @@
 
     return {
       farinha, alma, integral, agua, sal, fermento, massaFinal, massaTeorica, hidra,
+      poolishPct: pP,
       poolish: { farinha: poolishFarinha, agua: poolishAgua, fermento: poolishFermento },
       final: { alma: massaAlma, integral: massaIntegral, agua: massaAgua, fermento: massaFermento, sal: massaSal }
     };
@@ -3529,8 +3643,9 @@
     const discos = clamp(parseInt(discosNum.value) || 2, 2, 10);
     const peso = clamp(parseInt(pesoNum.value) || 260, 260, 320);
     const hidra = clamp(parseInt(hidraNum.value) || 60, 60, 85) / 100;
+    const poolishP = clamp(parseInt(poolishNum.value) || 45, 45, 100) / 100;
     const fPct = fermentoAjustado();
-    const r = calcular(discos, peso, hidra, fPct);
+    const r = calcular(discos, peso, hidra, fPct, poolishP);
 
     // Persiste os controles de produção (para não voltar ao padrão no reload)
     if (typeof salvarProducao === 'function') salvarProducao();
@@ -3544,6 +3659,7 @@
     const hidraPct = Math.round(hidra * 100);
     document.getElementById('hidraVal').textContent = hidraPct;
     document.getElementById('hidraResumo').textContent = hidraPct + '%';
+    document.getElementById('poolishVal').textContent = Math.round(poolishP * 100);
 
     // Aviso de hidratação alta (71% ou mais)
     const warn = document.getElementById('hidraWarn');
@@ -3597,7 +3713,7 @@
 
     // Tabela por etapa (poolish / massa final)
     let e = '';
-    e += `<tr class="subhead"><td colspan="2">${t('subPoolish')}</td></tr>`;
+    e += `<tr class="subhead"><td colspan="2">${t('subPoolish', Math.round(r.poolishPct * 100))}</td></tr>`;
     e += etapaRow(t('ingFarinhaAlma'), r.poolish.farinha);
     e += etapaRow(t('ingAgua'), r.poolish.agua);
     e += etapaRow(t('divFermentoSeco'), r.poolish.fermento);
@@ -3810,14 +3926,21 @@
     }
     const opts = (sel) => FARINHA_TIPOS.map(tp =>
       `<option value="${tp}" ${tp === sel ? 'selected' : ''}>${t('farTipo_' + tp)}</option>`).join('');
-    tbody.innerHTML = lista.map(f => `
+    // Detecta nomes já duplicados no armazenamento (para destacar a 2ª+ ocorrência)
+    const vistos = {};
+    tbody.innerHTML = lista.map(f => {
+      const chave = normNome(f.nome);
+      const jaDup = chave && vistos[chave];
+      if (chave) vistos[chave] = true;
+      return `
       <tr>
-        <td><input type="text" value="${escapeHtml(f.nome || '')}" placeholder="${t('farThNome')}" oninput="editarFarinha(${f.id}, 'nome', this.value)"></td>
+        <td><input type="text" class="${jaDup ? 'dup' : ''}" value="${escapeHtml(f.nome || '')}" placeholder="${t('farThNome')}" oninput="editarFarinha(${f.id}, 'nome', this.value, this)" onblur="validarNomeFarinha(${f.id})">${jaDup ? `<div class="far-dup-msg">${t('farNomeDuplicadoInline')}</div>` : ''}</td>
         <td><select onchange="editarFarinha(${f.id}, 'tipo', this.value)">${opts(f.tipo)}</select></td>
         <td><input type="number" min="0" step="10" value="${f.w != null ? f.w : ''}" placeholder="W" oninput="editarFarinha(${f.id}, 'w', this.value)"></td>
         <td><input type="number" min="0" step="0.1" value="${f.proteina != null ? f.proteina : ''}" placeholder="%" oninput="editarFarinha(${f.id}, 'proteina', this.value)"></td>
         <td class="far-x"><button class="far-del" title="${t('fExcluir')}" aria-label="${t('fExcluir')}" onclick="excluirFarinha(${f.id})">${ICO.lixeira}</button></td>
-      </tr>`).join('');
+      </tr>`;
+    }).join('');
   }
 
   function addFarinha() {
@@ -3827,8 +3950,21 @@
     renderFarinhas();
   }
 
-  // Edita um campo de uma farinha (sem re-renderizar a tabela, para não perder foco)
-  function editarFarinha(id, campo, valor) {
+  // Nome normalizado (para comparar sem depender de maiúsc./espaços)
+  function normNome(s) { return (s || '').trim().toLowerCase(); }
+  // Há OUTRA farinha (id diferente) com este nome?
+  function nomeFarinhaDuplicado(id, nome) {
+    const alvo = normNome(nome);
+    if (!alvo) return false;
+    return lerFarinhas().some(x => x.id !== id && normNome(x.nome) === alvo);
+  }
+
+  // Edita um campo de uma farinha (sem re-renderizar a tabela, para não perder foco).
+  // Para o campo 'nome', dá feedback visual NÃO-MODAL de duplicado (borda vermelha +
+  // mensagem inline) — sem alert/focus, que causavam loop de foco. A gravação do nome
+  // acontece, mas o duplicado fica sinalizado até ser corrigido; a validação "dura"
+  // (que impede salvar) ocorre no blur (validarNomeFarinha).
+  function editarFarinha(id, campo, valor, input) {
     const lista = lerFarinhas();
     const f = lista.find(x => x.id === id);
     if (!f) return;
@@ -3839,6 +3975,40 @@
       f[campo] = valor;
     }
     gravarFarinhas(lista);
+    if (campo === 'nome') marcarDuplicado(id, input);
+  }
+
+  // Marca/desmarca visualmente o input do nome como duplicado (sem modal).
+  function marcarDuplicado(id, input) {
+    if (!input) return;
+    const dup = nomeFarinhaDuplicado(id, input.value);
+    input.classList.toggle('dup', dup);
+    const cel = input.closest('td');
+    let aviso = cel ? cel.querySelector('.far-dup-msg') : null;
+    if (dup) {
+      if (!aviso && cel) {
+        aviso = document.createElement('div');
+        aviso.className = 'far-dup-msg';
+        cel.appendChild(aviso);
+      }
+      if (aviso) aviso.textContent = t('farNomeDuplicadoInline');
+    } else if (aviso) {
+      aviso.remove();
+    }
+  }
+
+  // Ao sair da célula do nome: se ficou um nome duplicado, limpa APENAS o nome desta
+  // linha (mantém os outros campos) e re-renderiza, evitando duas farinhas com o mesmo
+  // nome persistidas. Sem alert/focus (que travavam). O aviso visual já orientou.
+  function validarNomeFarinha(id) {
+    const lista = lerFarinhas();
+    const f = lista.find(x => x.id === id);
+    if (!f) return;
+    if (nomeFarinhaDuplicado(id, f.nome)) {
+      f.nome = '';
+      gravarFarinhas(lista);
+      renderFarinhas();
+    }
   }
 
   function excluirFarinha(id) {
@@ -4675,6 +4845,9 @@
     // Alertas do cronograma
     renderCronoAlerts(plano);
 
+    // Reagenda as notificações das etapas (se ativas) sempre que o plano muda
+    if (typeof reagendarNotificacoes === 'function') reagendarNotificacoes();
+
     // Previsão do fim (assar) no cabeçalho — não usado mais no start-ctrl, mantido seguro
     const fimEl = document.getElementById('fimPrevisto');
     if (fimEl) fimEl.textContent = plano ? formatDateTime(plano.assar) : '—';
@@ -4968,6 +5141,23 @@
     if (_alarmeTick) { clearInterval(_alarmeTick); _alarmeTick = null; }
   }
 
+  // Vibra o aparelho (se suportado). Padrão de 3 pulsos.
+  function vibrar(padrao) {
+    try { if (navigator.vibrate) navigator.vibrate(padrao || [200, 120, 200]); } catch (e) {}
+  }
+
+  // Aviso ao FIM de um timer (mistura/forno/cocção): notificação do sistema
+  // (espelha no smartwatch pareado, se a permissão foi concedida) + vibração.
+  // O som já é tratado pelo iniciarAlarme() no ponto de chamada.
+  function avisarTimer(titulo, corpo) {
+    vibrar([300, 150, 300]);
+    try {
+      if (('Notification' in window) && Notification.permission === 'granted') {
+        new Notification(titulo, { body: corpo || '', icon: './icon-192.png', badge: './icon-192.png', tag: 'pizzacalc-timer' });
+      }
+    } catch (e) { /* silencioso */ }
+  }
+
   // ===== Guia de mistura passo a passo (com timer) =====
   // Cada etapa: [chaveTitulo, chaveVel, chaveDesc, segundos, opcional?]
   const MIX_STEPS = [
@@ -5070,6 +5260,7 @@
         if (!mixState.done.includes(i)) mixState.done.push(i);
         mixState.alarme = true;
         iniciarAlarme();
+        avisarTimer(t('notifTimerMix'), t(MIX_STEPS[i][0]));
       }
       atualizarRelogioMix();
     }, 1000);
@@ -5131,6 +5322,7 @@
         document.getElementById('preaqTimer').classList.add('ready');
         preaq.alarme = true;
         iniciarAlarme();
+        avisarTimer(t('notifTimerPreaq'), t('preaqPronto'));
         document.getElementById('preaqDesc').innerHTML = `<b>${t('preaqPronto')}</b>`;
       }
       atualizarPreaq();
@@ -5193,13 +5385,17 @@
     document.getElementById('coccaoTimer').classList.add('running');
     coccao.tick = setInterval(() => {
       coccao.seg += 1;
-      // 100s: início da janela ideal -> aviso único
-      if (coccao.seg === COCCAO_MIN && !coccao.beep100) { coccao.beep100 = true; beep(2); }
-      // 150s: fim da janela ideal -> alarme contínuo até parar
+      // 90s: início da janela ideal -> aviso único (bip + notificação/vibração)
+      if (coccao.seg === COCCAO_MIN && !coccao.beep100) {
+        coccao.beep100 = true; beep(2);
+        avisarTimer(t('notifTimerCoccaoOk'), t('coccaoOk', coccao.seg));
+      }
+      // 140s: fim da janela ideal -> alarme contínuo até parar
       if (coccao.seg === COCCAO_MAX && !coccao.beep150) {
         coccao.beep150 = true;
         coccao.alarme = true;
         iniciarAlarme();
+        avisarTimer(t('notifTimerCoccaoFim'), t('coccaoOver', coccao.seg));
       }
       atualizarCoccao();
     }, 1000);
@@ -5964,6 +6160,161 @@
     window.print();
   }
 
+  // ===== Notificações das etapas + exportar para o calendário =====
+  // As 5 etapas do cronograma com o título i18n e o Date (do planejarCronograma).
+  // Retorna [] se o plano não estiver definido.
+  function etapasComHorario() {
+    const plano = planejarCronograma();
+    if (!plano) return [];
+    const mapa = {
+      poolish: plano.inicio, massa: plano.massaFinal,
+      maturacao: plano.geladeira, bolear: plano.bolear, assar: plano.assar
+    };
+    return CRONOGRAMA.map(step => ({
+      id: step.id, titulo: t(step.titKey), quando: mapa[step.id]
+    })).filter(e => e.quando instanceof Date && !isNaN(e.quando));
+  }
+
+  // Preferências das notificações (ligado? quantos min antes?)
+  function notifAtivo() {
+    try { return localStorage.getItem('pizzaNotif') === '1'; } catch (e) { return false; }
+  }
+  function notifMinAntes() {
+    const el = document.getElementById('notifAntes');
+    return el ? (parseInt(el.value) || 0) : 0;
+  }
+  function salvarNotifPrefs() {
+    try { localStorage.setItem('pizzaNotifAntes', String(notifMinAntes())); } catch (e) {}
+  }
+
+  // Liga/desliga as notificações. Ao ligar, pede permissão ao navegador.
+  function toggleNotificacoes() {
+    if (notifAtivo()) {
+      try { localStorage.setItem('pizzaNotif', '0'); } catch (e) {}
+      limparNotificacoes();
+      atualizarNotifUI();
+      return;
+    }
+    if (!('Notification' in window)) { alert(t('notifSemSuporte')); return; }
+    Notification.requestPermission().then(perm => {
+      if (perm === 'granted') {
+        try { localStorage.setItem('pizzaNotif', '1'); } catch (e) {}
+        reagendarNotificacoes();
+      } else {
+        alert(t('notifNegada'));
+      }
+      atualizarNotifUI();
+    });
+  }
+
+  // Agenda (via setTimeout) as notificações futuras das etapas + lembrete "X min antes".
+  // Só funciona enquanto o app está aberto — a nota na UI explica isso.
+  let _notifTimers = [];
+  function limparNotificacoes() {
+    _notifTimers.forEach(id => clearTimeout(id));
+    _notifTimers = [];
+  }
+  function reagendarNotificacoes() {
+    limparNotificacoes();
+    if (!notifAtivo() || !('Notification' in window) || Notification.permission !== 'granted') {
+      atualizarNotifUI();
+      return;
+    }
+    const antesMs = notifMinAntes() * 60000;
+    const agora = Date.now();
+    etapasComHorario().forEach(e => {
+      const alvo = e.quando.getTime();
+      // Lembrete X min antes
+      if (antesMs > 0) {
+        const tAntes = alvo - antesMs - agora;
+        if (tAntes > 0) _notifTimers.push(setTimeout(
+          () => dispararNotificacao(t('notifTituloAntes', notifMinAntes()), e.titulo + ' · ' + horaCurta(e.quando)),
+          Math.min(tAntes, 2147483647)));
+      }
+      // No horário
+      const tNo = alvo - agora;
+      if (tNo > 0) _notifTimers.push(setTimeout(
+        () => dispararNotificacao(t('notifTituloAgora'), e.titulo + ' · ' + horaCurta(e.quando)),
+        Math.min(tNo, 2147483647)));
+    });
+    atualizarNotifUI();
+  }
+  function dispararNotificacao(titulo, corpo) {
+    try {
+      const n = new Notification(titulo, { body: corpo, icon: './icon-192.png', badge: './icon-192.png', tag: 'pizzacalc-crono' });
+      try { beep(2); } catch (e) {}
+    } catch (e) { /* silencioso */ }
+  }
+
+  // Atualiza o rótulo do botão e a nota explicativa conforme o estado.
+  function atualizarNotifUI() {
+    const btnTxt = document.getElementById('notifBtnTxt');
+    const btn = document.getElementById('notifBtn');
+    const nota = document.getElementById('notifNota');
+    const ativo = notifAtivo() && ('Notification' in window) && Notification.permission === 'granted';
+    if (btnTxt) btnTxt.textContent = ativo ? t('notifDesativar') : t('notifAtivar');
+    if (btn) btn.classList.toggle('ativo', ativo);
+    if (nota) {
+      const n = etapasComHorario().length;
+      nota.innerHTML = ativo
+        ? t('notifNotaAtivo', n)
+        : t('notifNota');
+    }
+  }
+
+  // ===== Exportar cronograma para o calendário (.ics) =====
+  // Gera um arquivo iCalendar com as 5 etapas como eventos de 30 min, cada um
+  // com um alarme (VALARM) X min antes. O Android abre no app de calendário.
+  function exportarCalendario() {
+    const etapas = etapasComHorario();
+    if (!etapas.length) { alert(t('calSemPlano')); return; }
+    const antes = notifMinAntes();
+    const pad = (n) => String(n).padStart(2, '0');
+    // Formato de data UTC do iCalendar: AAAAMMDDTHHMMSSZ
+    const fmtICS = (d) => `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
+    const agora = new Date();
+    const dtstamp = fmtICS(agora);
+
+    let ics = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//PizzaCalc//PT-BR//\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\n';
+    etapas.forEach((e, i) => {
+      const ini = e.quando;
+      const fim = new Date(ini.getTime() + 30 * 60000);   // evento de 30 min
+      const uid = `pizzacalc-${dtstamp}-${i}@local`;
+      const titulo = `${t('calPrefixo')}: ${e.titulo}`;
+      ics += 'BEGIN:VEVENT\r\n';
+      ics += `UID:${uid}\r\n`;
+      ics += `DTSTAMP:${dtstamp}\r\n`;
+      ics += `DTSTART:${fmtICS(ini)}\r\n`;
+      ics += `DTEND:${fmtICS(fim)}\r\n`;
+      ics += `SUMMARY:${icsEscape(titulo)}\r\n`;
+      if (antes > 0) {
+        ics += 'BEGIN:VALARM\r\nACTION:DISPLAY\r\n';
+        ics += `DESCRIPTION:${icsEscape(titulo)}\r\n`;
+        ics += `TRIGGER:-PT${antes}M\r\n`;
+        ics += 'END:VALARM\r\n';
+      }
+      ics += 'END:VEVENT\r\n';
+    });
+    ics += 'END:VCALENDAR\r\n';
+
+    const d = new Date();
+    const nome = `pizzacalc-cronograma-${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}.ics`;
+    try {
+      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = nome;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (err) {
+      alert(t('calErro'));
+    }
+  }
+  // Escapa caracteres especiais do iCalendar (vírgula, ponto-e-vírgula, barra, quebra)
+  function icsEscape(s) {
+    return String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+  }
+
   // Carrega o cronograma padrão: poolish sexta 14:00, assar domingo 19:00, appretto 4h
   function carregarCronogramaPadrao() {
     aplicarPlanoPadrao();
@@ -6048,15 +6399,30 @@
   const pesoNum = document.getElementById('pesoNum');
   const hidraRange = document.getElementById('hidraRange');
   const hidraNum = document.getElementById('hidraNum');
+  const poolishRange = document.getElementById('poolishRange');
+  const poolishNum = document.getElementById('poolishNum');
 
-  function syncFromRange(range, num) { num.value = range.value; render(); }
+  function syncFromRange(range, num) { num.value = range.value; limparSelecaoPerfil(); render(); }
   function syncFromNum(num, range) {
     let v = parseInt(num.value);
     if (!isNaN(v)) {
       // mantém o slider dentro do alcance visual, sem travar o número
       range.value = clamp(v, parseInt(range.min), parseInt(range.max));
     }
+    limparSelecaoPerfil();
     render();
+  }
+
+  // Ao mexer manualmente num controle, a config deixa de ser o perfil selecionado:
+  // volta o dropdown para "— selecionar um perfil —". (Não é chamada por setPreset,
+  // que é usado ao carregar perfil/receita padrão.)
+  function limparSelecaoPerfil() {
+    const sel = document.getElementById('perfilSelect');
+    if (sel && sel.value !== '') {
+      sel.value = '';
+      const btnEx = document.getElementById('perfilExcluir');
+      if (btnEx) btnEx.disabled = true;
+    }
   }
 
   discosRange.addEventListener('input', () => syncFromRange(discosRange, discosNum));
@@ -6065,13 +6431,15 @@
   pesoNum.addEventListener('input', () => syncFromNum(pesoNum, pesoRange));
   hidraRange.addEventListener('input', () => syncFromRange(hidraRange, hidraNum));
   hidraNum.addEventListener('input', () => syncFromNum(hidraNum, hidraRange));
+  poolishRange.addEventListener('input', () => syncFromRange(poolishRange, poolishNum));
+  poolishNum.addEventListener('input', () => syncFromNum(poolishNum, poolishRange));
 
   // Persistência dos controles de produção (discos/peso/hidratação): salva a
   // cada mudança e restaura ao abrir, para não voltar ao padrão a cada reload.
   function salvarProducao() {
     try {
       localStorage.setItem('pizzaProducao', JSON.stringify({
-        discos: discosNum.value, peso: pesoNum.value, hidra: hidraNum.value
+        discos: discosNum.value, peso: pesoNum.value, hidra: hidraNum.value, poolish: poolishNum.value
       }));
     } catch (e) {}
   }
@@ -6090,6 +6458,7 @@
     if (saved.discos != null) { discosNum.value = saved.discos; discosRange.value = clamp(parseInt(saved.discos) || 6, parseInt(discosRange.min), parseInt(discosRange.max)); }
     if (saved.peso != null) { pesoNum.value = saved.peso; pesoRange.value = clamp(parseInt(saved.peso) || 280, parseInt(pesoRange.min), parseInt(pesoRange.max)); }
     if (saved.hidra != null) { hidraNum.value = saved.hidra; hidraRange.value = clamp(parseInt(saved.hidra) || 67, parseInt(hidraRange.min), parseInt(hidraRange.max)); }
+    if (saved.poolish != null) { poolishNum.value = saved.poolish; poolishRange.value = clamp(parseInt(saved.poolish) || 45, parseInt(poolishRange.min), parseInt(poolishRange.max)); }
   })();
 
   // ===== Controles da calculadora de temperatura da água (DDT) =====
@@ -6228,6 +6597,19 @@
       parseFloat(apprettoRange.value).toFixed(1).replace('.', ',');
   })();
 
+  // Restaura a preferência de "avisar X min antes" e o estado do botão de notificações
+  (function initNotif() {
+    let antes = '10';
+    try { antes = localStorage.getItem('pizzaNotifAntes') || '10'; } catch (e) {}
+    const el = document.getElementById('notifAntes');
+    if (el) el.value = antes;
+    // Se as notificações foram ligadas antes mas a permissão foi revogada, desliga
+    if (notifAtivo() && (!('Notification' in window) || Notification.permission !== 'granted')) {
+      try { localStorage.setItem('pizzaNotif', '0'); } catch (e) {}
+    }
+    if (typeof atualizarNotifUI === 'function') atualizarNotifUI();
+  })();
+
   // Plano padrão: poolish na próxima sexta 14:00, assar domingo 19:00, appretto 4h
   function aplicarPlanoPadrao() {
     const now = new Date();
@@ -6241,16 +6623,17 @@
     apprettoRange.value = '4';
   }
 
-  function setPreset(d, p, h) {
+  function setPreset(d, p, h, pool) {
     discosNum.value = d; discosRange.value = d;
     pesoNum.value = p; pesoRange.value = p;
     hidraNum.value = h; hidraRange.value = h;
+    if (pool != null) { poolishNum.value = pool; poolishRange.value = pool; }
     render();
   }
 
   // Botão "Receita padrão": aplica o preset e volta o dropdown de perfis ao início.
   function receitaPadrao() {
-    setPreset(6, 280, 67);
+    setPreset(6, 280, 67, 45);
     const sel = document.getElementById('perfilSelect');
     if (sel) sel.value = '';
     const btnEx = document.getElementById('perfilExcluir');
@@ -6295,15 +6678,21 @@
     const d = clamp(parseInt(discosNum.value) || 2, 2, 10);
     const p = clamp(parseInt(pesoNum.value) || 260, 260, 320);
     const h = clamp(parseInt(hidraNum.value) || 60, 60, 85);
+    const pool = clamp(parseInt(poolishNum.value) || 45, 45, 100);
     const sugestao = t('perfilNomePadrao', d, p, h);
     const nome = (prompt(t('perfilNomePrompt'), sugestao) || '').trim();
     if (!nome) return;
 
     const perfis = lerPerfis();
     const existente = perfis.findIndex(x => x.nome === nome);
-    const perfil = { nome, discos: d, peso: p, hidra: h };
-    if (existente >= 0) perfis[existente] = perfil;   // sobrescreve o de mesmo nome
-    else perfis.push(perfil);
+    const perfil = { nome, discos: d, peso: p, hidra: h, poolish: pool };
+    if (existente >= 0) {
+      // já existe um perfil com este nome: confirmar antes de sobrescrever
+      if (!confirm(t('perfilSobrescrever', nome))) return;
+      perfis[existente] = perfil;
+    } else {
+      perfis.push(perfil);
+    }
     gravarPerfis(perfis);
     popularPerfis(perfis.findIndex(x => x.nome === nome));
   }
@@ -6316,7 +6705,8 @@
     const perfis = lerPerfis();
     const p = perfis[parseInt(idx)];
     if (!p) return;
-    setPreset(p.discos, p.peso, p.hidra);
+    // Perfis antigos (sem poolish) assumem 45% (padrão)
+    setPreset(p.discos, p.peso, p.hidra, p.poolish != null ? p.poolish : 45);
     document.getElementById('perfilExcluir').disabled = false;
   }
 
