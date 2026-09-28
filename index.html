@@ -8,8 +8,8 @@
 <!-- PWA -->
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#cc5500">
-<!-- força esquema claro: evita que o Android use fundo escuro na splash/janela -->
-<meta name="color-scheme" content="light">
+<!-- suporta ambos os esquemas; o tema é controlado por data-tema no <html> -->
+<meta name="color-scheme" content="light dark">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -51,6 +51,61 @@
     --night: #5a63c0;
     --night-bg: #eef0fb;
     --night-text: #35408a;
+    --switch-off: #cfc7bb;    /* trilho do switch desligado */
+    --mix-base: #fff;         /* base clara com que os color-mix se misturam */
+  }
+
+  /* ===== Tema escuro (grafite quente) — laranja e verde preservados =====
+     Aplicado quando data-tema="escuro" (manual) OU data-tema="auto" + SO no escuro. */
+  :root[data-tema="escuro"], :root.tema-escuro {
+    color-scheme: dark;
+    --orange: #ff7a2f;        /* laranja um pouco mais claro para brilhar no escuro */
+    --orange-light: #3a2a1c;  /* "laranja claro" vira um âmbar escuro (fundos suaves) */
+    --orange-deep: #ff8c47;   /* realce laranja (hover) mais claro no escuro */
+    --dark: #f2ece4;          /* "texto escuro" vira claro */
+    --gray: #a99f92;
+    --line: #3a352e;
+    --green: #4fbf94;         /* verde mais claro para contraste no escuro */
+    --bg: #17140f;            /* fundo grafite quente */
+    --card-bg: #211d17;       /* superfície de cards/botões */
+    --surface-2: #17140f;
+    --text: #f2ece4;
+    --text-soft: #d7cfc4;
+    --text-muted: #a99f92;
+    --text-faint: #8a8175;
+    --line-soft: #4a443c;
+    --shadow: rgba(0,0,0,0.35);
+    --danger: #ff6b58;
+    --danger-strong: #ff8272;
+    --danger-deep: #ff9c8f;
+    --danger-bg: #3a1f1b;
+    --warn-bg: #332a17;
+    --warn-line: #c99326;
+    --warn-text: #e6c078;
+    --warn-text2: #d8a94e;
+    --night: #8a92e0;
+    --night-bg: #23263a;
+    --night-text: #aab2f0;
+    --switch-off: #4a443c;
+    --mix-base: var(--card-bg);   /* color-mix agora mistura com a superfície escura */
+  }
+
+  /* Modo automático: segue o sistema. Quando data-tema="auto" e o SO está no
+     escuro, herda a mesma paleta escura (reaproveita a classe .tema-escuro que o
+     JS aplica; este bloco cobre o caso puramente por mídia, sem depender do JS). */
+  @media (prefers-color-scheme: dark) {
+    :root[data-tema="auto"] {
+      color-scheme: dark;
+      --orange: #ff7a2f; --orange-light: #3a2a1c; --orange-deep: #ff8c47;
+      --dark: #f2ece4; --gray: #a99f92; --line: #3a352e; --green: #4fbf94;
+      --bg: #17140f; --card-bg: #211d17; --surface-2: #17140f;
+      --text: #f2ece4; --text-soft: #d7cfc4; --text-muted: #a99f92; --text-faint: #8a8175;
+      --line-soft: #4a443c; --shadow: rgba(0,0,0,0.35);
+      --danger: #ff6b58; --danger-strong: #ff8272; --danger-deep: #ff9c8f; --danger-bg: #3a1f1b;
+      --warn-bg: #332a17; --warn-line: #c99326; --warn-text: #e6c078; --warn-text2: #d8a94e;
+      --night: #8a92e0; --night-bg: #23263a; --night-text: #aab2f0;
+      --switch-off: #4a443c; --mix-base: var(--card-bg);
+    }
   }
 
   html { background: var(--bg); }   /* fundo no primeiro paint (antes do body) */
@@ -63,7 +118,7 @@
     background: var(--bg);
     color: var(--dark);
     line-height: 1.5;
-    padding: 24px 16px 60px;
+    padding: 24px 16px 28px;
   }
 
   .wrap {
@@ -146,19 +201,22 @@
     .lang-switcher { width: 100%; flex-wrap: nowrap; justify-content: space-between; gap: 6px; }
     /* botões de ação (mão + tela ligada) ficam compactos e do MESMO tamanho:
        retangulares com laterais arredondadas (pill), como as bandeiras. */
-    #mnmBtnLabel, #wakeLabel { display: none; }
-    /* mão, bolinha e bandeiras: TODOS com 34px de altura (pills idênticos) */
-    #mnmBtn, #wakeToggle, .lang-btn {
+    #mnmBtnLabel, #wakeLabel, #temaLabel { display: none; }
+    /* tema, mão, bolinha e bandeiras: TODOS com 34px de altura (pills idênticos) */
+    #temaBtn, #mnmBtn, #wakeToggle, .lang-btn {
       height: 34px; box-sizing: border-box;
     }
-    #mnmBtn, #wakeToggle {
-      padding: 0 14px; gap: 0; justify-content: center;
-      min-width: 52px;   /* mesma largura para os dois pills (ícone vs bolinha) */
+    #temaBtn, #mnmBtn, #wakeToggle {
+      padding: 0 12px; gap: 0; justify-content: center;
+      min-width: 46px;   /* mesma largura para os pills (ícone vs bolinha) */
     }
     .lang-btn { padding: 0 10px; }
   }
   /* ícone do botão mão na massa (herda a cor do texto do wake-btn) */
   #mnmBtn .btn-ico { width: 17px; height: 17px; }
+  /* ícone do botão de tema (sol/lua/auto) */
+  #temaBtn .tema-ico { width: 17px; height: 17px; display: inline-flex; flex: none; }
+  #temaBtn .tema-ico svg { width: 100%; height: 100%; }
 
   /* Botão "manter tela ligada" (Wake Lock) — fica na linha do seletor de idioma */
   .wake-btn {
@@ -184,7 +242,7 @@
   .wake-btn.on {
     border-color: var(--green);
     color: var(--green);
-    background: color-mix(in srgb, var(--green) 8%, #fff);
+    background: color-mix(in srgb, var(--green) 8%, var(--mix-base));
   }
   .wake-btn.on .wake-dot {
     background: var(--green);
@@ -407,7 +465,7 @@
   }
   .switch-track {
     position: absolute; inset: 0;
-    background: #cfc7bb; border-radius: 999px;
+    background: var(--switch-off); border-radius: 999px;
     transition: background 0.2s ease;
   }
   .switch-knob {
@@ -696,7 +754,7 @@
     font-size: 0.72rem;
     font-weight: 600;
     color: var(--dotcolor, var(--text-faint));
-    background: color-mix(in srgb, var(--dotcolor, var(--text-faint)) 12%, #fff);
+    background: color-mix(in srgb, var(--dotcolor, var(--text-faint)) 12%, var(--mix-base));
     padding: 1px 8px;
     border-radius: 20px;
     margin-left: 6px;
@@ -988,7 +1046,7 @@
     font-size: 0.72rem;
     font-weight: 700;
     color: var(--orange);
-    background: color-mix(in srgb, var(--orange) 12%, #fff);
+    background: color-mix(in srgb, var(--orange) 12%, var(--mix-base));
     padding: 1px 8px;
     border-radius: 20px;
     margin-left: 6px;
@@ -1266,7 +1324,7 @@
   .fornada.favorita {
     border-left-width: 4px;
     border-color: var(--orange);
-    background: color-mix(in srgb, var(--orange) 5%, #fff);
+    background: color-mix(in srgb, var(--orange) 5%, var(--mix-base));
   }
   @media print { #diarioCard { display: none !important; } }
 
@@ -1817,6 +1875,10 @@
       <h1><img src="icon-512.png" alt="Ícone Pizza"> <span data-i18n="appTitle">PizzaCalc</span></h1>
       <div class="lang-switcher">
         <div class="top-actions">
+          <button id="temaBtn" class="wake-btn" onclick="ciclarTema()" title="Tema">
+            <span class="tema-ico" id="temaIco"></span>
+            <span id="temaLabel" data-i18n="temaAuto">Tema: automático</span>
+          </button>
           <button id="mnmBtn" class="wake-btn" onclick="abrirMaoNaMassa()" title="Modo mão na massa">
             <span class="print-ico" data-ico="maos"></span>
             <span id="mnmBtnLabel" data-i18n="maoNaMassa">Mão na massa</span>
@@ -2497,7 +2559,7 @@
   </div><!-- /ABA Ajuda -->
 
   <footer id="footer" data-i18n="footer">
-    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.9.13</span>
+    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.10.2</span>
   </footer>
 </div>
 
@@ -2567,7 +2629,13 @@
     // sino (notificações) — versão btn-ico
     sinoBtn: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M6 8a6 6 0 0 1 12 0c0 7 3 5 3 9H3c0-4 3-2 3-9z"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg>`,
     // calendário (adicionar ao calendário)
-    calendario: `<svg class="btn-ico" ${SVG_ATTRS}><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 2.5v4M16 2.5v4"/><path d="M12 13v4M10 15h4"/></svg>`
+    calendario: `<svg class="btn-ico" ${SVG_ATTRS}><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 2.5v4M16 2.5v4"/><path d="M12 13v4M10 15h4"/></svg>`,
+    // tema: sol (claro)
+    temaSol: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:100%;height:100%"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>`,
+    // tema: lua (escuro)
+    temaLua: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:100%;height:100%"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`,
+    // tema: automático (meio sol / meio lua = contraste)
+    temaAuto: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:100%;height:100%"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg>`
   };
   // Chevron dos cabeçalhos colapsáveis (gira via CSS quando .card-head.open)
   const CHEVRON = `<svg class="chevron" ${SVG_ATTRS}><path d="M6 9l6 6 6-6"/></svg>`;
@@ -2670,6 +2738,7 @@
       wakeOff: 'Manter tela ligada',
       wakeOn: 'Tela sempre ligada',
       wakeIndisponivel: 'Tela sempre ligada (indisponível neste navegador)',
+      temaAuto: 'Tema: automático', temaClaro: 'Tema: claro', temaEscuro: 'Tema: escuro',
       // Abas de navegação
       tabReceita: 'Receita', tabPreparo: 'Preparo', tabCronograma: 'Cronograma',
       tabDiario: 'Diário', tabReferencia: 'Referência', tabAjuda: 'Ajuda',
@@ -2690,7 +2759,7 @@
       ajDicasTit: 'Dicas de uso',
       ajDicas: '<ul><li><b>Mão na massa</b> (botão no topo): passo a passo em tela cheia para usar na bancada.</li><li><b>Manter tela ligada</b>: impede a tela do celular de apagar durante o preparo.</li><li><b>PT/EN</b>: troque o idioma nas bandeiras.</li><li><b>Imprimir</b>: receita, cronograma, lista de compras e tabela têm botões próprios.</li><li><b>Instalar</b>: no celular, "Adicionar à tela inicial" para usar como app, offline.</li></ul><span class="aj-dica">Botões <b>Expandir/Recolher cards</b> agem na aba atual; o <b>chevron duplo</b> ao lado age em todas as abas.</span>',
       ajSobreTit: 'Sobre',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da 🌾 farinha ao 🔥 forno.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: © 2026 · Versão: 1.9.13</p><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem">Ooni® Halo Core™ e Fornetto® Slim™ são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: © 2026 · Versão: 1.10.2</p><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem">Ooni® Halo Core™ e Fornetto® Slim™ são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
       // Backup completo
       backupTitulo: 'Backup completo',
       backupIntro: 'Salve <b>tudo</b> num arquivo: perfis, farinhas, preços, diário (com fotos), configuração e idioma. Use para <b>trocar de aparelho</b> ou fazer backup antes de limpar o navegador. Importar <b>substitui</b> os dados atuais.',
@@ -2865,7 +2934,7 @@
       btnImprimirVel: 'Imprimir tabela',
       btnImprimirGlossario: 'Imprimir glossário',
       thVel: 'Vel.', thPotencia: 'Potência', thUso: 'Uso / equivalente industrial',
-      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.9.13</span>',
+      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.10.2</span>',
       velIntro: 'Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b> (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).',
       comoFunciona: '<b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e recalcula a água total. O <b>poolish</b> é ajustável de 45% a 100% <b>da água total</b>, sempre a 100% de hidratação (mesma quantidade de água e farinha); o fermento acompanha essa fração. O restante da água e da farinha entra na massa final. Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.',
       progresso: (n, t) => `<b>${n}</b> de ${t} etapas`,
@@ -3038,6 +3107,7 @@
       wakeOff: 'Keep screen on',
       wakeOn: 'Screen stays on',
       wakeIndisponivel: 'Keep screen on (not supported in this browser)',
+      temaAuto: 'Theme: automatic', temaClaro: 'Theme: light', temaEscuro: 'Theme: dark',
       // Navigation tabs
       tabReceita: 'Recipe', tabPreparo: 'Prep', tabCronograma: 'Schedule',
       tabDiario: 'Log', tabReferencia: 'Reference', tabAjuda: 'Help',
@@ -3058,7 +3128,7 @@
       ajDicasTit: 'Usage tips',
       ajDicas: '<ul><li><b>Hands-on</b> (top button): a full-screen step-by-step for the bench.</li><li><b>Keep screen on</b>: stops the phone screen turning off during prep.</li><li><b>PT/EN</b>: switch language with the flags.</li><li><b>Print</b>: recipe, schedule, shopping list and table have their own buttons.</li><li><b>Install</b>: on mobile, "Add to Home screen" to use it as an app, offline.</li></ul><span class="aj-dica"><b>Expand/Collapse cards</b> acts on the current tab; the <b>double chevron</b> next to it acts on all tabs.</span>',
       ajSobreTit: 'About',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from 🌾 flour to 🔥 oven.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><p>Developed by <b>Paulo Godoy</b></p><p>Year: © 2026 · Version: 1.9.13</p><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem">Ooni® Halo Core™ and Fornetto® Slim™ are trademarks of their respective owners, cited only as equipment reference.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><p>Developed by <b>Paulo Godoy</b></p><p>Year: © 2026 · Version: 1.10.2</p><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem">Ooni® Halo Core™ and Fornetto® Slim™ are trademarks of their respective owners, cited only as equipment reference.</p>',
       // Full backup
       backupTitulo: 'Full backup',
       backupIntro: 'Save <b>everything</b> to a file: profiles, flours, prices, log (with photos), settings and language. Use it to <b>move to another device</b> or back up before clearing the browser. Importing <b>replaces</b> the current data.',
@@ -3226,7 +3296,7 @@
       btnImprimirVel: 'Print table',
       btnImprimirGlossario: 'Print glossary',
       thVel: 'Speed', thPotencia: 'Power', thUso: 'Use / industrial equivalent',
-      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.9.13</span>',
+      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.10.2</span>',
       velIntro: 'Spiral mixer with rotating bowl (60–300 RPM). Since the industrial mixer is also a spiral, the comparison is direct by hook RPM: <b>industrial 1st speed ≈ 100 RPM</b> (speed 4) and <b>2nd speed ≈ 200 RPM</b> (speed 12).',
       comoFunciona: '<b>How it works:</b> Quantities scale proportionally, keeping the recipe ratios (flour 95% Alma + 5% Integral, salt 2.5%, yeast 0.1%). <b>Hydration</b> is adjustable and recalculates the total water. The <b>poolish</b> is adjustable from 45% to 100% <b>of the total water</b>, always at 100% hydration (equal water and flour); the yeast follows that fraction. The remaining water and flour go into the final dough. A ~1% dough loss during handling is accounted for in the reverse calculation.',
       progresso: (n, t) => `<b>${n}</b> of ${t} steps`,
@@ -3466,6 +3536,7 @@
     { const b = document.getElementById('backupIntro'); if (b) b.innerHTML = t('backupIntro'); }
     if (typeof atualizarCollapseAll === 'function') atualizarCollapseAll();
     if (typeof atualizarNotifUI === 'function') atualizarNotifUI();
+    if (typeof aplicarTema === 'function') aplicarTema();
     render();
   }
 
@@ -6786,6 +6857,55 @@
     LANG = (saved === 'en') ? 'en' : 'pt';
     document.querySelectorAll('.lang-btn').forEach(b =>
       b.classList.toggle('active', b.getAttribute('data-lang') === LANG));
+  })();
+
+  // ===== Tema (claro/escuro/automático) =====
+  // 3 estados: 'auto' (segue o SO), 'claro', 'escuro'. Persistido em pizzaTema.
+  // O <html> recebe data-tema; o CSS aplica a paleta. O JS também resolve o
+  // estado efetivo para setar a classe .tema-escuro e o meta theme-color.
+  const TEMA_ORDEM = ['auto', 'claro', 'escuro'];
+  let TEMA = 'auto';
+  const mediaEscuro = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
+  function temaEfetivoEscuro() {
+    if (TEMA === 'escuro') return true;
+    if (TEMA === 'claro') return false;
+    return !!(mediaEscuro && mediaEscuro.matches);   // auto
+  }
+  function aplicarTema() {
+    const root = document.documentElement;
+    root.setAttribute('data-tema', TEMA);
+    const escuro = temaEfetivoEscuro();
+    root.classList.toggle('tema-escuro', escuro);
+    // meta theme-color acompanha o fundo do tema efetivo
+    const mt = document.querySelector('meta[name="theme-color"]');
+    if (mt) mt.setAttribute('content', escuro ? '#17140f' : '#cc5500');
+    // ícone + rótulo do botão
+    const ico = document.getElementById('temaIco');
+    if (ico) ico.innerHTML = TEMA === 'claro' ? ICO.temaSol : (TEMA === 'escuro' ? ICO.temaLua : ICO.temaAuto);
+    const lbl = document.getElementById('temaLabel');
+    if (lbl) lbl.textContent = t(TEMA === 'claro' ? 'temaClaro' : (TEMA === 'escuro' ? 'temaEscuro' : 'temaAuto'));
+    const btn = document.getElementById('temaBtn');
+    if (btn) { const tip = lbl ? lbl.textContent : ''; btn.setAttribute('title', tip); btn.setAttribute('aria-label', tip); }
+  }
+  function ciclarTema() {
+    const i = TEMA_ORDEM.indexOf(TEMA);
+    TEMA = TEMA_ORDEM[(i + 1) % TEMA_ORDEM.length];
+    try { localStorage.setItem('pizzaTema', TEMA); } catch (e) {}
+    aplicarTema();
+  }
+  // Restaura o tema salvo e aplica no boot
+  (function initTema() {
+    let saved = 'auto';
+    try { saved = localStorage.getItem('pizzaTema') || 'auto'; } catch (e) {}
+    TEMA = TEMA_ORDEM.includes(saved) ? saved : 'auto';
+    aplicarTema();
+    // no modo automático, reage à mudança do SO em tempo real
+    if (mediaEscuro) {
+      const onChange = () => { if (TEMA === 'auto') aplicarTema(); };
+      if (mediaEscuro.addEventListener) mediaEscuro.addEventListener('change', onChange);
+      else if (mediaEscuro.addListener) mediaEscuro.addListener(onChange);
+    }
   })();
 
   // ===== Manter tela ligada (Screen Wake Lock API) =====
