@@ -91,8 +91,11 @@
   }
 
   /* Modo automático: segue o sistema. Quando data-tema="auto" e o SO está no
-     escuro, herda a mesma paleta escura (reaproveita a classe .tema-escuro que o
-     JS aplica; este bloco cobre o caso puramente por mídia, sem depender do JS). */
+     escuro, herda a mesma paleta escura. Em runtime o JS aplica a classe
+     .tema-escuro (bloco acima); ESTE bloco existe só como fallback puro-CSS para
+     evitar o flash de tema claro antes de o JS rodar. Por isso os valores são os
+     mesmos do bloco :root[data-tema="escuro"] acima — MANTER OS DOIS EM SINCRONIA
+     ao mexer na paleta escura (o CSS puro não permite reusar a lista sem repeti-la). */
   @media (prefers-color-scheme: dark) {
     :root[data-tema="auto"] {
       color-scheme: dark;
@@ -126,21 +129,25 @@
     margin: 0 auto;
   }
 
+  /* Cabeçalho: numa linha só — botão "Mão na massa" à esquerda, título no centro,
+     "Manter tela ligada" à direita. */
   .header-top {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
+    gap: 10px;
   }
   header h1 {
     font-size: 1.8rem;
-    margin: 0 0 4px;
+    margin: 0;
     color: var(--orange);
     letter-spacing: 0.5px;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
+    flex: 1;   /* o título ocupa o meio e fica centralizado entre os dois botões */
   }
   header h1 img {
     width: 40px;
@@ -148,39 +155,8 @@
     border-radius: 8px;
     flex: none;
   }
-  .lang-switcher {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  /* grupos internos: ações (mão/tela ligada) e bandeiras */
-  .top-actions, .lang-flags { display: flex; align-items: center; gap: 8px; }
-  .lang-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    background: var(--card-bg);
-    color: var(--dark);
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-  .lang-btn:hover { background: var(--orange-light); border-color: var(--orange); }
-  .lang-btn.active { background: var(--orange); color: #fff; border-color: var(--orange); }
-  .lang-btn .flag {
-    width: 22px;
-    height: 16px;
-    border-radius: 2px;
-    display: block;
-    box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
-  }
   header p {
-    margin: 0 0 24px;
+    margin: 6px 0 24px;
     color: var(--gray);
     font-size: 0.9rem;
     text-align: center;
@@ -189,34 +165,19 @@
   /* Em telas estreitas (celular), os botões descem para baixo do título e
      ficam centralizados na tela, em vez de alinhados à esquerda. */
   @media (max-width: 640px) {
-    .header-top {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-    /* folga entre os botões (acima) e o subtítulo "Pizza Napolitana..." */
-    header p { margin-top: 14px; }
-    /* No celular: ações (mão + tela ligada) coladas à ESQUERDA e bandeiras à
-       DIREITA, ocupando a largura toda, numa linha só. */
-    .lang-switcher { width: 100%; flex-wrap: nowrap; justify-content: space-between; gap: 6px; }
-    /* botões de ação (mão + tela ligada) ficam compactos e do MESMO tamanho:
-       retangulares com laterais arredondadas (pill), como as bandeiras. */
-    #mnmBtnLabel, #wakeLabel, #temaLabel { display: none; }
-    /* tema, mão, bolinha e bandeiras: TODOS com 34px de altura (pills idênticos) */
-    #temaBtn, #mnmBtn, #wakeToggle, .lang-btn {
+    /* No celular, o cabeçalho segue em UMA linha (mão · título · tela ligada),
+       mas os botões viram só ícone (o rótulo some) para caber. */
+    header h1 { font-size: 1.5rem; }
+    #mnmBtnLabel, #wakeLabel { display: none; }
+    #mnmBtn, #wakeToggle {
       height: 34px; box-sizing: border-box;
-    }
-    #temaBtn, #mnmBtn, #wakeToggle {
       padding: 0 12px; gap: 0; justify-content: center;
-      min-width: 46px;   /* mesma largura para os pills (ícone vs bolinha) */
+      min-width: 44px; flex: none;
     }
-    .lang-btn { padding: 0 10px; }
   }
   /* ícone do botão mão na massa (herda a cor do texto do wake-btn) */
   #mnmBtn .btn-ico { width: 17px; height: 17px; }
-  /* ícone do botão de tema (sol/lua/auto) */
-  #temaBtn .tema-ico { width: 17px; height: 17px; display: inline-flex; flex: none; }
-  #temaBtn .tema-ico svg { width: 100%; height: 100%; }
+
 
   /* Botão "manter tela ligada" (Wake Lock) — fica na linha do seletor de idioma */
   .wake-btn {
@@ -266,19 +227,25 @@
   .tab-btn {
     flex: 1;
     min-width: 0;
-    padding: 9px 8px;
+    padding: 9px 4px;
     border: 1px solid var(--line);
     border-radius: 8px;
     background: var(--card-bg);
     color: var(--gray);
-    font-size: 0.86rem;
+    font-size: 0.78rem;
     font-weight: 700;
     cursor: pointer;
-    white-space: nowrap;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 7px;
+    gap: 5px;
+  }
+  /* o texto da aba encolhe com reticências se faltar espaço (não estoura a borda) */
+  .tab-btn .tab-txt {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
   }
   .tab-btn:hover { background: var(--orange-light); border-color: var(--orange); }
   .tab-btn.active { background: var(--orange); color: #fff; border-color: var(--orange); }
@@ -445,18 +412,6 @@
   }
 
   /* Ajuste do fermento pela temperatura ambiente */
-  .ferm-temp {
-    margin-top: 18px;
-    padding-top: 16px;
-    border-top: 1px solid var(--line);
-  }
-  /* rótulo + switch: label à esquerda, chave deslizante à direita (estilo Android) */
-  .ferm-temp-toggle {
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    font-size: 0.85rem; font-weight: 400; color: var(--gray);
-    cursor: pointer; user-select: none;
-  }
-  .ferm-temp-toggle .ft-label { flex: 1; }
   /* Switch (chave deslizante) — o checkbox real fica invisível por cima do trilho */
   .switch { position: relative; flex: none; width: 38px; height: 22px; }
   .switch input {
@@ -477,10 +432,8 @@
   .switch input:checked + .switch-track { background: var(--orange); }
   .switch input:checked + .switch-track .switch-knob { transform: translateX(16px); }
   .switch input:focus-visible + .switch-track { outline: 2px solid var(--orange); outline-offset: 2px; }
-  /* nota do fermento: estilo padrão .fixed-note — só um respiro no topo
-     (o negrito já é laranja pela regra global .fixed-note b). */
-  .ferm-temp .fixed-note { margin-top: 10px; }
-  @media print { .ferm-temp { display: none !important; } }
+  /* nota do fermento (no card Preparo da aba Config): respiro no topo */
+  #cfgPreparoWrap .fixed-note { margin-top: 10px; }
 
   /* Telas estreitas: seletor de perfil em linha cheia; botões na linha seguinte */
   @media (max-width: 640px) {
@@ -550,6 +503,13 @@
     border-top: 1px dashed var(--line);
   }
   .fixed-note b { color: var(--orange); }
+
+  /* separador fino tracejado (mesmo traço do .fixed-note) usado no card "Sobre" */
+  .sobre-sep {
+    border: none;
+    border-top: 1px dashed var(--line);
+    margin: 14px 0;
+  }
 
   footer {
     text-align: center;
@@ -642,10 +602,10 @@
     padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px;
     font-size: 0.86rem; color: var(--dark); background: var(--card-bg);
   }
-  .crono-lembretes #notifBtn.ativo {
-    background: var(--green); border-color: var(--green); color: #fff;
+  #notifBtn.ativo, #notifBtn.ativo:hover {
+    background: var(--green) !important; border-color: var(--green) !important; color: #fff !important;
   }
-  .crono-lembretes #notifBtn.ativo .btn-ico { color: #fff; }
+  #notifBtn.ativo .btn-ico { color: #fff; }
   .crono-lembretes .fixed-note { margin-top: 10px; }
   @media print { .crono-lembretes { display: none !important; } }
 
@@ -934,6 +894,28 @@
   /* Card de backup completo */
   #backupWrap { display: none; }
   #backupWrap.show { display: block; padding-top: 10px; }
+
+  /* Aba Configurações */
+  .cfg-wrap { display: none; }
+  .cfg-wrap.show { display: block; padding-top: 10px; }
+  .cfg-item { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 14px; }
+  .cfg-item:last-child { margin-bottom: 0; }
+  .cfg-label { font-weight: 400; font-size: 0.86rem; color: var(--gray); line-height: 1.45; }
+  /* Aparência: labels com largura fixa igual, para os 1ºs botões (Automático /
+     Português) alinharem na mesma coluna, com um respiro do rótulo. */
+  #cfgAparenciaWrap .cfg-item { gap: 8px 6px; }
+  #cfgAparenciaWrap .cfg-label { min-width: 52px; }
+  .cfg-seg { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+  .cfg-seg-btn {
+    padding: 6px 14px; font-size: 0.84rem; font-weight: 600;
+    border: 1px solid var(--line); background: var(--card-bg); color: var(--dark);
+    border-radius: 999px; cursor: pointer;
+  }
+  .cfg-seg-btn:hover { background: var(--orange-light); border-color: var(--orange); }
+  .cfg-seg-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+  /* item com switch (ex.: ajuste de fermento): label à esquerda, switch à direita */
+  .cfg-toggle { justify-content: space-between; cursor: pointer; user-select: none; margin-bottom: 0; }
+  .cfg-toggle .cfg-label { flex: 1; min-width: 0; }
 
   /* Base de farinhas (tabela editável) */
   #farinhasWrap { display: none; }
@@ -1692,7 +1674,6 @@
 
     /* Esconde controles e botões sempre na impressão */
     .controls-card, .btns { display: none !important; }
-    .lang-switcher { display: none !important; }
     .plan-ctrl { display: none !important; }
     #cronoAlerts { display: none !important; }
     .timeline-head .progress { display: none !important; }
@@ -1872,48 +1853,15 @@
 <div class="wrap">
   <header>
     <div class="header-top">
+      <button id="mnmBtn" class="wake-btn" onclick="abrirMaoNaMassa()" title="Modo mão na massa">
+        <span class="print-ico" data-ico="maos"></span>
+        <span id="mnmBtnLabel" data-i18n="maoNaMassa">Mão na massa</span>
+      </button>
       <h1><img src="icon-512.png" alt="Ícone Pizza"> <span data-i18n="appTitle">PizzaCalc</span></h1>
-      <div class="lang-switcher">
-        <div class="top-actions">
-          <button id="temaBtn" class="wake-btn" onclick="ciclarTema()" title="Tema">
-            <span class="tema-ico" id="temaIco"></span>
-            <span id="temaLabel" data-i18n="temaAuto">Tema: automático</span>
-          </button>
-          <button id="mnmBtn" class="wake-btn" onclick="abrirMaoNaMassa()" title="Modo mão na massa">
-            <span class="print-ico" data-ico="maos"></span>
-            <span id="mnmBtnLabel" data-i18n="maoNaMassa">Mão na massa</span>
-          </button>
-          <button id="wakeToggle" class="wake-btn" onclick="toggleWakeLock()" aria-pressed="false" title="Manter tela ligada">
-            <span class="wake-dot"></span>
-            <span id="wakeLabel" data-i18n="wakeOff">Manter tela ligada</span>
-          </button>
-        </div>
-        <div class="lang-flags">
-          <button class="lang-btn" data-lang="pt" onclick="setLang('pt')" title="Português">
-            <svg class="flag" viewBox="0 0 28 20" aria-hidden="true">
-              <rect width="28" height="20" fill="#009c3b"/>
-              <path d="M14 2 L26 10 L14 18 L2 10 Z" fill="#ffdf00"/>
-              <circle cx="14" cy="10" r="4.2" fill="#002776"/>
-            </svg>
-            PT
-          </button>
-          <button class="lang-btn" data-lang="en" onclick="setLang('en')" title="English">
-            <svg class="flag" viewBox="0 0 28 20" aria-hidden="true">
-              <rect width="28" height="20" fill="#b22234"/>
-              <g fill="#fff">
-                <rect y="1.54" width="28" height="1.54"/>
-                <rect y="4.62" width="28" height="1.54"/>
-                <rect y="7.69" width="28" height="1.54"/>
-                <rect y="10.77" width="28" height="1.54"/>
-                <rect y="13.85" width="28" height="1.54"/>
-                <rect y="16.92" width="28" height="1.54"/>
-              </g>
-              <rect width="11.2" height="10.77" fill="#3c3b6e"/>
-            </svg>
-            EN
-          </button>
-        </div>
-      </div>
+      <button id="wakeToggle" class="wake-btn" onclick="toggleWakeLock()" aria-pressed="false" title="Manter tela ligada">
+        <span class="wake-dot"></span>
+        <span id="wakeLabel" data-i18n="wakeOff">Manter tela ligada</span>
+      </button>
     </div>
     <p data-i18n="appSubtitle">Pizza Napolitana — Venturelli 95/5 • Hidratação 67% • Poolish</p>
   </header>
@@ -1973,18 +1921,6 @@
       <span><span data-i18n="salLbl">Sal</span>: <b>2,5%</b></span>
     </div>
 
-    <!-- Ajuste do fermento pela temperatura ambiente (Q10) -->
-    <div class="ferm-temp">
-      <label class="ferm-temp-toggle">
-        <span class="ft-label" data-i18n="fermTempLabel">Ajustar fermento pela temperatura ambiente</span>
-        <span class="switch">
-          <input type="checkbox" id="fermTempToggle" onchange="toggleFermTemp()">
-          <span class="switch-track"><span class="switch-knob"></span></span>
-        </span>
-      </label>
-      <div class="fixed-note" id="fermTempNota" style="display:none"></div>
-    </div>
-
     <!-- Perfis de massa salvos -->
     <div class="perfis">
       <label for="perfilSelect" data-i18n="perfisLabel">Perfis salvos</label>
@@ -2042,6 +1978,12 @@
         <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>
       </svg>
       <span class="tab-txt" data-i18n="tabReferencia">Referência</span>
+    </button>
+    <button class="tab-btn" data-tab="config" onclick="setTab('config')" title="Configurações" aria-label="Configurações">
+      <svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      <span class="tab-txt" data-i18n="tabConfig">Config</span>
     </button>
     <button class="tab-btn" data-tab="ajuda" onclick="setTab('ajuda')" title="Ajuda" aria-label="Ajuda">
       <svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -2239,7 +2181,7 @@
         <p class="mdesc" id="preaqDesc"></p>
         <div class="mix-timer">
           <span class="mix-clock" id="preaqClock">40:00</span>
-          <button class="primary icon-btn" id="preaqBtn" onclick="preaqToggle()"></button>
+          <button class="primary icon-btn" id="preaqBtn"></button>
           <button class="icon-btn" id="preaqResetBtn" onclick="preaqReset()"></button>
         </div>
       </div>
@@ -2253,7 +2195,7 @@
         <p class="mdesc" id="coccaoDesc"></p>
         <div class="mix-timer">
           <span class="mix-clock" id="coccaoClock">00:00</span>
-          <button class="primary icon-btn" id="coccaoBtn" onclick="coccaoToggle()"></button>
+          <button class="primary icon-btn" id="coccaoBtn"></button>
           <button class="icon-btn" id="coccaoResetBtn" onclick="coccaoReset()"></button>
         </div>
         <div class="coccao-bar"><div class="coccao-fill" id="coccaoFill"></div></div>
@@ -2363,26 +2305,14 @@
         </div>
       </div>
 
-      <!-- Lembretes do cronograma: notificações web + exportar para o calendário -->
+      <!-- Exportar o cronograma para o calendário (as notificações ficam em Config) -->
       <div class="crono-lembretes">
         <div class="cl-linha">
-          <button type="button" class="icon-label-btn" id="notifBtn" onclick="toggleNotificacoes()">
-            <span class="print-ico" data-ico="sinoBtn"></span><span class="btn-txt" id="notifBtnTxt" data-i18n="notifAtivar">Ativar notificações</span>
-          </button>
           <button type="button" class="icon-label-btn" onclick="exportarCalendario()">
             <span class="print-ico" data-ico="calendario"></span><span class="btn-txt" data-i18n="calAdicionar">Adicionar ao calendário</span>
           </button>
-          <span class="cl-antecedencia">
-            <label for="notifAntes" data-i18n="notifAntesLabel">Avisar antes:</label>
-            <select id="notifAntes" onchange="salvarNotifPrefs(); reagendarNotificacoes()">
-              <option value="0" data-i18n="notifNoHorario">No horário</option>
-              <option value="5">5 min</option>
-              <option value="10" selected>10 min</option>
-              <option value="15">15 min</option>
-            </select>
-          </span>
         </div>
-        <div class="fixed-note" id="notifNota"></div>
+        <div class="fixed-note" id="cronoCalNota" data-i18n="cronoCalNota"></div>
       </div>
 
       <div id="cronoAlerts"></div>
@@ -2558,8 +2488,104 @@
 
   </div><!-- /ABA Ajuda -->
 
+  <!-- ABA: Configurações -->
+  <div class="tab-panel" data-tab="config">
+
+    <!-- Aparência: tema + idioma -->
+    <div class="card" id="cfgAparenciaCard">
+      <div class="timeline-head card-head" id="cfgAparenciaToggle" onclick="toggleCfg('cfgAparencia')" role="button" tabindex="0" aria-expanded="true">
+        <h2 style="margin:0" data-i18n="cfgAparenciaTit">Aparência</h2>
+        <span class="chevron-wrap"></span>
+      </div>
+      <div id="cfgAparenciaWrap" class="cfg-wrap">
+        <div class="cfg-item">
+          <span class="cfg-label" data-i18n="cfgTema">Tema</span>
+          <div class="cfg-seg" id="cfgTemaSeg" role="group">
+            <button type="button" class="cfg-seg-btn" data-tema-opt="auto" onclick="setTema('auto')" data-i18n="cfgTemaAuto">Automático</button>
+            <button type="button" class="cfg-seg-btn" data-tema-opt="claro" onclick="setTema('claro')" data-i18n="cfgTemaClaro">Claro</button>
+            <button type="button" class="cfg-seg-btn" data-tema-opt="escuro" onclick="setTema('escuro')" data-i18n="cfgTemaEscuro">Escuro</button>
+          </div>
+        </div>
+        <div class="cfg-item">
+          <span class="cfg-label" data-i18n="cfgIdioma">Idioma</span>
+          <div class="cfg-seg" id="cfgLangSeg" role="group">
+            <button type="button" class="cfg-seg-btn" data-lang-opt="pt" onclick="setLang('pt')">Português</button>
+            <button type="button" class="cfg-seg-btn" data-lang-opt="en" onclick="setLang('en')">English</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preparo: ajuste de fermento pela temperatura -->
+    <div class="card" id="cfgPreparoCard">
+      <div class="timeline-head card-head" id="cfgPreparoToggle" onclick="toggleCfg('cfgPreparo')" role="button" tabindex="0" aria-expanded="true">
+        <h2 style="margin:0" data-i18n="cfgPreparoTit">Preparo</h2>
+        <span class="chevron-wrap"></span>
+      </div>
+      <div id="cfgPreparoWrap" class="cfg-wrap">
+        <label class="cfg-item cfg-toggle">
+          <span class="cfg-label" data-i18n="fermTempLabel">Ajustar fermento pela temperatura ambiente</span>
+          <span class="switch">
+            <input type="checkbox" id="fermTempToggle" onchange="toggleFermTemp()">
+            <span class="switch-track"><span class="switch-knob"></span></span>
+          </span>
+        </label>
+        <div class="fixed-note" id="fermTempNota" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- Notificações do cronograma -->
+    <div class="card" id="cfgNotifCard">
+      <div class="timeline-head card-head" id="cfgNotifToggle" onclick="toggleCfg('cfgNotif')" role="button" tabindex="0" aria-expanded="true">
+        <h2 style="margin:0" data-i18n="cfgNotifTit">Notificações do cronograma</h2>
+        <span class="chevron-wrap"></span>
+      </div>
+      <div id="cfgNotifWrap" class="cfg-wrap">
+        <div class="crono-lembretes" style="margin:0">
+          <div class="cl-linha">
+            <button type="button" class="icon-label-btn" id="notifBtn" onclick="toggleNotificacoes()">
+              <span class="print-ico" data-ico="sinoBtn"></span><span class="btn-txt" id="notifBtnTxt" data-i18n="notifAtivar">Ativar notificações</span>
+            </button>
+            <span class="cl-antecedencia">
+              <label for="notifAntes" data-i18n="notifAntesLabel">Avisar antes:</label>
+              <select id="notifAntes" onchange="salvarNotifPrefs(); reagendarNotificacoes()">
+                <option value="0" data-i18n="notifNoHorario">No horário</option>
+                <option value="5">5 min</option>
+                <option value="10" selected>10 min</option>
+                <option value="15">15 min</option>
+              </select>
+            </span>
+          </div>
+          <div class="fixed-note" id="notifNota"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dados: backup (atalho) + resetar layout dos cards -->
+    <div class="card" id="cfgDadosCard">
+      <div class="timeline-head card-head" id="cfgDadosToggle" onclick="toggleCfg('cfgDados')" role="button" tabindex="0" aria-expanded="true">
+        <h2 style="margin:0" data-i18n="cfgDadosTit">Dados e layout</h2>
+        <span class="chevron-wrap"></span>
+      </div>
+      <div id="cfgDadosWrap" class="cfg-wrap">
+        <p class="ddt-intro" id="cfgBackupIntro"></p>
+        <div class="btns" style="margin:0">
+          <button class="icon-label-btn" onclick="exportarTudo()"><span class="print-ico" data-ico="exportar"></span><span class="btn-txt" data-i18n="btnBackupExportar">Exportar tudo</span></button>
+          <button class="icon-label-btn" onclick="importarTudo()"><span class="print-ico" data-ico="importar"></span><span class="btn-txt" data-i18n="btnBackupImportar">Importar tudo</span></button>
+        </div>
+        <div class="fixed-note" id="cfgResetLayoutNota" style="margin-top:16px">
+          <span data-i18n="cfgResetLayoutDesc">Reabre todos os cards do app (desfaz os que você recolheu).</span>
+        </div>
+        <div class="btns" style="margin-top:10px">
+          <button class="icon-label-btn" onclick="resetarLayoutCards()"><span class="print-ico" data-ico="recarregar"></span><span class="btn-txt" data-i18n="cfgResetLayoutBtn">Resetar layout dos cards</span></button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /ABA Config -->
+
   <footer id="footer" data-i18n="footer">
-    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.10.2</span>
+    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.11.25</span>
   </footer>
 </div>
 
@@ -2591,6 +2617,24 @@
 <input type="file" id="fotoInputCam" accept="image/*" capture="environment" style="display:none">
 
 <script>
+  // ===== Helpers de localStorage (encapsulam o try/catch de acesso) =====
+  // lsGet/lsSet: valores string. lsGetJSON/lsSetJSON: objetos (JSON.parse/stringify).
+  // Se o storage falhar (modo privado, cota) devolvem o padrão / ignoram, sem quebrar.
+  function lsGet(key, fallback = null) {
+    try { const v = localStorage.getItem(key); return v === null ? fallback : v; }
+    catch (e) { return fallback; }
+  }
+  function lsSet(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) {}
+  }
+  function lsGetJSON(key, fallback = null) {
+    try { const v = localStorage.getItem(key); return v === null ? fallback : JSON.parse(v); }
+    catch (e) { return fallback; }
+  }
+  function lsSetJSON(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
+  }
+
   // ===== Ícones SVG dos timers (traço/fill único, herdam currentColor) =====
   const SVG_ATTRS = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
   const ICO = {
@@ -2630,12 +2674,6 @@
     sinoBtn: `<svg class="btn-ico" ${SVG_ATTRS}><path d="M6 8a6 6 0 0 1 12 0c0 7 3 5 3 9H3c0-4 3-2 3-9z"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg>`,
     // calendário (adicionar ao calendário)
     calendario: `<svg class="btn-ico" ${SVG_ATTRS}><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 2.5v4M16 2.5v4"/><path d="M12 13v4M10 15h4"/></svg>`,
-    // tema: sol (claro)
-    temaSol: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:100%;height:100%"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>`,
-    // tema: lua (escuro)
-    temaLua: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:100%;height:100%"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`,
-    // tema: automático (meio sol / meio lua = contraste)
-    temaAuto: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:100%;height:100%"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg>`
   };
   // Chevron dos cabeçalhos colapsáveis (gira via CSS quando .card-head.open)
   const CHEVRON = `<svg class="chevron" ${SVG_ATTRS}><path d="M6 9l6 6 6-6"/></svg>`;
@@ -2738,11 +2776,23 @@
       wakeOff: 'Manter tela ligada',
       wakeOn: 'Tela sempre ligada',
       wakeIndisponivel: 'Tela sempre ligada (indisponível neste navegador)',
-      temaAuto: 'Tema: automático', temaClaro: 'Tema: claro', temaEscuro: 'Tema: escuro',
+
       // Abas de navegação
       tabReceita: 'Receita', tabPreparo: 'Preparo', tabCronograma: 'Cronograma',
-      tabDiario: 'Diário', tabReferencia: 'Referência', tabAjuda: 'Ajuda',
+      tabDiario: 'Diário', tabReferencia: 'Referência', tabAjuda: 'Ajuda', tabConfig: 'Config',
       expandirTudo: 'Expandir cards', recolherTudo: 'Recolher cards',
+      // Aba Configurações
+      cfgAparenciaTit: 'Aparência',
+      cfgTema: 'Tema:', cfgTemaAuto: 'Automático', cfgTemaClaro: 'Claro', cfgTemaEscuro: 'Escuro',
+      cfgIdioma: 'Idioma:',
+      cfgPreparoTit: 'Preparo',
+      cfgNotifTit: 'Notificações do cronograma',
+      cfgDadosTit: 'Dados e layout',
+      cfgBackupIntro: 'Salve <b>tudo</b> num arquivo (perfis, farinhas, preços, diário com fotos, configuração e idioma) para trocar de aparelho ou fazer backup. Importar <b>substitui</b> os dados atuais.',
+      cfgResetLayoutDesc: 'Reabre todos os cards do app (desfaz os que você recolheu).',
+      cfgResetLayoutBtn: 'Resetar layout dos cards',
+      cfgResetLayoutConfirm: 'Reabrir todos os cards do app?',
+      cronoCalNota: 'Gera um arquivo de calendário com as etapas (com alarme). As <b>notificações</b> ficam na aba <b>Config</b>.',
       // Aba Ajuda — títulos e conteúdo (curto, por tema)
       ajComecarTit: 'Começando',
       ajComecar: '<p>O app é dividido em <b>abas</b> (embaixo do título). O fluxo básico:</p><ol><li><b>Receita</b> — ajuste discos, peso e hidratação.</li><li><b>Preparo</b> — calcule a água e siga os guias com timer.</li><li><b>Cronograma</b> — defina os horários; o app calcula o resto.</li><li><b>Diário</b> — registre cada fornada para calibrar as próximas.</li></ol><p>Cada card <b>abre e fecha</b> ao tocar no título. O app <b>salva tudo</b> neste aparelho.</p>',
@@ -2759,7 +2809,7 @@
       ajDicasTit: 'Dicas de uso',
       ajDicas: '<ul><li><b>Mão na massa</b> (botão no topo): passo a passo em tela cheia para usar na bancada.</li><li><b>Manter tela ligada</b>: impede a tela do celular de apagar durante o preparo.</li><li><b>PT/EN</b>: troque o idioma nas bandeiras.</li><li><b>Imprimir</b>: receita, cronograma, lista de compras e tabela têm botões próprios.</li><li><b>Instalar</b>: no celular, "Adicionar à tela inicial" para usar como app, offline.</li></ul><span class="aj-dica">Botões <b>Expandir/Recolher cards</b> agem na aba atual; o <b>chevron duplo</b> ao lado age em todas as abas.</span>',
       ajSobreTit: 'Sobre',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: © 2026 · Versão: 1.10.2</p><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem">Ooni® Halo Core™ e Fornetto® Slim™ são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><hr class="sobre-sep"><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: <b>© 2026</b> · Versão: <b>1.11.25</b></p><hr class="sobre-sep"><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> e <b>Fornetto® Slim™</b> são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
       // Backup completo
       backupTitulo: 'Backup completo',
       backupIntro: 'Salve <b>tudo</b> num arquivo: perfis, farinhas, preços, diário (com fotos), configuração e idioma. Use para <b>trocar de aparelho</b> ou fazer backup antes de limpar o navegador. Importar <b>substitui</b> os dados atuais.',
@@ -2893,7 +2943,7 @@
       duracaoAppretto: 'Duração do appretto',
       // Lembretes do cronograma (notificações + calendário)
       notifAtivar: 'Ativar notificações',
-      notifDesativar: 'Notificações ativas (tocar para desligar)',
+      notifDesativar: 'Notificações ativas',
       notifAntesLabel: 'Avisar antes:',
       notifNoHorario: 'No horário',
       notifTituloAgora: '🍕 PizzaCalc — hora da etapa',
@@ -2934,7 +2984,7 @@
       btnImprimirVel: 'Imprimir tabela',
       btnImprimirGlossario: 'Imprimir glossário',
       thVel: 'Vel.', thPotencia: 'Potência', thUso: 'Uso / equivalente industrial',
-      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.10.2</span>',
+      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.11.25</span>',
       velIntro: 'Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b> (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).',
       comoFunciona: '<b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e recalcula a água total. O <b>poolish</b> é ajustável de 45% a 100% <b>da água total</b>, sempre a 100% de hidratação (mesma quantidade de água e farinha); o fermento acompanha essa fração. O restante da água e da farinha entra na massa final. Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.',
       progresso: (n, t) => `<b>${n}</b> de ${t} etapas`,
@@ -2983,7 +3033,7 @@
       mixIntro: 'Siga as etapas da massa final na Halo Core com o timer. Cada etapa toca um alarme ao terminar e libera a próxima. Monitore a temperatura para chegar em <b>19–23°C</b>.',
       mixTotalLbl: (dur) => `Tempo ativo de mistura: <b>${dur}</b> (fora a pausa)`,
       mixStart: 'Iniciar', mixPause: 'Pausar', mixResume: 'Retomar', mixReset: 'Zerar',
-      mixPararAlarme: '🔔 Parar alarme',
+      mixPararAlarme: 'Parar alarme',
       mixOpcional: 'opcional',
       mixS1Tit: 'Dissolver o poolish', mixS1Vel: 'velocidade 4',
       mixS1Desc: 'Toda a água + todo o poolish no bowl por 1 minuto até dissolver bem.',
@@ -3107,11 +3157,23 @@
       wakeOff: 'Keep screen on',
       wakeOn: 'Screen stays on',
       wakeIndisponivel: 'Keep screen on (not supported in this browser)',
-      temaAuto: 'Theme: automatic', temaClaro: 'Theme: light', temaEscuro: 'Theme: dark',
+
       // Navigation tabs
       tabReceita: 'Recipe', tabPreparo: 'Prep', tabCronograma: 'Schedule',
-      tabDiario: 'Log', tabReferencia: 'Reference', tabAjuda: 'Help',
+      tabDiario: 'Log', tabReferencia: 'Reference', tabAjuda: 'Help', tabConfig: 'Settings',
       expandirTudo: 'Expand cards', recolherTudo: 'Collapse cards',
+      // Settings tab
+      cfgAparenciaTit: 'Appearance',
+      cfgTema: 'Theme:', cfgTemaAuto: 'Automatic', cfgTemaClaro: 'Light', cfgTemaEscuro: 'Dark',
+      cfgIdioma: 'Language:',
+      cfgPreparoTit: 'Prep',
+      cfgNotifTit: 'Schedule notifications',
+      cfgDadosTit: 'Data & layout',
+      cfgBackupIntro: 'Save <b>everything</b> to a file (profiles, flours, prices, log with photos, settings and language) to move devices or back up. Importing <b>replaces</b> the current data.',
+      cfgResetLayoutDesc: 'Reopens all app cards (undoes the ones you collapsed).',
+      cfgResetLayoutBtn: 'Reset cards layout',
+      cfgResetLayoutConfirm: 'Reopen all app cards?',
+      cronoCalNota: 'Generates a calendar file with the stages (with an alarm). <b>Notifications</b> are on the <b>Settings</b> tab.',
       // Help tab — titles and content (short, by theme)
       ajComecarTit: 'Getting started',
       ajComecar: '<p>The app is split into <b>tabs</b> (below the title). The basic flow:</p><ol><li><b>Recipe</b> — set pizzas, weight and hydration.</li><li><b>Prep</b> — compute the water and follow the timed guides.</li><li><b>Schedule</b> — set the times; the app works out the rest.</li><li><b>Log</b> — record each bake to calibrate the next ones.</li></ol><p>Each card <b>opens/closes</b> when you tap its title. The app <b>saves everything</b> on this device.</p>',
@@ -3128,7 +3190,7 @@
       ajDicasTit: 'Usage tips',
       ajDicas: '<ul><li><b>Hands-on</b> (top button): a full-screen step-by-step for the bench.</li><li><b>Keep screen on</b>: stops the phone screen turning off during prep.</li><li><b>PT/EN</b>: switch language with the flags.</li><li><b>Print</b>: recipe, schedule, shopping list and table have their own buttons.</li><li><b>Install</b>: on mobile, "Add to Home screen" to use it as an app, offline.</li></ul><span class="aj-dica"><b>Expand/Collapse cards</b> acts on the current tab; the <b>double chevron</b> next to it acts on all tabs.</span>',
       ajSobreTit: 'About',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><p>Developed by <b>Paulo Godoy</b></p><p>Year: © 2026 · Version: 1.10.2</p><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem">Ooni® Halo Core™ and Fornetto® Slim™ are trademarks of their respective owners, cited only as equipment reference.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><hr class="sobre-sep"><p>Developed by <b>Paulo Godoy</b></p><p>Year: <b>© 2026</b> · Version: <b>1.11.25</b></p><hr class="sobre-sep"><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> and <b>Fornetto® Slim™</b> are trademarks of their respective owners, cited only as equipment reference.</p>',
       // Full backup
       backupTitulo: 'Full backup',
       backupIntro: 'Save <b>everything</b> to a file: profiles, flours, prices, log (with photos), settings and language. Use it to <b>move to another device</b> or back up before clearing the browser. Importing <b>replaces</b> the current data.',
@@ -3255,7 +3317,7 @@
       duracaoAppretto: 'Appretto duration',
       // Schedule reminders (notifications + calendar)
       notifAtivar: 'Enable notifications',
-      notifDesativar: 'Notifications on (tap to turn off)',
+      notifDesativar: 'Notifications on',
       notifAntesLabel: 'Notify before:',
       notifNoHorario: 'On time',
       notifTituloAgora: '🍕 PizzaCalc — stage time',
@@ -3296,7 +3358,7 @@
       btnImprimirVel: 'Print table',
       btnImprimirGlossario: 'Print glossary',
       thVel: 'Speed', thPotencia: 'Power', thUso: 'Use / industrial equivalent',
-      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.10.2</span>',
+      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.11.25</span>',
       velIntro: 'Spiral mixer with rotating bowl (60–300 RPM). Since the industrial mixer is also a spiral, the comparison is direct by hook RPM: <b>industrial 1st speed ≈ 100 RPM</b> (speed 4) and <b>2nd speed ≈ 200 RPM</b> (speed 12).',
       comoFunciona: '<b>How it works:</b> Quantities scale proportionally, keeping the recipe ratios (flour 95% Alma + 5% Integral, salt 2.5%, yeast 0.1%). <b>Hydration</b> is adjustable and recalculates the total water. The <b>poolish</b> is adjustable from 45% to 100% <b>of the total water</b>, always at 100% hydration (equal water and flour); the yeast follows that fraction. The remaining water and flour go into the final dough. A ~1% dough loss during handling is accounted for in the reverse calculation.',
       progresso: (n, t) => `<b>${n}</b> of ${t} steps`,
@@ -3342,7 +3404,7 @@
       mixIntro: 'Follow the final-dough steps on the Halo Core with the timer. Each step rings an alarm when it ends and unlocks the next one. Monitor the temperature to reach <b>19–23°C</b>.',
       mixTotalLbl: (dur) => `Active mixing time: <b>${dur}</b> (excluding the rest)`,
       mixStart: 'Start', mixPause: 'Pause', mixResume: 'Resume', mixReset: 'Reset',
-      mixPararAlarme: '🔔 Stop alarm',
+      mixPararAlarme: 'Stop alarm',
       mixOpcional: 'optional',
       mixS1Tit: 'Dissolve the poolish', mixS1Vel: 'speed 4',
       mixS1Desc: 'All the water + all the poolish in the bowl for 1 minute until well dissolved.',
@@ -3499,7 +3561,7 @@
     // sincroniza com o idioma atual a partir das chaves i18n.
     document.querySelectorAll('.tab-btn').forEach(b => {
       const tab = b.getAttribute('data-tab');
-      const chave = { receita: 'tabReceita', preparo: 'tabPreparo', cronograma: 'tabCronograma', diario: 'tabDiario', referencia: 'tabReferencia' }[tab];
+      const chave = { receita: 'tabReceita', preparo: 'tabPreparo', cronograma: 'tabCronograma', diario: 'tabDiario', referencia: 'tabReferencia', ajuda: 'tabAjuda', config: 'tabConfig' }[tab];
       if (chave) { b.setAttribute('title', t(chave)); b.setAttribute('aria-label', t(chave)); }
     });
     const sairB = document.getElementById('mnmSair');
@@ -3534,18 +3596,24 @@
     if (typeof renderRecheios === 'function') renderRecheios();
     { const ri = document.getElementById('recheiosIntro'); if (ri) ri.innerHTML = t('recheiosIntro'); }
     { const b = document.getElementById('backupIntro'); if (b) b.innerHTML = t('backupIntro'); }
+    { const cb = document.getElementById('cfgBackupIntro'); if (cb) cb.innerHTML = t('cfgBackupIntro'); }
     if (typeof atualizarCollapseAll === 'function') atualizarCollapseAll();
     if (typeof atualizarNotifUI === 'function') atualizarNotifUI();
     if (typeof aplicarTema === 'function') aplicarTema();
+    if (typeof atualizarSegLang === 'function') atualizarSegLang();
     render();
   }
 
   function setLang(lang) {
     LANG = (lang === 'en') ? 'en' : 'pt';
-    try { localStorage.setItem('pizzaLang', LANG); } catch (e) {}
-    document.querySelectorAll('.lang-btn').forEach(b =>
-      b.classList.toggle('active', b.getAttribute('data-lang') === LANG));
+    lsSet('pizzaLang', LANG);
+    atualizarSegLang();
     aplicarIdioma();
+  }
+  // Marca o segmento de idioma ativo no seletor da aba Config
+  function atualizarSegLang() {
+    document.querySelectorAll('#cfgLangSeg .cfg-seg-btn').forEach(b =>
+      b.classList.toggle('active', b.getAttribute('data-lang-opt') === LANG));
   }
 
   // ===== Proporções base da receita (baker's percentages) =====
@@ -3677,7 +3745,7 @@
 
   // Liga/desliga o ajuste, persiste e recalcula
   function toggleFermTemp() {
-    try { localStorage.setItem('pizzaFermTemp', fermTempAtivo() ? '1' : '0'); } catch (e) {}
+    lsSet('pizzaFermTemp', fermTempAtivo() ? '1' : '0');
     render();
   }
   // Mostra/esconde e preenche a nota explicativa (recebe a fração já calculada)
@@ -3890,7 +3958,7 @@
     if (alvo == null) return;
     hidraNum.value = alvo;
     hidraRange.value = clamp(alvo, parseInt(hidraRange.min), parseInt(hidraRange.max));
-    try { localStorage.setItem('pizzaHidratacaoEstilo', estilo); } catch (e) {}
+    lsSet('pizzaHidratacaoEstilo', estilo);
     render();
   }
 
@@ -3960,13 +4028,7 @@
       `<div class="compras-grupo"><div class="compras-grupo-tit">${t('comprasGrupoMolho')}</div>${molho.map(([n, q]) => item(n, q)).join('')}</div>`;
   }
 
-  function toggleCompras() {
-    const wrap = document.getElementById('comprasWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('comprasToggle', show);
-    saveWrap('comprasWrap', show);
-  }
+  function toggleCompras() { toggleCard('comprasWrap', 'comprasToggle'); }
 
   // Imprime apenas a lista de compras
   function imprimirCompras() {
@@ -3989,14 +4051,11 @@
   const FARINHA_TIPOS = ['00', '0', '1', '2', 'integral', 'semolina', 'outro'];
 
   function lerFarinhas() {
-    try {
-      const raw = localStorage.getItem('pizzaFarinhas');
-      const arr = raw ? JSON.parse(raw) : [];
-      return Array.isArray(arr) ? arr : [];
-    } catch (e) { return []; }
+    const arr = lsGetJSON('pizzaFarinhas', []);
+    return Array.isArray(arr) ? arr : [];
   }
   function gravarFarinhas(lista) {
-    try { localStorage.setItem('pizzaFarinhas', JSON.stringify(lista)); } catch (e) {}
+    lsSetJSON('pizzaFarinhas', lista);
   }
 
   // Nome legível de uma farinha (para exibir na ficha do diário / seletor)
@@ -4112,14 +4171,7 @@
     renderFarinhas();
   }
 
-  function toggleFarinhas() {
-    const wrap = document.getElementById('farinhasWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('farinhasToggle', show);
-    saveWrap('farinhasWrap', show);
-    if (show) renderFarinhas();
-  }
+  function toggleFarinhas() { toggleCard('farinhasWrap', 'farinhasToggle', renderFarinhas); }
 
   // ===== Vínculo de farinhas na ficha do diário (blend com %) =====
   // f.farinhas = [{ id, pct }]. Mostra resumo no grid + editor inline.
@@ -4264,12 +4316,11 @@
   };
 
   function lerPrecos() {
-    let saved = null;
-    try { saved = JSON.parse(localStorage.getItem('pizzaCustoPrecos')); } catch (e) {}
+    const saved = lsGetJSON('pizzaCustoPrecos');
     return Object.assign({}, CUSTO_PADRAO, (saved && typeof saved === 'object') ? saved : {});
   }
   function gravarPrecos(p) {
-    try { localStorage.setItem('pizzaCustoPrecos', JSON.stringify(p)); } catch (e) {}
+    lsSetJSON('pizzaCustoPrecos', p);
   }
 
   // Formata dinheiro no idioma atual (vírgula/ponto), 2 casas
@@ -4361,14 +4412,7 @@
     renderHistPrecos();
   }
 
-  function toggleCusto() {
-    const wrap = document.getElementById('custoWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('custoToggle', show);
-    saveWrap('custoWrap', show);
-    if (show) render();
-  }
+  function toggleCusto() { toggleCard('custoWrap', 'custoToggle', render); }
 
   // Salva os preços digitados e recalcula (chamado pelos inputs via delegação)
   function salvarCustoPrecos() {
@@ -4438,14 +4482,11 @@
   const CUSTO_CHAVES = ['alma', 'integral', 'sal', 'fermento', 'tomate', 'alho', 'manjericao', 'azeite'];
 
   function lerHistPrecos() {
-    try {
-      const raw = localStorage.getItem('pizzaCustoHistorico');
-      const arr = raw ? JSON.parse(raw) : [];
-      return Array.isArray(arr) ? arr : [];
-    } catch (e) { return []; }
+    const arr = lsGetJSON('pizzaCustoHistorico', []);
+    return Array.isArray(arr) ? arr : [];
   }
   function gravarHistPrecos(lista) {
-    try { localStorage.setItem('pizzaCustoHistorico', JSON.stringify(lista)); } catch (e) {}
+    lsSetJSON('pizzaCustoHistorico', lista);
   }
 
   // Custo total + por pizza dos preços informados, para a produção atual (referência)
@@ -4663,6 +4704,12 @@
       ['ajReferenciaWrap', () => toggleAjuda('ajReferencia')],
       ['ajDicasWrap', () => toggleAjuda('ajDicas')],
       ['ajSobreWrap', () => toggleAjuda('ajSobre')]
+    ],
+    config: [
+      ['cfgAparenciaWrap', () => toggleCfg('cfgAparencia')],
+      ['cfgPreparoWrap', () => toggleCfg('cfgPreparo')],
+      ['cfgNotifWrap', () => toggleCfg('cfgNotif')],
+      ['cfgDadosWrap', () => toggleCfg('cfgDados')]
     ]
   };
   let abaAtiva = 'receita';
@@ -4736,7 +4783,7 @@
   // ===== Estado dos blocos colapsáveis (aberto por padrão + persistência) =====
   // Salva se um bloco está aberto. Chave no localStorage: 'pizzaOpen_<id>'.
   function saveWrap(id, aberto) {
-    try { localStorage.setItem('pizzaOpen_' + id, aberto ? '1' : '0'); } catch (e) {}
+    lsSet('pizzaOpen_' + id, aberto ? '1' : '0');
   }
   // Reflete no cabeçalho o estado aberto/fechado: classe .open, aria-expanded e o chevron.
   function setHeadState(headId, aberto) {
@@ -4750,8 +4797,7 @@
   }
   // Restaura o estado de um bloco. Sem preferência salva => ABERTO por padrão.
   function restoreWrap(wrapId, headId) {
-    let pref = null;
-    try { pref = localStorage.getItem('pizzaOpen_' + wrapId); } catch (e) {}
+    const pref = lsGet('pizzaOpen_' + wrapId);
     const aberto = (pref === null) ? true : (pref === '1');
     const wrap = document.getElementById(wrapId);
     if (!wrap) return;
@@ -4779,38 +4825,25 @@
     ['ajComecar', 'ajReceita', 'ajPreparo', 'ajCronograma', 'ajDiario', 'ajReferencia', 'ajDicas', 'ajSobre']
       .forEach(p => restoreWrap(p + 'Wrap', p + 'Toggle'));
     restoreWrap('backupWrap', 'backupToggle');
+    ['cfgAparencia', 'cfgPreparo', 'cfgNotif', 'cfgDados']
+      .forEach(p => restoreWrap(p + 'Wrap', p + 'Toggle'));
   }
 
-  function toggleIng() {
-    const wrap = document.getElementById('ingWrap');
+  // Abre/fecha um card colapsável genérico. wrapId = id do conteúdo; headId = id do
+  // cabeçalho (chevron); cb (opcional) roda quando o card é ABERTO (ex.: render()).
+  function toggleCard(wrapId, headId, cb) {
+    const wrap = document.getElementById(wrapId);
     const show = !wrap.classList.contains('show');
     wrap.classList.toggle('show', show);
-    setHeadState('ingToggle', show);
-    saveWrap('ingWrap', show);
-  }
-  function toggleDiv() {
-    const wrap = document.getElementById('divWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('divToggle', show);
-    saveWrap('divWrap', show);
-  }
-  function toggleMolho() {
-    const wrap = document.getElementById('molhoWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('molhoToggle', show);
-    saveWrap('molhoWrap', show);
+    setHeadState(headId, show);
+    saveWrap(wrapId, show);
+    if (show && typeof cb === 'function') cb();
   }
 
-  function toggleDDT() {
-    const wrap = document.getElementById('ddtWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('ddtToggle', show);
-    saveWrap('ddtWrap', show);
-    if (show) render();
-  }
+  function toggleIng() { toggleCard('ingWrap', 'ingToggle'); }
+  function toggleDiv() { toggleCard('divWrap', 'divToggle'); }
+  function toggleMolho() { toggleCard('molhoWrap', 'molhoToggle'); }
+  function toggleDDT() { toggleCard('ddtWrap', 'ddtToggle', render); }
 
   // ===== Temperatura da água (DDT) =====
   // Com pré-fermento (poolish), usa-se a regra de 4 FATORES: o poolish é uma
@@ -5090,13 +5123,7 @@
     render();
   }
 
-  function toggleTimeline() {
-    const wrap = document.getElementById('timelineWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('tlToggle', show);
-    saveWrap('timelineWrap', show);
-  }
+  function toggleTimeline() { toggleCard('timelineWrap', 'tlToggle'); }
 
   // ===== Tabela de velocidades =====
   function renderVelocidades() {
@@ -5108,13 +5135,7 @@
     document.getElementById('velTbody').innerHTML = html;
   }
 
-  function toggleVelocidades() {
-    const wrap = document.getElementById('velocidadesWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('velToggle', show);
-    saveWrap('velocidadesWrap', show);
-  }
+  function toggleVelocidades() { toggleCard('velocidadesWrap', 'velToggle'); }
 
   // ===== Glossário napolitano =====
   function renderGlossario() {
@@ -5123,13 +5144,7 @@
       ([termo, def]) => `<dt>${termo}</dt><dd>${def}</dd>`
     ).join('');
   }
-  function toggleGlossario() {
-    const wrap = document.getElementById('glossarioWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('glossarioToggle', show);
-    saveWrap('glossarioWrap', show);
-  }
+  function toggleGlossario() { toggleCard('glossarioWrap', 'glossarioToggle'); }
 
   // ===== Solução de problemas =====
   function renderTrouble() {
@@ -5143,13 +5158,7 @@
         </details>`
     ).join('');
   }
-  function toggleTrouble() {
-    const wrap = document.getElementById('troubleWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('troubleToggle', show);
-    saveWrap('troubleWrap', show);
-  }
+  function toggleTrouble() { toggleCard('troubleWrap', 'troubleToggle'); }
 
   // ===== Biblioteca de recheios / combinações (estática) =====
   function renderRecheios() {
@@ -5169,13 +5178,7 @@
       d.addEventListener('toggle', atualizarRecheiosToggleAll));
     atualizarRecheiosToggleAll();
   }
-  function toggleRecheios() {
-    const wrap = document.getElementById('recheiosWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('recheiosToggle', show);
-    saveWrap('recheiosWrap', show);
-  }
+  function toggleRecheios() { toggleCard('recheiosWrap', 'recheiosToggle'); }
 
   // Expande/recolhe TODAS as receitas (os <details>) de uma vez.
   function toggleTodosRecheios() {
@@ -5346,11 +5349,10 @@
     return `${seg} s`;
   }
 
-  // Para o alarme da etapa concluída (botão "Parar alarme")
+  // Parar o alarme volta a etapa ao estado inicial (relógio cheio, só o play,
+  // sem marca de concluída) — mesmo comportamento do reset da etapa.
   function mixPararAlarme() {
-    pararAlarme();
-    mixState.alarme = false;
-    renderMix();
+    mixReset(mixState.idx);
   }
 
   function mixStart(i) {
@@ -5405,14 +5407,7 @@
     }
   }
 
-  function toggleMix() {
-    const wrap = document.getElementById('mixWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('mixToggle', show);
-    saveWrap('mixWrap', show);
-    if (show) renderMix();
-  }
+  function toggleMix() { toggleCard('mixWrap', 'mixToggle', renderMix); }
 
   // ===== Timers do forno Fornetto =====
   const PREAQ_SEG = 40 * 60;      // 40 min de pré-aquecimento
@@ -5443,14 +5438,24 @@
     }, 1000);
     atualizarPreaq();
   }
-  function preaqPause() {
-    if (preaq.tick) { clearInterval(preaq.tick); preaq.tick = null; }
-    preaq.rodando = false;
-    document.getElementById('preaqTimer').classList.remove('running');
-    atualizarPreaq();
+  // Helpers comuns dos timers do forno: pausar (para o tick) e parar o alarme.
+  // Recebem o objeto de estado, o id do card e a função de redesenho.
+  function pausarTimerForno(estado, timerId, atualizar) {
+    if (estado.tick) { clearInterval(estado.tick); estado.tick = null; }
+    estado.rodando = false;
+    document.getElementById(timerId).classList.remove('running');
+    atualizar();
   }
+  // Silencia o alarme e limpa o flag/classe (passo interno; quem chama redesenha).
+  function pararAlarmeTimerForno(estado, timerId) {
+    pararAlarme();
+    estado.alarme = false;
+    document.getElementById(timerId).classList.remove('alarme');
+  }
+
+  function preaqPause() { pausarTimerForno(preaq, 'preaqTimer', atualizarPreaq); }
   function preaqReset() {
-    preaqPararAlarme();
+    pararAlarmeTimerForno(preaq, 'preaqTimer');
     preaqPause();
     preaq.restante = PREAQ_SEG;
     const timer = document.getElementById('preaqTimer');
@@ -5458,37 +5463,48 @@
     document.getElementById('preaqDesc').innerHTML = t('preaqDesc');
     atualizarPreaq();
   }
-  function preaqPararAlarme() {
-    pararAlarme();
-    preaq.alarme = false;
-    document.getElementById('preaqTimer').classList.remove('alarme');
-    atualizarPreaq();
-  }
-  function atualizarPreaq() {
-    document.getElementById('preaqClock').textContent = mmss(preaq.restante);
-    const btn = document.getElementById('preaqBtn');
-    const timer = document.getElementById('preaqTimer');
-    const resetBtn = document.getElementById('preaqResetBtn');
+  // Parar o alarme volta o timer ao estado inicial (só o botão play).
+  function preaqPararAlarme() { preaqReset(); }
+  // Parte comum dos dois timers do forno: configura o botão principal (play/pause
+  // ou sino "parar alarme") e o botão de reset (visível só fora do estado inicial).
+  // A lógica específica de cada timer (contagem, barra, status) fica em cada
+  // atualizarXxx; este helper cobre só o que é idêntico entre preaq e cocção.
+  function sincronizarBotoesTimer(cfg) {
+    const btn = document.getElementById(cfg.btnId);
+    const timer = document.getElementById(cfg.timerId);
+    const resetBtn = document.getElementById(cfg.resetBtnId);
     resetBtn.innerHTML = ICO.reset;
     resetBtn.setAttribute('aria-label', t('mixReset'));
     resetBtn.setAttribute('title', t('mixReset'));
     // reset só aparece fora do estado inicial (rodando, pausado ou alarme)
-    const preaqInicial = !preaq.rodando && !preaq.alarme && preaq.restante === PREAQ_SEG;
-    resetBtn.style.display = preaqInicial ? 'none' : '';
-    if (preaq.alarme) {
+    resetBtn.style.display = cfg.inicial ? 'none' : '';
+    if (cfg.estado.alarme) {
       timer.classList.add('alarme');
-      btn.innerHTML = `${ICO.sino}<span>${t('mixPararAlarme')}</span>`;
-      btn.className = 'alarme-btn';
-      btn.removeAttribute('aria-label'); btn.removeAttribute('title');
-      btn.setAttribute('onclick', 'preaqPararAlarme()');
+      btn.innerHTML = ICO.sino;
+      btn.className = 'alarme-btn icon-btn';
+      btn.setAttribute('aria-label', t('mixPararAlarme'));
+      btn.setAttribute('title', t('mixPararAlarme'));
+      // usa a PROPRIEDADE onclick (não setAttribute) para substituir de forma
+      // confiável o handler inline do HTML — evita o clique cair no toggle antigo
+      btn.onclick = cfg.onPararAlarme;
     } else {
       timer.classList.remove('alarme');
-      const lbl = preaq.rodando ? t('mixPause') : t('mixStart');
-      btn.innerHTML = preaq.rodando ? ICO.pause : ICO.play;
+      const lbl = cfg.estado.rodando ? t('mixPause') : t('mixStart');
+      btn.innerHTML = cfg.estado.rodando ? ICO.pause : ICO.play;
       btn.className = 'primary icon-btn';
       btn.setAttribute('aria-label', lbl); btn.setAttribute('title', lbl);
-      btn.setAttribute('onclick', 'preaqToggle()');
+      btn.onclick = cfg.onToggle;
     }
+  }
+
+  function atualizarPreaq() {
+    document.getElementById('preaqClock').textContent = mmss(preaq.restante);
+    sincronizarBotoesTimer({
+      timerId: 'preaqTimer', btnId: 'preaqBtn', resetBtnId: 'preaqResetBtn',
+      estado: preaq,
+      inicial: !preaq.rodando && !preaq.alarme && preaq.restante === PREAQ_SEG,
+      onToggle: preaqToggle, onPararAlarme: preaqPararAlarme
+    });
   }
 
   // Cocção (progressivo, com marcações em 100s e 150s)
@@ -5515,50 +5531,24 @@
     }, 1000);
     atualizarCoccao();
   }
-  function coccaoPause() {
-    if (coccao.tick) { clearInterval(coccao.tick); coccao.tick = null; }
-    coccao.rodando = false;
-    document.getElementById('coccaoTimer').classList.remove('running');
-    atualizarCoccao();
-  }
+  function coccaoPause() { pausarTimerForno(coccao, 'coccaoTimer', atualizarCoccao); }
   function coccaoReset() {
-    coccaoPararAlarme();
+    pararAlarmeTimerForno(coccao, 'coccaoTimer');
     coccaoPause();
     coccao.seg = 0; coccao.beep100 = false; coccao.beep150 = false;
     atualizarCoccao();
   }
-  function coccaoPararAlarme() {
-    pararAlarme();
-    coccao.alarme = false;
-    document.getElementById('coccaoTimer').classList.remove('alarme');
-    atualizarCoccao();
-  }
+  // Parar o alarme volta o timer ao estado inicial (só o botão play).
+  function coccaoPararAlarme() { coccaoReset(); }
   function atualizarCoccao() {
     const s = coccao.seg;
     document.getElementById('coccaoClock').textContent = mmss(s);
-    const btn = document.getElementById('coccaoBtn');
-    const timer = document.getElementById('coccaoTimer');
-    const resetBtn = document.getElementById('coccaoResetBtn');
-    resetBtn.innerHTML = ICO.reset;
-    resetBtn.setAttribute('aria-label', t('mixReset'));
-    resetBtn.setAttribute('title', t('mixReset'));
-    // reset só aparece fora do estado inicial (rodando, pausado ou alarme)
-    const coccaoInicial = !coccao.rodando && !coccao.alarme && coccao.seg === 0;
-    resetBtn.style.display = coccaoInicial ? 'none' : '';
-    if (coccao.alarme) {
-      timer.classList.add('alarme');
-      btn.innerHTML = `${ICO.sino}<span>${t('mixPararAlarme')}</span>`;
-      btn.className = 'alarme-btn';
-      btn.removeAttribute('aria-label'); btn.removeAttribute('title');
-      btn.setAttribute('onclick', 'coccaoPararAlarme()');
-    } else {
-      timer.classList.remove('alarme');
-      const lbl = coccao.rodando ? t('mixPause') : t('mixStart');
-      btn.innerHTML = coccao.rodando ? ICO.pause : ICO.play;
-      btn.className = 'primary icon-btn';
-      btn.setAttribute('aria-label', lbl); btn.setAttribute('title', lbl);
-      btn.setAttribute('onclick', 'coccaoToggle()');
-    }
+    sincronizarBotoesTimer({
+      timerId: 'coccaoTimer', btnId: 'coccaoBtn', resetBtnId: 'coccaoResetBtn',
+      estado: coccao,
+      inicial: !coccao.rodando && !coccao.alarme && coccao.seg === 0,
+      onToggle: coccaoToggle, onPararAlarme: coccaoPararAlarme
+    });
 
     // barra de progresso (0..COCCAO_BAR)
     const fill = document.getElementById('coccaoFill');
@@ -5579,27 +5569,17 @@
     }
   }
 
-  function toggleForno() {
-    const wrap = document.getElementById('fornoWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('fornoToggle', show);
-    saveWrap('fornoWrap', show);
-    if (show) { atualizarPreaq(); atualizarCoccao(); }
-  }
+  function toggleForno() { toggleCard('fornoWrap', 'fornoToggle', () => { atualizarPreaq(); atualizarCoccao(); }); }
 
   // ===== Diário de fornadas =====
   // Cada fornada guarda produção + temperaturas do dia + massa medida + forno + nota.
   // Com a massa medida, recalcula o atrito real da Halo Core (inverso do DDT).
   function lerDiario() {
-    try {
-      const raw = localStorage.getItem('pizzaDiario');
-      const arr = raw ? JSON.parse(raw) : [];
-      return Array.isArray(arr) ? arr : [];
-    } catch (e) { return []; }
+    const arr = lsGetJSON('pizzaDiario', []);
+    return Array.isArray(arr) ? arr : [];
   }
   function gravarDiario(lista) {
-    try { localStorage.setItem('pizzaDiario', JSON.stringify(lista)); } catch (e) {}
+    lsSetJSON('pizzaDiario', lista);
   }
 
   // Atrito real de uma fornada = massa*4 − (farinha + ambiente + poolish + água).
@@ -6037,32 +6017,29 @@
     else if (e.key === 'ArrowRight') lightboxNav(1);
   });
 
-  function toggleDiario() {
-    const wrap = document.getElementById('diarioWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('diarioToggle', show);
-    saveWrap('diarioWrap', show);
-    if (show) renderDiario();
-  }
-
-  function toggleInsights() {
-    const wrap = document.getElementById('insightsWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('insightsToggle', show);
-    saveWrap('insightsWrap', show);
-    if (show) renderInsights();
-  }
+  function toggleDiario() { toggleCard('diarioWrap', 'diarioToggle', renderDiario); }
+  function toggleInsights() { toggleCard('insightsWrap', 'insightsToggle', renderInsights); }
 
   // ===== Aba Ajuda (cards colapsáveis genéricos) =====
   // prefix ex.: 'ajComecar' -> wrap #ajComecarWrap, cabeçalho #ajComecarToggle
-  function toggleAjuda(prefix) {
-    const wrap = document.getElementById(prefix + 'Wrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState(prefix + 'Toggle', show);
-    saveWrap(prefix + 'Wrap', show);
+  // Aba Ajuda e Config: prefix ex. 'ajComecar' -> #ajComecarWrap / #ajComecarToggle
+  function toggleAjuda(prefix) { toggleCard(prefix + 'Wrap', prefix + 'Toggle'); }
+  function toggleCfg(prefix) { toggleCard(prefix + 'Wrap', prefix + 'Toggle'); }
+
+  // Reseta o layout dos cards: apaga todas as preferências pizzaOpen_* (que
+  // guardam quais cards estão recolhidos) e reabre tudo. Não toca em dados.
+  function resetarLayoutCards() {
+    if (!confirm(t('cfgResetLayoutConfirm'))) return;
+    try {
+      const remover = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.indexOf('pizzaOpen_') === 0) remover.push(k);
+      }
+      remover.forEach(k => localStorage.removeItem(k));
+    } catch (e) {}
+    if (typeof restoreWraps === 'function') restoreWraps();
+    if (typeof atualizarCollapseAll === 'function') atualizarCollapseAll();
   }
 
   // ===== Exportar / compartilhar / importar =====
@@ -6233,13 +6210,7 @@
     reader.readAsText(file);
   }, false);
 
-  function toggleBackup() {
-    const wrap = document.getElementById('backupWrap');
-    const show = !wrap.classList.contains('show');
-    wrap.classList.toggle('show', show);
-    setHeadState('backupToggle', show);
-    saveWrap('backupWrap', show);
-  }
+  function toggleBackup() { toggleCard('backupWrap', 'backupToggle'); }
 
   renderDiario();
 
@@ -6291,28 +6262,38 @@
 
   // Preferências das notificações (ligado? quantos min antes?)
   function notifAtivo() {
-    try { return localStorage.getItem('pizzaNotif') === '1'; } catch (e) { return false; }
+    return lsGet('pizzaNotif') === '1';
   }
   function notifMinAntes() {
     const el = document.getElementById('notifAntes');
     return el ? (parseInt(el.value) || 0) : 0;
   }
   function salvarNotifPrefs() {
-    try { localStorage.setItem('pizzaNotifAntes', String(notifMinAntes())); } catch (e) {}
+    lsSet('pizzaNotifAntes', String(notifMinAntes()));
   }
 
   // Liga/desliga as notificações. Ao ligar, pede permissão ao navegador.
   function toggleNotificacoes() {
+    // Desligar
     if (notifAtivo()) {
-      try { localStorage.setItem('pizzaNotif', '0'); } catch (e) {}
+      lsSet('pizzaNotif', '0');
       limparNotificacoes();
       atualizarNotifUI();
       return;
     }
+    // Ligar
     if (!('Notification' in window)) { alert(t('notifSemSuporte')); return; }
+    // Se a permissão já foi concedida antes, liga direto (não reabre o prompt)
+    if (Notification.permission === 'granted') {
+      lsSet('pizzaNotif', '1');
+      reagendarNotificacoes();
+      atualizarNotifUI();
+      return;
+    }
+    // Caso contrário, pede a permissão
     Notification.requestPermission().then(perm => {
       if (perm === 'granted') {
-        try { localStorage.setItem('pizzaNotif', '1'); } catch (e) {}
+        lsSet('pizzaNotif', '1');
         reagendarNotificacoes();
       } else {
         alert(t('notifNegada'));
@@ -6502,13 +6483,10 @@
   }
 
   function loadDone() {
-    try {
-      const raw = localStorage.getItem('pizzaTimelineDone');
-      return raw ? JSON.parse(raw) : [];
-    } catch (e) { return []; }
+    return lsGetJSON('pizzaTimelineDone', []);
   }
   function saveDone() {
-    try { localStorage.setItem('pizzaTimelineDone', JSON.stringify(doneSteps)); } catch (e) {}
+    lsSetJSON('pizzaTimelineDone', doneSteps);
   }
 
   function etapaRow(nome, val) {
@@ -6562,23 +6540,19 @@
   // Persistência dos controles de produção (discos/peso/hidratação): salva a
   // cada mudança e restaura ao abrir, para não voltar ao padrão a cada reload.
   function salvarProducao() {
-    try {
-      localStorage.setItem('pizzaProducao', JSON.stringify({
-        discos: discosNum.value, peso: pesoNum.value, hidra: hidraNum.value, poolish: poolishNum.value
-      }));
-    } catch (e) {}
+    lsSetJSON('pizzaProducao', {
+      discos: discosNum.value, peso: pesoNum.value, hidra: hidraNum.value, poolish: poolishNum.value
+    });
   }
   // Restaura o toggle de ajuste de fermento pela temperatura (desligado por padrão)
   (function initFermTemp() {
-    let saved = '0';
-    try { saved = localStorage.getItem('pizzaFermTemp') || '0'; } catch (e) {}
+    const saved = lsGet('pizzaFermTemp', '0');
     const el = document.getElementById('fermTempToggle');
     if (el) el.checked = (saved === '1');
   })();
 
   (function initProducao() {
-    let saved = null;
-    try { saved = JSON.parse(localStorage.getItem('pizzaProducao')); } catch (e) {}
+    const saved = lsGetJSON('pizzaProducao');
     if (!saved) return;
     if (saved.discos != null) { discosNum.value = saved.discos; discosRange.value = clamp(parseInt(saved.discos) || 6, parseInt(discosRange.min), parseInt(discosRange.max)); }
     if (saved.peso != null) { pesoNum.value = saved.peso; pesoRange.value = clamp(parseInt(saved.peso) || 280, parseInt(pesoRange.min), parseInt(pesoRange.max)); }
@@ -6594,12 +6568,10 @@
   const ddtAtrito = document.getElementById('ddtAtrito');
 
   function salvarDDT() {
-    try {
-      localStorage.setItem('pizzaDDT', JSON.stringify({
-        ambiente: ddtAmbiente.value, farinha: ddtFarinha.value,
-        poolish: ddtPoolish.value, alvo: ddtAlvo.value, atrito: ddtAtrito.value
-      }));
-    } catch (e) {}
+    lsSetJSON('pizzaDDT', {
+      ambiente: ddtAmbiente.value, farinha: ddtFarinha.value,
+      poolish: ddtPoolish.value, alvo: ddtAlvo.value, atrito: ddtAtrito.value
+    });
   }
   [ddtAmbiente, ddtFarinha, ddtPoolish, ddtAlvo, ddtAtrito].forEach(el => {
     el.addEventListener('input', () => { salvarDDT(); render(); });
@@ -6608,8 +6580,7 @@
   const DDT_PADRAO = { ambiente: '21', farinha: '21', poolish: '4', alvo: '21', atrito: '36' };
 
   (function initDDT() {
-    let saved = null;
-    try { saved = JSON.parse(localStorage.getItem('pizzaDDT')); } catch (e) {}
+    const saved = lsGetJSON('pizzaDDT');
     if (saved) {
       if (saved.ambiente != null) ddtAmbiente.value = saved.ambiente;
       if (saved.farinha != null) ddtFarinha.value = saved.farinha;
@@ -6688,14 +6659,11 @@
   const elsAssar = { dia: assarDia, mes: assarMes, ano: assarAno, hora: assarHora };
 
   function salvarPlano() {
-    try {
-      const p = {
-        inicio: [inicioDia.value, inicioMes.value, inicioAno.value, inicioHora.value],
-        assar: [assarDia.value, assarMes.value, assarAno.value, assarHora.value],
-        appretto: apprettoRange.value
-      };
-      localStorage.setItem('pizzaPlano', JSON.stringify(p));
-    } catch (e) {}
+    lsSetJSON('pizzaPlano', {
+      inicio: [inicioDia.value, inicioMes.value, inicioAno.value, inicioHora.value],
+      assar: [assarDia.value, assarMes.value, assarAno.value, assarHora.value],
+      appretto: apprettoRange.value
+    });
   }
 
   [inicioDia, inicioMes, inicioAno, inicioHora, assarDia, assarMes, assarAno, assarHora].forEach(sel => {
@@ -6709,8 +6677,7 @@
 
   // Restaura plano salvo ou usa padrão (poolish próxima sexta 14:00; assar domingo 19:00)
   (function initPlano() {
-    let saved = null;
-    try { saved = JSON.parse(localStorage.getItem('pizzaPlano')); } catch (e) {}
+    const saved = lsGetJSON('pizzaPlano');
     if (saved && saved.inicio && saved.assar) {
       [inicioDia.value, inicioMes.value, inicioAno.value, inicioHora.value] = saved.inicio;
       [assarDia.value, assarMes.value, assarAno.value, assarHora.value] = saved.assar;
@@ -6724,13 +6691,12 @@
 
   // Restaura a preferência de "avisar X min antes" e o estado do botão de notificações
   (function initNotif() {
-    let antes = '10';
-    try { antes = localStorage.getItem('pizzaNotifAntes') || '10'; } catch (e) {}
+    const antes = lsGet('pizzaNotifAntes', '10');
     const el = document.getElementById('notifAntes');
     if (el) el.value = antes;
     // Se as notificações foram ligadas antes mas a permissão foi revogada, desliga
     if (notifAtivo() && (!('Notification' in window) || Notification.permission !== 'granted')) {
-      try { localStorage.setItem('pizzaNotif', '0'); } catch (e) {}
+      lsSet('pizzaNotif', '0');
     }
     if (typeof atualizarNotifUI === 'function') atualizarNotifUI();
   })();
@@ -6769,14 +6735,11 @@
   // Cada perfil guarda a configuração de PRODUÇÃO (discos, peso, hidratação).
   // Datas do cronograma e temperaturas do DDT são circunstanciais e não entram.
   function lerPerfis() {
-    try {
-      const raw = localStorage.getItem('pizzaPerfis');
-      const arr = raw ? JSON.parse(raw) : [];
-      return Array.isArray(arr) ? arr : [];
-    } catch (e) { return []; }
+    const arr = lsGetJSON('pizzaPerfis', []);
+    return Array.isArray(arr) ? arr : [];
   }
   function gravarPerfis(lista) {
-    try { localStorage.setItem('pizzaPerfis', JSON.stringify(lista)); } catch (e) {}
+    lsSetJSON('pizzaPerfis', lista);
   }
 
   // (Re)constrói o dropdown de perfis. Chamada também na troca de idioma.
@@ -6852,11 +6815,9 @@
 
   // Inicializa idioma (restaura salvo ou usa PT padrão) e aplica tudo
   (function initLang() {
-    let saved = 'pt';
-    try { saved = localStorage.getItem('pizzaLang') || 'pt'; } catch (e) {}
+    const saved = lsGet('pizzaLang', 'pt');
     LANG = (saved === 'en') ? 'en' : 'pt';
-    document.querySelectorAll('.lang-btn').forEach(b =>
-      b.classList.toggle('active', b.getAttribute('data-lang') === LANG));
+    if (typeof atualizarSegLang === 'function') atualizarSegLang();
   })();
 
   // ===== Tema (claro/escuro/automático) =====
@@ -6880,24 +6841,19 @@
     // meta theme-color acompanha o fundo do tema efetivo
     const mt = document.querySelector('meta[name="theme-color"]');
     if (mt) mt.setAttribute('content', escuro ? '#17140f' : '#cc5500');
-    // ícone + rótulo do botão
-    const ico = document.getElementById('temaIco');
-    if (ico) ico.innerHTML = TEMA === 'claro' ? ICO.temaSol : (TEMA === 'escuro' ? ICO.temaLua : ICO.temaAuto);
-    const lbl = document.getElementById('temaLabel');
-    if (lbl) lbl.textContent = t(TEMA === 'claro' ? 'temaClaro' : (TEMA === 'escuro' ? 'temaEscuro' : 'temaAuto'));
-    const btn = document.getElementById('temaBtn');
-    if (btn) { const tip = lbl ? lbl.textContent : ''; btn.setAttribute('title', tip); btn.setAttribute('aria-label', tip); }
+    // marca o segmento ativo do seletor de tema (aba Config)
+    document.querySelectorAll('#cfgTemaSeg .cfg-seg-btn').forEach(b =>
+      b.classList.toggle('active', b.getAttribute('data-tema-opt') === TEMA));
   }
-  function ciclarTema() {
-    const i = TEMA_ORDEM.indexOf(TEMA);
-    TEMA = TEMA_ORDEM[(i + 1) % TEMA_ORDEM.length];
-    try { localStorage.setItem('pizzaTema', TEMA); } catch (e) {}
+  // Define o tema diretamente (usado pelos botões da aba Config)
+  function setTema(estado) {
+    TEMA = TEMA_ORDEM.includes(estado) ? estado : 'auto';
+    lsSet('pizzaTema', TEMA);
     aplicarTema();
   }
   // Restaura o tema salvo e aplica no boot
   (function initTema() {
-    let saved = 'auto';
-    try { saved = localStorage.getItem('pizzaTema') || 'auto'; } catch (e) {}
+    const saved = lsGet('pizzaTema', 'auto');
     TEMA = TEMA_ORDEM.includes(saved) ? saved : 'auto';
     aplicarTema();
     // no modo automático, reage à mudança do SO em tempo real
@@ -6963,7 +6919,7 @@
   async function toggleWakeLock() {
     if (!wakeSuportado) return;
     wakeDesejado = !wakeDesejado;
-    try { localStorage.setItem('pizzaWake', wakeDesejado ? '1' : '0'); } catch (e) {}
+    lsSet('pizzaWake', wakeDesejado ? '1' : '0');
     if (wakeDesejado) await requestWakeLock();
     else await releaseWakeLock();
   }
@@ -6979,9 +6935,7 @@
   // Restaura a preferência salva (tenta reativar; o navegador pode exigir um
   // gesto do usuário — nesse caso o clique no botão resolve).
   (function initWake() {
-    let saved = '0';
-    try { saved = localStorage.getItem('pizzaWake') || '0'; } catch (e) {}
-    wakeDesejado = (saved === '1');
+    wakeDesejado = (lsGet('pizzaWake', '0') === '1');
     if (wakeDesejado) requestWakeLock();
     atualizarBotaoWake();
   })();
