@@ -761,6 +761,41 @@
     color: #fff;
   }
 
+  /* Timeline "agora": faixa de status + destaque da etapa atual */
+  .crono-agora { display: none; }
+  .crono-agora.show {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px;
+    margin: 0 0 14px; padding: 10px 14px;
+    background: var(--orange-light); border-radius: 10px;
+    border-left: 4px solid var(--orange);
+    font-size: 0.9rem;
+  }
+  .crono-agora.concluido { border-left-color: var(--green); }
+  .crono-agora .ca-lbl {
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--orange); font-weight: 700;
+  }
+  .crono-agora .ca-val { font-weight: 700; color: var(--dark); }
+  .crono-agora .ca-prox { color: var(--text-soft); font-size: 0.86rem; width: 100%; }
+  /* selo AGORA no título da etapa em andamento */
+  .step .tag-agora {
+    display: inline-block; margin-left: 6px;
+    font-size: 0.66rem; font-weight: 700; letter-spacing: 0.5px;
+    color: #fff; background: var(--orange);
+    padding: 2px 8px; border-radius: 20px; vertical-align: middle;
+    text-transform: uppercase;
+  }
+  /* realce da etapa atual (barra/anel laranja, sem depender do checkbox) */
+  .step.agora .content {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--orange) 30%, transparent);
+  }
+  .step.agora .dot {
+    border-color: var(--orange); color: var(--orange);
+  }
+  /* não risca/apaga a etapa atual mesmo se marcada como concluída */
+  .step.agora.done .content { opacity: 1; }
+
   #timelineWrap { display: none; }
   #timelineWrap.show { display: block; }
 
@@ -780,6 +815,23 @@
   .vel-table td:nth-child(1) { font-weight: 700; color: var(--orange); font-variant-numeric: tabular-nums; }
   .vel-table td:nth-child(2), .vel-table td:nth-child(3) { font-variant-numeric: tabular-nums; white-space: nowrap; }
   .vel-table tr.vel-key td { background: var(--orange-light); }
+
+  /* Farinha e hidratação (tabelas de referência) */
+  #farinhaTabWrap { display: none; }
+  #farinhaTabWrap.show { display: block; padding-top: 10px; }
+  .farinha-tab-bloco { margin-bottom: 20px; }
+  .farinha-tab-bloco:last-child { margin-bottom: 0; }
+  .farinha-tab-bloco h3 {
+    font-size: 0.9rem; margin: 0 0 8px; color: var(--dark);
+  }
+  .farinha-tab-nota {
+    font-size: 0.78rem; color: var(--gray); font-style: italic; margin: 6px 0 0;
+  }
+  /* nas tabelas de farinha, a 1ª coluna não é laranja (não é "velocidade") */
+  #farinhaTabConteudo .vel-table td:nth-child(1) { color: var(--dark); }
+  /* tabela larga (exemplos de produto): rola na horizontal em vez de estourar a tela */
+  .tab-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tab-scroll-wide .vel-table { min-width: 520px; }
 
   /* Glossário napolitano */
   #glossarioWrap { display: none; }
@@ -1201,6 +1253,59 @@
     margin-top: 10px; padding: 6px 12px; font-size: 0.82rem;
   }
   .diario-vazio { font-size: 0.88rem; color: var(--gray); font-style: italic; }
+
+  /* Controles do diário: ordenar / filtrar / comparar */
+  .diario-ctrl {
+    display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;
+    margin: 0 0 14px;
+  }
+  .diario-ctrl-campo { display: flex; flex-direction: column; gap: 3px; }
+  .diario-ctrl-campo label {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--gray); font-weight: 600;
+  }
+  .diario-ctrl-campo select {
+    padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px;
+    font-size: 0.86rem; color: var(--dark); background: var(--card-bg);
+  }
+  #diarioCompararBtn.ativo {
+    background: var(--orange); color: #fff; border-color: var(--orange);
+  }
+  /* Pontuação 1-5 (estrelas) dentro da ficha */
+  .f-nota5 { display: flex; align-items: center; gap: 2px; margin: 10px 0 0; }
+  .f-nota5-lbl { font-size: 0.84rem; color: var(--gray); margin-right: 6px; }
+  .f-nota5-estrela {
+    width: 26px; height: 26px; padding: 0; border: none; background: none;
+    cursor: pointer; color: var(--gray);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .f-nota5-estrela.on { color: var(--orange); }
+  .f-nota5-estrela .fav-ico { width: 18px; height: 18px; display: block; }
+  /* checkbox de seleção no modo comparar + destaque da ficha selecionada */
+  .f-comparar-chk { flex: none; order: -2; width: 18px; height: 18px; cursor: pointer; accent-color: var(--orange); }
+  .fornada.comparando { border-color: var(--orange); background: color-mix(in srgb, var(--orange) 7%, var(--mix-base)); }
+  /* Painel de comparação (tabela campo | A | B) */
+  .diario-comparar { display: none; }
+  .diario-comparar.show {
+    display: block; margin: 0 0 14px; padding: 12px 14px;
+    background: var(--orange-light); border-radius: 10px;
+  }
+  .comparar-dica { font-size: 0.86rem; color: var(--gray); font-style: italic; }
+  .comparar-tit {
+    font-weight: 700; color: var(--orange);
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .comparar-tabela { width: 100%; border-collapse: collapse; min-width: 340px; }
+  .comparar-tabela th, .comparar-tabela td {
+    text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line);
+    font-size: 0.84rem; vertical-align: top;
+  }
+  .comparar-tabela thead th { color: var(--dark); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .comparar-tabela tbody th {
+    font-weight: 600; color: var(--gray); white-space: nowrap;
+  }
+  .comparar-tabela td { color: var(--dark); font-variant-numeric: tabular-nums; }
 
   /* Insights do diário (card próprio, colapsável) */
   #insightsWrap { display: none; }
@@ -1676,11 +1781,17 @@
     .controls-card, .btns { display: none !important; }
     .plan-ctrl { display: none !important; }
     #cronoAlerts { display: none !important; }
+    #cronoAgora { display: none !important; }
     .timeline-head .progress { display: none !important; }
+    /* o selo "agora" e o realce não fazem sentido no papel */
+    .step .tag-agora { display: none !important; }
+    .step.agora .content { box-shadow: none !important; }
 
     /* A tabela de velocidades NÃO sai nas impressões da receita/cronograma;
        só no seu próprio modo (print-velocidades). */
     #velocidadesCard { display: none !important; }
+    /* Tabelas de farinha/hidratação: material de tela, nunca impressas */
+    #farinhaTabCard { display: none !important; }
     /* Glossário é material de tela, nunca impresso */
     #glossarioCard { display: none !important; }
     /* Solução de problemas: material de tela (some por padrão; volta no print-glossario? não) */
@@ -2225,6 +2336,29 @@
       <!-- Médias / calibração -->
       <div class="diario-medias" id="diarioMedias"></div>
 
+      <!-- Controles: ordenar / filtrar / comparar -->
+      <div class="diario-ctrl" id="diarioCtrl">
+        <div class="diario-ctrl-campo">
+          <label for="diarioOrdenar" data-i18n="diarioOrdenarLbl">Ordenar</label>
+          <select id="diarioOrdenar" onchange="setDiarioOrdem(this.value)">
+            <option value="recente" data-i18n="ordRecente">Mais recente</option>
+            <option value="antiga" data-i18n="ordAntiga">Mais antiga</option>
+            <option value="nota" data-i18n="ordNota">Melhor nota</option>
+          </select>
+        </div>
+        <div class="diario-ctrl-campo">
+          <label for="diarioFiltro" data-i18n="diarioFiltroLbl">Filtrar</label>
+          <select id="diarioFiltro" onchange="setDiarioFiltro(this.value)">
+            <option value="todas" data-i18n="filtTodas">Todas</option>
+            <option value="favoritas" data-i18n="filtFavoritas">Só favoritas</option>
+          </select>
+        </div>
+        <button class="icon-fixed-btn" id="diarioCompararBtn" onclick="toggleModoComparar()"><span data-i18n="btnComparar">Comparar</span></button>
+      </div>
+
+      <!-- Painel de comparação (aparece no modo comparar) -->
+      <div class="diario-comparar" id="diarioComparar"></div>
+
       <!-- Lista de fornadas -->
       <div class="diario-lista" id="diarioLista"></div>
 
@@ -2317,6 +2451,9 @@
 
       <div id="cronoAlerts"></div>
 
+      <!-- Faixa "agora / próxima ação" (atualizada pelo relógio) -->
+      <div class="crono-agora" id="cronoAgora"></div>
+
       <div class="timeline" id="timeline"></div>
     </div>
   </div>
@@ -2351,6 +2488,18 @@
       <div class="btns" style="margin:12px 0 0">
         <button class="icon-label-btn" onclick="addFarinha()"><span class="print-ico" data-ico="mais"></span><span class="btn-txt" data-i18n="btnAddFarinha">Adicionar farinha</span></button>
       </div>
+    </div>
+  </div>
+
+  <!-- Farinha e hidratação (tabelas de referência) -->
+  <div class="card" id="farinhaTabCard">
+    <div class="timeline-head card-head" id="farinhaTabToggle" onclick="toggleFarinhaTab()" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="farinhaTabTitulo">Farinha e hidratação</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="farinhaTabWrap">
+      <p class="vel-intro" id="farinhaTabIntro"></p>
+      <div id="farinhaTabConteudo"></div>
     </div>
   </div>
 
@@ -2585,7 +2734,7 @@
   </div><!-- /ABA Config -->
 
   <footer id="footer" data-i18n="footer">
-    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.11.25</span>
+    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.14.1</span>
   </footer>
 </div>
 
@@ -2809,7 +2958,7 @@
       ajDicasTit: 'Dicas de uso',
       ajDicas: '<ul><li><b>Mão na massa</b> (botão no topo): passo a passo em tela cheia para usar na bancada.</li><li><b>Manter tela ligada</b>: impede a tela do celular de apagar durante o preparo.</li><li><b>PT/EN</b>: troque o idioma nas bandeiras.</li><li><b>Imprimir</b>: receita, cronograma, lista de compras e tabela têm botões próprios.</li><li><b>Instalar</b>: no celular, "Adicionar à tela inicial" para usar como app, offline.</li></ul><span class="aj-dica">Botões <b>Expandir/Recolher cards</b> agem na aba atual; o <b>chevron duplo</b> ao lado age em todas as abas.</span>',
       ajSobreTit: 'Sobre',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><hr class="sobre-sep"><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: <b>© 2026</b> · Versão: <b>1.11.25</b></p><hr class="sobre-sep"><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> e <b>Fornetto® Slim™</b> são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><hr class="sobre-sep"><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: <b>© 2026</b> · Versão: <b>1.14.1</b></p><hr class="sobre-sep"><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> e <b>Fornetto® Slim™</b> são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
       // Backup completo
       backupTitulo: 'Backup completo',
       backupIntro: 'Salve <b>tudo</b> num arquivo: perfis, farinhas, preços, diário (com fotos), configuração e idioma. Use para <b>trocar de aparelho</b> ou fazer backup antes de limpar o navegador. Importar <b>substitui</b> os dados atuais.',
@@ -2962,6 +3111,8 @@
       calSemPlano: 'Defina o início do poolish e a hora de assar antes de exportar para o calendário.',
       calErro: 'Não foi possível gerar o arquivo de calendário.',
       velTitulo: 'Tabela de velocidades — Halo Core',
+      farinhaTabTitulo: 'Farinha e hidratação',
+      farinhaTabIntro: 'Referências de <b>proteína/força (W)</b>, <b>hidratação</b> e estrutura por tipo de massa. São <b>valores indicativos</b>: farinha, processo, tempo e produto mudam o resultado — calibre pelo seu diário.',
       glossarioTitulo: 'Glossário napolitano',
       troubleTitulo: 'Solução de problemas',
       troubleIntro: 'Problemas comuns na napolitana, causas prováveis e como ajustar. Toque em cada item para expandir.',
@@ -2984,7 +3135,7 @@
       btnImprimirVel: 'Imprimir tabela',
       btnImprimirGlossario: 'Imprimir glossário',
       thVel: 'Vel.', thPotencia: 'Potência', thUso: 'Uso / equivalente industrial',
-      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.11.25</span>',
+      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.14.1</span>',
       velIntro: 'Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b> (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).',
       comoFunciona: '<b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e recalcula a água total. O <b>poolish</b> é ajustável de 45% a 100% <b>da água total</b>, sempre a 100% de hidratação (mesma quantidade de água e farinha); o fermento acompanha essa fração. O restante da água e da farinha entra na massa final. Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.',
       progresso: (n, t) => `<b>${n}</b> de ${t} etapas`,
@@ -3079,6 +3230,16 @@
       fLabelProd: 'Prod.', fLabelAmbiente: 'Ambiente', fLabelFarinha: 'Farinha',
       fLabelPoolish: 'Poolish', fLabelAgua: 'Água', fLabelMassa: 'Massa medida',
       fLabelForno: 'Forno', fLabelAtrito: 'Atrito calc.', fLabelFarinhas: 'Farinhas',
+      fLabelNota5: 'Nota', notaEstrela: (n) => `${n} de 5`,
+      fLabelObs: 'Observações',
+      // controles do diário (ordenar/filtrar/comparar)
+      diarioOrdenarLbl: 'Ordenar', ordRecente: 'Mais recente', ordAntiga: 'Mais antiga', ordNota: 'Melhor nota',
+      diarioFiltroLbl: 'Filtrar', filtTodas: 'Todas', filtFavoritas: 'Só favoritas',
+      diarioFiltroVazio: 'Nenhuma fornada com esse filtro.',
+      btnComparar: 'Comparar',
+      compararSelLbl: 'Selecionar para comparar',
+      compararDica: 'Selecione mais uma fornada para comparar (máximo 2).',
+      compararTitulo: 'Comparação', compararConfig: 'Produção',
       btnFarinha: 'Farinha', btnAddFarinhaVinc: 'Adicionar farinha',
       farVincSelecione: '— selecione —',
       farVincSemBase: 'Nenhuma farinha cadastrada. Cadastre em Referência → Farinhas primeiro.',
@@ -3114,6 +3275,10 @@
       cronoApprettoLongo: (d) => `⚠️ <b>Appretto longo (${d}).</b> Risco de sobrefermentação dos panetti (espalham, perdem tensão). Considere reduzir ou deixar parte na geladeira.`,
       cronoNoite: (lista) => `🌙 <b>Atividade em horário incômodo (22:00–05:00):</b> ${lista}. Ajuste o início do poolish ou a hora de assar para deslocar.`,
       atInicio: 'Início do poolish', atMassa: 'Massa final', atBolear: 'Boleamento',
+      // Timeline "agora"
+      agoraSelo: 'Agora', agoraLbl: 'Agora', agoraProx: 'Próximo',
+      agoraEm: (d) => `em ${d}`,
+      agoraConcluido: '✅ Produção concluída.',
       // cronograma (etapas)
       stPoolishTit: 'Poolish',
       stPoolishLead: '{poolishFarinha} farinha Alma Italiana + {poolishAgua} água + {poolishFerm} fermento seco.',
@@ -3190,7 +3355,7 @@
       ajDicasTit: 'Usage tips',
       ajDicas: '<ul><li><b>Hands-on</b> (top button): a full-screen step-by-step for the bench.</li><li><b>Keep screen on</b>: stops the phone screen turning off during prep.</li><li><b>PT/EN</b>: switch language with the flags.</li><li><b>Print</b>: recipe, schedule, shopping list and table have their own buttons.</li><li><b>Install</b>: on mobile, "Add to Home screen" to use it as an app, offline.</li></ul><span class="aj-dica"><b>Expand/Collapse cards</b> acts on the current tab; the <b>double chevron</b> next to it acts on all tabs.</span>',
       ajSobreTit: 'About',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><hr class="sobre-sep"><p>Developed by <b>Paulo Godoy</b></p><p>Year: <b>© 2026</b> · Version: <b>1.11.25</b></p><hr class="sobre-sep"><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> and <b>Fornetto® Slim™</b> are trademarks of their respective owners, cited only as equipment reference.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><hr class="sobre-sep"><p>Developed by <b>Paulo Godoy</b></p><p>Year: <b>© 2026</b> · Version: <b>1.14.1</b></p><hr class="sobre-sep"><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> and <b>Fornetto® Slim™</b> are trademarks of their respective owners, cited only as equipment reference.</p>',
       // Full backup
       backupTitulo: 'Full backup',
       backupIntro: 'Save <b>everything</b> to a file: profiles, flours, prices, log (with photos), settings and language. Use it to <b>move to another device</b> or back up before clearing the browser. Importing <b>replaces</b> the current data.',
@@ -3336,6 +3501,8 @@
       calSemPlano: 'Set the poolish start and the baking time before exporting to the calendar.',
       calErro: 'Could not generate the calendar file.',
       velTitulo: 'Speed table — Halo Core',
+      farinhaTabTitulo: 'Flour and hydration',
+      farinhaTabIntro: 'References for <b>protein/strength (W)</b>, <b>hydration</b> and structure by dough type. These are <b>indicative values</b>: flour, process, time and product change the result — calibrate with your log.',
       glossarioTitulo: 'Neapolitan glossary',
       troubleTitulo: 'Troubleshooting',
       troubleIntro: 'Common Neapolitan issues, likely causes and how to fix them. Tap each item to expand.',
@@ -3358,7 +3525,7 @@
       btnImprimirVel: 'Print table',
       btnImprimirGlossario: 'Print glossary',
       thVel: 'Speed', thPotencia: 'Power', thUso: 'Use / industrial equivalent',
-      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.11.25</span>',
+      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.14.1</span>',
       velIntro: 'Spiral mixer with rotating bowl (60–300 RPM). Since the industrial mixer is also a spiral, the comparison is direct by hook RPM: <b>industrial 1st speed ≈ 100 RPM</b> (speed 4) and <b>2nd speed ≈ 200 RPM</b> (speed 12).',
       comoFunciona: '<b>How it works:</b> Quantities scale proportionally, keeping the recipe ratios (flour 95% Alma + 5% Integral, salt 2.5%, yeast 0.1%). <b>Hydration</b> is adjustable and recalculates the total water. The <b>poolish</b> is adjustable from 45% to 100% <b>of the total water</b>, always at 100% hydration (equal water and flour); the yeast follows that fraction. The remaining water and flour go into the final dough. A ~1% dough loss during handling is accounted for in the reverse calculation.',
       progresso: (n, t) => `<b>${n}</b> of ${t} steps`,
@@ -3448,6 +3615,16 @@
       fLabelProd: 'Batch', fLabelAmbiente: 'Room', fLabelFarinha: 'Flour',
       fLabelPoolish: 'Poolish', fLabelAgua: 'Water', fLabelMassa: 'Measured dough',
       fLabelForno: 'Oven', fLabelAtrito: 'Calc. friction', fLabelFarinhas: 'Flours',
+      fLabelNota5: 'Rating', notaEstrela: (n) => `${n} of 5`,
+      fLabelObs: 'Notes',
+      // diary controls (sort/filter/compare)
+      diarioOrdenarLbl: 'Sort', ordRecente: 'Newest', ordAntiga: 'Oldest', ordNota: 'Best rating',
+      diarioFiltroLbl: 'Filter', filtTodas: 'All', filtFavoritas: 'Favorites only',
+      diarioFiltroVazio: 'No bakes match this filter.',
+      btnComparar: 'Compare',
+      compararSelLbl: 'Select to compare',
+      compararDica: 'Select one more bake to compare (max 2).',
+      compararTitulo: 'Comparison', compararConfig: 'Production',
       btnFarinha: 'Flour', btnAddFarinhaVinc: 'Add flour',
       farVincSelecione: '— select —',
       farVincSemBase: 'No flours registered. Add them in Reference → Flours first.',
@@ -3481,6 +3658,10 @@
       cronoApprettoLongo: (d) => `⚠️ <b>Long appretto (${d}).</b> Risk of over-proofing the dough balls (they spread, lose tension). Consider reducing it or keeping part in the fridge.`,
       cronoNoite: (lista) => `🌙 <b>Activity at an awkward time (22:00–05:00):</b> ${lista}. Adjust the poolish start or the baking time to shift it.`,
       atInicio: 'Poolish start', atMassa: 'Final dough', atBolear: 'Balling',
+      // Timeline "now"
+      agoraSelo: 'Now', agoraLbl: 'Now', agoraProx: 'Next',
+      agoraEm: (d) => `in ${d}`,
+      agoraConcluido: '✅ Production complete.',
       stPoolishTit: 'Poolish',
       stPoolishLead: '{poolishFarinha} Alma Italiana flour + {poolishAgua} water + {poolishFerm} dry yeast.',
       stPoolishI1: '2h at room temperature + the rest in the fridge at 4°C ({poolishFrio} cold).',
@@ -3533,6 +3714,7 @@
     // nota, intro e conteúdos dependentes de idioma
     document.getElementById('comoFunciona').innerHTML = t('comoFunciona');
     document.getElementById('velIntro').innerHTML = t('velIntro');
+    document.getElementById('farinhaTabIntro').innerHTML = t('farinhaTabIntro');
     document.getElementById('ddtIntro').innerHTML = t('ddtIntro');
     document.getElementById('ddtNota').innerHTML = t('ddtNota');
     document.getElementById('mixIntro').innerHTML = t('mixIntro');
@@ -3589,6 +3771,7 @@
     // selects de mês reconstroem com nomes traduzidos (se já populados)
     if (typeof repopularMeses === 'function') repopularMeses();
     renderVelocidades();
+    if (typeof renderFarinhaTab === 'function') renderFarinhaTab();
     if (typeof renderGlossario === 'function') renderGlossario();
     if (typeof renderTrouble === 'function') renderTrouble();
     document.getElementById('troubleIntro').innerHTML = t('troubleIntro');
@@ -4687,6 +4870,8 @@
       p.classList.toggle('active', p.getAttribute('data-tab') === nome));
     abaAtiva = nome;
     if (typeof atualizarCollapseAll === 'function') atualizarCollapseAll();
+    // liga/desliga o relógio da timeline conforme a aba (só roda em Cronograma)
+    if (typeof sincronizarAgoraTick === 'function') sincronizarAgoraTick();
   }
   // Cards colapsáveis por aba: [wrapId, toggleFn]
   const CARDS_POR_ABA = {
@@ -4694,7 +4879,7 @@
     preparo: [['ddtWrap', toggleDDT], ['mixWrap', toggleMix], ['fornoWrap', toggleForno]],
     cronograma: [['timelineWrap', toggleTimeline]],
     diario: [['diarioWrap', toggleDiario], ['insightsWrap', toggleInsights], ['backupWrap', toggleBackup]],
-    referencia: [['velocidadesWrap', toggleVelocidades], ['glossarioWrap', toggleGlossario], ['troubleWrap', toggleTrouble], ['farinhasWrap', toggleFarinhas], ['recheiosWrap', toggleRecheios]],
+    referencia: [['velocidadesWrap', toggleVelocidades], ['glossarioWrap', toggleGlossario], ['troubleWrap', toggleTrouble], ['farinhasWrap', toggleFarinhas], ['farinhaTabWrap', toggleFarinhaTab], ['recheiosWrap', toggleRecheios]],
     ajuda: [
       ['ajComecarWrap', () => toggleAjuda('ajComecar')],
       ['ajReceitaWrap', () => toggleAjuda('ajReceita')],
@@ -4819,6 +5004,7 @@
     restoreWrap('glossarioWrap', 'glossarioToggle');
     restoreWrap('troubleWrap', 'troubleToggle');
     restoreWrap('farinhasWrap', 'farinhasToggle');
+    restoreWrap('farinhaTabWrap', 'farinhaTabToggle');
     restoreWrap('recheiosWrap', 'recheiosToggle');
     restoreWrap('diarioWrap', 'diarioToggle');
     restoreWrap('insightsWrap', 'insightsToggle');
@@ -4930,9 +5116,14 @@
       assar: plano.assar
     } : null;
 
+    // fase atual pelo relógio (para destacar a etapa "agora")
+    const fase = faseAgora(plano);
+    const idxAgora = (fase && fase.estado === 'durante') ? fase.idx : -1;
+
     let html = '';
     CRONOGRAMA.forEach((step, i) => {
       const done = doneSteps.includes(i);
+      const ehAgora = (i === idxAgora);
       const itens = step.itensKeys.length
         ? `<ul>${step.itensKeys.map(k => `<li>${fill(t(k))}</li>`).join('')}</ul>` : '';
       const warn = step.warnKey ? `<div class="step-warn">▲ ${t(step.warnKey)}</div>` : '';
@@ -4943,6 +5134,8 @@
         const dt = plano[step.horario];
         tag = `<span class="tag">+${durLabel(horasDesdeInicio(plano, dt))}</span>`;
       }
+      // selo "AGORA" na etapa em andamento
+      const seloAgora = ehAgora ? `<span class="tag-agora">${t('agoraSelo')}</span>` : '';
 
       let whenHtml = '';
       if (horarios) {
@@ -4951,11 +5144,11 @@
       }
 
       html += `
-        <div class="step ${done ? 'done' : ''}" style="--dotcolor:${step.cor}">
+        <div class="step ${done ? 'done' : ''} ${ehAgora ? 'agora' : ''}" style="--dotcolor:${step.cor}">
           <div class="dot">${done ? '✓' : (i + 1)}</div>
           <div class="content">
             <div class="step-top">
-              <span class="title">${t(step.titKey)}${tag}</span>
+              <span class="title">${t(step.titKey)}${tag}${seloAgora}</span>
             </div>
             ${whenHtml}
             <div class="lead">${fill(t(step.leadKey))}</div>
@@ -4969,6 +5162,9 @@
         </div>`;
     });
     document.getElementById('timeline').innerHTML = html;
+
+    // Faixa "agora / próxima ação" (relógio)
+    renderCronoAgora(plano);
 
     // Alertas do cronograma
     renderCronoAlerts(plano);
@@ -5021,6 +5217,109 @@
     const totalH = (assar.getTime() - inicio.getTime()) / 3600000;
 
     return { inicio, massaFinal, geladeira, bolear, assar, poolishH, apprettoH, maturacaoH, totalH };
+  }
+
+  // ===== Timeline "agora" =====
+  // Determina, pelo relógio, em que ponto do cronograma estamos AGORA.
+  // Retorna null se o plano não existe. Caso contrário:
+  //   { estado: 'antes'|'durante'|'concluido', idx, proxIdx, proxDt, restanteH }
+  // idx = índice da etapa atual em CRONOGRAMA (-1 se ainda não começou).
+  // As 5 fases começam em: inicio, massaFinal, geladeira, bolear, assar.
+  function faseAgora(plano) {
+    if (!plano) return null;
+    const marcos = [plano.inicio, plano.massaFinal, plano.geladeira, plano.bolear, plano.assar];
+    const agora = Date.now();
+    // antes do início do poolish
+    if (agora < marcos[0].getTime()) {
+      return { estado: 'antes', idx: -1, proxIdx: 0, proxDt: marcos[0],
+        restanteH: (marcos[0].getTime() - agora) / 3600000 };
+    }
+    // depois (ou no momento) de assar -> concluído
+    if (agora >= marcos[4].getTime()) {
+      return { estado: 'concluido', idx: 4, proxIdx: -1, proxDt: null, restanteH: 0 };
+    }
+    // durante: acha a maior fase cujo marco já passou
+    let idx = 0;
+    for (let i = 0; i < marcos.length; i++) {
+      if (agora >= marcos[i].getTime()) idx = i;
+    }
+    const proxIdx = idx + 1;
+    const proxDt = marcos[proxIdx];
+    return { estado: 'durante', idx, proxIdx, proxDt,
+      restanteH: (proxDt.getTime() - agora) / 3600000 };
+  }
+
+  // Preenche a faixa "agora / próxima ação". Fica oculta se não há plano.
+  function renderCronoAgora(plano) {
+    const box = document.getElementById('cronoAgora');
+    if (!box) return;
+    const fase = faseAgora(plano);
+    if (!fase) { box.className = 'crono-agora'; box.innerHTML = ''; return; }
+
+    const nome = (i) => t(CRONOGRAMA[i].titKey);
+    let cls = 'crono-agora show', html = '';
+    if (fase.estado === 'antes') {
+      html = `<span class="ca-lbl">${t('agoraProx')}</span>
+              <span class="ca-val">${nome(fase.proxIdx)} · ${t('agoraEm', durLabel(fase.restanteH))}</span>`;
+    } else if (fase.estado === 'concluido') {
+      cls += ' concluido';
+      html = `<span class="ca-val">${t('agoraConcluido')}</span>`;
+    } else {
+      // durante: etapa atual + próxima ação com tempo restante
+      const prox = fase.proxIdx >= 0
+        ? `<span class="ca-prox">${t('agoraProx')}: ${nome(fase.proxIdx)} · ${t('agoraEm', durLabel(fase.restanteH))}</span>`
+        : '';
+      html = `<span class="ca-lbl">${t('agoraLbl')}</span>
+              <span class="ca-val">${nome(fase.idx)}</span>${prox}`;
+    }
+    box.className = cls;
+    box.innerHTML = html;
+  }
+
+  // Atualiza SÓ o "agora" (faixa + realce da etapa) sem re-renderizar a timeline
+  // inteira — leve o bastante para rodar num intervalo. Sincroniza a classe
+  // .agora dos .step diretamente no DOM.
+  function atualizarAgora() {
+    const plano = planejarCronograma();
+    renderCronoAgora(plano);
+    const fase = faseAgora(plano);
+    const idxAgora = (fase && fase.estado === 'durante') ? fase.idx : -1;
+    const steps = document.querySelectorAll('#timeline .step');
+    steps.forEach((el, i) => {
+      const ehAgora = (i === idxAgora);
+      el.classList.toggle('agora', ehAgora);
+      // injeta/remove o selo AGORA no título conforme o estado
+      const titulo = el.querySelector('.title');
+      if (!titulo) return;
+      let selo = titulo.querySelector('.tag-agora');
+      if (ehAgora && !selo) {
+        selo = document.createElement('span');
+        selo.className = 'tag-agora';
+        selo.textContent = t('agoraSelo');
+        titulo.appendChild(selo);
+      } else if (!ehAgora && selo) {
+        selo.remove();
+      }
+    });
+  }
+
+  // Controle do intervalo: roda só com o card do cronograma ABERTO e a aba ativa.
+  // (var, não let: sincronizarAgoraTick pode ser chamada no boot — via setTab —
+  //  antes desta linha; var evita o ReferenceError de Temporal Dead Zone.)
+  var _agoraTick = null;
+  function iniciarAgoraTick() {
+    pararAgoraTick();
+    atualizarAgora();
+    _agoraTick = setInterval(atualizarAgora, 30000);   // a cada 30 s
+  }
+  function pararAgoraTick() {
+    if (_agoraTick) { clearInterval(_agoraTick); _agoraTick = null; }
+  }
+  // Liga/desliga conforme o cronograma esteja visível (card aberto + aba ativa).
+  function sincronizarAgoraTick() {
+    const wrap = document.getElementById('timelineWrap');
+    const visivel = wrap && wrap.classList.contains('show') && abaAtiva === 'cronograma';
+    if (visivel) iniciarAgoraTick(); else pararAgoraTick();
   }
 
   // Gera os alertas (horário incômodo + fases fora de faixa)
@@ -5123,7 +5422,7 @@
     render();
   }
 
-  function toggleTimeline() { toggleCard('timelineWrap', 'tlToggle'); }
+  function toggleTimeline() { toggleCard('timelineWrap', 'tlToggle'); sincronizarAgoraTick(); }
 
   // ===== Tabela de velocidades =====
   function renderVelocidades() {
@@ -5136,6 +5435,102 @@
   }
 
   function toggleVelocidades() { toggleCard('velocidadesWrap', 'velToggle'); }
+
+  // ===== Farinha e hidratação (tabelas de referência estáticas) =====
+  // Fonte: support/tables/tabelas_farinha.md. Valores indicativos.
+  // Cada bloco: { titulo:{pt,en}, cols:{pt:[],en:[]}, linhas:[[...]] }.
+  const FARINHA_TAB = [
+    {
+      titulo: { pt: 'Proteína, hidratação e água', en: 'Protein, hydration and water' },
+      cols: {
+        pt: ['Proteína (g/100g)', 'Hidratação', 'Água por 1 kg'],
+        en: ['Protein (g/100g)', 'Hydration', 'Water per 1 kg']
+      },
+      linhas: [
+        ['10 g', '50–55%', '500–550 g'],
+        ['11–12 g', '55–60%', '550–600 g'],
+        ['12–13 g', '60–67%', '600–670 g'],
+        ['13–14 g', '67–75%', '670–750 g']
+      ],
+      nota: { pt: 'Valores indicativos.', en: 'Indicative values.' }
+    },
+    {
+      titulo: { pt: 'Força da farinha (W) e hidratação', en: 'Flour strength (W) and hydration' },
+      cols: {
+        pt: ['Força (W)', 'Hidratação', 'Água por 1 kg'],
+        en: ['Strength (W)', 'Hydration', 'Water per 1 kg']
+      },
+      linhas: [
+        ['W 200–240', '50–55%', '500–550 g'],
+        ['W 240–260', '55–60%', '550–600 g'],
+        ['W 260–280', '60–65%', '600–650 g'],
+        ['W 280–300', '60–67%', '600–670 g'],
+        ['W 300–320', '60–70%', '600–700 g'],
+        ['W 320+', '65%+', '650 g+']
+      ],
+      nota: { pt: 'Valores indicativos.', en: 'Indicative values.' }
+    },
+    {
+      titulo: { pt: 'Aumento de volume na puntata', en: 'Volume increase during bulk (puntata)' },
+      cols: {
+        pt: ['Hidratação', 'Aumento recomendado'],
+        en: ['Hydration', 'Recommended increase']
+      },
+      linhas: [
+        ['50–60%', { pt: 'Nenhum aumento significativo', en: 'No significant increase' }],
+        ['60–65%', '0–10%'],
+        ['65–70%', '5–20%'],
+        ['70–75%', '10–30%']
+      ],
+      nota: {
+        pt: 'Extremamente indicativo — depende de farinha, processo, tempo e produto.',
+        en: 'Extremely indicative — depends on flour, process, time and product.'
+      }
+    },
+    {
+      titulo: { pt: 'Farinha e massa: exemplos', en: 'Flour & dough: examples' },
+      cols: {
+        pt: ['Produto', 'W', 'Hidratação', 'Repouso*', 'Estrutura'],
+        en: ['Product', 'W', 'Hydration', 'Rest*', 'Structure']
+      },
+      linhas: [
+        [{ pt: 'Focaccia', en: 'Focaccia' }, '200–250', '55–60%', '2–6 h',
+          { pt: 'Esponjosa, alveolação fechada', en: 'Spongy, tight crumb' }],
+        [{ pt: 'Pizza napolitana clássica', en: 'Classic Neapolitan pizza' }, '250–280', '58–62%', '8–24 h',
+          { pt: 'Cornicione baixo e pouco pronunciado', en: 'Low, subtle crust' }],
+        [{ pt: 'Pizza napolitana contemporânea', en: 'Contemporary Neapolitan pizza' }, '280–340', '67–75%', '12–48 h',
+          { pt: 'Cornicione alto e alveolado', en: 'Tall, airy crust' }],
+        [{ pt: 'Pizza em assadeira (alta hidratação)', en: 'High-hydration pan pizza' }, '300–340', '75–80%', '6–24 h',
+          { pt: 'Alveolada e aberta', en: 'Open, airy crumb' }],
+        [{ pt: 'Pizza romana redonda', en: 'Roman round pizza' }, '200–260', '50–58%', '6–24 h',
+          { pt: 'Plana e compacta', en: 'Flat and compact' }]
+      ],
+      nota: {
+        pt: '* Tempos puramente indicativos. Não é regra — tudo depende de farinha, processo e produto.',
+        en: '* Rest times purely indicative. Not a rule — everything depends on flour, process and product.'
+      }
+    }
+  ];
+  // Resolve um valor que pode ser string simples ou objeto {pt,en}
+  function tabVal(v) { return (v && typeof v === 'object') ? (v[LANG] || v.pt) : v; }
+  function renderFarinhaTab() {
+    const html = FARINHA_TAB.map(bloco => {
+      const cols = bloco.cols[LANG] || bloco.cols.pt;
+      const thead = '<tr>' + cols.map(c => `<th>${c}</th>`).join('') + '</tr>';
+      const tbody = bloco.linhas.map(linha =>
+        '<tr>' + linha.map(cel => `<td>${tabVal(cel)}</td>`).join('') + '</tr>'
+      ).join('');
+      // wide = tabela com 4+ colunas (ex.: exemplos de produto) rola no mobile
+      const wide = cols.length >= 4 ? ' tab-scroll-wide' : '';
+      return `<div class="farinha-tab-bloco">
+        <h3>${bloco.titulo[LANG] || bloco.titulo.pt}</h3>
+        <div class="tab-scroll${wide}"><table class="vel-table"><thead>${thead}</thead><tbody>${tbody}</tbody></table></div>
+        <p class="farinha-tab-nota">${bloco.nota[LANG] || bloco.nota.pt}</p>
+      </div>`;
+    }).join('');
+    document.getElementById('farinhaTabConteudo').innerHTML = html;
+  }
+  function toggleFarinhaTab() { toggleCard('farinhaTabWrap', 'farinhaTabToggle'); }
 
   // ===== Glossário napolitano =====
   function renderGlossario() {
@@ -5662,6 +6057,26 @@
     reabrirFornada(ts);   // preserva o estado aberto/fechado da ficha
   }
 
+  // Define a pontuação 1-5 da fornada (clicar na estrela já marcada zera).
+  function definirNota5(ts, n) {
+    const lista = lerDiario();
+    const f = lista.find(x => x.ts === ts);
+    if (!f) return;
+    f.nota5 = (f.nota5 === n) ? 0 : n;   // clicar de novo na mesma estrela limpa
+    gravarDiario(lista);
+    renderDiario();
+    reabrirFornada(ts);
+  }
+  // HTML das 5 estrelas de pontuação (preenchidas até n). ts p/ o onclick.
+  function estrelasNota(ts, n) {
+    n = n || 0;
+    const btns = [];
+    for (let i = 1; i <= 5; i++) {
+      btns.push(`<button class="f-nota5-estrela ${i <= n ? 'on' : ''}" title="${t('notaEstrela', i)}" aria-label="${t('notaEstrela', i)}" onclick="event.stopPropagation(); definirNota5(${ts}, ${i})">${i <= n ? ICO.estrelaCheia : ICO.estrela}</button>`);
+    }
+    return `<div class="f-nota5"><span class="f-nota5-lbl">${t('fLabelNota5')}:</span>${btns.join('')}</div>`;
+  }
+
   // "Repetir": recarrega discos/peso/hidratação desta fornada nos controles de
   // produção (temperaturas do DDT e datas do cronograma não entram) e leva ao topo.
   function repetirFornada(ts) {
@@ -5708,9 +6123,99 @@
     return { media: Math.round((soma / atritos.length) * 10) / 10, n: atritos.length };
   }
 
+  // Estado dos controles do diário (ordenação, filtro e modo comparar)
+  let diarioOrdem = 'recente';    // 'recente' | 'antiga' | 'nota'
+  let diarioFiltro = 'todas';     // 'todas' | 'favoritas'
+  let modoComparar = false;
+  let comparaSel = [];            // ts das fornadas selecionadas (máx. 2)
+
+  function setDiarioOrdem(v) { diarioOrdem = v; renderDiario(); }
+  function setDiarioFiltro(v) { diarioFiltro = v; renderDiario(); }
+
+  // Liga/desliga o modo comparar (limpa a seleção ao sair)
+  function toggleModoComparar() {
+    modoComparar = !modoComparar;
+    if (!modoComparar) comparaSel = [];
+    renderDiario();
+  }
+  // Seleciona/desseleciona uma fornada para comparar (máx. 2; a mais antiga sai)
+  function toggleComparaSel(ts) {
+    const i = comparaSel.indexOf(ts);
+    if (i >= 0) comparaSel.splice(i, 1);
+    else {
+      comparaSel.push(ts);
+      if (comparaSel.length > 2) comparaSel.shift();   // mantém só as 2 últimas
+    }
+    renderDiario();
+  }
+  // Painel de comparação: tabela (campo | A | B). Só aparece com 2 selecionadas.
+  function renderComparar() {
+    const box = document.getElementById('diarioComparar');
+    if (!box) return;
+    if (!modoComparar || comparaSel.length < 2) {
+      // dica enquanto seleciona
+      box.innerHTML = (modoComparar && comparaSel.length === 1)
+        ? `<div class="comparar-dica">${t('compararDica')}</div>` : '';
+      box.classList.toggle('show', modoComparar && comparaSel.length === 1);
+      return;
+    }
+    const lista = lerDiario();
+    const a = lista.find(x => x.ts === comparaSel[0]);
+    const b = lista.find(x => x.ts === comparaSel[1]);
+    if (!a || !b) { box.innerHTML = ''; box.classList.remove('show'); return; }
+    const atrA = atritoDaFornada(a), atrB = atritoDaFornada(b);
+    const nfmt = (v, u) => (v == null || (typeof v === 'number' && isNaN(v))) ? '—' : `${String(v).replace('.', ',')}${u || ''}`;
+    const nota = (f) => f.nota5 ? `${f.nota5}★` : '—';
+    const linhas = [
+      [t('fLabelNota5'), nota(a), nota(b)],
+      [t('compararConfig'), `${a.discos}×${a.peso}g · ${a.hidra}%`, `${b.discos}×${b.peso}g · ${b.hidra}%`],
+      [t('fLabelAmbiente'), nfmt(a.ambiente, '°C'), nfmt(b.ambiente, '°C')],
+      [t('fLabelFarinha'), nfmt(a.farinha, '°C'), nfmt(b.farinha, '°C')],
+      [t('fLabelPoolish'), nfmt(a.poolish, '°C'), nfmt(b.poolish, '°C')],
+      [t('fLabelAgua'), nfmt(a.agua, '°C'), nfmt(b.agua, '°C')],
+      [t('fLabelMassa'), nfmt(a.massa, '°C'), nfmt(b.massa, '°C')],
+      [t('fLabelForno'), nfmt(a.forno, 's'), nfmt(b.forno, 's')],
+      [t('fLabelAtrito'), atrA != null ? `${Math.round(atrA)}°C` : '—', atrB != null ? `${Math.round(atrB)}°C` : '—'],
+      [t('fLabelObs'), a.nota ? escapeHtml(a.nota) : '—', b.nota ? escapeHtml(b.nota) : '—']
+    ];
+    const corpo = linhas.map(([lbl, va, vb]) =>
+      `<tr><th>${lbl}</th><td>${va}</td><td>${vb}</td></tr>`).join('');
+    box.innerHTML = `
+      <div class="comparar-tit">${t('compararTitulo')}</div>
+      <div class="tab-scroll"><table class="comparar-tabela">
+        <thead><tr><th></th><th>${dataCurta(a.ts)}</th><th>${dataCurta(b.ts)}</th></tr></thead>
+        <tbody>${corpo}</tbody>
+      </table></div>`;
+    box.classList.add('show');
+  }
+
+  // Ordena/filtra a lista conforme os controles. Base sempre a partir de lerDiario().
+  function fornadasVisiveis() {
+    let lista = lerDiario().slice();
+    if (diarioFiltro === 'favoritas') lista = lista.filter(f => f.favorita);
+    if (diarioOrdem === 'antiga') lista.sort((a, b) => a.ts - b.ts);
+    else if (diarioOrdem === 'nota') lista.sort((a, b) => (b.nota5 || 0) - (a.nota5 || 0) || b.ts - a.ts);
+    else lista.sort((a, b) => b.ts - a.ts);   // recente (padrão)
+    return lista;
+  }
+
   function renderDiario() {
-    const lista = lerDiario().slice().sort((a, b) => b.ts - a.ts);   // mais recente primeiro
-    document.getElementById('diarioContagem').textContent = t('diarioContagemLbl', lista.length);
+    const total = lerDiario().length;
+    const lista = fornadasVisiveis();
+    document.getElementById('diarioContagem').textContent = t('diarioContagemLbl', total);
+
+    // Controles (ordenar/filtrar/comparar): só aparecem com fornadas registradas.
+    const ctrl = document.getElementById('diarioCtrl');
+    if (ctrl) {
+      ctrl.style.display = total ? '' : 'none';
+      const selO = document.getElementById('diarioOrdenar');
+      const selF = document.getElementById('diarioFiltro');
+      if (selO) selO.value = diarioOrdem;
+      if (selF) selF.value = diarioFiltro;
+      const btnC = document.getElementById('diarioCompararBtn');
+      if (btnC) btnC.classList.toggle('ativo', modoComparar);
+    }
+    renderComparar();
 
     // Médias / calibração
     const med = document.getElementById('diarioMedias');
@@ -5727,7 +6232,9 @@
     // Lista de fornadas
     const box = document.getElementById('diarioLista');
     if (!lista.length) {
-      box.innerHTML = `<div class="diario-vazio">${t('diarioVazio')}</div>`;
+      // distingue "nenhuma fornada" de "nenhuma no filtro atual"
+      const msg = total ? t('diarioFiltroVazio') : t('diarioVazio');
+      box.innerHTML = `<div class="diario-vazio">${msg}</div>`;
       return;
     }
     box.innerHTML = lista.map(f => {
@@ -5742,9 +6249,15 @@
         ? `<button onclick="aplicarAtrito(${atr})">${t('fUsarAtrito')}</button>` : '';
       const fav = !!f.favorita;
       const estrela = `<button class="f-fav ${fav ? 'on' : ''}" title="${t(fav ? 'favoritaRem' : 'favoritaAdd')}" aria-label="${t(fav ? 'favoritaRem' : 'favoritaAdd')}" aria-pressed="${fav}" onclick="event.stopPropagation(); alternarFavorita(${f.ts})">${fav ? ICO.estrelaCheia : ICO.estrela}</button>`;
+      // no modo comparar: checkbox de seleção (máx. 2) antes da estrela
+      const selecionada = comparaSel.includes(f.ts);
+      const chkComparar = modoComparar
+        ? `<input type="checkbox" class="f-comparar-chk" ${selecionada ? 'checked' : ''} title="${t('compararSelLbl')}" aria-label="${t('compararSelLbl')}" onclick="event.stopPropagation(); toggleComparaSel(${f.ts})">`
+        : '';
       return `
-        <details class="fornada ${fav ? 'favorita' : ''}">
+        <details class="fornada ${fav ? 'favorita' : ''} ${selecionada ? 'comparando' : ''}">
           <summary class="fornada-top">
+            ${chkComparar}
             ${estrela}
             <span class="f-data">${dataCurta(f.ts)}</span>
             <span class="f-config">${t('fLabelProd')}: ${f.discos} × ${f.peso}g · ${f.hidra}%</span>
@@ -5758,6 +6271,7 @@
             ${linha(t('fLabelForno'), f.forno, 's')}
             ${atritoHtml}
           </div>
+          ${estrelasNota(f.ts, f.nota5)}
           ${renderFarinhasFornada(f)}
           ${f.nota ? `<div class="f-nota">${escapeHtml(f.nota)}</div>` : ''}
           ${renderFotosFornada(f)}
@@ -6929,6 +7443,11 @@
   document.addEventListener('visibilitychange', () => {
     if (wakeDesejado && wakeLock === null && document.visibilityState === 'visible') {
       requestWakeLock();
+    }
+    // pausa/retoma o relógio da timeline quando a aba do navegador oculta/volta
+    if (typeof sincronizarAgoraTick === 'function') {
+      if (document.visibilityState === 'visible') sincronizarAgoraTick();
+      else pararAgoraTick();
     }
   });
 
