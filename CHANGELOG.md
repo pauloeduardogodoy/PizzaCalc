@@ -19,6 +19,9 @@
 
 ### v1.14.0 — Cronograma: marcador "agora" · 2026-09-29
 
+- **v1.14.1** — Correção: um erro de inicialização (variável acessada antes da declaração)
+  travava o carregamento do app após a v1.14.0, deixando botões e recursos sem responder. Boot
+  restaurado.
 - **v1.14.0** — O cronograma ganhou um marcador **"agora"**: uma faixa no topo mostra em qual
   etapa você está pelo relógio e qual a próxima ação (com o tempo restante), e a etapa em
   andamento fica destacada com um selo "Agora". Atualiza sozinho (a cada 30 s) enquanto o card
@@ -157,6 +160,8 @@
 
 ### v1.14.0 — Schedule: "now" marker · 2026-09-29
 
+- **v1.14.1** — Fix: an initialization error (variable accessed before its declaration) broke the
+  app's load after v1.14.0, leaving buttons and features unresponsive. Boot restored.
 - **v1.14.0** — The schedule gained a **"now"** marker: a band at the top shows which stage you're
   in by the clock and the next action (with time remaining), and the current stage is highlighted
   with a "Now" badge. It self-updates (every 30 s) while the card is open; no notification. It also
