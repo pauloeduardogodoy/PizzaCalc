@@ -28,9 +28,10 @@ com base no equipamento real de casa. A receita de referência (fonte da verdade
 
 ### Funcionalidades
 
-O app é organizado em **abas** (Receita · Preparo · Cronograma · Diário · Referência · Ajuda) com
-ícones; no celular as abas mostram só o ícone. A aba **Ajuda** traz um guia rápido de como usar
-cada parte do app. Os controles de produção ficam sempre visíveis
+O app é organizado em **abas** (Receita · Preparo · Cronograma · Diário · Referência · Ajuda ·
+Config) com ícones; no celular as abas mostram só o ícone. A aba **Ajuda** traz um guia rápido de
+como usar cada parte do app, e a aba **Config** reúne as preferências (tema, idioma, notificações
+e mais). Os controles de produção ficam sempre visíveis
 no topo. Cada card recolhível (água, mistura, cocção, cronograma, diário, velocidades)
 **expande/recolhe ao clicar no cabeçalho** (com um chevron que gira), abre por padrão e
 **lembra se você o deixou aberto ou fechado** entre sessões. O app sempre inicia na aba Receita.
@@ -70,7 +71,7 @@ zerar).
   temperatura ambiente do card de água e tamanho do lote): massa mole em ambiente quente,
   fermentação lenta/acelerada, lote perto do limite da cuba, massa firme em hidratação baixa.
 - **Perfis de massa salvos** — Salva/carrega configurações nomeadas de produção (localStorage).
-- **Backup completo** — Na aba Ajuda, exporta **todo** o estado do app (perfis, farinhas, preços,
+- **Backup completo** — Na aba Config, exporta **todo** o estado do app (perfis, farinhas, preços,
   diário com fotos, configuração e idioma) num arquivo JSON, e importa de volta — para migrar de
   aparelho ou fazer backup antes de limpar o navegador.
 - **Calculadora de temperatura da água (DDT)** — Card recolhível. Regra de 4 fatores,
@@ -124,6 +125,13 @@ zerar).
   panetto, maturação, cornicione, leopard spots…) com definições. Botão de imprimir.
 - **Solução de problemas** — Problemas comuns (massa rasga, encolhe, borda pálida, azeda…)
   com causa provável e como ajustar.
+- **Aba Configurações** — Uma aba dedicada reúne as preferências do app: **tema**
+  (automático/claro/escuro), **idioma** (PT/EN), **ajuste de fermento pela temperatura**,
+  **notificações do cronograma** (ativar + avisar antes), **resetar o layout dos cards** e um
+  atalho para o **backup completo**.
+- **Tema claro/escuro** — **Automático** (segue o sistema, em tempo real), **claro** ou
+  **escuro**, escolhido na aba Configurações. A preferência fica salva. Mantém o laranja (ação)
+  e o verde (sucesso) como identidade.
 - **Manter tela ligada** — Impede o celular de apagar a tela durante a produção (Wake Lock API).
 - **Impressão** — Modos independentes: só receita, só cronograma, tudo, ou só a tabela de
   velocidades.
@@ -139,7 +147,7 @@ zerar).
 ### Instalação / Deploy
 
 - É HTML/CSS/JS puro, sem dependências nem build.
-- **PWA (instalável/offline):** sirva a pasta `app/` por **https** (ex.: GitHub Pages). O
+- **PWA (instalável/offline):** sirva a pasta `app_web/` por **https** (ex.: GitHub Pages). O
   `index.html` é a raiz. No celular, "Adicionar à tela inicial".
 - A Wake Lock API e o service worker exigem **https** (não funcionam via `file://`).
 
@@ -161,9 +169,10 @@ based on real home equipment. Reference recipe (source of truth):
 
 ### Features
 
-The app is organized into **tabs** (Recipe · Prep · Schedule · Log · Reference · Help) with icons;
-on mobile the tabs show the icon only. The **Help** tab has a quick guide on how to use each part
-of the app. The production controls stay visible at the top. Each
+The app is organized into **tabs** (Recipe · Prep · Schedule · Log · Reference · Help · Settings)
+with icons; on mobile the tabs show the icon only. The **Help** tab has a quick guide on how to
+use each part of the app, and the **Settings** tab gathers the preferences (theme, language,
+notifications and more). The production controls stay visible at the top. Each
 collapsible card (water, mixing, baking, schedule, log, speeds) **expands/collapses when you
 tap its header** (with a rotating chevron), opens by default and **remembers whether you left
 it open or closed** across sessions. The app always starts on the Recipe tab. Buttons use
@@ -201,9 +210,9 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   room temperature from the water card, and batch size): soft dough in a warm room, slow/fast
   fermentation, batch near the bowl limit, firm dough at low hydration.
 - **Saved dough profiles** — Save/load named production settings (localStorage).
-- **Full backup** — On the Help tab, exports the app's **entire** state (profiles, flours, prices,
-  log with photos, settings and language) to a JSON file, and imports it back — to move to another
-  device or back up before clearing the browser.
+- **Full backup** — On the Settings tab, exports the app's **entire** state (profiles, flours,
+  prices, log with photos, settings and language) to a JSON file, and imports it back — to move to
+  another device or back up before clearing the browser.
 - **Water temperature calculator (DDT)** — Collapsible card. 4-factor rule, accounting for the
   cold **poolish** from the fridge: `water = (desired dough × 4) − (flour + room + friction +
   poolish)`. Estimates crushed ice. The Halo Core **friction** is calibratable (default 36°C,
@@ -252,6 +261,13 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   panetto, maturation, cornicione, leopard spots…) with definitions. Print button.
 - **Troubleshooting** — Common issues (dough tears, shrinks, pale crust, too sour…) with
   likely cause and how to fix.
+- **Settings tab** — A dedicated tab gathers the app preferences: **theme**
+  (automatic/light/dark), **language** (PT/EN), **yeast adjustment by temperature**, **schedule
+  notifications** (enable + notify before), **reset cards layout**, and a shortcut to the **full
+  backup**.
+- **Light/dark theme** — **Automatic** (follows the system, in real time), **light** or **dark**,
+  chosen on the Settings tab. The preference is saved. Keeps orange (action) and green (success)
+  as the identity.
 - **Keep screen on** — Prevents the phone screen from turning off during a bake (Wake Lock API).
 - **Printing** — Independent modes: recipe only, schedule only, everything, or the speed table.
 
@@ -266,7 +282,7 @@ icon-only on mobile; timers use icons only (play/pause/reset).
 ### Setup / Deploy
 
 - Pure HTML/CSS/JS, no dependencies and no build step.
-- **PWA (installable/offline):** serve the `app/` folder over **https** (e.g. GitHub Pages).
+- **PWA (installable/offline):** serve the `app_web/` folder over **https** (e.g. GitHub Pages).
   `index.html` is the root. On mobile, "Add to Home screen".
 - The Wake Lock API and the service worker require **https** (they don't work via `file://`).
 
@@ -275,10 +291,12 @@ icon-only on mobile; timers use icons only (play/pause/reset).
 ## 📁 Estrutura · Structure
 
 ```
-app/
+app_web/
 ├── index.html       # app completo (calculadora + PWA + service worker)
 ├── manifest.json    # configuração da PWA
 ├── sw.js            # service worker (cache offline)
+├── CHANGELOG.md     # histórico de versões · version history
+├── README.md        # este arquivo · this file
 └── icon-*.png       # ícones
 ```
 
@@ -289,5 +307,14 @@ app/
 HTML + CSS + JavaScript puro · sem frameworks · sem build · dados salvos em `localStorage` ·
 PWA com service worker (cache offline) · Web Audio (alarmes) · Screen Wake Lock API ·
 Web Share API (exportar diário).
+
+---
+
+## 📝 Histórico de versões · Version history
+
+Veja o [CHANGELOG.md](./CHANGELOG.md) para o histórico completo de mudanças, updates e correções. ·
+*See the [CHANGELOG.md](./CHANGELOG.md) for the full history of changes, updates and fixes.*
+
+---
 
 *Feito para pizzaiolos caseiros · Made for home pizzaioli. 🍕*
