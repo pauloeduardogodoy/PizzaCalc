@@ -96,7 +96,8 @@ zerar).
 - **Cronograma passo a passo** — Planeja de trás pra frente a partir do início do poolish +
   hora de assar + duração do appretto. Prioriza poolish de ~20h, usa a maturação em bloco como
   amortecedor e alerta sobre horários incômodos (madrugada), appretto longo e maturação fora de
-  faixa. Datas em formato brasileiro.
+  faixa. Datas em formato brasileiro. Um marcador **"agora"** destaca, pelo relógio, a etapa em
+  andamento e mostra a próxima ação e em quanto tempo (atualiza sozinho, sem notificação).
 - **Lembretes do cronograma** — No card Cronograma: **notificações do navegador** para cada
   etapa (poolish, massa, geladeira, appretto, assar), com aviso no horário e um lembrete
   configurável (0/5/10/15 min antes) — aparecem também no smartwatch pareado, enquanto o app
@@ -108,14 +109,23 @@ zerar).
   fotos** (glúten, panetto, borda, fundo…), adicionadas pela ficha, com miniaturas e visualização
   ampliada; as fotos são comprimidas no aparelho. Cada fornada pode ser **marcada como favorita**
   (com destaque) e tem um botão **"Repetir"** que recarrega discos/peso/hidratação dela nos
-  controles de produção. Traz **Insights**: mini-gráficos (SVG) da evolução do atrito, da
-  temperatura da massa e do tempo de forno ao longo das fornadas, com médias e faixas ideais.
-  Exporta/compartilha (JSON + resumo, com as fotos) e importa para migrar entre aparelhos.
+  controles de produção. Cada fornada aceita uma **nota de 1 a 5 estrelas**. A lista pode ser
+  **ordenada** (mais recente, mais antiga ou melhor nota) e **filtrada** (todas ou só favoritas),
+  e há um modo **comparar** que mostra duas fornadas lado a lado numa tabela (produção,
+  temperaturas, massa, forno, atrito e observações). Traz **Insights**: mini-gráficos (SVG) da
+  evolução do atrito, da temperatura da massa e do tempo de forno ao longo das fornadas, com
+  médias e faixas ideais. Exporta/compartilha (JSON + resumo, com as fotos) e importa para migrar
+  entre aparelhos.
 - **Farinhas** — Base editável de farinhas (marca, tipo, força W, proteína) na aba Referência.
   Cada fornada do diário pode vincular **uma ou mais** farinhas com o **percentual** de cada
   (blend), com aviso se a soma não fechar 100%. Vai junto no export/import.
 - **Tabela de velocidades da Halo Core** — As 20 velocidades com potência, RPM e equivalência
   industrial.
+- **Farinha e hidratação** — Card de referência (estático) na aba Referência, logo abaixo de
+  "Farinhas", com quatro tabelas:
+  proteína → hidratação, força (W) → hidratação, aumento de volume na puntata por hidratação, e
+  exemplos de produto (W/hidratação/repouso/estrutura, de focaccia a pizza romana). São valores
+  indicativos, para orientar a escolha de hidratação conforme a farinha.
 - **Recheios / combinações** — Biblioteca de referência (estática) na aba Referência com 11
   combinações (Calabresa, Muçarela, Frango com Catupiry, Marguerita, Quatro Queijos, Pepperoni,
   Napolitana, Lombo, Brócolis com Bacon, Palmito, Corn & Bacon), em ordem alfabética, cada uma
@@ -233,7 +243,9 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   while open.
 - **Step-by-step schedule** — Plans backwards from poolish start + baking time + appretto length.
   Prefers ~20h poolish, uses bulk maturation as the buffer, and warns about awkward hours,
-  long appretto and out-of-range maturation. Brazilian date format.
+  long appretto and out-of-range maturation. Brazilian date format. A **"now"** marker highlights
+  the current stage by the clock and shows the next action and how long until it (self-updating,
+  no notification).
 - **Schedule reminders** — In the Schedule card: **browser notifications** for each stage
   (poolish, dough, fridge, appretto, bake), on time plus a configurable lead reminder
   (0/5/10/15 min before) — they also show on a paired smartwatch while the app is open. And
@@ -245,6 +257,9 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   ball, crust, base…), added from the entry, with thumbnails and a full-screen viewer; photos are
   compressed on the device. Each bake can be **starred as a favorite** (highlighted) and has a
   **Repeat** button that reloads its pizzas/weight/hydration into the production controls.
+  Each bake takes a **1–5 star rating**. The list can be **sorted** (newest, oldest or best
+  rating) and **filtered** (all or favorites only), and a **compare** mode shows two bakes side by
+  side in a table (production, temperatures, dough, oven, friction and notes).
   It includes **Insights**: mini charts (SVG) of the friction, dough temperature and oven time
   trends across bakes, with averages and ideal ranges. Export/share (JSON + summary, including
   photos) and import to move between devices.
@@ -252,6 +267,11 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   tab. Each bake in the log can link **one or more** flours with each one's **percentage**
   (blend), with a warning if they don't add up to 100%. Included in export/import.
 - **Halo Core speed table** — All 20 speeds with power, RPM and industrial equivalence.
+- **Flour and hydration** — A reference card (static) on the Reference tab, right below "Flours",
+  with four tables:
+  protein → hydration, strength (W) → hydration, volume increase during bulk (puntata) by
+  hydration, and product examples (W/hydration/rest/structure, from focaccia to Roman pizza).
+  Indicative values, to guide the hydration choice by flour.
 - **Toppings / combinations** — A static reference library on the Reference tab with 11
   combinations (Calabresa sausage, Mozzarella, Chicken & Catupiry, Margherita, Four Cheese,
   Pepperoni, Napolitana, Pork loin, Broccoli & Bacon, Heart of palm, Corn & Bacon), alphabetically
