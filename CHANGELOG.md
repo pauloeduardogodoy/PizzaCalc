@@ -17,6 +17,31 @@
 
 ## 🇧🇷 Português
 
+### v1.14.0 — Cronograma: marcador "agora" · 2026-09-29
+
+- **v1.14.0** — O cronograma ganhou um marcador **"agora"**: uma faixa no topo mostra em qual
+  etapa você está pelo relógio e qual a próxima ação (com o tempo restante), e a etapa em
+  andamento fica destacada com um selo "Agora". Atualiza sozinho (a cada 30 s) enquanto o card
+  está aberto; não usa notificação. Também indica "produção concluída" após o horário de assar.
+
+### v1.13.0 — Diário: nota, filtro/ordenação e comparação · 2026-09-29
+
+- **v1.13.0** — Diário de fornadas ganhou três recursos: **nota de 1 a 5 estrelas** por fornada;
+  **ordenar** (mais recente / mais antiga / melhor nota) e **filtrar** (todas / só favoritas) a
+  lista; e um modo **comparar** que mostra duas fornadas lado a lado numa tabela (produção,
+  temperaturas, massa, forno, atrito e observações). A nota entra no export/import.
+
+### v1.12.0 — Tabelas de farinha e hidratação · 2026-09-29
+
+- **v1.12.2** — Card "Farinha e hidratação" movido para logo abaixo do card "Farinhas" (agrupa as
+  referências de farinha).
+- **v1.12.1** — Correção: a tabela "Farinha e massa: exemplos" (larga) passou a rolar na horizontal
+  no celular, em vez de estourar a largura da tela.
+- **v1.12.0** — **Card "Farinha e hidratação"** na aba Referência (abaixo da Tabela de velocidades):
+  quatro tabelas de referência — proteína → hidratação, força (W) → hidratação, aumento de volume
+  na puntata, e exemplos de produto (W/hidratação/repouso/estrutura). Estático, bilíngue, valores
+  indicativos. (Fonte: tabelas em `support/tables/`.)
+
 ### v1.11.x — Preferências, refinamentos e refatoração · 2026-09-29
 
 - **v1.11.25** — Card "Sobre": `© 2026`, versão, `Ooni® Halo Core™` e `Fornetto® Slim™` em negrito.
@@ -129,6 +154,31 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.14.0 — Schedule: "now" marker · 2026-09-29
+
+- **v1.14.0** — The schedule gained a **"now"** marker: a band at the top shows which stage you're
+  in by the clock and the next action (with time remaining), and the current stage is highlighted
+  with a "Now" badge. It self-updates (every 30 s) while the card is open; no notification. It also
+  shows "production complete" after the baking time.
+
+### v1.13.0 — Log: rating, filter/sort and comparison · 2026-09-29
+
+- **v1.13.0** — The bake log gained three features: a **1–5 star rating** per bake; **sort**
+  (newest / oldest / best rating) and **filter** (all / favorites only) for the list; and a
+  **compare** mode showing two bakes side by side in a table (production, temperatures, dough,
+  oven, friction and notes). The rating is included in export/import.
+
+### v1.12.0 — Flour and hydration tables · 2026-09-29
+
+- **v1.12.2** — "Flour and hydration" card moved to right below the "Flours" card (groups the flour
+  references).
+- **v1.12.1** — Fix: the wide "Flour & dough: examples" table now scrolls horizontally on mobile
+  instead of overflowing the screen width.
+- **v1.12.0** — **"Flour and hydration" card** on the Reference tab (below the Speed table): four
+  reference tables — protein → hydration, strength (W) → hydration, volume increase during bulk
+  (puntata), and product examples (W/hydration/rest/structure). Static, bilingual, indicative
+  values. (Source: tables in `support/tables/`.)
 
 ### v1.11.x — Preferences, refinements and refactor · 2026-09-29
 
