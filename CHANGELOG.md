@@ -17,6 +17,18 @@
 
 ## 🇧🇷 Português
 
+### v1.15.2 — Logo por tema · 2026-09-29
+
+- **v1.15.2** — O logo do cabeçalho agora acompanha o tema: versão preta (`icon-512_black.png`)
+  no tema escuro (manual ou automático) e a versão padrão no tema claro.
+
+### v1.15.1 — Ajuda atualizada · 2026-09-29
+
+- **v1.15.1** — Correção: a aba **Ajuda** estava desatualizada. Adicionado o card **"Aba
+  Configurações"** (que faltava) e atualizados os cards de Cronograma (marcador "agora"), Diário
+  (nota 1–5, ordenar/filtrar, comparar), Referência (Farinha e hidratação) e Dicas (tema/idioma/
+  unidades agora ficam na aba Config).
+
 ### v1.15.0 — Unidades Internacional/Imperial · 2026-09-29
 
 - **v1.15.0** — Novo seletor de **unidades** na aba Config (abaixo do idioma): alterna toda a
@@ -165,6 +177,17 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.15.2 — Theme-aware logo · 2026-09-29
+
+- **v1.15.2** — The header logo now follows the theme: a black version (`icon-512_black.png`) in
+  dark mode (manual or automatic) and the standard version in light mode.
+
+### v1.15.1 — Help updated · 2026-09-29
+
+- **v1.15.1** — Fix: the **Help** tab was out of date. Added the missing **"Settings tab"** card
+  and updated the Schedule (the "now" marker), Log (1–5 rating, sort/filter, compare), Reference
+  (Flour and hydration) and Tips (theme/language/units now live on the Settings tab) cards.
 
 ### v1.15.0 — Metric/Imperial units · 2026-09-29
 

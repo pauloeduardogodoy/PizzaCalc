@@ -1968,7 +1968,7 @@
         <span class="print-ico" data-ico="maos"></span>
         <span id="mnmBtnLabel" data-i18n="maoNaMassa">Mão na massa</span>
       </button>
-      <h1><img src="icon-512.png" alt="Ícone Pizza"> <span data-i18n="appTitle">PizzaCalc</span></h1>
+      <h1><img id="appLogo" src="icon-512.png" alt="Ícone Pizza"> <span data-i18n="appTitle">PizzaCalc</span></h1>
       <button id="wakeToggle" class="wake-btn" onclick="toggleWakeLock()" aria-pressed="false" title="Manter tela ligada">
         <span class="wake-dot"></span>
         <span id="wakeLabel" data-i18n="wakeOff">Manter tela ligada</span>
@@ -2619,6 +2619,14 @@
     <div id="ajReferenciaWrap" class="ajuda-wrap"><div class="ajuda-conteudo" data-i18n="ajReferencia"></div></div>
   </div>
 
+  <div class="card" id="ajudaConfigCard">
+    <div class="timeline-head card-head" id="ajConfigToggle" onclick="toggleAjuda('ajConfig')" role="button" tabindex="0" aria-expanded="true">
+      <h2 style="margin:0" data-i18n="ajConfigTit">Aba Configurações</h2>
+      <span class="chevron-wrap"></span>
+    </div>
+    <div id="ajConfigWrap" class="ajuda-wrap"><div class="ajuda-conteudo" data-i18n="ajConfig"></div></div>
+  </div>
+
   <div class="card" id="ajudaDicasCard">
     <div class="timeline-head card-head" id="ajDicasToggle" onclick="toggleAjuda('ajDicas')" role="button" tabindex="0" aria-expanded="true">
       <h2 style="margin:0" data-i18n="ajDicasTit">Dicas de uso</h2>
@@ -2741,7 +2749,7 @@
   </div><!-- /ABA Config -->
 
   <footer id="footer" data-i18n="footer">
-    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.15.0</span>
+    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.15.2</span>
   </footer>
 </div>
 
@@ -2966,15 +2974,17 @@
       ajPreparoTit: 'Aba Preparo',
       ajPreparo: '<ul><li><b>Temperatura da água</b>: informe ambiente/farinha/poolish e o app diz a água (e o gelo) para a massa sair a 19–23°C.</li><li><b>Guia de mistura</b>: as 6 etapas na Halo Core, cada uma com timer e alarme.</li><li><b>Guia de cocção</b>: timer de pré-aquecimento e de assar, com a janela ideal marcada.</li></ul>',
       ajCronogramaTit: 'Aba Cronograma',
-      ajCronograma: '<p>Defina o <b>início do poolish</b> e a <b>hora de assar</b> (e a duração do appretto). O app planeja de trás pra frente e mostra cada etapa com data/hora.</p><p>Fique de olho nos <b>alertas</b>: horário incômodo (madrugada), maturação fora de faixa ou appretto longo.</p>',
+      ajCronograma: '<p>Defina o <b>início do poolish</b> e a <b>hora de assar</b> (e a duração do appretto). O app planeja de trás pra frente e mostra cada etapa com data/hora.</p><p>O marcador <b>"agora"</b> destaca, pelo relógio, a etapa em andamento e a próxima ação (com o tempo restante).</p><p>Fique de olho nos <b>alertas</b>: horário incômodo (madrugada), maturação fora de faixa ou appretto longo.</p>',
       ajDiarioTit: 'Aba Diário',
-      ajDiario: '<ul><li><b>Registrar fornada</b>: guarda a produção, as temperaturas e a massa medida.</li><li>O app calcula o <b>atrito real</b> da masseira e a média — aplique no card de água para calibrar.</li><li><b>Fotos</b>, <b>favoritar</b> (estrela) e <b>Repetir</b> (recarrega a receita daquela fornada).</li><li><b>Insights</b>: gráficos de atrito, temperatura da massa e tempo de forno.</li></ul>',
+      ajDiario: '<ul><li><b>Registrar fornada</b>: guarda a produção, as temperaturas e a massa medida.</li><li>O app calcula o <b>atrito real</b> da masseira e a média — aplique no card de água para calibrar.</li><li><b>Nota (1–5 estrelas)</b>, <b>favoritar</b> (estrela) e <b>Repetir</b> (recarrega a receita daquela fornada).</li><li><b>Ordenar</b> (recente/antiga/melhor nota) e <b>filtrar</b> (só favoritas); <b>Comparar</b> duas fornadas lado a lado.</li><li><b>Fotos</b> por fornada e <b>Insights</b>: gráficos de atrito, temperatura da massa e tempo de forno.</li></ul>',
       ajReferenciaTit: 'Aba Referência',
-      ajReferencia: '<ul><li><b>Farinhas</b>: cadastre suas farinhas (marca, tipo, W, proteína) e vincule às fornadas.</li><li><b>Recheios</b>: combinações clássicas com ingredientes e montagem.</li><li><b>Tabela de velocidades</b> da Halo Core.</li><li><b>Glossário</b> napolitano e <b>Solução de problemas</b>.</li></ul>',
+      ajReferencia: '<ul><li><b>Farinhas</b>: cadastre suas farinhas (marca, tipo, W, proteína) e vincule às fornadas.</li><li><b>Farinha e hidratação</b>: tabelas de referência (proteína/força × hidratação × estrutura).</li><li><b>Recheios</b>: combinações clássicas com ingredientes e montagem.</li><li><b>Tabela de velocidades</b> da Halo Core.</li><li><b>Glossário</b> napolitano e <b>Solução de problemas</b>.</li></ul>',
+      ajConfigTit: 'Aba Configurações',
+      ajConfig: '<p>Reúne as <b>preferências</b> do app (ficam salvas neste aparelho):</p><ul><li><b>Tema</b>: automático (segue o sistema), claro ou escuro.</li><li><b>Idioma</b>: português ou inglês.</li><li><b>Unidades</b>: Internacional (g, °C) ou Imperial (oz/lb, °F).</li><li><b>Ajustar fermento pela temperatura</b>: liga/desliga o ajuste opcional.</li><li><b>Notificações do cronograma</b>: ativar e escolher o aviso antecipado.</li><li><b>Resetar layout dos cards</b> e atalho para o <b>Backup completo</b>.</li></ul>',
       ajDicasTit: 'Dicas de uso',
-      ajDicas: '<ul><li><b>Mão na massa</b> (botão no topo): passo a passo em tela cheia para usar na bancada.</li><li><b>Manter tela ligada</b>: impede a tela do celular de apagar durante o preparo.</li><li><b>PT/EN</b>: troque o idioma nas bandeiras.</li><li><b>Imprimir</b>: receita, cronograma, lista de compras e tabela têm botões próprios.</li><li><b>Instalar</b>: no celular, "Adicionar à tela inicial" para usar como app, offline.</li></ul><span class="aj-dica">Botões <b>Expandir/Recolher cards</b> agem na aba atual; o <b>chevron duplo</b> ao lado age em todas as abas.</span>',
+      ajDicas: '<ul><li><b>Mão na massa</b> (botão no topo): passo a passo em tela cheia para usar na bancada.</li><li><b>Manter tela ligada</b>: impede a tela do celular de apagar durante o preparo.</li><li><b>Tema, idioma e unidades</b>: ajuste na aba <b>Config</b>.</li><li><b>Imprimir</b>: receita, cronograma, lista de compras e tabela têm botões próprios.</li><li><b>Instalar</b>: no celular, "Adicionar à tela inicial" para usar como app, offline.</li></ul><span class="aj-dica">Botões <b>Expandir/Recolher cards</b> agem na aba atual; o <b>chevron duplo</b> ao lado age em todas as abas.</span>',
       ajSobreTit: 'Sobre',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><hr class="sobre-sep"><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: <b>© 2026</b> · Versão: <b>1.15.0</b></p><hr class="sobre-sep"><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> e <b>Fornetto® Slim™</b> são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><hr class="sobre-sep"><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: <b>© 2026</b> · Versão: <b>1.15.2</b></p><hr class="sobre-sep"><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> e <b>Fornetto® Slim™</b> são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
       // Backup completo
       backupTitulo: 'Backup completo',
       backupIntro: 'Salve <b>tudo</b> num arquivo: perfis, farinhas, preços, diário (com fotos), configuração e idioma. Use para <b>trocar de aparelho</b> ou fazer backup antes de limpar o navegador. Importar <b>substitui</b> os dados atuais.',
@@ -3151,7 +3161,7 @@
       btnImprimirVel: 'Imprimir tabela',
       btnImprimirGlossario: 'Imprimir glossário',
       thVel: 'Vel.', thPotencia: 'Potência', thUso: 'Uso / equivalente industrial',
-      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.15.0</span>',
+      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.15.2</span>',
       velIntro: 'Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b> (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).',
       comoFunciona: '<b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e recalcula a água total. O <b>poolish</b> é ajustável de 45% a 100% <b>da água total</b>, sempre a 100% de hidratação (mesma quantidade de água e farinha); o fermento acompanha essa fração. O restante da água e da farinha entra na massa final. Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.',
       progresso: (n, t) => `<b>${n}</b> de ${t} etapas`,
@@ -3364,15 +3374,17 @@
       ajPreparoTit: 'Prep tab',
       ajPreparo: '<ul><li><b>Water temperature</b>: enter room/flour/poolish and the app gives the water (and ice) for a 19–23°C dough.</li><li><b>Mixing guide</b>: the 6 Halo Core steps, each with a timer and alarm.</li><li><b>Baking guide</b>: preheat and bake timers, with the ideal window marked.</li></ul>',
       ajCronogramaTit: 'Schedule tab',
-      ajCronograma: '<p>Set the <b>poolish start</b> and the <b>baking time</b> (and appretto length). The app plans backwards and shows each step with date/time.</p><p>Watch the <b>alerts</b>: awkward hours (late night), out-of-range maturation or long appretto.</p>',
+      ajCronograma: '<p>Set the <b>poolish start</b> and the <b>baking time</b> (and appretto length). The app plans backwards and shows each step with date/time.</p><p>The <b>"now"</b> marker highlights the current stage by the clock and the next action (with time remaining).</p><p>Watch the <b>alerts</b>: awkward hours (late night), out-of-range maturation or long appretto.</p>',
       ajDiarioTit: 'Log tab',
-      ajDiario: '<ul><li><b>Log a bake</b>: saves the batch, temperatures and measured dough temp.</li><li>The app computes the mixer\'s <b>real friction</b> and the average — apply it to the water card to calibrate.</li><li><b>Photos</b>, <b>favorite</b> (star) and <b>Repeat</b> (reloads that bake\'s recipe).</li><li><b>Insights</b>: charts of friction, dough temp and oven time.</li></ul>',
+      ajDiario: '<ul><li><b>Log a bake</b>: saves the batch, temperatures and measured dough temp.</li><li>The app computes the mixer\'s <b>real friction</b> and the average — apply it to the water card to calibrate.</li><li><b>Rating (1–5 stars)</b>, <b>favorite</b> (star) and <b>Repeat</b> (reloads that bake\'s recipe).</li><li><b>Sort</b> (newest/oldest/best rating) and <b>filter</b> (favorites only); <b>Compare</b> two bakes side by side.</li><li><b>Photos</b> per bake and <b>Insights</b>: charts of friction, dough temp and oven time.</li></ul>',
       ajReferenciaTit: 'Reference tab',
-      ajReferencia: '<ul><li><b>Flours</b>: register your flours (brand, type, W, protein) and link them to bakes.</li><li><b>Toppings</b>: classic combinations with ingredients and assembly.</li><li>Halo Core <b>speed table</b>.</li><li>Neapolitan <b>glossary</b> and <b>troubleshooting</b>.</li></ul>',
+      ajReferencia: '<ul><li><b>Flours</b>: register your flours (brand, type, W, protein) and link them to bakes.</li><li><b>Flour and hydration</b>: reference tables (protein/strength × hydration × structure).</li><li><b>Toppings</b>: classic combinations with ingredients and assembly.</li><li>Halo Core <b>speed table</b>.</li><li>Neapolitan <b>glossary</b> and <b>troubleshooting</b>.</li></ul>',
+      ajConfigTit: 'Settings tab',
+      ajConfig: '<p>Gathers the app <b>preferences</b> (saved on this device):</p><ul><li><b>Theme</b>: automatic (follows the system), light or dark.</li><li><b>Language</b>: Portuguese or English.</li><li><b>Units</b>: Metric (g, °C) or Imperial (oz/lb, °F).</li><li><b>Adjust yeast to temperature</b>: toggles the optional adjustment.</li><li><b>Schedule notifications</b>: enable and pick the lead reminder.</li><li><b>Reset cards layout</b> and a shortcut to the <b>full backup</b>.</li></ul>',
       ajDicasTit: 'Usage tips',
-      ajDicas: '<ul><li><b>Hands-on</b> (top button): a full-screen step-by-step for the bench.</li><li><b>Keep screen on</b>: stops the phone screen turning off during prep.</li><li><b>PT/EN</b>: switch language with the flags.</li><li><b>Print</b>: recipe, schedule, shopping list and table have their own buttons.</li><li><b>Install</b>: on mobile, "Add to Home screen" to use it as an app, offline.</li></ul><span class="aj-dica"><b>Expand/Collapse cards</b> acts on the current tab; the <b>double chevron</b> next to it acts on all tabs.</span>',
+      ajDicas: '<ul><li><b>Hands-on</b> (top button): a full-screen step-by-step for the bench.</li><li><b>Keep screen on</b>: stops the phone screen turning off during prep.</li><li><b>Theme, language and units</b>: set them on the <b>Settings</b> tab.</li><li><b>Print</b>: recipe, schedule, shopping list and table have their own buttons.</li><li><b>Install</b>: on mobile, "Add to Home screen" to use it as an app, offline.</li></ul><span class="aj-dica"><b>Expand/Collapse cards</b> acts on the current tab; the <b>double chevron</b> next to it acts on all tabs.</span>',
       ajSobreTit: 'About',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><hr class="sobre-sep"><p>Developed by <b>Paulo Godoy</b></p><p>Year: <b>© 2026</b> · Version: <b>1.15.0</b></p><hr class="sobre-sep"><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> and <b>Fornetto® Slim™</b> are trademarks of their respective owners, cited only as equipment reference.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><hr class="sobre-sep"><p>Developed by <b>Paulo Godoy</b></p><p>Year: <b>© 2026</b> · Version: <b>1.15.2</b></p><hr class="sobre-sep"><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> and <b>Fornetto® Slim™</b> are trademarks of their respective owners, cited only as equipment reference.</p>',
       // Full backup
       backupTitulo: 'Full backup',
       backupIntro: 'Save <b>everything</b> to a file: profiles, flours, prices, log (with photos), settings and language. Use it to <b>move to another device</b> or back up before clearing the browser. Importing <b>replaces</b> the current data.',
@@ -3542,7 +3554,7 @@
       btnImprimirVel: 'Print table',
       btnImprimirGlossario: 'Print glossary',
       thVel: 'Speed', thPotencia: 'Power', thUso: 'Use / industrial equivalent',
-      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.15.0</span>',
+      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.15.2</span>',
       velIntro: 'Spiral mixer with rotating bowl (60–300 RPM). Since the industrial mixer is also a spiral, the comparison is direct by hook RPM: <b>industrial 1st speed ≈ 100 RPM</b> (speed 4) and <b>2nd speed ≈ 200 RPM</b> (speed 12).',
       comoFunciona: '<b>How it works:</b> Quantities scale proportionally, keeping the recipe ratios (flour 95% Alma + 5% Integral, salt 2.5%, yeast 0.1%). <b>Hydration</b> is adjustable and recalculates the total water. The <b>poolish</b> is adjustable from 45% to 100% <b>of the total water</b>, always at 100% hydration (equal water and flour); the yeast follows that fraction. The remaining water and flour go into the final dough. A ~1% dough loss during handling is accounted for in the reverse calculation.',
       progresso: (n, t) => `<b>${n}</b> of ${t} steps`,
@@ -5018,6 +5030,7 @@
       ['ajCronogramaWrap', () => toggleAjuda('ajCronograma')],
       ['ajDiarioWrap', () => toggleAjuda('ajDiario')],
       ['ajReferenciaWrap', () => toggleAjuda('ajReferencia')],
+      ['ajConfigWrap', () => toggleAjuda('ajConfig')],
       ['ajDicasWrap', () => toggleAjuda('ajDicas')],
       ['ajSobreWrap', () => toggleAjuda('ajSobre')]
     ],
@@ -5139,7 +5152,7 @@
     restoreWrap('recheiosWrap', 'recheiosToggle');
     restoreWrap('diarioWrap', 'diarioToggle');
     restoreWrap('insightsWrap', 'insightsToggle');
-    ['ajComecar', 'ajReceita', 'ajPreparo', 'ajCronograma', 'ajDiario', 'ajReferencia', 'ajDicas', 'ajSobre']
+    ['ajComecar', 'ajReceita', 'ajPreparo', 'ajCronograma', 'ajDiario', 'ajReferencia', 'ajConfig', 'ajDicas', 'ajSobre']
       .forEach(p => restoreWrap(p + 'Wrap', p + 'Toggle'));
     restoreWrap('backupWrap', 'backupToggle');
     ['cfgAparencia', 'cfgPreparo', 'cfgNotif', 'cfgDados']
@@ -7504,6 +7517,9 @@
     // meta theme-color acompanha o fundo do tema efetivo
     const mt = document.querySelector('meta[name="theme-color"]');
     if (mt) mt.setAttribute('content', escuro ? '#17140f' : '#cc5500');
+    // logo do app: versão preta no tema escuro, versão padrão no claro
+    const logo = document.getElementById('appLogo');
+    if (logo) logo.setAttribute('src', escuro ? 'icon-512_black.png' : 'icon-512.png');
     // marca o segmento ativo do seletor de tema (aba Config)
     document.querySelectorAll('#cfgTemaSeg .cfg-seg-btn').forEach(b =>
       b.classList.toggle('active', b.getAttribute('data-tema-opt') === TEMA));
