@@ -136,12 +136,16 @@ zerar).
 - **Solução de problemas** — Problemas comuns (massa rasga, encolhe, borda pálida, azeda…)
   com causa provável e como ajustar.
 - **Aba Configurações** — Uma aba dedicada reúne as preferências do app: **tema**
-  (automático/claro/escuro), **idioma** (PT/EN), **ajuste de fermento pela temperatura**,
-  **notificações do cronograma** (ativar + avisar antes), **resetar o layout dos cards** e um
-  atalho para o **backup completo**.
+  (automático/claro/escuro), **idioma** (PT/EN), **unidades** (Internacional/Imperial), **ajuste
+  de fermento pela temperatura**, **notificações do cronograma** (ativar + avisar antes),
+  **resetar o layout dos cards** e um atalho para o **backup completo**.
 - **Tema claro/escuro** — **Automático** (segue o sistema, em tempo real), **claro** ou
   **escuro**, escolhido na aba Configurações. A preferência fica salva. Mantém o laranja (ação)
   e o verde (sucesso) como identidade.
+- **Unidades (Internacional/Imperial)** — Alterna toda a exibição entre **gramas + °C** e
+  **onças/libras + °F** (pesos em oz, total da massa em lb; temperaturas em °F, inclusive os
+  campos do card de água). Os cálculos internos permanecem em gramas e °C — só a apresentação e a
+  entrada mudam. Preferência salva.
 - **Manter tela ligada** — Impede o celular de apagar a tela durante a produção (Wake Lock API).
 - **Impressão** — Modos independentes: só receita, só cronograma, tudo, ou só a tabela de
   velocidades.
@@ -282,9 +286,13 @@ icon-only on mobile; timers use icons only (play/pause/reset).
 - **Troubleshooting** — Common issues (dough tears, shrinks, pale crust, too sour…) with
   likely cause and how to fix.
 - **Settings tab** — A dedicated tab gathers the app preferences: **theme**
-  (automatic/light/dark), **language** (PT/EN), **yeast adjustment by temperature**, **schedule
-  notifications** (enable + notify before), **reset cards layout**, and a shortcut to the **full
-  backup**.
+  (automatic/light/dark), **language** (PT/EN), **units** (Metric/Imperial), **yeast adjustment by
+  temperature**, **schedule notifications** (enable + notify before), **reset cards layout**, and
+  a shortcut to the **full backup**.
+- **Units (Metric/Imperial)** — Switches the whole display between **grams + °C** and
+  **ounces/pounds + °F** (weights in oz, total dough in lb; temperatures in °F, including the water
+  card fields). Internal calculations stay in grams and °C — only the display and input change.
+  Preference saved.
 - **Light/dark theme** — **Automatic** (follows the system, in real time), **light** or **dark**,
   chosen on the Settings tab. The preference is saved. Keeps orange (action) and green (success)
   as the identity.

@@ -1990,11 +1990,11 @@
         </div>
       </div>
       <div class="control">
-        <label><span data-i18n="pesoPanetto">Peso por panetto</span>: <span class="val" id="pesoVal">280</span> g</label>
+        <label><span data-i18n="pesoPanetto">Peso por panetto</span>: <span class="val" id="pesoVal">280</span> <span id="pesoValUnid">g</span></label>
         <div class="row-input">
           <input type="range" id="pesoRange" min="260" max="320" step="5" value="280">
           <input type="number" id="pesoNum" min="260" max="320" step="5" value="280">
-          <span class="unit">g</span>
+          <span class="unit" id="pesoInputUnid">g</span>
         </div>
       </div>
       <div class="control">
@@ -2662,6 +2662,13 @@
             <button type="button" class="cfg-seg-btn" data-lang-opt="en" onclick="setLang('en')">English</button>
           </div>
         </div>
+        <div class="cfg-item">
+          <span class="cfg-label" data-i18n="cfgUnidade">Unidades</span>
+          <div class="cfg-seg" id="cfgUnidSeg" role="group">
+            <button type="button" class="cfg-seg-btn" data-unid-opt="si" onclick="setUnidade('si')" data-i18n="cfgUnidSI">[ g, °C ]</button>
+            <button type="button" class="cfg-seg-btn" data-unid-opt="imp" onclick="setUnidade('imp')" data-i18n="cfgUnidImp">[ oz/lb, °F ]</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -2734,7 +2741,7 @@
   </div><!-- /ABA Config -->
 
   <footer id="footer" data-i18n="footer">
-    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.14.1</span>
+    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.15.0</span>
   </footer>
 </div>
 
@@ -2918,6 +2925,14 @@
   // ===== Internacionalização (PT padrão / EN) =====
   let LANG = 'pt';
 
+  // ===== Sistema de unidades (SI padrão / Imperial) =====
+  // 'si' = gramas + Celsius; 'imp' = onças/libras + Fahrenheit. Afeta SÓ a
+  // exibição e a entrada; os cálculos e o localStorage ficam sempre em g/°C.
+  let UNID = 'si';
+  const OZ = 28.349523125;    // 1 oz em gramas
+  const LB = 453.59237;       // 1 lb em gramas
+  function usaImp() { return UNID === 'imp'; }
+
   const I18N = {
     pt: {
       appTitle: 'PizzaCalc',
@@ -2934,6 +2949,7 @@
       cfgAparenciaTit: 'Aparência',
       cfgTema: 'Tema:', cfgTemaAuto: 'Automático', cfgTemaClaro: 'Claro', cfgTemaEscuro: 'Escuro',
       cfgIdioma: 'Idioma:',
+      cfgUnidade: 'Unidades:', cfgUnidSI: '[ g, °C ]', cfgUnidImp: '[ oz/lb, °F ]',
       cfgPreparoTit: 'Preparo',
       cfgNotifTit: 'Notificações do cronograma',
       cfgDadosTit: 'Dados e layout',
@@ -2958,7 +2974,7 @@
       ajDicasTit: 'Dicas de uso',
       ajDicas: '<ul><li><b>Mão na massa</b> (botão no topo): passo a passo em tela cheia para usar na bancada.</li><li><b>Manter tela ligada</b>: impede a tela do celular de apagar durante o preparo.</li><li><b>PT/EN</b>: troque o idioma nas bandeiras.</li><li><b>Imprimir</b>: receita, cronograma, lista de compras e tabela têm botões próprios.</li><li><b>Instalar</b>: no celular, "Adicionar à tela inicial" para usar como app, offline.</li></ul><span class="aj-dica">Botões <b>Expandir/Recolher cards</b> agem na aba atual; o <b>chevron duplo</b> ao lado age em todas as abas.</span>',
       ajSobreTit: 'Sobre',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><hr class="sobre-sep"><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: <b>© 2026</b> · Versão: <b>1.14.1</b></p><hr class="sobre-sep"><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> e <b>Fornetto® Slim™</b> são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><hr class="sobre-sep"><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: <b>© 2026</b> · Versão: <b>1.15.0</b></p><hr class="sobre-sep"><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> e <b>Fornetto® Slim™</b> são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
       // Backup completo
       backupTitulo: 'Backup completo',
       backupIntro: 'Salve <b>tudo</b> num arquivo: perfis, farinhas, preços, diário (com fotos), configuração e idioma. Use para <b>trocar de aparelho</b> ou fazer backup antes de limpar o navegador. Importar <b>substitui</b> os dados atuais.',
@@ -2984,7 +3000,7 @@
       // Passo 1 — Poolish
       mnmP1Tit: 'Poolish',
       mnmP1Lead: 'Prepare o pré-fermento com <b>antecedência</b> (padrão ~20h antes de assar). Misture só os ingredientes do poolish e deixe fermentar.',
-      mnmP1I1: '2h fora da geladeira + o restante na geladeira a 4°C.',
+      mnmP1I1: () => `2h fora da geladeira + o restante na geladeira a ${fmtTemp(4)}.`,
       mnmP1I2: 'Bowl da Halo Core com a tampa fechada e o furo de ventilação aberto.',
       mnmP1I3: 'Quando dobrar de volume e ficar borbulhante, está pronto.',
       // Passo 2 — Massa final
@@ -3001,8 +3017,8 @@
       // Passo 4 — Bolear + appretto
       mnmP4Tit: 'Bolear + Appretto',
       mnmP4Lead: 'Divida a massa em panetti e deixe a segunda fermentação (appretto) fora da geladeira até a hora de assar.',
-      mnmP4I1: 'Temperatura ambiente < 22°C: até ~4h.',
-      mnmP4I2: 'Temperatura ambiente > 25°C: 2,5h a 3h.',
+      mnmP4I1: () => `Temperatura ambiente < ${usaImp() ? Math.round(cToF(22)) + '°F' : '22°C'}: até ~4h.`,
+      mnmP4I2: () => `Temperatura ambiente > ${usaImp() ? Math.round(cToF(25)) + '°F' : '25°C'}: 2,5h a 3h.`,
       mnmP4I3: 'Quando os panetti dobrarem de volume, estão prontos.',
       // Passo 5 — Assar
       mnmP5Tit: 'Assar — Fornetto Slim',
@@ -3135,7 +3151,7 @@
       btnImprimirVel: 'Imprimir tabela',
       btnImprimirGlossario: 'Imprimir glossário',
       thVel: 'Vel.', thPotencia: 'Potência', thUso: 'Uso / equivalente industrial',
-      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.14.1</span>',
+      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.15.0</span>',
       velIntro: 'Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b> (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).',
       comoFunciona: '<b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e recalcula a água total. O <b>poolish</b> é ajustável de 45% a 100% <b>da água total</b>, sempre a 100% de hidratação (mesma quantidade de água e farinha); o fermento acompanha essa fração. O restante da água e da farinha entra na massa final. Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.',
       progresso: (n, t) => `<b>${n}</b> de ${t} etapas`,
@@ -3173,10 +3189,10 @@
       ddtAtrito: 'Atrito da masseira',
       ddtAguaLabel: 'Temperatura da água',
       btnResetDDT: 'Restaurar padrão',
-      ddtGelo: (g, total) => `Use ~<b>${g} g</b> de gelo moído no lugar de parte dos ${total} g de água (o restante como água gelada) para ajudar a atingir a temperatura.`,
+      ddtGelo: (g, total) => `Use ~<b>${g}</b> de gelo moído no lugar de parte dos ${total} de água (o restante como água gelada) para ajudar a atingir a temperatura.`,
       ddtGeloZero: 'Água da torneira gelada já deve bastar — não é necessário gelo.',
-      ddtFrio: (c) => `⚠️ <b>Água muito fria (${c}°C).</b> Na prática, use o máximo de gelo possível e água quase congelante. Considere resfriar a farinha ou baixar a temperatura ambiente.`,
-      ddtQuente: (c) => `⚠️ <b>Água morna necessária (${c}°C).</b> Ambiente/farinha frios demais; a massa pode sair abaixo do alvo. Use água na temperatura ambiente ou levemente morna.`,
+      ddtFrio: (c) => `⚠️ <b>Água muito fria (${c}).</b> Na prática, use o máximo de gelo possível e água quase congelante. Considere resfriar a farinha ou baixar a temperatura ambiente.`,
+      ddtQuente: (c) => `⚠️ <b>Água morna necessária (${c}).</b> Ambiente/farinha frios demais; a massa pode sair abaixo do alvo. Use água na temperatura ambiente ou levemente morna.`,
       ddtNota: '<b>Poolish:</b> saindo da geladeira, fica em torno de 4°C — meça se puder. Ele é ~46% da massa e resfria bastante, então a água pedida costuma ser mais alta do que sem pré-fermento. <b>Atrito:</b> a sova de força da Halo Core (vel. 8–9 + burst) aquece muito a massa. O padrão de <b>36°C</b> foi calibrado numa fornada real (água 2°C, ambiente/farinha 21°C, poolish 4°C → massa 20,9°C). Meça a temperatura no fim de cada fornada e ajuste o atrito para afinar.',
       // Guia de mistura com timer
       mixTitulo: 'Guia de mistura — Halo Core',
@@ -3201,10 +3217,10 @@
       // Timer do forno Fornetto
       fornoTitulo: 'Guia de cocção — Fornetto Slim',
       btnMostrarForno: 'Mostrar timers do forno', btnOcultarForno: 'Ocultar timers do forno',
-      fornoIntro: 'Dois timers: <b>pré-aquecimento</b> (40 min a 390°C) e <b>cocção</b> (90–140 s). O alarme toca quando o forno está pronto e nos pontos de cocção — sem queimar a napolitana.',
-      preaqTit: 'Pré-aquecimento', preaqVel: '390°C · 40 min',
-      preaqDesc: 'Deixe o Fornetto Slim aquecer por 40 minutos a 390°C antes da primeira pizza. O alarme avisa quando estiver pronto.',
-      preaqPronto: '🔥 Forno pronto! Pré-aquecido a 390°C.',
+      fornoIntro: () => `Dois timers: <b>pré-aquecimento</b> (40 min a ${fmtTemp(390)}) e <b>cocção</b> (90–140 s). O alarme toca quando o forno está pronto e nos pontos de cocção — sem queimar a napolitana.`,
+      preaqTit: 'Pré-aquecimento', preaqVel: () => `${fmtTemp(390)} · 40 min`,
+      preaqDesc: () => `Deixe o Fornetto Slim aquecer por 40 minutos a ${fmtTemp(390)} antes da primeira pizza. O alarme avisa quando estiver pronto.`,
+      preaqPronto: () => `🔥 Forno pronto! Pré-aquecido a ${fmtTemp(390)}.`,
       coccaoTit: 'Cocção', coccaoVel: '90–140 s',
       coccaoDesc: 'Cronômetro crescente. Gire a pizza a cada ~30 s. A faixa verde marca a janela ideal de 90–140 s — observe borda e leopard spots.',
       coccaoWait: (s) => `Assando… ${s}s (aguarde a janela de 90 s)`,
@@ -3223,7 +3239,7 @@
       diarioVazio: 'Nenhuma fornada registrada ainda. Toque em "Registrar fornada" ao final de uma produção.',
       diarioContagemLbl: (n) => `${n} fornada${n === 1 ? '' : 's'}`,
       // prompts do registro
-      promptMassaMedida: 'Temperatura da massa final medida (°C):',
+      promptMassaMedida: () => `Temperatura da massa final medida (${usaImp() ? '°F' : '°C'}):`,
       promptTempoForno: 'Tempo de cocção que funcionou (segundos) — opcional:',
       promptNota: 'Observações (borda, leopard spots, manuseio…) — opcional:',
       // rótulos dos campos na ficha
@@ -3282,7 +3298,7 @@
       // cronograma (etapas)
       stPoolishTit: 'Poolish',
       stPoolishLead: '{poolishFarinha} farinha Alma Italiana + {poolishAgua} água + {poolishFerm} fermento seco.',
-      stPoolishI1: '2h fora da geladeira + o restante na geladeira à 4°C ({poolishFrio} de frio).',
+      stPoolishI1: () => `2h fora da geladeira + o restante na geladeira à ${fmtTemp(4)} ({poolishFrio} de frio).`,
       stPoolishI2: 'Bowl da Halo Core com a tampa de silicone fechada, porém com o furo de ventilação aberto.',
       stMassaTit: 'Massa final — Halo Core',
       stMassaLead: 'Todo o poolish + {finalAlma} Alma Italiana + {finalIntegral} Integral + {finalAgua} água gelada com gelo moído + {finalSal} sal + {finalFerm} fermento seco.',
@@ -3292,17 +3308,17 @@
       stMassaI4: 'Adicionar o sal em velocidade 6 por 2 minutos.',
       stMassaI5: 'Sova em velocidade 8 ou 9 por 6 minutos para ganhar força, monitorando a temperatura.',
       stMassaI6: 'Caso necessário, sove em velocidade 12 por no máximo 45s.',
-      stMassaWarn: 'Temperatura final 19-23°C',
+      stMassaWarn: () => `Temperatura final ${usaImp() ? Math.round(cToF(19)) + '-' + Math.round(cToF(23)) + '°F' : '19-23°C'}`,
       stMaturTit: 'Maturação em geladeira',
       stMaturLead: 'Massa no bowl Tramontina 8,3L fechado com filme em contato + tampa. Vai para a geladeira ~30 min após a massa final. Total de maturação em bloco: {maturacao}.',
       stBolearTit: 'Bolear + Appretto',
       stBolearLead: '{discos} panetti de {peso} armazenados nos potes com desmoldante e tampados fora da geladeira ({appretto} de appretto).',
-      stBolearI1: 'Temperatura ambiente < 22°C: até ~4h.',
-      stBolearI2: 'Temperatura ambiente > 25°C: 2,5h a 3h.',
+      stBolearI1: () => `Temperatura ambiente < ${usaImp() ? Math.round(cToF(22)) + '°F' : '22°C'}: até ~4h.`,
+      stBolearI2: () => `Temperatura ambiente > ${usaImp() ? Math.round(cToF(25)) + '°F' : '25°C'}: 2,5h a 3h.`,
       stBolearI3: 'Observar os panetti — quando dobrarem de volume, estão prontos.',
       stAssarTit: 'Assar — Fornetto Slim',
       stAssarLead: 'Forno pré-aquecido por 40 minutos.',
-      stAssarI1: 'Temperatura 390°C.',
+      stAssarI1: () => `Temperatura ${fmtTemp(390)}.`,
       stAssarI2: '90-140 segundos (conforme o ponto de borda e leopard spots desejado).',
       // durações e datas
       inicioLabel: 'início',
@@ -3331,6 +3347,7 @@
       cfgAparenciaTit: 'Appearance',
       cfgTema: 'Theme:', cfgTemaAuto: 'Automatic', cfgTemaClaro: 'Light', cfgTemaEscuro: 'Dark',
       cfgIdioma: 'Language:',
+      cfgUnidade: 'Units:', cfgUnidSI: '[ g, °C ]', cfgUnidImp: '[ oz/lb, °F ]',
       cfgPreparoTit: 'Prep',
       cfgNotifTit: 'Schedule notifications',
       cfgDadosTit: 'Data & layout',
@@ -3355,7 +3372,7 @@
       ajDicasTit: 'Usage tips',
       ajDicas: '<ul><li><b>Hands-on</b> (top button): a full-screen step-by-step for the bench.</li><li><b>Keep screen on</b>: stops the phone screen turning off during prep.</li><li><b>PT/EN</b>: switch language with the flags.</li><li><b>Print</b>: recipe, schedule, shopping list and table have their own buttons.</li><li><b>Install</b>: on mobile, "Add to Home screen" to use it as an app, offline.</li></ul><span class="aj-dica"><b>Expand/Collapse cards</b> acts on the current tab; the <b>double chevron</b> next to it acts on all tabs.</span>',
       ajSobreTit: 'About',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><hr class="sobre-sep"><p>Developed by <b>Paulo Godoy</b></p><p>Year: <b>© 2026</b> · Version: <b>1.14.1</b></p><hr class="sobre-sep"><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> and <b>Fornetto® Slim™</b> are trademarks of their respective owners, cited only as equipment reference.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><hr class="sobre-sep"><p>Developed by <b>Paulo Godoy</b></p><p>Year: <b>© 2026</b> · Version: <b>1.15.0</b></p><hr class="sobre-sep"><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> and <b>Fornetto® Slim™</b> are trademarks of their respective owners, cited only as equipment reference.</p>',
       // Full backup
       backupTitulo: 'Full backup',
       backupIntro: 'Save <b>everything</b> to a file: profiles, flours, prices, log (with photos), settings and language. Use it to <b>move to another device</b> or back up before clearing the browser. Importing <b>replaces</b> the current data.',
@@ -3380,7 +3397,7 @@
       mnmCronoAssar: 'Bake',
       mnmP1Tit: 'Poolish',
       mnmP1Lead: 'Prepare the pre-ferment <b>ahead of time</b> (default ~20h before baking). Mix only the poolish ingredients and let it ferment.',
-      mnmP1I1: '2h at room temperature + the rest in the fridge at 4°C.',
+      mnmP1I1: () => `2h at room temperature + the rest in the fridge at ${fmtTemp(4)}.`,
       mnmP1I2: 'Halo Core bowl with the lid closed and the vent hole open.',
       mnmP1I3: 'When it doubles in volume and turns bubbly, it is ready.',
       mnmP2Tit: 'Final dough — Halo Core',
@@ -3394,8 +3411,8 @@
       mnmP3I3: 'Let it mature between 12h and 48h (the schedule computes the exact time).',
       mnmP4Tit: 'Balling + Appretto',
       mnmP4Lead: 'Divide the dough into balls and let the second fermentation (appretto) at room temperature until baking time.',
-      mnmP4I1: 'Room temperature < 22°C: up to ~4h.',
-      mnmP4I2: 'Room temperature > 25°C: 2.5h to 3h.',
+      mnmP4I1: () => `Room temperature < ${usaImp() ? Math.round(cToF(22)) + '°F' : '22°C'}: up to ~4h.`,
+      mnmP4I2: () => `Room temperature > ${usaImp() ? Math.round(cToF(25)) + '°F' : '25°C'}: 2.5h to 3h.`,
       mnmP4I3: 'When the balls double in volume, they are ready.',
       mnmP5Tit: 'Bake — Fornetto Slim',
       mnmP5Lead: 'Preheat the oven and bake each pizza in the ideal window. Use the timers below.',
@@ -3525,7 +3542,7 @@
       btnImprimirVel: 'Print table',
       btnImprimirGlossario: 'Print glossary',
       thVel: 'Speed', thPotencia: 'Power', thUso: 'Use / industrial equivalent',
-      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.14.1</span>',
+      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.15.0</span>',
       velIntro: 'Spiral mixer with rotating bowl (60–300 RPM). Since the industrial mixer is also a spiral, the comparison is direct by hook RPM: <b>industrial 1st speed ≈ 100 RPM</b> (speed 4) and <b>2nd speed ≈ 200 RPM</b> (speed 12).',
       comoFunciona: '<b>How it works:</b> Quantities scale proportionally, keeping the recipe ratios (flour 95% Alma + 5% Integral, salt 2.5%, yeast 0.1%). <b>Hydration</b> is adjustable and recalculates the total water. The <b>poolish</b> is adjustable from 45% to 100% <b>of the total water</b>, always at 100% hydration (equal water and flour); the yeast follows that fraction. The remaining water and flour go into the final dough. A ~1% dough loss during handling is accounted for in the reverse calculation.',
       progresso: (n, t) => `<b>${n}</b> of ${t} steps`,
@@ -3560,10 +3577,10 @@
       ddtAtrito: 'Mixer friction',
       ddtAguaLabel: 'Water temperature',
       btnResetDDT: 'Reset to default',
-      ddtGelo: (g, total) => `Use ~<b>${g} g</b> of crushed ice in place of part of the ${total} g of water (the rest as cold water) to help hit the target.`,
+      ddtGelo: (g, total) => `Use ~<b>${g}</b> of crushed ice in place of part of the ${total} of water (the rest as cold water) to help hit the target.`,
       ddtGeloZero: 'Cold tap water should be enough — no ice needed.',
-      ddtFrio: (c) => `⚠️ <b>Water too cold (${c}°C).</b> In practice, use as much ice as possible and near-freezing water. Consider chilling the flour or lowering the room temperature.`,
-      ddtQuente: (c) => `⚠️ <b>Warm water needed (${c}°C).</b> Room/flour too cold; the dough may come out below target. Use room-temperature or slightly warm water.`,
+      ddtFrio: (c) => `⚠️ <b>Water too cold (${c}).</b> In practice, use as much ice as possible and near-freezing water. Consider chilling the flour or lowering the room temperature.`,
+      ddtQuente: (c) => `⚠️ <b>Warm water needed (${c}).</b> Room/flour too cold; the dough may come out below target. Use room-temperature or slightly warm water.`,
       ddtNota: '<b>Poolish:</b> straight from the fridge it sits around 4°C — measure it if you can. It is ~46% of the dough and cools it noticeably, so the required water is usually higher than without a pre-ferment. <b>Friction:</b> the Halo Core strength knead (speed 8–9 + burst) heats the dough a lot. The default of <b>36°C</b> was calibrated on a real batch (water 2°C, room/flour 21°C, poolish 4°C → dough 20.9°C). Measure the temperature at the end of each batch and tweak the friction to fine-tune.',
       // Mixing guide with timer
       mixTitulo: 'Mixing guide — Halo Core',
@@ -3588,10 +3605,10 @@
       // Fornetto oven timer
       fornoTitulo: 'Baking guide — Fornetto Slim',
       btnMostrarForno: 'Show oven timers', btnOcultarForno: 'Hide oven timers',
-      fornoIntro: 'Two timers: <b>preheat</b> (40 min at 390°C) and <b>baking</b> (90–140 s). The alarm rings when the oven is ready and at the baking marks — so you never burn the Neapolitan.',
-      preaqTit: 'Preheat', preaqVel: '390°C · 40 min',
-      preaqDesc: 'Let the Fornetto Slim heat up for 40 minutes at 390°C before the first pizza. The alarm rings when it is ready.',
-      preaqPronto: '🔥 Oven ready! Preheated to 390°C.',
+      fornoIntro: () => `Two timers: <b>preheat</b> (40 min at ${fmtTemp(390)}) and <b>baking</b> (90–140 s). The alarm rings when the oven is ready and at the baking marks — so you never burn the Neapolitan.`,
+      preaqTit: 'Preheat', preaqVel: () => `${fmtTemp(390)} · 40 min`,
+      preaqDesc: () => `Let the Fornetto Slim heat up for 40 minutes at ${fmtTemp(390)} before the first pizza. The alarm rings when it is ready.`,
+      preaqPronto: () => `🔥 Oven ready! Preheated to ${fmtTemp(390)}.`,
       coccaoTit: 'Baking', coccaoVel: '90–140 s',
       coccaoDesc: 'Count-up timer. Rotate the pizza every ~30 s. The green band marks the ideal 90–140 s window — watch the crust and leopard spots.',
       coccaoWait: (s) => `Baking… ${s}s (wait for the 90 s window)`,
@@ -3609,7 +3626,7 @@
       diarioIntro: 'Log each bake with the temperatures and the <b>measured final dough temp</b>. The app computes the real Halo Core friction for each one and the average — use it to calibrate the water temperature. Data is stored only on this device; export it to move to another phone.',
       diarioVazio: 'No bakes logged yet. Tap "Log a bake" at the end of a batch.',
       diarioContagemLbl: (n) => `${n} bake${n === 1 ? '' : 's'}`,
-      promptMassaMedida: 'Measured final dough temperature (°C):',
+      promptMassaMedida: () => `Measured final dough temperature (${usaImp() ? '°F' : '°C'}):`,
       promptTempoForno: 'Baking time that worked (seconds) — optional:',
       promptNota: 'Notes (crust, leopard spots, handling…) — optional:',
       fLabelProd: 'Batch', fLabelAmbiente: 'Room', fLabelFarinha: 'Flour',
@@ -3664,7 +3681,7 @@
       agoraConcluido: '✅ Production complete.',
       stPoolishTit: 'Poolish',
       stPoolishLead: '{poolishFarinha} Alma Italiana flour + {poolishAgua} water + {poolishFerm} dry yeast.',
-      stPoolishI1: '2h at room temperature + the rest in the fridge at 4°C ({poolishFrio} cold).',
+      stPoolishI1: () => `2h at room temperature + the rest in the fridge at ${fmtTemp(4)} ({poolishFrio} cold).`,
       stPoolishI2: 'Halo Core bowl with the silicone lid closed, but with the vent hole open.',
       stMassaTit: 'Final dough — Halo Core',
       stMassaLead: 'All the poolish + {finalAlma} Alma Italiana + {finalIntegral} Wholemeal + {finalAgua} ice-cold water with crushed ice + {finalSal} salt + {finalFerm} dry yeast.',
@@ -3674,17 +3691,17 @@
       stMassaI4: 'Add the salt at speed 6 for 2 minutes.',
       stMassaI5: 'Knead at speed 8 or 9 for 6 minutes to build strength, monitoring the temperature.',
       stMassaI6: 'If needed, knead at speed 12 for no more than 45s.',
-      stMassaWarn: 'Final temperature 19-23°C',
+      stMassaWarn: () => `Final temperature ${usaImp() ? Math.round(cToF(19)) + '-' + Math.round(cToF(23)) + '°F' : '19-23°C'}`,
       stMaturTit: 'Cold maturation',
       stMaturLead: 'Dough in the closed Tramontina 8.3L bowl with plastic film in contact + lid. Goes to the fridge ~30 min after the final dough. Total bulk maturation: {maturacao}.',
       stBolearTit: 'Balling + Appretto',
       stBolearLead: '{discos} dough balls of {peso} stored in the containers with release agent and covered at room temperature ({appretto} of appretto).',
-      stBolearI1: 'Room temperature < 22°C: up to ~4h.',
-      stBolearI2: 'Room temperature > 25°C: 2.5h to 3h.',
+      stBolearI1: () => `Room temperature < ${usaImp() ? Math.round(cToF(22)) + '°F' : '22°C'}: up to ~4h.`,
+      stBolearI2: () => `Room temperature > ${usaImp() ? Math.round(cToF(25)) + '°F' : '25°C'}: 2.5h to 3h.`,
       stBolearI3: 'Watch the dough balls — when they double in volume, they are ready.',
       stAssarTit: 'Bake — Fornetto Slim',
       stAssarLead: 'Oven preheated for 40 minutes.',
-      stAssarI1: 'Temperature 390°C.',
+      stAssarI1: () => `Temperature ${fmtTemp(390)}.`,
       stAssarI2: '90-140 seconds (depending on the crust and leopard spots desired).',
       inicioLabel: 'start',
       dias: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
@@ -3799,6 +3816,76 @@
       b.classList.toggle('active', b.getAttribute('data-lang-opt') === LANG));
   }
 
+  // Define o sistema de unidades (usado pelos botões da aba Config)
+  function setUnidade(u) {
+    UNID = (u === 'imp') ? 'imp' : 'si';
+    lsSet('pizzaUnidade', UNID);
+    atualizarSegUnid();
+    aplicarUnidadeUI();   // reetiqueta inputs/labels de temperatura
+    render();             // recalcula toda a exibição (peso/temperatura)
+  }
+  // Marca o segmento de unidade ativo no seletor da aba Config
+  function atualizarSegUnid() {
+    document.querySelectorAll('#cfgUnidSeg .cfg-seg-btn').forEach(b =>
+      b.classList.toggle('active', b.getAttribute('data-unid-opt') === UNID));
+  }
+  // Reetiqueta os campos conforme a unidade (temperatura + peso por panetto).
+  function aplicarUnidadeUI() {
+    if (typeof aplicarUnidadeTemp === 'function') aplicarUnidadeTemp();
+    // unidade ao lado do slider de peso por panetto
+    const pu = document.getElementById('pesoInputUnid');
+    if (pu) pu.textContent = usaImp() ? 'oz' : 'g';
+  }
+
+  // Lê um input de temperatura devolvendo SEMPRE °C (converte de °F se imperial).
+  function lerTempC(el) {
+    const v = parseFloat(el && el.value);
+    if (isNaN(v)) return NaN;
+    return usaImp() ? fToC(v) : v;
+  }
+
+  // Config dos campos de temperatura do DDT: limites/passo/valor em °C.
+  // Ao trocar de unidade, convertemos o value exibido e reetiquetamos min/max/step
+  // e o span de unidade — mas o valor "verdadeiro" lido é sempre reconvertido p/ °C.
+  const DDT_CAMPOS = [
+    { id: 'ddtAmbiente', minC: 0, maxC: 45, stepC: 1 },
+    { id: 'ddtFarinha', minC: 0, maxC: 45, stepC: 1 },
+    { id: 'ddtPoolish', minC: 0, maxC: 30, stepC: 1 },
+    { id: 'ddtAlvo', minC: 19, maxC: 23, stepC: 0.5 }
+  ];
+  // Guarda se os inputs já estão exibindo em °F (para converter o value só uma vez)
+  let _tempUIImp = false;
+  function aplicarUnidadeTemp() {
+    const imp = usaImp();
+    // converte o VALUE exibido de cada input se o modo mudou
+    if (imp !== _tempUIImp) {
+      DDT_CAMPOS.forEach(c => {
+        const el = document.getElementById(c.id);
+        if (!el) return;
+        const atualC = _tempUIImp ? fToC(parseFloat(el.value)) : parseFloat(el.value);
+        if (!isNaN(atualC)) el.value = imp ? Math.round(cToF(atualC) * 10) / 10 : atualC;
+      });
+      // Nota: o ATRITO permanece sempre em °C (é um delta de calibração técnico,
+      // não uma temperatura "sentida"); não convertemos seu slider.
+      _tempUIImp = imp;
+    }
+    // reetiqueta min/max/step e a unidade de cada input
+    DDT_CAMPOS.forEach(c => {
+      const el = document.getElementById(c.id);
+      if (!el) return;
+      if (imp) {
+        el.min = Math.round(cToF(c.minC)); el.max = Math.round(cToF(c.maxC));
+        el.step = (c.stepC === 0.5) ? 1 : Math.max(1, Math.round(c.stepC * 9 / 5));
+      } else {
+        el.min = c.minC; el.max = c.maxC; el.step = c.stepC;
+      }
+      // span de unidade ao lado do input (irmão .unit dentro do .row-input)
+      const wrap = el.closest('.row-input');
+      const unit = wrap && wrap.querySelector('.unit');
+      if (unit) unit.textContent = imp ? '°F' : '°C';
+    });
+  }
+
   // ===== Proporções base da receita (baker's percentages) =====
   // Referência: 6 discos × 280g = 1680g de massa final
   const PCT = {
@@ -3891,10 +3978,45 @@
   ];
 
   // ===== Formatação =====
+  // Aplica vírgula/ponto conforme idioma a um número já string.
+  function decSep(s) { return LANG === 'en' ? s : s.replace('.', ','); }
+
+  // Formata um peso (valor SEMPRE em gramas) conforme a unidade escolhida.
+  // SI: gramas (1 casa abaixo de 10 g). Imperial: onças (oz), com mais casas
+  // para valores pequenos (fermento) para não virar "0,0 oz".
   function fmt(g) {
-    // Abaixo de 10g mostra 1 casa decimal (fermento/sal pequenos); acima, inteiro
-    if (g < 10) return g.toFixed(g < 1 ? 2 : 1).replace('.', ',') + ' g';
+    if (usaImp()) {
+      const oz = g / OZ;
+      let casas;
+      if (oz < 0.1) casas = 3;         // fermento/sal minúsculos
+      else if (oz < 1) casas = 2;
+      else casas = 1;
+      return decSep(oz.toFixed(casas)) + ' oz';
+    }
+    // SI (gramas)
+    if (g < 10) return decSep(g.toFixed(g < 1 ? 2 : 1)) + ' g';
     return Math.round(g) + ' g';
+  }
+  // Peso "grande" (total da massa, farinha total): em Imperial usa lb (2 casas),
+  // caindo para oz quando abaixo de ~1 lb; em SI, kg acima de 1000 g, senão g.
+  function fmtTotal(g) {
+    if (usaImp()) {
+      if (g >= LB) return decSep((g / LB).toFixed(2)) + ' lb';
+      return decSep((g / OZ).toFixed(1)) + ' oz';
+    }
+    return Math.round(g) + ' g';
+  }
+  // ===== Conversão de temperatura (interna sempre em °C) =====
+  function cToF(c) { return c * 9 / 5 + 32; }
+  function fToC(f) { return (f - 32) * 5 / 9; }
+  // Formata uma temperatura (valor SEMPRE em °C) conforme a unidade. `casas`
+  // controla as decimais (padrão: 0 p/ inteiros; a água usa 1).
+  function fmtTemp(c, casas) {
+    if (c == null || isNaN(c)) return '—';
+    const d = (casas == null) ? 0 : casas;
+    const v = usaImp() ? cToF(c) : c;
+    const u = usaImp() ? '°F' : '°C';
+    return decSep(v.toFixed(d)) + ' ' + u;
   }
   function pct(p) { return (p * 100).toFixed(p < 0.01 ? 2 : (p < 0.1 ? 1 : 0)).replace('.', ',') + '%'; }
 
@@ -3915,7 +4037,7 @@
   // Temperatura ambiente informada no card DDT (fallback: referência)
   function fermTempAmbiente() {
     const el = document.getElementById('ddtAmbiente');
-    const v = el ? parseFloat(el.value) : NaN;
+    const v = el ? lerTempC(el) : NaN;   // sempre em °C (converte de °F se imperial)
     return isNaN(v) ? FERM_TEMP_REF : v;
   }
   // Fração de fermento a usar agora (ajustada ou padrão)
@@ -4001,7 +4123,14 @@
 
     // Summary
     document.getElementById('discosVal').textContent = discos;
-    document.getElementById('pesoVal').textContent = peso;
+    // Peso por panetto: o slider opera em g; o rótulo mostra oz no modo imperial.
+    if (usaImp()) {
+      document.getElementById('pesoVal').textContent = decSep((peso / OZ).toFixed(1));
+      document.getElementById('pesoValUnid').textContent = 'oz';
+    } else {
+      document.getElementById('pesoVal').textContent = peso;
+      document.getElementById('pesoValUnid').textContent = 'g';
+    }
     const hidraPct = Math.round(hidra * 100);
     document.getElementById('hidraVal').textContent = hidraPct;
     document.getElementById('hidraResumo').textContent = hidraPct + '%';
@@ -4015,8 +4144,8 @@
     } else {
       warn.classList.remove('show');
     }
-    document.getElementById('massaTotal').textContent = fmt(r.massaFinal);
-    document.getElementById('farinhaTotal').textContent = fmt(r.farinha);
+    document.getElementById('massaTotal').textContent = fmtTotal(r.massaFinal);
+    document.getElementById('farinhaTotal').textContent = fmtTotal(r.farinha);
 
     // Faixa de carga da Halo Core: acima de HALO_MAX o motor sofre; abaixo de
     // HALO_MIN a espiral bate mal (massa pouca para o gancho pegar).
@@ -4054,7 +4183,7 @@
     for (const [nome, p, val] of rows) {
       html += `<tr><td>${nome}</td><td>${pct(p)}</td><td class="qty">${fmt(val)}</td></tr>`;
     }
-    html += `<tr class="total"><td>${t('ingMassaTotal')}</td><td></td><td class="qty">${fmt(r.massaFinal)}</td></tr>`;
+    html += `<tr class="total"><td>${t('ingMassaTotal')}</td><td></td><td class="qty">${fmtTotal(r.massaFinal)}</td></tr>`;
     document.getElementById('tbody').innerHTML = html;
 
     // Tabela por etapa (poolish / massa final)
@@ -4102,7 +4231,7 @@
   function renderDicasContextuais(hidraPct, massaTotal) {
     const box = document.getElementById('dicasCtx');
     if (!box) return;
-    const amb = (typeof fermTempAmbiente === 'function') ? fermTempAmbiente() : parseFloat(ddtAmbiente.value);
+    const amb = (typeof fermTempAmbiente === 'function') ? fermTempAmbiente() : lerTempC(ddtAmbiente);
     const dicas = [];
 
     if (hidraPct > 70 && !isNaN(amb) && amb > 25) dicas.push(t('dicaHidraQuente'));
@@ -4125,7 +4254,7 @@
   const HIDRA_MIN = 60, HIDRA_MAX = 85;
 
   function ajusteHidraTemp() {
-    const amb = (typeof fermTempAmbiente === 'function') ? fermTempAmbiente() : parseFloat(ddtAmbiente.value);
+    const amb = (typeof fermTempAmbiente === 'function') ? fermTempAmbiente() : lerTempC(ddtAmbiente);
     if (isNaN(amb)) return 0;
     return clamp(Math.round((21 - amb) / 6), -3, 3);   // frio +água, quente −água
   }
@@ -4195,13 +4324,14 @@
     const azeiteMl = Math.round(MOLHO_AZEITE_ML * fator);
     const oreganoG = MOLHO_OREGANO_G * fator;
     const pimentaG = MOLHO_PIMENTA_G * fator;
+    const tomateQtd = `${usaImp() ? fmt(tomateG) : tomateG + ' g'} (${numFmt(latas)} lata${latas === 1 ? '' : 's'})`;
     const molho = [
-      [t('molhoIngTomate'), `${tomateG} g (${numFmt(latas)} lata${latas === 1 ? '' : 's'})`],
+      [t('molhoIngTomate'), tomateQtd],
       [t('molhoIngAlho'), t('molhoQtdAlho', fracDente(alhoDentes))],
       [t('molhoIngManjericao'), t('molhoQtdManjericao', manjMin, manjMax)],
       [t('molhoIngAzeite'), t('molhoQtdAzeiteMl', azeiteMl, colherSopa(azeiteMl))],
       [t('molhoIngOregano'), molhoGramas(oreganoG)],
-      [t('molhoIngSal'), t('molhoQtdSalG', salG)],
+      [t('molhoIngSal'), usaImp() ? molhoGramas(salG) : t('molhoQtdSalG', salG)],
       [t('molhoIngPimenta'), molhoGramas(pimentaG)]
     ];
 
@@ -4807,9 +4937,10 @@
     return numFmt(c);
   }
 
-  // Formata gramas do molho: 1 casa decimal abaixo de 1 g (ex.: "0,5 g"),
-  // inteiro a partir de 1 g (ex.: "1 g", "3 g"). Usa vírgula/ponto por idioma.
+  // Formata gramas do molho: SI = 1 casa abaixo de 1 g, inteiro acima ("0,5 g",
+  // "3 g"); Imperial = onças (usa o fmt central, que já trata casas pequenas).
   function molhoGramas(g) {
+    if (usaImp()) return fmt(g);
     const v = g < 1 ? Math.round(g * 10) / 10 : Math.round(g);
     return `${numFmt(v)} g`;
   }
@@ -4842,12 +4973,12 @@
     const pimentaG = MOLHO_PIMENTA_G * fator;
 
     const rows = [
-      [t('molhoIngTomate'), `${tomateG} g`],
+      [t('molhoIngTomate'), molhoGramas(tomateG)],
       [t('molhoIngAlho'), t('molhoQtdAlho', fracDente(alhoDentes))],
       [t('molhoIngManjericao'), t('molhoQtdManjericao', manjMin, manjMax)],
       [t('molhoIngAzeite'), `${azeiteMl} ml`],
       [t('molhoIngOregano'), molhoGramas(oreganoG)],
-      [t('molhoIngSal'), t('molhoQtdSalG', salG)],
+      [t('molhoIngSal'), usaImp() ? molhoGramas(salG) : t('molhoQtdSalG', salG)],
       [t('molhoIngPimenta'), molhoGramas(pimentaG)]
     ];
     document.getElementById('molhoTbody').innerHTML = rows.map(
@@ -5037,11 +5168,12 @@
   // puxa a temperatura final para baixo.
   //   água = (massa desejada × 4) − (farinha + ambiente + atrito + poolish)
   function renderDDT(aguaTotal) {
-    const ambiente = clampFloat(parseFloat(ddtAmbiente.value), 0, 45);
-    const farinha = clampFloat(parseFloat(ddtFarinha.value), 0, 45);
-    const poolishT = clampFloat(parseFloat(ddtPoolish.value), 0, 30);
-    const alvo = clampFloat(parseFloat(ddtAlvo.value), 19, 23);
-    const atrito = clampFloat(parseFloat(ddtAtrito.value), 0, 45);
+    // leitura sempre em °C (converte de °F na entrada se estiver em imperial)
+    const ambiente = clampFloat(lerTempC(ddtAmbiente), 0, 45);
+    const farinha = clampFloat(lerTempC(ddtFarinha), 0, 45);
+    const poolishT = clampFloat(lerTempC(ddtPoolish), 0, 30);
+    const alvo = clampFloat(lerTempC(ddtAlvo), 19, 23);
+    const atrito = clampFloat(parseFloat(ddtAtrito.value), 0, 45);   // atrito sempre em °C
     document.getElementById('ddtAtritoVal').textContent = atrito;
 
     // Se algum campo estiver vazio/inválido, não calcula
@@ -5062,21 +5194,21 @@
     }
 
     const geloHtml = geloG > 0
-      ? `<div class="gelo">${t('ddtGelo', geloG, totalAgua)}</div>`
+      ? `<div class="gelo">${t('ddtGelo', fmt(geloG), fmt(totalAgua))}</div>`
       : `<div class="gelo">${t('ddtGeloZero')}</div>`;
 
     document.getElementById('ddtResult').innerHTML =
       `<div class="cap">${t('ddtAguaLabel')}</div>
-       <div class="big">${String(aguaArred).replace('.', ',')} °C</div>
+       <div class="big">${fmtTemp(aguaArred, 1)}</div>
        ${geloHtml}`;
 
-    // Avisos de valores extremos (fora do que é prático)
+    // Avisos de valores extremos (fora do que é prático) — valor já formatado na unidade
     const warn = document.getElementById('ddtWarn');
     if (aguaArred < 1) {
-      warn.innerHTML = t('ddtFrio', String(aguaArred).replace('.', ','));
+      warn.innerHTML = t('ddtFrio', fmtTemp(aguaArred, 1));
       warn.classList.add('show');
     } else if (aguaArred > 35) {
-      warn.innerHTML = t('ddtQuente', String(aguaArred).replace('.', ','));
+      warn.innerHTML = t('ddtQuente', fmtTemp(aguaArred, 1));
       warn.classList.add('show');
     } else {
       warn.classList.remove('show');
@@ -5998,16 +6130,18 @@
     const discos = clamp(parseInt(discosNum.value) || 2, 2, 10);
     const peso = clamp(parseInt(pesoNum.value) || 260, 260, 320);
     const hidra = clamp(parseInt(hidraNum.value) || 60, 60, 85);
-    const ambiente = parseFloat(ddtAmbiente.value);
-    const farinha = parseFloat(ddtFarinha.value);
-    const poolish = parseFloat(ddtPoolish.value);
-    // A água usada: pega o valor calculado no card DDT (resultado exibido).
+    // Temperaturas gravadas SEMPRE em °C (fonte da verdade do diário)
+    const ambiente = lerTempC(ddtAmbiente);
+    const farinha = lerTempC(ddtFarinha);
+    const poolish = lerTempC(ddtPoolish);
+    // A água usada: pega o valor calculado no card DDT (já em °C).
     const agua = ddtAguaCalculada();
 
-    // Pede a massa medida (obrigatória para calibrar; pode cancelar p/ registrar sem)
+    // Pede a massa medida (em °C ou °F conforme a unidade; convertemos p/ °C)
     const massaTxt = prompt(t('promptMassaMedida'), '');
     if (massaTxt === null) return;   // cancelou
-    const massa = parseFloat(String(massaTxt).replace(',', '.'));
+    let massa = parseFloat(String(massaTxt).replace(',', '.'));
+    if (!isNaN(massa) && usaImp()) massa = fToC(massa);   // usuário digitou em °F
 
     const tempoTxt = prompt(t('promptTempoForno'), '');
     if (tempoTxt === null) return;
@@ -6037,11 +6171,11 @@
 
   // Temperatura da água calculada atualmente no card DDT (mesma fórmula de renderDDT)
   function ddtAguaCalculada() {
-    const ambiente = clampFloat(parseFloat(ddtAmbiente.value), 0, 45);
-    const farinha = clampFloat(parseFloat(ddtFarinha.value), 0, 45);
-    const poolishT = clampFloat(parseFloat(ddtPoolish.value), 0, 30);
-    const alvo = clampFloat(parseFloat(ddtAlvo.value), 19, 23);
-    const atrito = clampFloat(parseFloat(ddtAtrito.value), 0, 45);
+    const ambiente = clampFloat(lerTempC(ddtAmbiente), 0, 45);
+    const farinha = clampFloat(lerTempC(ddtFarinha), 0, 45);
+    const poolishT = clampFloat(lerTempC(ddtPoolish), 0, 30);
+    const alvo = clampFloat(lerTempC(ddtAlvo), 19, 23);
+    const atrito = clampFloat(parseFloat(ddtAtrito.value), 0, 45);   // atrito sempre em °C
     if ([ambiente, farinha, poolishT, alvo, atrito].some(v => isNaN(v))) return null;
     return Math.round((alvo * 4 - (farinha + ambiente + atrito + poolishT)) * 10) / 10;
   }
@@ -6165,15 +6299,18 @@
     if (!a || !b) { box.innerHTML = ''; box.classList.remove('show'); return; }
     const atrA = atritoDaFornada(a), atrB = atritoDaFornada(b);
     const nfmt = (v, u) => (v == null || (typeof v === 'number' && isNaN(v))) ? '—' : `${String(v).replace('.', ',')}${u || ''}`;
+    // temperatura guardada em °C -> converte p/ a unidade; peso do panetto idem
+    const tfmt = (v) => (v == null || isNaN(v)) ? '—' : fmtTemp(v, (v % 1 === 0) ? 0 : 1);
+    const pesoFmt = (g) => usaImp() ? fmt(g) : g + 'g';
     const nota = (f) => f.nota5 ? `${f.nota5}★` : '—';
     const linhas = [
       [t('fLabelNota5'), nota(a), nota(b)],
-      [t('compararConfig'), `${a.discos}×${a.peso}g · ${a.hidra}%`, `${b.discos}×${b.peso}g · ${b.hidra}%`],
-      [t('fLabelAmbiente'), nfmt(a.ambiente, '°C'), nfmt(b.ambiente, '°C')],
-      [t('fLabelFarinha'), nfmt(a.farinha, '°C'), nfmt(b.farinha, '°C')],
-      [t('fLabelPoolish'), nfmt(a.poolish, '°C'), nfmt(b.poolish, '°C')],
-      [t('fLabelAgua'), nfmt(a.agua, '°C'), nfmt(b.agua, '°C')],
-      [t('fLabelMassa'), nfmt(a.massa, '°C'), nfmt(b.massa, '°C')],
+      [t('compararConfig'), `${a.discos}×${pesoFmt(a.peso)} · ${a.hidra}%`, `${b.discos}×${pesoFmt(b.peso)} · ${b.hidra}%`],
+      [t('fLabelAmbiente'), tfmt(a.ambiente), tfmt(b.ambiente)],
+      [t('fLabelFarinha'), tfmt(a.farinha), tfmt(b.farinha)],
+      [t('fLabelPoolish'), tfmt(a.poolish), tfmt(b.poolish)],
+      [t('fLabelAgua'), tfmt(a.agua), tfmt(b.agua)],
+      [t('fLabelMassa'), tfmt(a.massa), tfmt(b.massa)],
       [t('fLabelForno'), nfmt(a.forno, 's'), nfmt(b.forno, 's')],
       [t('fLabelAtrito'), atrA != null ? `${Math.round(atrA)}°C` : '—', atrB != null ? `${Math.round(atrB)}°C` : '—'],
       [t('fLabelObs'), a.nota ? escapeHtml(a.nota) : '—', b.nota ? escapeHtml(b.nota) : '—']
@@ -6239,9 +6376,14 @@
     }
     box.innerHTML = lista.map(f => {
       const atr = atritoDaFornada(f);
-      const linha = (lbl, val, unidade) =>
-        (val == null || (typeof val === 'number' && isNaN(val)))
-          ? '' : `<span>${lbl}: <b>${String(val).replace('.', ',')}${unidade || ''}</b></span>`;
+      // valores guardados em °C; '°C' converte p/ a unidade, demais unidades cruas.
+      const linha = (lbl, val, unidade) => {
+        if (val == null || (typeof val === 'number' && isNaN(val))) return '';
+        const txt = (unidade === '°C') ? fmtTemp(val, (val % 1 === 0) ? 0 : 1)
+          : `${String(val).replace('.', ',')}${unidade || ''}`;
+        return `<span>${lbl}: <b>${txt}</b></span>`;
+      };
+      // atrito é um delta técnico de calibração -> permanece em °C nas duas unidades
       const atritoHtml = atr != null
         ? `<span>${t('fLabelAtrito')}: <b class="f-atrito">${String(Math.round(atr)).replace('.', ',')}°C</b></span>`
         : '';
@@ -6260,7 +6402,7 @@
             ${chkComparar}
             ${estrela}
             <span class="f-data">${dataCurta(f.ts)}</span>
-            <span class="f-config">${t('fLabelProd')}: ${f.discos} × ${f.peso}g · ${f.hidra}%</span>
+            <span class="f-config">${t('fLabelProd')}: ${f.discos} × ${usaImp() ? fmt(f.peso) : f.peso + 'g'} · ${f.hidra}%</span>
           </summary>
           <div class="f-grid">
             ${linha(t('fLabelAmbiente'), f.ambiente, '°C')}
@@ -7334,6 +7476,13 @@
     if (typeof atualizarSegLang === 'function') atualizarSegLang();
   })();
 
+  // Restaura o sistema de unidades salvo (SI padrão)
+  (function initUnidade() {
+    const saved = lsGet('pizzaUnidade', 'si');
+    UNID = (saved === 'imp') ? 'imp' : 'si';
+    if (typeof atualizarSegUnid === 'function') atualizarSegUnid();
+  })();
+
   // ===== Tema (claro/escuro/automático) =====
   // 3 estados: 'auto' (segue o SO), 'claro', 'escuro'. Persistido em pizzaTema.
   // O <html> recebe data-tema; o CSS aplica a paleta. O JS também resolve o
@@ -7663,6 +7812,7 @@
   });
 
   restoreWraps();    // abre/fecha os blocos conforme a preferência salva (padrão: aberto)
+  if (typeof aplicarUnidadeUI === 'function') aplicarUnidadeUI();   // reetiqueta °C/°F e oz/g conforme a unidade salva
   aplicarIdioma();   // aplica textos estáticos + dinâmicos (chama render e renderVelocidades)
 
   // ===== PWA: registra o service worker (offline / instalável) =====

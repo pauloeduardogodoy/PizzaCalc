@@ -17,6 +17,14 @@
 
 ## 🇧🇷 Português
 
+### v1.15.0 — Unidades Internacional/Imperial · 2026-09-29
+
+- **v1.15.0** — Novo seletor de **unidades** na aba Config (abaixo do idioma): alterna toda a
+  exibição entre **Internacional** (gramas, °C) e **Imperial** (onças/libras, °F). Pesos em oz e
+  o total da massa em lb; temperaturas em °F, inclusive os campos do card de água (que passam a
+  aceitar entrada em °F). Os cálculos internos e os dados salvos permanecem em gramas e °C — só a
+  apresentação e a entrada mudam. Preferência salva.
+
 ### v1.14.0 — Cronograma: marcador "agora" · 2026-09-29
 
 - **v1.14.1** — Correção: um erro de inicialização (variável acessada antes da declaração)
@@ -157,6 +165,14 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.15.0 — Metric/Imperial units · 2026-09-29
+
+- **v1.15.0** — New **units** selector on the Settings tab (below language): switches the whole
+  display between **Metric** (grams, °C) and **Imperial** (ounces/pounds, °F). Weights in oz and
+  total dough in lb; temperatures in °F, including the water card fields (which now accept °F
+  input). Internal calculations and stored data stay in grams and °C — only the display and input
+  change. Preference saved.
 
 ### v1.14.0 — Schedule: "now" marker · 2026-09-29
 
