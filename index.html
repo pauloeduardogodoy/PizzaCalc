@@ -620,7 +620,18 @@
     cursor: pointer;
     font-weight: 600;
   }
-  button:hover { background: var(--orange-light); border-color: var(--orange); }
+  /* link estilizado como botão (ex.: baixar APK) */
+  a.icon-label-btn {
+    border: 1px solid var(--line);
+    background: var(--card-bg);
+    color: var(--dark);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  button:hover, a.icon-label-btn:hover { background: var(--orange-light); border-color: var(--orange); }
   button.primary { background: var(--orange); color: #fff; border-color: var(--orange); }
   button.primary:hover { background: var(--orange-deep); }
 
@@ -1145,6 +1156,9 @@
   @media (max-width: 560px) {
     .print-btn .btn-txt, .icon-label-btn .btn-txt { display: none; }
     .print-btn, .icon-label-btn { padding: 8px 12px; }
+    /* exceção: botões marcados mantêm o texto no celular (cabem bem) */
+    .btn-txt-sempre .btn-txt { display: inline !important; }
+    .btn-txt-sempre { padding: 8px 16px; }
     /* fonte menor p/ "Receita padrão" caber na linha com as 2 impressoras */
     .btn-receita-padrao { font-size: 0.78rem; padding: 8px 10px; }
     /* botões de excluir (lixeira): só o ícone no celular (lixeira é intuitiva) */
@@ -2330,7 +2344,7 @@
       <span class="progress progress-sub" id="diarioContagem"></span>
       <p class="ddt-intro" id="diarioIntro"></p>
       <div class="btns" style="margin:0 0 14px">
-        <button class="icon-label-btn" onclick="registrarFornada()"><span class="print-ico" data-ico="livroMais"></span><span class="btn-txt" data-i18n="btnRegistrarFornada">Registrar fornada</span></button>
+        <button class="icon-label-btn btn-txt-sempre" onclick="registrarFornada()"><span class="print-ico" data-ico="livroMais"></span><span class="btn-txt" data-i18n="btnRegistrarFornada">Registrar fornada</span></button>
       </div>
 
       <!-- Médias / calibração -->
@@ -2364,8 +2378,8 @@
 
       <!-- Exportar / compartilhar / importar -->
       <div class="btns" style="margin-top:16px">
-        <button class="icon-label-btn" onclick="exportarDiario()"><span class="print-ico" data-ico="exportar"></span><span class="btn-txt" data-i18n="btnExportarDiario">Exportar / compartilhar</span></button>
-        <button class="icon-label-btn" onclick="importarDiario()"><span class="print-ico" data-ico="importar"></span><span class="btn-txt" data-i18n="btnImportarDiario">Importar</span></button>
+        <button class="icon-label-btn btn-txt-sempre" onclick="exportarDiario()"><span class="print-ico" data-ico="exportar"></span><span class="btn-txt" data-i18n="btnExportarDiario">Exportar</span></button>
+        <button class="icon-label-btn btn-txt-sempre" onclick="importarDiario()"><span class="print-ico" data-ico="importar"></span><span class="btn-txt" data-i18n="btnImportarDiario">Importar</span></button>
       </div>
     </div>
   </div>
@@ -2390,8 +2404,8 @@
     <div id="backupWrap">
       <p class="ddt-intro" id="backupIntro"></p>
       <div class="btns" style="margin:0">
-        <button class="icon-label-btn" onclick="exportarTudo()"><span class="print-ico" data-ico="exportar"></span><span class="btn-txt" data-i18n="btnBackupExportar">Exportar tudo</span></button>
-        <button class="icon-label-btn" onclick="importarTudo()"><span class="print-ico" data-ico="importar"></span><span class="btn-txt" data-i18n="btnBackupImportar">Importar tudo</span></button>
+        <button class="icon-label-btn btn-txt-sempre" onclick="exportarTudo()"><span class="print-ico" data-ico="exportar"></span><span class="btn-txt" data-i18n="btnBackupExportar">Exportar tudo</span></button>
+        <button class="icon-label-btn btn-txt-sempre" onclick="importarTudo()"><span class="print-ico" data-ico="importar"></span><span class="btn-txt" data-i18n="btnBackupImportar">Importar tudo</span></button>
       </div>
     </div>
   </div>
@@ -2442,7 +2456,7 @@
       <!-- Exportar o cronograma para o calendário (as notificações ficam em Config) -->
       <div class="crono-lembretes">
         <div class="cl-linha">
-          <button type="button" class="icon-label-btn" onclick="exportarCalendario()">
+          <button type="button" class="icon-label-btn btn-txt-sempre" onclick="exportarCalendario()">
             <span class="print-ico" data-ico="calendario"></span><span class="btn-txt" data-i18n="calAdicionar">Adicionar ao calendário</span>
           </button>
         </div>
@@ -2734,22 +2748,37 @@
       <div id="cfgDadosWrap" class="cfg-wrap">
         <p class="ddt-intro" id="cfgBackupIntro"></p>
         <div class="btns" style="margin:0">
-          <button class="icon-label-btn" onclick="exportarTudo()"><span class="print-ico" data-ico="exportar"></span><span class="btn-txt" data-i18n="btnBackupExportar">Exportar tudo</span></button>
-          <button class="icon-label-btn" onclick="importarTudo()"><span class="print-ico" data-ico="importar"></span><span class="btn-txt" data-i18n="btnBackupImportar">Importar tudo</span></button>
+          <button class="icon-label-btn btn-txt-sempre" onclick="exportarTudo()"><span class="print-ico" data-ico="exportar"></span><span class="btn-txt" data-i18n="btnBackupExportar">Exportar tudo</span></button>
+          <button class="icon-label-btn btn-txt-sempre" onclick="importarTudo()"><span class="print-ico" data-ico="importar"></span><span class="btn-txt" data-i18n="btnBackupImportar">Importar tudo</span></button>
         </div>
         <div class="fixed-note" id="cfgResetLayoutNota" style="margin-top:16px">
           <span data-i18n="cfgResetLayoutDesc">Reabre todos os cards do app (desfaz os que você recolheu).</span>
         </div>
         <div class="btns" style="margin-top:10px">
-          <button class="icon-label-btn" onclick="resetarLayoutCards()"><span class="print-ico" data-ico="recarregar"></span><span class="btn-txt" data-i18n="cfgResetLayoutBtn">Resetar layout dos cards</span></button>
+          <button class="icon-label-btn btn-txt-sempre" onclick="resetarLayoutCards()"><span class="print-ico" data-ico="recarregar"></span><span class="btn-txt" data-i18n="cfgResetLayoutBtn">Resetar layout dos cards</span></button>
         </div>
+      </div>
+    </div>
+
+    <!-- Android APP: link para baixar o APK -->
+    <div class="card" id="cfgApkCard">
+      <div class="timeline-head card-head" id="cfgApkToggle" onclick="toggleCfg('cfgApk')" role="button" tabindex="0" aria-expanded="true">
+        <h2 style="margin:0" data-i18n="cfgApkTit">Android APP</h2>
+        <span class="chevron-wrap"></span>
+      </div>
+      <div id="cfgApkWrap" class="cfg-wrap">
+        <p class="ddt-intro" id="cfgApkIntro"></p>
+        <div class="btns" style="margin:0">
+          <a class="icon-label-btn btn-txt-sempre" href="./PizzaCalc.apk" download><span class="print-ico" data-ico="exportar"></span><span class="btn-txt" data-i18n="cfgApkBtn">Baixar APK (Android)</span></a>
+        </div>
+        <div class="fixed-note" id="cfgApkNota" style="margin-top:16px"></div>
       </div>
     </div>
 
   </div><!-- /ABA Config -->
 
   <footer id="footer" data-i18n="footer">
-    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.15.2</span>
+    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.16.1</span>
   </footer>
 </div>
 
@@ -2965,6 +2994,10 @@
       cfgResetLayoutDesc: 'Reabre todos os cards do app (desfaz os que você recolheu).',
       cfgResetLayoutBtn: 'Resetar layout dos cards',
       cfgResetLayoutConfirm: 'Reabrir todos os cards do app?',
+      cfgApkTit: 'Android APP',
+      cfgApkIntro: 'Prefere o app instalado no Android? Baixe o <b>APK</b> e instale direto no aparelho.',
+      cfgApkBtn: 'Baixar APK (Android)',
+      cfgApkNota: 'Ao instalar um APK fora da Play Store, o Android pede para permitir "instalar apps de fontes desconhecidas". O app é o mesmo deste site, empacotado para Android.',
       cronoCalNota: 'Gera um arquivo de calendário com as etapas (com alarme). As <b>notificações</b> ficam na aba <b>Config</b>.',
       // Aba Ajuda — títulos e conteúdo (curto, por tema)
       ajComecarTit: 'Começando',
@@ -2980,11 +3013,11 @@
       ajReferenciaTit: 'Aba Referência',
       ajReferencia: '<ul><li><b>Farinhas</b>: cadastre suas farinhas (marca, tipo, W, proteína) e vincule às fornadas.</li><li><b>Farinha e hidratação</b>: tabelas de referência (proteína/força × hidratação × estrutura).</li><li><b>Recheios</b>: combinações clássicas com ingredientes e montagem.</li><li><b>Tabela de velocidades</b> da Halo Core.</li><li><b>Glossário</b> napolitano e <b>Solução de problemas</b>.</li></ul>',
       ajConfigTit: 'Aba Configurações',
-      ajConfig: '<p>Reúne as <b>preferências</b> do app (ficam salvas neste aparelho):</p><ul><li><b>Tema</b>: automático (segue o sistema), claro ou escuro.</li><li><b>Idioma</b>: português ou inglês.</li><li><b>Unidades</b>: Internacional (g, °C) ou Imperial (oz/lb, °F).</li><li><b>Ajustar fermento pela temperatura</b>: liga/desliga o ajuste opcional.</li><li><b>Notificações do cronograma</b>: ativar e escolher o aviso antecipado.</li><li><b>Resetar layout dos cards</b> e atalho para o <b>Backup completo</b>.</li></ul>',
+      ajConfig: '<p>Reúne as <b>preferências</b> do app (ficam salvas neste aparelho):</p><ul><li><b>Tema</b>: automático (segue o sistema), claro ou escuro.</li><li><b>Idioma</b>: português ou inglês.</li><li><b>Unidades</b>: Internacional (g, °C) ou Imperial (oz/lb, °F).</li><li><b>Ajustar fermento pela temperatura</b>: liga/desliga o ajuste opcional.</li><li><b>Notificações do cronograma</b>: ativar e escolher o aviso antecipado.</li><li><b>Resetar layout dos cards</b> e atalho para o <b>Backup completo</b>.</li><li><b>Android APP</b>: baixar o APK para instalar no Android.</li></ul>',
       ajDicasTit: 'Dicas de uso',
       ajDicas: '<ul><li><b>Mão na massa</b> (botão no topo): passo a passo em tela cheia para usar na bancada.</li><li><b>Manter tela ligada</b>: impede a tela do celular de apagar durante o preparo.</li><li><b>Tema, idioma e unidades</b>: ajuste na aba <b>Config</b>.</li><li><b>Imprimir</b>: receita, cronograma, lista de compras e tabela têm botões próprios.</li><li><b>Instalar</b>: no celular, "Adicionar à tela inicial" para usar como app, offline.</li></ul><span class="aj-dica">Botões <b>Expandir/Recolher cards</b> agem na aba atual; o <b>chevron duplo</b> ao lado age em todas as abas.</span>',
       ajSobreTit: 'Sobre',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><hr class="sobre-sep"><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: <b>© 2026</b> · Versão: <b>1.15.2</b></p><hr class="sobre-sep"><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> e <b>Fornetto® Slim™</b> são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><hr class="sobre-sep"><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: <b>© 2026</b> · Versão: <b>1.16.1</b></p><hr class="sobre-sep"><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> e <b>Fornetto® Slim™</b> são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
       // Backup completo
       backupTitulo: 'Backup completo',
       backupIntro: 'Salve <b>tudo</b> num arquivo: perfis, farinhas, preços, diário (com fotos), configuração e idioma. Use para <b>trocar de aparelho</b> ou fazer backup antes de limpar o navegador. Importar <b>substitui</b> os dados atuais.',
@@ -3161,7 +3194,7 @@
       btnImprimirVel: 'Imprimir tabela',
       btnImprimirGlossario: 'Imprimir glossário',
       thVel: 'Vel.', thPotencia: 'Potência', thUso: 'Uso / equivalente industrial',
-      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.15.2</span>',
+      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.16.1</span>',
       velIntro: 'Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b> (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).',
       comoFunciona: '<b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e recalcula a água total. O <b>poolish</b> é ajustável de 45% a 100% <b>da água total</b>, sempre a 100% de hidratação (mesma quantidade de água e farinha); o fermento acompanha essa fração. O restante da água e da farinha entra na massa final. Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.',
       progresso: (n, t) => `<b>${n}</b> de ${t} etapas`,
@@ -3240,7 +3273,7 @@
       diarioTitulo: 'Diário de fornadas',
       btnMostrarDiario: 'Mostrar diário', btnOcultarDiario: 'Ocultar diário',
       btnRegistrarFornada: 'Registrar fornada',
-      btnExportarDiario: 'Exportar / compartilhar', btnImportarDiario: 'Importar',
+      btnExportarDiario: 'Exportar', btnImportarDiario: 'Importar',
       // Galeria de fotos da fornada
       btnTirarFoto: 'Tirar foto', btnAddFoto: 'Galeria', fotoRemover: 'Remover foto',
       fotoRemoverConfirm: 'Remover esta foto?',
@@ -3365,6 +3398,10 @@
       cfgResetLayoutDesc: 'Reopens all app cards (undoes the ones you collapsed).',
       cfgResetLayoutBtn: 'Reset cards layout',
       cfgResetLayoutConfirm: 'Reopen all app cards?',
+      cfgApkTit: 'Android app',
+      cfgApkIntro: 'Prefer the app installed on Android? Download the <b>APK</b> and install it straight on your device.',
+      cfgApkBtn: 'Download APK (Android)',
+      cfgApkNota: 'Installing an APK outside the Play Store, Android will ask you to allow "install apps from unknown sources". It is the same app as this site, packaged for Android.',
       cronoCalNota: 'Generates a calendar file with the stages (with an alarm). <b>Notifications</b> are on the <b>Settings</b> tab.',
       // Help tab — titles and content (short, by theme)
       ajComecarTit: 'Getting started',
@@ -3380,11 +3417,11 @@
       ajReferenciaTit: 'Reference tab',
       ajReferencia: '<ul><li><b>Flours</b>: register your flours (brand, type, W, protein) and link them to bakes.</li><li><b>Flour and hydration</b>: reference tables (protein/strength × hydration × structure).</li><li><b>Toppings</b>: classic combinations with ingredients and assembly.</li><li>Halo Core <b>speed table</b>.</li><li>Neapolitan <b>glossary</b> and <b>troubleshooting</b>.</li></ul>',
       ajConfigTit: 'Settings tab',
-      ajConfig: '<p>Gathers the app <b>preferences</b> (saved on this device):</p><ul><li><b>Theme</b>: automatic (follows the system), light or dark.</li><li><b>Language</b>: Portuguese or English.</li><li><b>Units</b>: Metric (g, °C) or Imperial (oz/lb, °F).</li><li><b>Adjust yeast to temperature</b>: toggles the optional adjustment.</li><li><b>Schedule notifications</b>: enable and pick the lead reminder.</li><li><b>Reset cards layout</b> and a shortcut to the <b>full backup</b>.</li></ul>',
+      ajConfig: '<p>Gathers the app <b>preferences</b> (saved on this device):</p><ul><li><b>Theme</b>: automatic (follows the system), light or dark.</li><li><b>Language</b>: Portuguese or English.</li><li><b>Units</b>: Metric (g, °C) or Imperial (oz/lb, °F).</li><li><b>Adjust yeast to temperature</b>: toggles the optional adjustment.</li><li><b>Schedule notifications</b>: enable and pick the lead reminder.</li><li><b>Reset cards layout</b> and a shortcut to the <b>full backup</b>.</li><li><b>Android app</b>: download the APK to install on Android.</li></ul>',
       ajDicasTit: 'Usage tips',
       ajDicas: '<ul><li><b>Hands-on</b> (top button): a full-screen step-by-step for the bench.</li><li><b>Keep screen on</b>: stops the phone screen turning off during prep.</li><li><b>Theme, language and units</b>: set them on the <b>Settings</b> tab.</li><li><b>Print</b>: recipe, schedule, shopping list and table have their own buttons.</li><li><b>Install</b>: on mobile, "Add to Home screen" to use it as an app, offline.</li></ul><span class="aj-dica"><b>Expand/Collapse cards</b> acts on the current tab; the <b>double chevron</b> next to it acts on all tabs.</span>',
       ajSobreTit: 'About',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><hr class="sobre-sep"><p>Developed by <b>Paulo Godoy</b></p><p>Year: <b>© 2026</b> · Version: <b>1.15.2</b></p><hr class="sobre-sep"><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> and <b>Fornetto® Slim™</b> are trademarks of their respective owners, cited only as equipment reference.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><hr class="sobre-sep"><p>Developed by <b>Paulo Godoy</b></p><p>Year: <b>© 2026</b> · Version: <b>1.16.1</b></p><hr class="sobre-sep"><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> and <b>Fornetto® Slim™</b> are trademarks of their respective owners, cited only as equipment reference.</p>',
       // Full backup
       backupTitulo: 'Full backup',
       backupIntro: 'Save <b>everything</b> to a file: profiles, flours, prices, log (with photos), settings and language. Use it to <b>move to another device</b> or back up before clearing the browser. Importing <b>replaces</b> the current data.',
@@ -3554,7 +3591,7 @@
       btnImprimirVel: 'Print table',
       btnImprimirGlossario: 'Print glossary',
       thVel: 'Speed', thPotencia: 'Power', thUso: 'Use / industrial equivalent',
-      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.15.2</span>',
+      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.16.1</span>',
       velIntro: 'Spiral mixer with rotating bowl (60–300 RPM). Since the industrial mixer is also a spiral, the comparison is direct by hook RPM: <b>industrial 1st speed ≈ 100 RPM</b> (speed 4) and <b>2nd speed ≈ 200 RPM</b> (speed 12).',
       comoFunciona: '<b>How it works:</b> Quantities scale proportionally, keeping the recipe ratios (flour 95% Alma + 5% Integral, salt 2.5%, yeast 0.1%). <b>Hydration</b> is adjustable and recalculates the total water. The <b>poolish</b> is adjustable from 45% to 100% <b>of the total water</b>, always at 100% hydration (equal water and flour); the yeast follows that fraction. The remaining water and flour go into the final dough. A ~1% dough loss during handling is accounted for in the reverse calculation.',
       progresso: (n, t) => `<b>${n}</b> of ${t} steps`,
@@ -3630,7 +3667,7 @@
       diarioTitulo: 'Bake log',
       btnMostrarDiario: 'Show log', btnOcultarDiario: 'Hide log',
       btnRegistrarFornada: 'Log a bake',
-      btnExportarDiario: 'Export / share', btnImportarDiario: 'Import',
+      btnExportarDiario: 'Export', btnImportarDiario: 'Import',
       // Bake photo gallery
       btnTirarFoto: 'Take photo', btnAddFoto: 'Gallery', fotoRemover: 'Remove photo',
       fotoRemoverConfirm: 'Remove this photo?',
@@ -3809,6 +3846,8 @@
     { const ri = document.getElementById('recheiosIntro'); if (ri) ri.innerHTML = t('recheiosIntro'); }
     { const b = document.getElementById('backupIntro'); if (b) b.innerHTML = t('backupIntro'); }
     { const cb = document.getElementById('cfgBackupIntro'); if (cb) cb.innerHTML = t('cfgBackupIntro'); }
+    { const ai = document.getElementById('cfgApkIntro'); if (ai) ai.innerHTML = t('cfgApkIntro'); }
+    { const an = document.getElementById('cfgApkNota'); if (an) an.innerHTML = t('cfgApkNota'); }
     if (typeof atualizarCollapseAll === 'function') atualizarCollapseAll();
     if (typeof atualizarNotifUI === 'function') atualizarNotifUI();
     if (typeof aplicarTema === 'function') aplicarTema();
@@ -5038,7 +5077,8 @@
       ['cfgAparenciaWrap', () => toggleCfg('cfgAparencia')],
       ['cfgPreparoWrap', () => toggleCfg('cfgPreparo')],
       ['cfgNotifWrap', () => toggleCfg('cfgNotif')],
-      ['cfgDadosWrap', () => toggleCfg('cfgDados')]
+      ['cfgDadosWrap', () => toggleCfg('cfgDados')],
+      ['cfgApkWrap', () => toggleCfg('cfgApk')]
     ]
   };
   let abaAtiva = 'receita';
@@ -5155,7 +5195,7 @@
     ['ajComecar', 'ajReceita', 'ajPreparo', 'ajCronograma', 'ajDiario', 'ajReferencia', 'ajConfig', 'ajDicas', 'ajSobre']
       .forEach(p => restoreWrap(p + 'Wrap', p + 'Toggle'));
     restoreWrap('backupWrap', 'backupToggle');
-    ['cfgAparencia', 'cfgPreparo', 'cfgNotif', 'cfgDados']
+    ['cfgAparencia', 'cfgPreparo', 'cfgNotif', 'cfgDados', 'cfgApk']
       .forEach(p => restoreWrap(p + 'Wrap', p + 'Toggle'));
   }
 
