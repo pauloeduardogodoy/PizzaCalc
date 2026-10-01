@@ -138,7 +138,8 @@ zerar).
 - **Aba Configurações** — Uma aba dedicada reúne as preferências do app: **tema**
   (automático/claro/escuro), **idioma** (PT/EN), **unidades** (Internacional/Imperial), **ajuste
   de fermento pela temperatura**, **notificações do cronograma** (ativar + avisar antes),
-  **resetar o layout dos cards** e um atalho para o **backup completo**.
+  **resetar o layout dos cards**, um atalho para o **backup completo** e o **download do APK**
+  (Android).
 - **Tema claro/escuro** — **Automático** (segue o sistema, em tempo real), **claro** ou
   **escuro**, escolhido na aba Configurações. A preferência fica salva. Mantém o laranja (ação)
   e o verde (sucesso) como identidade.
@@ -287,8 +288,8 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   likely cause and how to fix.
 - **Settings tab** — A dedicated tab gathers the app preferences: **theme**
   (automatic/light/dark), **language** (PT/EN), **units** (Metric/Imperial), **yeast adjustment by
-  temperature**, **schedule notifications** (enable + notify before), **reset cards layout**, and
-  a shortcut to the **full backup**.
+  temperature**, **schedule notifications** (enable + notify before), **reset cards layout**, a
+  shortcut to the **full backup**, and the **APK download** (Android).
 - **Units (Metric/Imperial)** — Switches the whole display between **grams + °C** and
   **ounces/pounds + °F** (weights in oz, total dough in lb; temperatures in °F, including the water
   card fields). Internal calculations stay in grams and °C — only the display and input change.
