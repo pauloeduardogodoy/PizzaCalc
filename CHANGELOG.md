@@ -17,6 +17,19 @@
 
 ## 🇧🇷 Português
 
+### v1.16.1 — Botões com texto no celular · 2026-09-29
+
+- **v1.16.1** — No celular, os botões de dados passam a mostrar ícone **+ texto** (antes só o
+  ícone): Registrar fornada, Exportar, Importar (Diário), Exportar/Importar tudo (Backup e Dados),
+  Adicionar ao calendário, Resetar layout dos cards e Baixar APK. O botão "Exportar / compartilhar"
+  do diário virou só **"Exportar"**.
+
+### v1.16.0 — Download do APK · 2026-09-29
+
+- **v1.16.0** — Novo card **"Android APP"** na aba Config (abaixo de "Dados e layout") com um
+  botão para **baixar o APK** e instalar o app no Android. O service worker não cacheia o `.apk`
+  (evita guardar o binário grande no aparelho).
+
 ### v1.15.2 — Logo por tema · 2026-09-29
 
 - **v1.15.2** — O logo do cabeçalho agora acompanha o tema: versão preta (`icon-512_black.png`)
@@ -177,6 +190,18 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.16.1 — Buttons keep text on mobile · 2026-09-29
+
+- **v1.16.1** — On mobile, the data buttons now show icon **+ text** (previously icon only): Log a
+  bake, Export, Import (Log), Export/Import all (Backup and Data), Add to calendar, Reset cards
+  layout and Download APK. The log's "Export / share" button is now just **"Export"**.
+
+### v1.16.0 — APK download · 2026-09-29
+
+- **v1.16.0** — New **"Android app"** card on the Settings tab (below "Data & layout") with a
+  button to **download the APK** and install the app on Android. The service worker does not cache
+  the `.apk` (avoids storing the large binary on the device).
 
 ### v1.15.2 — Theme-aware logo · 2026-09-29
 
