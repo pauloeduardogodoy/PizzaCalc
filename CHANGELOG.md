@@ -17,6 +17,20 @@
 
 ## 🇧🇷 Português
 
+### v1.17.1 — Correção do modo avançado no import · 2026-09-29
+
+- **v1.17.1** — Correção: restaurar um backup não desliga mais o modo avançado (a preferência é do
+  aparelho e agora é preservada através da importação). Antes, importar um backup feito sem o modo
+  avançado fazia a opção "Buscar backups online" sumir.
+
+### v1.17.0 — Backup online + nome com hora · 2026-09-29
+
+- **v1.17.0** — O nome do arquivo de backup passou a incluir **data e hora**
+  (`pizzacalc-backup-AAAA-MM-DD_HH-MM-SS.json`), para não sobrescrever backups do mesmo dia.
+  Adicionado um **recurso avançado** (opt-in) de **importar backup de um repositório online**:
+  lista os backups disponíveis e permite escolher um para restaurar. Importar sobrescreve os dados
+  do aparelho (com confirmação).
+
 ### v1.16.1 — Botões com texto no celular · 2026-09-29
 
 - **v1.16.1** — No celular, os botões de dados passam a mostrar ícone **+ texto** (antes só o
@@ -190,6 +204,20 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.17.1 — Advanced mode fix on import · 2026-09-29
+
+- **v1.17.1** — Fix: restoring a backup no longer turns off advanced mode (it's a device
+  preference and is now preserved across imports). Before, importing a backup made without advanced
+  mode caused the "Fetch online backups" option to disappear.
+
+### v1.17.0 — Online backup + timestamped name · 2026-09-29
+
+- **v1.17.0** — Backup file names now include **date and time**
+  (`pizzacalc-backup-YYYY-MM-DD_HH-MM-SS.json`), so same-day backups don't overwrite each other.
+  Added an **advanced feature** (opt-in) to **import a backup from an online repository**: it lists
+  the available backups and lets you pick one to restore. Importing overwrites the device data
+  (with confirmation).
 
 ### v1.16.1 — Buttons keep text on mobile · 2026-09-29
 
