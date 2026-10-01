@@ -1,7 +1,7 @@
 // Service Worker — cache offline da Calculadora de Massa
 // Estratégia: cache-first para os arquivos do app (tudo local, sem rede).
 
-const CACHE = 'pizza-massa-v242';
+const CACHE = 'pizza-massa-v244';
 const ASSETS = [
   './',
   './index.html',
@@ -37,6 +37,10 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
+
+  // Nunca cachear o APK (binário grande): deixa o download ir direto à rede,
+  // sem guardar no cache do PWA.
+  if (req.url.endsWith('.apk')) return;
 
   // Requisições de navegação (abrir uma página): tenta a rede; se falhar
   // ou vier 404 (ex.: pedido antigo por calculadora.html), cai no index.html
