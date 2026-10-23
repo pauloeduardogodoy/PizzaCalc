@@ -136,13 +136,17 @@ zerar).
 - **Solução de problemas** — Problemas comuns (massa rasga, encolhe, borda pálida, azeda…)
   com causa provável e como ajustar.
 - **Aba Configurações** — Uma aba dedicada reúne as preferências do app: **tema**
-  (automático/claro/escuro), **idioma** (PT/EN), **unidades** (Internacional/Imperial), **ajuste
-  de fermento pela temperatura**, **notificações do cronograma** (ativar + avisar antes),
-  **resetar o layout dos cards**, um atalho para o **backup completo** e o **download do APK**
-  (Android).
+  (automático/claro/escuro), **estilo visual** (Clássico/Flat), **idioma** (PT/EN),
+  **unidades** (Internacional/Imperial), **ajuste de fermento pela temperatura**, **notificações
+  do cronograma** (ativar + avisar antes), **resetar o layout dos cards**, um atalho para o
+  **backup completo** e o **download do APK** (Android).
 - **Tema claro/escuro** — **Automático** (segue o sistema, em tempo real), **claro** ou
   **escuro**, escolhido na aba Configurações. A preferência fica salva. Mantém o laranja (ação)
   e o verde (sucesso) como identidade.
+- **Estilo visual (Clássico/Flat)** — Escolha entre o visual **Clássico** (original,
+  arredondado — padrão) e o **Flat** (mais clean e sóbrio: linhas retas, botões e cards
+  planos, sem sombras, abas com indicador em barra). Muda só a "forma" — a paleta de cores dos
+  temas claro e escuro é a mesma nos dois estilos. Preferência salva no aparelho.
 - **Unidades (Internacional/Imperial)** — Alterna toda a exibição entre **gramas + °C** e
   **onças/libras + °F** (pesos em oz, total da massa em lb; temperaturas em °F, inclusive os
   campos do card de água). Os cálculos internos permanecem em gramas e °C — só a apresentação e a
@@ -287,9 +291,10 @@ icon-only on mobile; timers use icons only (play/pause/reset).
 - **Troubleshooting** — Common issues (dough tears, shrinks, pale crust, too sour…) with
   likely cause and how to fix.
 - **Settings tab** — A dedicated tab gathers the app preferences: **theme**
-  (automatic/light/dark), **language** (PT/EN), **units** (Metric/Imperial), **yeast adjustment by
-  temperature**, **schedule notifications** (enable + notify before), **reset cards layout**, a
-  shortcut to the **full backup**, and the **APK download** (Android).
+  (automatic/light/dark), **visual style** (Classic/Flat), **language** (PT/EN), **units**
+  (Metric/Imperial), **yeast adjustment by temperature**, **schedule notifications** (enable +
+  notify before), **reset cards layout**, a shortcut to the **full backup**, and the **APK
+  download** (Android).
 - **Units (Metric/Imperial)** — Switches the whole display between **grams + °C** and
   **ounces/pounds + °F** (weights in oz, total dough in lb; temperatures in °F, including the water
   card fields). Internal calculations stay in grams and °C — only the display and input change.
@@ -297,6 +302,10 @@ icon-only on mobile; timers use icons only (play/pause/reset).
 - **Light/dark theme** — **Automatic** (follows the system, in real time), **light** or **dark**,
   chosen on the Settings tab. The preference is saved. Keeps orange (action) and green (success)
   as the identity.
+- **Visual style (Classic/Flat)** — Choose between the **Classic** look (original, rounded —
+  default) and **Flat** (cleaner and more sober: straight lines, flat buttons and cards, no
+  shadows, tabs with an underline indicator). It only changes the "shape" — the light/dark color
+  palette is the same in both styles. Preference saved on the device.
 - **Keep screen on** — Prevents the phone screen from turning off during a bake (Wake Lock API).
 - **Printing** — Independent modes: recipe only, schedule only, everything, or the speed table.
 
