@@ -17,6 +17,14 @@
 
 ## 🇧🇷 Português
 
+### v1.18.0 — Estilo visual Flat · 2026-10-23
+
+- **v1.18.0** — Novo seletor de **estilo visual** na aba Config (card Aparência, abaixo do
+  tema): **Clássico** (o visual original, arredondado — padrão) ou **Flat** (mais clean e
+  sóbrio: linhas retas, botões e cards planos, sem sombras, abas com indicador em barra). É só a
+  "forma" — a paleta de cores dos temas claro e escuro é a mesma nos dois estilos. A preferência
+  fica salva neste aparelho e entra no backup completo.
+
 ### v1.17.1 — Correção do modo avançado no import · 2026-09-29
 
 - **v1.17.1** — Correção: restaurar um backup não desliga mais o modo avançado (a preferência é do
@@ -204,6 +212,14 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.18.0 — Flat visual style · 2026-10-23
+
+- **v1.18.0** — New **visual style** selector on the Settings tab (Appearance card, below the
+  theme): **Classic** (the original, rounded look — default) or **Flat** (cleaner and more
+  sober: straight lines, flat buttons and cards, no shadows, tabs with an underline indicator).
+  It only changes the "shape" — the light/dark color palette is the same in both styles. The
+  preference is saved on this device and is included in the full backup.
 
 ### v1.17.1 — Advanced mode fix on import · 2026-09-29
 
