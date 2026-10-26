@@ -17,6 +17,129 @@
 
 ## 🇧🇷 Português
 
+### v1.29.0 — Modos de fermentação no Cronograma · 2026-10-23
+
+- **v1.29.0** — Os atalhos do Cronograma agora são **modos de fermentação** (tempo total de
+  maturação): **8h · 24h · 48h · 53h**. Ao escolher um:
+  - define o dia de **assar** (hoje + o tempo, arredondado em dias, às **19:00**) e **preenche o
+    início do poolish** recuando o tempo do modo;
+  - **ajusta o fermento** conforme o tempo — mais curto, mais fermento (referência: 8h ≈ 0,60% ·
+    24h ≈ 0,20% · 48h ≈ 0,12% · 53h ≈ 0,10% da farinha; sempre com poolish, dividido entre poolish
+    e massa final como de costume);
+  - se a **massa final** cair no horário incômodo (22:00–05:00), o início é **deslocado** um pouco
+    para fugir da madrugada (o tempo total vira aproximado; a hora de assar fica em 19:00).
+  O rótulo dos atalhos passou de "Assar" para **"Maturação"**. Uma nota na tabela de ingredientes
+  mostra o modo ativo e o fermento resultante. **Valores de fermento são de referência — calibre
+  pelo seu diário de fornadas.** O modo fica salvo (`pizzaFermModo`), padrão 53h.
+
+### v1.28.1 — Tempo longo em dias e horas · 2026-10-23
+
+- **v1.28.1** — Na faixa **"Próximo"** do cronograma (e demais durações), tempos **acima de 72h**
+  passam a ser mostrados como **"N dias e XhYY"** (ex.: "3 dias e 8h30") em vez de um número
+  grande de horas. Até 72h, segue no formato em horas. Bilíngue.
+
+### v1.28.0 — Toque tátil ao concluir etapas · 2026-10-23
+
+- **v1.28.0** — Um **toque curto de vibração** confirma quando você marca uma etapa como
+  concluída — tanto no **checklist do cronograma** quanto ao avançar um passo no **modo "mão na
+  massa"**. É um pulso leve e único (bem diferente da vibração forte dos alarmes de timer, que já
+  existia). Só em aparelhos com suporte a vibração.
+
+### v1.27.1 — Logo claro na impressão · 2026-10-23
+
+- **v1.27.1** — Na **impressão**, o logo passa a ser sempre a versão de **fundo claro** — no tema
+  escuro o logo preto ficava estranho sobre o papel branco. A troca ocorre no `beforeprint` e é
+  revertida no `afterprint` (vale para Ctrl+P e para os botões de imprimir).
+
+### v1.27.0 — Abas na ordem do fluxo · 2026-10-23
+
+- **v1.27.0** — As abas foram **reordenadas para seguir o fluxo real de uma fornada**:
+  **Cronograma → Receita → Preparo → Diário** (· Referência · Ajuda · Config). O planejamento da
+  data (Cronograma) é o início de tudo, então agora é a **primeira aba** e o app **abre nela por
+  padrão**. O interruptor da Config virou **"Sempre iniciar no Cronograma"**. O "Imprimir tudo"
+  continua com a ficha na página 1 e o cronograma na 2.
+
+### v1.26.0 — Índice na aba Referência · 2026-10-23
+
+- **v1.26.0** — A aba **Referência** ganhou um **índice de atalhos** (chips) no topo: Farinhas ·
+  Farinha e hidratação · Recheios · Velocidades · Glossário · Problemas. Tocar num chip **abre o
+  card correspondente e rola até ele**, sem precisar procurar rolando. Não aparece na impressão.
+
+### v1.25.0 — Boas-vindas + ajuste do cronograma · 2026-10-23
+
+- **v1.25.0** — Novo **card de boas-vindas** na primeira abertura: explica o fluxo das abas
+  (Cronograma → Receita → Preparo → Diário) e o botão "Mão na massa". Traz um **seletor de idioma
+  com bandeiras (PT/EN)** logo no topo, para trocar o idioma já no primeiro acesso sem precisar ir
+  às Configurações. É dispensável ("Entendi" some e não volta) e pode ser **revisto** pelo link
+  "↻ Rever boas-vindas" em *Ajuda → Sobre*. Preferência em `pizzaOnboardingVisto`.
+- No **Cronograma**, mudar manualmente a **hora de assar** agora **reposiciona o início do
+  poolish automaticamente** (mesma regra dos atalhos Hoje/Amanhã/Depois); editar o início segue
+  como ajuste fino manual.
+
+### v1.24.0 — "Mão na massa" retoma de onde parou · 2026-10-23
+
+- **v1.24.0** — O modo **"mão na massa"** agora **lembra o progresso** da fornada: ao reabrir,
+  volta no passo em que você estava (em vez de começar sempre do poolish) e **marca os passos
+  concluídos** (selo "✓ Concluído" + contador no rodapé). Um botão **"↺ Recomeçar"** no topo zera
+  o progresso para uma nova fornada (o modo também recomeça sozinho se a última já estava toda
+  concluída). O progresso é salvo neste aparelho (`pizzaMnm`). Bilíngue.
+
+### v1.23.0 — Atalhos de data no cronograma · 2026-10-23
+
+- **v1.23.0** — Novos **atalhos** no topo do cronograma: **Assar Hoje · Amanhã · Depois** + uma
+  **hora** (padrão 19:00). Um toque define a data de assar e **preenche o início do poolish
+  automaticamente** (recuando a duração padrão de ~53h), poupando os 8 selects no caso comum. Os
+  campos detalhados (início/assar) continuam disponíveis para ajuste fino, e mexer neles desmarca
+  o atalho. Bilíngue.
+
+### v1.22.0 — Botão "próximo passo" · 2026-10-23
+
+- **v1.22.0** — Um botão discreto no rodapé de cada aba do fluxo dá o **fio condutor** de uma
+  fornada, na ordem real: **Cronograma → Receita → Preparo → Diário**. No Diário, o botão vira
+  **"Nova fornada: Cronograma"**, fechando o ciclo para a próxima. As abas de consulta
+  (Referência, Ajuda, Config) não têm o botão. Não aparece na impressão.
+
+### v1.21.1 — Layout do estimador de pessoas · 2026-10-23
+
+- **v1.21.1** — No estimador por nº de pessoas, os botões de apetite foram para uma **linha
+  própria** abaixo do campo "Pessoas", com o rótulo **"Apetite"** na frente — fica mais claro e
+  respira melhor no celular.
+
+### v1.21.0 — Discos por nº de pessoas · 2026-10-23
+
+- **v1.21.0** — Novo **estimador por nº de pessoas** no topo do card de produção (aba Receita):
+  informe quantas **pessoas** e o **apetite** (Leve · Normal · Faminto) e o app sugere o nº de
+  **discos**, preenchendo o controle existente (ingredientes, molho, compras e custo recalculam
+  a partir dele). O fator por pessoa é **Leve = 0,5 · Normal = 0,7 · Faminto = 1,0** pizza. O
+  slider de discos continua editável na mão. Pessoas + apetite ficam salvos no aparelho
+  (`pizzaPessoas`). Bilíngue.
+
+### v1.20.0 — Retomar a última aba · 2026-10-23
+
+- **v1.20.0** — O app agora **reabre na última aba** que você estava usando, em vez de voltar
+  sempre para a Receita — ótimo para continuar de onde parou no meio de uma fornada (ainda mais
+  com os timers que já persistem). A aba é lembrada neste aparelho (`pizzaAbaAtiva`). Para quem
+  prefere o comportamento antigo, há um novo interruptor **"Sempre iniciar na aba Receita"** no
+  card *Dados e layout* da aba Config (desligado por padrão).
+
+### v1.19.1 — Ajuste do status da cocção · 2026-10-23
+
+- **v1.19.1** — No status da cocção, removido o contador de segundos do texto "Assando…" (o
+  relógio grande logo acima já mostra o tempo) e arredondados os segundos para inteiro nos
+  textos de "ponto ideal" e "passou de 140 s" (antes, com a contagem pelo relógio, apareciam
+  casas decimais, ex.: "20.005s").
+
+### v1.19.0 — Timers que não se perdem · 2026-10-23
+
+- **v1.19.0** — Os três timers (mistura, pré-aquecimento e cocção) agora **sobrevivem a
+  bloquear a tela, trocar de app ou recarregar a página**. O tempo passou a ser contado pelo
+  **relógio real** (não por um contador em memória): ao voltar ao app, o tempo restante está
+  correto, e o **alarme dispara mesmo que a etapa tenha terminado com o app em segundo plano**.
+  O estado dos timers é salvo neste aparelho (chave `pizzaTimers`) e reavaliado ao reabrir e
+  ao voltar o app ao primeiro plano. Observação: por regra dos navegadores, o **som** do alarme
+  só retoma após o primeiro toque na tela; a vibração, a notificação e o destaque visual
+  aparecem na hora.
+
 ### v1.18.0 — Estilo visual Flat · 2026-10-23
 
 - **v1.18.0** — Novo seletor de **estilo visual** na aba Config (card Aparência, abaixo do
@@ -212,6 +335,127 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.29.0 — Fermentation modes in the Schedule · 2026-10-23
+
+- **v1.29.0** — The Schedule shortcuts are now **fermentation modes** (total maturation time):
+  **8h · 24h · 48h · 53h**. Picking one:
+  - sets the **baking** day (today + the time, rounded to days, at **19:00**) and **fills in the
+    poolish start** by backing off the mode's time;
+  - **adjusts the yeast** to the time — shorter means more yeast (reference: 8h ≈ 0.60% · 24h ≈
+    0.20% · 48h ≈ 0.12% · 53h ≈ 0.10% of flour; always with poolish, split between poolish and
+    final dough as usual);
+  - if the **final dough** would fall in awkward hours (22:00–05:00), the start is **nudged** to
+    avoid the middle of the night (total time becomes approximate; baking stays at 19:00).
+  The shortcuts label changed from "Bake" to **"Maturation"**. A note in the ingredients table
+  shows the active mode and resulting yeast. **Yeast values are reference — calibrate with your
+  bake log.** The mode is saved (`pizzaFermModo`), default 53h.
+
+### v1.28.1 — Long durations in days and hours · 2026-10-23
+
+- **v1.28.1** — In the schedule's **"Next"** strip (and other durations), times **over 72h** are
+  now shown as **"N days and XhYY"** (e.g. "3 days and 8h30") instead of a large hour count. Up to
+  72h it stays in the hours format. Bilingual.
+
+### v1.28.0 — Haptic tap when completing steps · 2026-10-23
+
+- **v1.28.0** — A **short vibration tap** confirms when you mark a step as done — both in the
+  **schedule checklist** and when advancing a step in **hands-on mode**. It's a light single pulse
+  (quite different from the strong timer-alarm vibration, which already existed). Only on devices
+  that support vibration.
+
+### v1.27.1 — Light logo when printing · 2026-10-23
+
+- **v1.27.1** — When **printing**, the logo now always uses the **light-background** version — in
+  dark theme the black logo looked odd on white paper. It swaps on `beforeprint` and reverts on
+  `afterprint` (covers Ctrl+P and the print buttons).
+
+### v1.27.0 — Tabs in flow order · 2026-10-23
+
+- **v1.27.0** — The tabs were **reordered to follow the real bake flow**: **Schedule → Recipe →
+  Prep → Log** (· Reference · Help · Settings). Planning the date (Schedule) is the start of
+  everything, so it's now the **first tab** and the app **opens on it by default**. The Settings
+  toggle became **"Always start on the Schedule tab"**. "Print everything" still has the recipe
+  sheet on page 1 and the schedule on page 2.
+
+### v1.26.0 — Reference tab index · 2026-10-23
+
+- **v1.26.0** — The **Reference** tab now has a **shortcut index** (chips) at the top: Flours ·
+  Flour & hydration · Toppings · Speeds · Glossary · Troubleshooting. Tapping a chip **opens the
+  matching card and scrolls to it**, no more hunting by scrolling. Hidden when printing.
+
+### v1.25.0 — Welcome card + schedule tweak · 2026-10-23
+
+- **v1.25.0** — New **welcome card** on first launch: explains the tab flow (Schedule → Recipe →
+  Prep → Log) and the "Hands-on" button. It includes a **flag language switcher (PT/EN)** right at
+  the top, so you can change the language on the very first open without going to Settings. It's
+  dismissible ("Got it" hides it for good) and can be **reviewed** via the "↻ Review welcome" link
+  in *Help → About*. Preference in `pizzaOnboardingVisto`.
+- On the **Schedule**, manually changing the **baking time** now **repositions the poolish start
+  automatically** (same rule as the Today/Tomorrow/Day-after shortcuts); editing the start remains
+  a manual fine-tune.
+
+### v1.24.0 — "Hands-on" resumes where you left off · 2026-10-23
+
+- **v1.24.0** — The **"hands-on"** mode now **remembers the bake's progress**: on reopen it
+  returns to the step you were on (instead of always starting at the poolish) and **marks
+  completed steps** ("✓ Done" badge + a counter in the footer). A **"↺ Restart"** button at the
+  top clears the progress for a new bake (the mode also restarts on its own if the last one was
+  fully completed). Progress is saved on this device (`pizzaMnm`). Bilingual.
+
+### v1.23.0 — Schedule date shortcuts · 2026-10-23
+
+- **v1.23.0** — New **shortcuts** at the top of the schedule: **Bake Today · Tomorrow · Day after**
+  + a **time** (default 19:00). One tap sets the baking date and **fills in the poolish start
+  automatically** (backing off the standard ~53h duration), saving the 8 selects in the common
+  case. The detailed fields (start/bake) are still there for fine-tuning, and editing them clears
+  the shortcut. Bilingual.
+
+### v1.22.0 — "Next step" button · 2026-10-23
+
+- **v1.22.0** — A discreet button at the bottom of each flow tab gives a bake a **guided thread**,
+  in the real order: **Schedule → Recipe → Prep → Log**. On the Log, the button becomes **"New
+  bake: Schedule"**, closing the loop for the next one. The reference tabs (Reference, Help,
+  Settings) don't have the button. It doesn't show when printing.
+
+### v1.21.1 — People estimator layout · 2026-10-23
+
+- **v1.21.1** — In the people estimator, the appetite buttons moved to their **own row** below the
+  "People" field, with an **"Appetite"** label in front — clearer and roomier on mobile.
+
+### v1.21.0 — Pizzas by number of people · 2026-10-23
+
+- **v1.21.0** — New **people estimator** at the top of the batch card (Recipe tab): enter how
+  many **people** and the **appetite** (Light · Normal · Hungry) and the app suggests the number
+  of **pizzas**, filling the existing control (ingredients, sauce, shopping list and cost
+  recalculate from it). The per-person factor is **Light = 0.5 · Normal = 0.7 · Hungry = 1.0**
+  pizza. The pizzas slider stays editable by hand. People + appetite are saved on the device
+  (`pizzaPessoas`). Bilingual.
+
+### v1.20.0 — Resume the last tab · 2026-10-23
+
+- **v1.20.0** — The app now **reopens on the last tab** you were using instead of always going
+  back to Recipe — great for picking up where you left off mid-bake (even more so with the timers
+  that already persist). The tab is remembered on this device (`pizzaAbaAtiva`). If you prefer the
+  old behavior, there's a new **"Always start on the Recipe tab"** switch in the *Data & layout*
+  card on the Settings tab (off by default).
+
+### v1.19.1 — Baking status tweak · 2026-10-23
+
+- **v1.19.1** — In the baking status, removed the seconds counter from the "Baking…" text (the
+  big clock right above already shows the time) and rounded the seconds to whole numbers in the
+  "sweet spot" and "past 140 s" messages (with clock-based counting they were showing decimals,
+  e.g. "20.005s").
+
+### v1.19.0 — Timers that don't get lost · 2026-10-23
+
+- **v1.19.0** — The three timers (mixing, preheat and baking) now **survive locking the screen,
+  switching apps or reloading the page**. Time is now counted by the **real clock** (not an
+  in-memory counter): when you return to the app the remaining time is correct, and the **alarm
+  fires even if the step ended while the app was in the background**. The timer state is saved on
+  this device (`pizzaTimers` key) and re-evaluated on reopen and when the app comes back to the
+  foreground. Note: by browser policy, the alarm **sound** only resumes after the first tap on
+  the screen; the vibration, notification and visual highlight show up right away.
 
 ### v1.18.0 — Flat visual style · 2026-10-23
 
