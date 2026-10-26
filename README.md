@@ -28,20 +28,26 @@ com base no equipamento real de casa. A receita de referência (fonte da verdade
 
 ### Funcionalidades
 
-O app é organizado em **abas** (Receita · Preparo · Cronograma · Diário · Referência · Ajuda ·
-Config) com ícones; no celular as abas mostram só o ícone. A aba **Ajuda** traz um guia rápido de
+O app é organizado em **abas**, na ordem do fluxo de uma fornada (Cronograma · Receita · Preparo ·
+Diário · Referência · Ajuda · Config) com ícones; no celular as abas mostram só o ícone. A aba **Ajuda** traz um guia rápido de
 como usar cada parte do app, e a aba **Config** reúne as preferências (tema, idioma, notificações
 e mais). Os controles de produção ficam sempre visíveis
 no topo. Cada card recolhível (água, mistura, cocção, cronograma, diário, velocidades)
 **expande/recolhe ao clicar no cabeçalho** (com um chevron que gira), abre por padrão e
-**lembra se você o deixou aberto ou fechado** entre sessões. O app sempre inicia na aba Receita.
-Os botões usam ícones: os de ação comum (imprimir, salvar, registrar, exportar/importar)
+**lembra se você o deixou aberto ou fechado** entre sessões. O app reabre na última aba usada
+(ajustável na Config). Um botão **"Próximo"** discreto no rodapé de cada aba do fluxo guia a
+fornada na ordem (**Cronograma → Receita → Preparo → Diário**, e "Nova fornada" volta ao
+Cronograma). Na primeira abertura, um **card de boas-vindas** (dispensável) explica o fluxo; dá para revê-lo
+em *Ajuda → Sobre*. Os botões usam ícones: os de ação comum (imprimir, salvar, registrar, exportar/importar)
 mostram ícone + texto no desktop e só ícone no celular; os timers usam só ícones (play/pausar/
 zerar).
 
 - **Calculadora de ingredientes** — Escala a receita por nº de discos (2–10), peso por panetto
   (260–320 g), hidratação (60–85%) e **fração de poolish (45–100% da água)**, mantendo as
   baker's percentages. Mostra a divisão poolish / massa final. Compensa ~1% de perda no manuseio.
+- **Estimar discos por nº de pessoas** — No topo do card de produção, informe quantas **pessoas**
+  e o **apetite** (Leve · Normal · Faminto) e o app sugere o nº de discos (Leve 0,5 · Normal 0,7 ·
+  Faminto 1,0 pizza por pessoa). O número de discos continua ajustável na mão.
 - **Poolish ajustável** — Um controle define quanto da **água total** vai para o poolish
   (45% a 100%), sempre a 100% de hidratação (mesma quantidade de água e farinha). O fermento
   acompanha essa fração; o restante de água e farinha entra na massa final. A 100%, toda a água
@@ -83,6 +89,10 @@ zerar).
   (Iniciar/Pausar/Zerar) e **alarme contínuo** que toca até você tocar em "Parar alarme".
 - **Guia de cocção — Fornetto Slim** — Timer de **pré-aquecimento** (40 min a 390°C) e de
   **cocção** (janela ideal 90–140 s) com barra de progresso e alarme contínuo, para não queimar.
+- **Timers que não se perdem** — Os três timers (mistura, pré-aquecimento e cocção) são contados
+  pelo **relógio**, então sobrevivem a **bloquear a tela, trocar de app ou recarregar a página**:
+  ao voltar, o tempo está certo, e o alarme dispara mesmo que a etapa tenha terminado com o app em
+  segundo plano. (O som só retoma após o primeiro toque na tela; a vibração e a notificação não.)
 - **Avisos dos timers no relógio** — Ao fim dos timers (etapa de mistura, forno pré-aquecido,
   ponto ideal e limite da cocção), além do alarme sonoro o app **vibra** e dispara uma
   **notificação do sistema** — que espelha no smartwatch pareado (se você ativou as notificações
@@ -92,11 +102,16 @@ zerar).
   na bancada. Mostra as quantidades reais, a temperatura da água e os **horários calculados pelo
   cronograma** em cada passo (início, assar previsto, maturação, appretto…). Reaproveita os
   **mesmos timers** de mistura e de forno nos passos correspondentes. Liga a tela sempre ligada
-  automaticamente enquanto está aberto.
+  automaticamente enquanto está aberto. **Retoma de onde você parou** entre sessões e marca os
+  passos concluídos (com um botão "↺ Recomeçar" para zerar).
 - **Cronograma passo a passo** — Planeja de trás pra frente a partir do início do poolish +
   hora de assar + duração do appretto. Prioriza poolish de ~20h, usa a maturação em bloco como
   amortecedor e alerta sobre horários incômodos (madrugada), appretto longo e maturação fora de
-  faixa. Datas em formato brasileiro. Um marcador **"agora"** destaca, pelo relógio, a etapa em
+  faixa. Datas em formato brasileiro. **Modos de fermentação** (botões **8h · 24h · 48h · 53h**):
+  escolher o tempo total de maturação define a data de assar (às 19:00), preenche o início do
+  poolish e **ajusta o fermento** para aquele tempo (mais curto = mais fermento; valores de
+  referência, a calibrar). Se a massa final cairia na madrugada, o início é deslocado para fugir
+  do horário incômodo. Um marcador **"agora"** destaca, pelo relógio, a etapa em
   andamento e mostra a próxima ação e em quanto tempo (atualiza sozinho, sem notificação).
 - **Lembretes do cronograma** — No card Cronograma: **notificações do navegador** para cada
   etapa (poolish, massa, geladeira, appretto, assar), com aviso no horário e um lembrete
@@ -116,6 +131,9 @@ zerar).
   evolução do atrito, da temperatura da massa e do tempo de forno ao longo das fornadas, com
   médias e faixas ideais. Exporta/compartilha (JSON + resumo, com as fotos) e importa para migrar
   entre aparelhos.
+- **Índice da Referência** — Uma barra de atalhos (chips) no topo da aba Referência (Farinhas ·
+  Farinha e hidratação · Recheios · Velocidades · Glossário · Problemas): tocar num chip abre o
+  card e rola até ele.
 - **Farinhas** — Base editável de farinhas (marca, tipo, força W, proteína) na aba Referência.
   Cada fornada do diário pode vincular **uma ou mais** farinhas com o **percentual** de cada
   (blend), com aviso se a soma não fechar 100%. Vai junto no export/import.
@@ -138,8 +156,12 @@ zerar).
 - **Aba Configurações** — Uma aba dedicada reúne as preferências do app: **tema**
   (automático/claro/escuro), **estilo visual** (Clássico/Flat), **idioma** (PT/EN),
   **unidades** (Internacional/Imperial), **ajuste de fermento pela temperatura**, **notificações
-  do cronograma** (ativar + avisar antes), **resetar o layout dos cards**, um atalho para o
-  **backup completo** e o **download do APK** (Android).
+  do cronograma** (ativar + avisar antes), **sempre iniciar na Receita** (ligado/desligado),
+  **resetar o layout dos cards**, um atalho para o **backup completo** e o **download do APK**
+  (Android).
+- **Retomar a última aba** — Ao reabrir, o app volta para a **última aba** que você usou (ótimo
+  para continuar de onde parou no meio de uma fornada). Dá para voltar ao comportamento de sempre
+  abrir na Receita por um interruptor na aba Config.
 - **Tema claro/escuro** — **Automático** (segue o sistema, em tempo real), **claro** ou
   **escuro**, escolhido na aba Configurações. A preferência fica salva. Mantém o laranja (ação)
   e o verde (sucesso) como identidade.
@@ -152,6 +174,8 @@ zerar).
   campos do card de água). Os cálculos internos permanecem em gramas e °C — só a apresentação e a
   entrada mudam. Preferência salva.
 - **Manter tela ligada** — Impede o celular de apagar a tela durante a produção (Wake Lock API).
+- **Feedback tátil** — Um toque curto de vibração confirma quando você marca uma etapa como
+  concluída (checklist do cronograma e modo "mão na massa"); os fins de timer vibram mais forte.
 - **Impressão** — Modos independentes: só receita, só cronograma, tudo, ou só a tabela de
   velocidades.
 
@@ -188,19 +212,26 @@ based on real home equipment. Reference recipe (source of truth):
 
 ### Features
 
-The app is organized into **tabs** (Recipe · Prep · Schedule · Log · Reference · Help · Settings)
-with icons; on mobile the tabs show the icon only. The **Help** tab has a quick guide on how to
+The app is organized into **tabs**, in a bake's flow order (Schedule · Recipe · Prep · Log ·
+Reference · Help · Settings) with icons; on mobile the tabs show the icon only. The **Help** tab has a quick guide on how to
 use each part of the app, and the **Settings** tab gathers the preferences (theme, language,
 notifications and more). The production controls stay visible at the top. Each
 collapsible card (water, mixing, baking, schedule, log, speeds) **expands/collapses when you
 tap its header** (with a rotating chevron), opens by default and **remembers whether you left
-it open or closed** across sessions. The app always starts on the Recipe tab. Buttons use
+it open or closed** across sessions. The app reopens on the last tab you used (adjustable in
+Settings). A discreet **"Next"** button at the bottom of each flow tab guides the bake in order
+(**Schedule → Recipe → Prep → Log**, then "New bake" back to Schedule). On first launch, a dismissible **welcome card** explains the flow; you can review it in
+*Help → About*. Buttons use
 icons: common actions (print, save, log, export/import) show icon + text on desktop and
 icon-only on mobile; timers use icons only (play/pause/reset).
 
 - **Ingredient calculator** — Scales by number of pizzas (2–10), weight per ball (260–320 g),
   hydration (60–85%) and **poolish fraction (45–100% of the water)**, keeping baker's
   percentages. Shows the poolish / final-dough split. Accounts for ~1% handling loss.
+- **Estimate pizzas by number of people** — At the top of the batch card, enter how many
+  **people** and the **appetite** (Light · Normal · Hungry) and the app suggests the number of
+  pizzas (Light 0.5 · Normal 0.7 · Hungry 1.0 pizza per person). The pizza count stays adjustable
+  by hand.
 - **Adjustable poolish** — A control sets how much of the **total water** goes into the poolish
   (45% to 100%), always at 100% hydration (equal water and flour). The yeast follows that
   fraction; the remaining water and flour go into the final dough. At 100%, all the water goes
@@ -240,6 +271,11 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   (Start/Pause/Reset) and a **continuous alarm** that rings until you tap "Stop alarm".
 - **Baking guide — Fornetto Slim** — **Preheat** timer (40 min at 390°C) and **baking** timer
   (ideal 90–140 s window) with a progress bar and continuous alarm, so you never burn it.
+- **Timers that don't get lost** — The three timers (mixing, preheat and baking) are counted by
+  the **clock**, so they survive **locking the screen, switching apps or reloading the page**:
+  when you come back the time is correct, and the alarm fires even if the step ended while the app
+  was in the background. (The sound only resumes after the first tap on the screen; the vibration
+  and notification don't.)
 - **Timer alerts on your watch** — When the timers end (mixing step, oven preheated, sweet spot
   and end of the baking window), besides the audible alarm the app **vibrates** and fires a
   **system notification** — which mirrors on a paired smartwatch (if you enabled notifications
@@ -249,10 +285,15 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   at the bench. It shows the real quantities, the water temperature and the **times computed by
   the schedule** on each step (start, planned bake, maturation, appretto…). It reuses the **same
   timers** for mixing and the oven in the matching steps. Keeps the screen on automatically
-  while open.
+  while open. It **resumes where you left off** across sessions and marks completed steps (with a
+  "↺ Restart" button to clear it).
 - **Step-by-step schedule** — Plans backwards from poolish start + baking time + appretto length.
   Prefers ~20h poolish, uses bulk maturation as the buffer, and warns about awkward hours,
-  long appretto and out-of-range maturation. Brazilian date format. A **"now"** marker highlights
+  long appretto and out-of-range maturation. Brazilian date format. **Fermentation modes** (buttons
+  **8h · 24h · 48h · 53h**): picking the total maturation time sets the baking date (at 19:00),
+  fills in the poolish start and **adjusts the yeast** for that time (shorter = more yeast;
+  reference values, to calibrate). If the final dough would fall in the middle of the night, the
+  start is nudged to avoid awkward hours. A **"now"** marker highlights
   the current stage by the clock and shows the next action and how long until it (self-updating,
   no notification).
 - **Schedule reminders** — In the Schedule card: **browser notifications** for each stage
@@ -272,6 +313,9 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   It includes **Insights**: mini charts (SVG) of the friction, dough temperature and oven time
   trends across bakes, with averages and ideal ranges. Export/share (JSON + summary, including
   photos) and import to move between devices.
+- **Reference index** — A shortcut bar (chips) at the top of the Reference tab (Flours · Flour &
+  hydration · Toppings · Speeds · Glossary · Troubleshooting): tapping a chip opens the card and
+  scrolls to it.
 - **Flours** — An editable flour database (brand, type, W strength, protein) on the Reference
   tab. Each bake in the log can link **one or more** flours with each one's **percentage**
   (blend), with a warning if they don't add up to 100%. Included in export/import.
@@ -293,8 +337,11 @@ icon-only on mobile; timers use icons only (play/pause/reset).
 - **Settings tab** — A dedicated tab gathers the app preferences: **theme**
   (automatic/light/dark), **visual style** (Classic/Flat), **language** (PT/EN), **units**
   (Metric/Imperial), **yeast adjustment by temperature**, **schedule notifications** (enable +
-  notify before), **reset cards layout**, a shortcut to the **full backup**, and the **APK
-  download** (Android).
+  notify before), **always start on Recipe** (on/off), **reset cards layout**, a shortcut to the
+  **full backup**, and the **APK download** (Android).
+- **Resume the last tab** — On reopen, the app returns to the **last tab** you used (great for
+  picking up where you left off mid-bake). You can switch back to always opening on Recipe with a
+  toggle on the Settings tab.
 - **Units (Metric/Imperial)** — Switches the whole display between **grams + °C** and
   **ounces/pounds + °F** (weights in oz, total dough in lb; temperatures in °F, including the water
   card fields). Internal calculations stay in grams and °C — only the display and input change.
@@ -307,6 +354,8 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   shadows, tabs with an underline indicator). It only changes the "shape" — the light/dark color
   palette is the same in both styles. Preference saved on the device.
 - **Keep screen on** — Prevents the phone screen from turning off during a bake (Wake Lock API).
+- **Haptic feedback** — A short vibration tap confirms when you mark a step as done (schedule
+  checklist and hands-on mode); timer endings vibrate more strongly.
 - **Printing** — Independent modes: recipe only, schedule only, everything, or the speed table.
 
 ### How to use
