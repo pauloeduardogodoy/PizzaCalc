@@ -17,6 +17,26 @@
 
 ## 🇧🇷 Português
 
+### v1.30.0 — Fases próprias por modo de fermentação · 2026-10-23
+
+- **v1.30.0** — **Fluxo do cronograma em 3 passos:** (1) escolher o **modo de fermentação**
+  (8h/24h/48h/53h) — só marca o modo e ajusta o fermento; (2) definir a **hora de assar**; (3) o
+  app **calcula o início do poolish**. Os botões de modo não definem mais a data sozinhos (o campo
+  de hora ao lado deles foi removido), e "Início do poolish" virou um campo **calculado** (abaixo
+  da hora de assar). Cada **modo** tem **fases próprias** (antes todos usavam as do ciclo longo):
+  poolish e appretto fixos por modo; a maturação em bloco é o "resto" (quanto mais tempo, mais
+  maturação a frio):
+  - **8h:** poolish 2h · maturação ~3,5h **em temperatura ambiente** · appretto 2h.
+  - **24h:** poolish 10h · maturação ~9,5h (geladeira) · appretto 4h.
+  - **48h:** poolish 15h · maturação ~28,5h (geladeira) · appretto 4h.
+  - **53h:** poolish 20h · maturação ~28,5h (geladeira) · appretto 4h (ciclo validado).
+  No modo **8h** os textos das etapas se adaptam: o **poolish** fica "em temperatura ambiente
+  (não vai à geladeira)" e a **maturação** aparece como **"temperatura ambiente"**. (A água da
+  massa final segue **gelada** em todos os modos — a Halo Core aquece a massa na sova.) Os
+  **alertas** passaram a respeitar cada modo (não acusam mais maturação "curta" indevidamente nos
+  modos rápidos). Ao fugir do horário incômodo, só a **maturação** estica (poolish/appretto ficam
+  fixos). Valores a calibrar na prática.
+
 ### v1.29.0 — Modos de fermentação no Cronograma · 2026-10-23
 
 - **v1.29.0** — Os atalhos do Cronograma agora são **modos de fermentação** (tempo total de
@@ -335,6 +355,24 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.30.0 — Per-mode fermentation phases · 2026-10-23
+
+- **v1.30.0** — **3-step schedule flow:** (1) pick the **fermentation mode** (8h/24h/48h/53h) —
+  it just marks the mode and adjusts the yeast; (2) set the **baking time**; (3) the app
+  **computes the poolish start**. The mode buttons no longer set the date on their own (the time
+  field next to them was removed), and "Poolish start" became a **computed** field (below the
+  baking time). Each **mode** has its **own phases** (before all used the long cycle's): poolish
+  and appretto fixed per mode; bulk maturation is the "rest" (more time = more cold maturation):
+  - **8h:** poolish 2h · maturation ~3.5h **at room temperature** · appretto 2h.
+  - **24h:** poolish 10h · maturation ~9.5h (fridge) · appretto 4h.
+  - **48h:** poolish 15h · maturation ~28.5h (fridge) · appretto 4h.
+  - **53h:** poolish 20h · maturation ~28.5h (fridge) · appretto 4h (validated cycle).
+  In **8h** mode the step texts adapt: the **poolish** reads "at room temperature (no fridge)" and
+  the **maturation** shows as **"room temperature"**. (The final-dough water stays **ice-cold** in
+  every mode — the Halo Core heats the dough while kneading.) **Alerts** now respect each mode (no more false "short maturation" warnings in the fast modes). When avoiding
+  awkward hours, only **maturation** stretches (poolish/appretto stay fixed). Values to calibrate
+  in practice.
 
 ### v1.29.0 — Fermentation modes in the Schedule · 2026-10-23
 
