@@ -107,11 +107,11 @@ zerar).
 - **Cronograma passo a passo** — Planeja de trás pra frente a partir do início do poolish +
   hora de assar + duração do appretto. Prioriza poolish de ~20h, usa a maturação em bloco como
   amortecedor e alerta sobre horários incômodos (madrugada), appretto longo e maturação fora de
-  faixa. Datas em formato brasileiro. **Modos de fermentação** (botões **8h · 24h · 48h · 53h**):
-  escolher o tempo total de maturação define a data de assar (às 19:00), preenche o início do
-  poolish e **ajusta o fermento** para aquele tempo (mais curto = mais fermento; valores de
-  referência, a calibrar). Se a massa final cairia na madrugada, o início é deslocado para fugir
-  do horário incômodo. Um marcador **"agora"** destaca, pelo relógio, a etapa em
+  faixa. Datas em formato brasileiro. **Fluxo em 3 passos:** escolha o **modo de fermentação**
+  (**8h · 24h · 48h · 53h**, que ajusta o fermento — mais curto = mais fermento, valores de
+  referência a calibrar), defina a **hora de assar** e o app **calcula o início do poolish**. Se
+  a massa final cairia na madrugada, o início é deslocado para fugir do horário incômodo. Um
+  marcador **"agora"** destaca, pelo relógio, a etapa em
   andamento e mostra a próxima ação e em quanto tempo (atualiza sozinho, sem notificação).
 - **Lembretes do cronograma** — No card Cronograma: **notificações do navegador** para cada
   etapa (poolish, massa, geladeira, appretto, assar), com aviso no horário e um lembrete
@@ -289,11 +289,11 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   "↺ Restart" button to clear it).
 - **Step-by-step schedule** — Plans backwards from poolish start + baking time + appretto length.
   Prefers ~20h poolish, uses bulk maturation as the buffer, and warns about awkward hours,
-  long appretto and out-of-range maturation. Brazilian date format. **Fermentation modes** (buttons
-  **8h · 24h · 48h · 53h**): picking the total maturation time sets the baking date (at 19:00),
-  fills in the poolish start and **adjusts the yeast** for that time (shorter = more yeast;
-  reference values, to calibrate). If the final dough would fall in the middle of the night, the
-  start is nudged to avoid awkward hours. A **"now"** marker highlights
+  long appretto and out-of-range maturation. Brazilian date format. **3-step flow:** pick the
+  **fermentation mode** (**8h · 24h · 48h · 53h**, which adjusts the yeast — shorter = more yeast,
+  reference values to calibrate), set the **baking time** and the app **computes the poolish
+  start**. If the final dough would fall in the middle of the night, the start is nudged to avoid
+  awkward hours. A **"now"** marker highlights
   the current stage by the clock and shows the next action and how long until it (self-updating,
   no notification).
 - **Schedule reminders** — In the Schedule card: **browser notifications** for each stage
