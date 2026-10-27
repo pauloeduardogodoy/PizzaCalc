@@ -1854,10 +1854,7 @@
   }
   .atalho-btn:hover { background: var(--orange-light); border-color: var(--orange); }
   .atalho-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; }
-  .atalho-hora-wrap { display: inline-flex; align-items: center; gap: 6px; }
-  .atalho-hora-wrap label { font-size: 0.85rem; color: var(--gray); min-width: 0; }
-  /* select de hora dos atalhos: mesmo tamanho dos selects das linhas de data (0,85rem) */
-  #atalhoHora { padding: 7px 6px; font-size: 0.85rem; }
+
   .plan-ctrl select {
     padding: 8px 10px;
     border: 1px solid var(--line);
@@ -2356,28 +2353,15 @@
         <button class="icon-fixed-btn" id="tlReset" onclick="resetTimeline()" style="display:none"><span class="print-ico" data-ico="borracha"></span><span data-i18n="btnLimpar">Limpar marcações</span></button>
       </div>
       <div class="plan-ctrl">
-        <!-- Atalhos rápidos: definem o dia de assar (hoje/amanhã/depois) + hora, e
-             preenchem o início do poolish automaticamente (recuando a duração padrão). -->
+        <!-- 1) Escolha o MODO de fermentação (só marca o modo + ajusta o fermento).
+             2) Defina a hora de assar abaixo. 3) O app calcula o início do poolish. -->
         <div class="plan-row plan-atalhos">
           <label data-i18n="atalhoMaturacaoLabel">Maturação:</label>
           <div class="atalho-dias" id="atalhoModos">
-            <button type="button" class="atalho-btn" onclick="atalhoModo('8h')" data-modo="8h">8h</button>
-            <button type="button" class="atalho-btn" onclick="atalhoModo('24h')" data-modo="24h">24h</button>
-            <button type="button" class="atalho-btn" onclick="atalhoModo('48h')" data-modo="48h">48h</button>
-            <button type="button" class="atalho-btn" onclick="atalhoModo('53h')" data-modo="53h">53h</button>
-          </div>
-          <span class="atalho-hora-wrap">
-            <label for="atalhoHora" data-i18n="as">às</label>
-            <select id="atalhoHora" aria-label="Hora de assar (atalho)"></select>
-          </span>
-        </div>
-        <div class="plan-row plan-row-data">
-          <label data-i18n="inicioPoolish">Início do poolish:</label>
-          <div class="plan-selects">
-            <select id="inicioDia" aria-label="Dia do início"></select>
-            <select id="inicioMes" aria-label="Mês do início"></select>
-            <select id="inicioAno" aria-label="Ano do início"></select>
-            <select id="inicioHora" aria-label="Hora do início"></select>
+            <button type="button" class="atalho-btn" onclick="selecionarModo('8h')" data-modo="8h">8h</button>
+            <button type="button" class="atalho-btn" onclick="selecionarModo('24h')" data-modo="24h">24h</button>
+            <button type="button" class="atalho-btn" onclick="selecionarModo('48h')" data-modo="48h">48h</button>
+            <button type="button" class="atalho-btn" onclick="selecionarModo('53h')" data-modo="53h">53h</button>
           </div>
         </div>
         <div class="plan-row plan-row-data">
@@ -2387,6 +2371,15 @@
             <select id="assarMes" aria-label="Mês de assar"></select>
             <select id="assarAno" aria-label="Ano de assar"></select>
             <select id="assarHora" aria-label="Hora de assar"></select>
+          </div>
+        </div>
+        <div class="plan-row plan-row-data">
+          <label data-i18n="inicioPoolishCalc">Início do poolish (calculado):</label>
+          <div class="plan-selects">
+            <select id="inicioDia" aria-label="Dia do início"></select>
+            <select id="inicioMes" aria-label="Mês do início"></select>
+            <select id="inicioAno" aria-label="Ano do início"></select>
+            <select id="inicioHora" aria-label="Hora do início"></select>
           </div>
         </div>
         <div class="plan-row">
@@ -3064,7 +3057,7 @@
   </div><!-- /ABA Config -->
 
   <footer id="footer" data-i18n="footer">
-    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.29.0</span>
+    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.30.0</span>
   </footer>
 </div>
 
@@ -3318,7 +3311,7 @@
       ajPreparoTit: 'Aba Preparo',
       ajPreparo: '<ul><li><b>Temperatura da água</b>: informe ambiente/farinha/poolish e o app diz a água (e o gelo) para a massa sair a 19–23°C.</li><li><b>Guia de mistura</b>: as 6 etapas na Halo Core, cada uma com timer e alarme.</li><li><b>Guia de cocção</b>: timer de pré-aquecimento e de assar, com a janela ideal marcada.</li></ul><span class="aj-dica">Os <b>timers não se perdem</b>: pode bloquear a tela, trocar de app ou recarregar — ao voltar, o tempo está certo (contado pelo relógio) e o alarme dispara mesmo se a etapa terminou com o app em segundo plano.</span>',
       ajCronogramaTit: 'Aba Cronograma',
-      ajCronograma: '<p>Defina o <b>início do poolish</b> e a <b>hora de assar</b> (e a duração do appretto). O app planeja de trás pra frente e mostra cada etapa com data/hora.</p><p>Com pressa? Escolha o <b>tempo de maturação</b> (<b>8h · 24h · 48h · 53h</b>): o app define o dia de assar (às 19:00), <b>preenche o início do poolish</b> e <b>ajusta o fermento</b> para aquele tempo (mais curto = mais fermento). Se a massa final cair na madrugada, o início é deslocado um pouco para evitar horário incômodo. Mudar a <b>hora de assar</b> também reposiciona o início; ajuste o início só se quiser refinar.</p><p>O marcador <b>"agora"</b> destaca, pelo relógio, a etapa em andamento e a próxima ação (com o tempo restante).</p><p>Fique de olho nos <b>alertas</b>: horário incômodo (madrugada), maturação fora de faixa ou appretto longo.</p>',
+      ajCronograma: '<p>O planejamento tem 3 passos: <b>1)</b> escolha o <b>tempo de maturação</b> (<b>8h · 24h · 48h · 53h</b>) — isso ajusta o <b>fermento</b> (mais curto = mais fermento); <b>2)</b> defina a <b>hora de assar</b>; <b>3)</b> o app <b>calcula o início do poolish</b> e monta a timeline. Se a massa final cair na madrugada, o início é deslocado um pouco para evitar horário incômodo. O campo "Início do poolish (calculado)" pode ser refinado à mão se quiser.</p><p>O marcador <b>"agora"</b> destaca, pelo relógio, a etapa em andamento e a próxima ação (com o tempo restante).</p><p>Fique de olho nos <b>alertas</b>: horário incômodo (madrugada), maturação fora de faixa ou appretto longo.</p>',
       ajDiarioTit: 'Aba Diário',
       ajDiario: '<ul><li><b>Registrar fornada</b>: guarda a produção, as temperaturas e a massa medida.</li><li>O app calcula o <b>atrito real</b> da masseira e a média — aplique no card de água para calibrar.</li><li><b>Nota (1–5 estrelas)</b>, <b>favoritar</b> (estrela) e <b>Repetir</b> (recarrega a receita daquela fornada).</li><li><b>Ordenar</b> (recente/antiga/melhor nota) e <b>filtrar</b> (só favoritas); <b>Comparar</b> duas fornadas lado a lado.</li><li><b>Fotos</b> por fornada e <b>Insights</b>: gráficos de atrito, temperatura da massa e tempo de forno.</li></ul>',
       ajReferenciaTit: 'Aba Referência',
@@ -3328,7 +3321,7 @@
       ajDicasTit: 'Dicas de uso',
       ajDicas: '<ul><li><b>Mão na massa</b> (botão no topo): passo a passo em tela cheia para usar na bancada. <b>Retoma de onde você parou</b> e marca os passos concluídos (↺ Recomeçar zera).</li><li><b>Manter tela ligada</b>: impede a tela do celular de apagar durante o preparo.</li><li><b>Tema, estilo visual, idioma e unidades</b>: ajuste na aba <b>Config</b>.</li><li><b>Imprimir</b>: receita, cronograma, lista de compras e tabela têm botões próprios.</li><li><b>Instalar</b>: no celular, "Adicionar à tela inicial" para usar como app, offline.</li></ul><span class="aj-dica">Botões <b>Expandir/Recolher cards</b> agem na aba atual; o <b>chevron duplo</b> ao lado age em todas as abas.</span>',
       ajSobreTit: 'Sobre',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><p><a href="#" onclick="reverOnboarding();return false" style="color:var(--orange);font-weight:600;text-decoration:none">↻ Rever boas-vindas</a></p><hr class="sobre-sep"><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: <b>© 2026</b> · Versão: <b id="verTap">1.29.0</b></p><hr class="sobre-sep"><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> e <b>Fornetto® Slim™</b> são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><p><a href="#" onclick="reverOnboarding();return false" style="color:var(--orange);font-weight:600;text-decoration:none">↻ Rever boas-vindas</a></p><hr class="sobre-sep"><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: <b>© 2026</b> · Versão: <b id="verTap">1.30.0</b></p><hr class="sobre-sep"><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> e <b>Fornetto® Slim™</b> são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
       // Backup completo
       backupTitulo: 'Backup completo',
       backupIntro: 'Salve <b>tudo</b> num arquivo: perfis, farinhas, preços, diário (com fotos), configuração e idioma. Use para <b>trocar de aparelho</b> ou fazer backup antes de limpar o navegador. Importar <b>substitui</b> os dados atuais.',
@@ -3371,6 +3364,12 @@
       mnmP3I1: 'Bowl fechado com filme em contato + tampa.',
       mnmP3I2: 'Vai para a geladeira ~30 min após a massa final.',
       mnmP3I3: 'Deixe maturar entre 12h e 48h (o cronograma calcula o tempo exato).',
+      // Passo 3 — variante modo mesmo-dia (8h): maturação em temperatura ambiente
+      mnmP3TitAmbiente: 'Maturação em temperatura ambiente',
+      mnmP3LeadAmbiente: 'Deixe a massa maturar em bloco <b>em temperatura ambiente</b> (modo mesmo dia) — o descanso que desenvolve sabor e estrutura.',
+      mnmP3I1Ambiente: 'Bowl fechado com filme em contato + tampa.',
+      mnmP3I2Ambiente: 'Fica em temperatura ambiente (não vai à geladeira).',
+      mnmP3I3Ambiente: 'O cronograma calcula o tempo exato de maturação.',
       // Passo 4 — Bolear + appretto
       mnmP4Tit: 'Bolear + Appretto',
       mnmP4Lead: 'Divida a massa em panetti e deixe a segunda fermentação (appretto) fora da geladeira até a hora de assar.',
@@ -3466,7 +3465,7 @@
       btnCarregarPadrao: 'Carregar cronograma padrão',
       btnImprimirCrono: 'Imprimir cronograma',
       btnLimpar: 'Limpar marcações',
-      inicioPoolish: 'Início do poolish:', horaAssar: 'Hora de assar:', as: 'às',
+      inicioPoolish: 'Início do poolish:', inicioPoolishCalc: 'Início do poolish (calculado):', horaAssar: 'Hora de assar:', as: 'às',
       atalhoMaturacaoLabel: 'Maturação:',
       duracaoAppretto: 'Duração do appretto',
       // Lembretes do cronograma (notificações + calendário)
@@ -3514,7 +3513,7 @@
       btnImprimirVel: 'Imprimir tabela',
       btnImprimirGlossario: 'Imprimir glossário',
       thVel: 'Vel.', thPotencia: 'Potência', thUso: 'Uso / equivalente industrial',
-      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.29.0</span>',
+      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.30.0</span>',
       velIntro: 'Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b> (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).',
       comoFunciona: '<b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e recalcula a água total. O <b>poolish</b> é ajustável de 45% a 100% <b>da água total</b>, sempre a 100% de hidratação (mesma quantidade de água e farinha); o fermento acompanha essa fração. O restante da água e da farinha entra na massa final. Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.',
       progresso: (n, t) => `<b>${n}</b> de ${t} etapas`,
@@ -3662,6 +3661,7 @@
       stPoolishTit: 'Poolish',
       stPoolishLead: '{poolishFarinha} farinha Alma Italiana + {poolishAgua} água + {poolishFerm} fermento seco.',
       stPoolishI1: () => `2h fora da geladeira + o restante na geladeira à ${fmtTemp(4)} ({poolishFrio} de frio).`,
+      stPoolishI1Ambiente: 'Todo o tempo em temperatura ambiente (modo mesmo dia) — não vai à geladeira.',
       stPoolishI2: 'Bowl da Halo Core com a tampa de silicone fechada, porém com o furo de ventilação aberto.',
       stMassaTit: 'Massa final — Halo Core',
       stMassaLead: 'Todo o poolish + {finalAlma} Alma Italiana + {finalIntegral} Integral + {finalAgua} água gelada com gelo moído + {finalSal} sal + {finalFerm} fermento seco.',
@@ -3674,6 +3674,8 @@
       stMassaWarn: () => `Temperatura final ${usaImp() ? Math.round(cToF(19)) + '-' + Math.round(cToF(23)) + '°F' : '19-23°C'}`,
       stMaturTit: 'Maturação em geladeira',
       stMaturLead: 'Massa no bowl Tramontina 8,3L fechado com filme em contato + tampa. Vai para a geladeira ~30 min após a massa final. Total de maturação em bloco: {maturacao}.',
+      stMaturTitAmbiente: 'Maturação em temperatura ambiente',
+      stMaturLeadAmbiente: 'Massa no bowl fechado com filme em contato + tampa, em <b>temperatura ambiente</b> (modo mesmo dia). Total de maturação em bloco: {maturacao}.',
       stBolearTit: 'Bolear + Appretto',
       stBolearLead: '{discos} panetti de {peso} armazenados nos potes com desmoldante e tampados fora da geladeira ({appretto} de appretto).',
       stBolearI1: () => `Temperatura ambiente < ${usaImp() ? Math.round(cToF(22)) + '°F' : '22°C'}: até ~4h.`,
@@ -3753,7 +3755,7 @@
       ajPreparoTit: 'Prep tab',
       ajPreparo: '<ul><li><b>Water temperature</b>: enter room/flour/poolish and the app gives the water (and ice) for a 19–23°C dough.</li><li><b>Mixing guide</b>: the 6 Halo Core steps, each with a timer and alarm.</li><li><b>Baking guide</b>: preheat and bake timers, with the ideal window marked.</li></ul><span class="aj-dica">The <b>timers don\'t get lost</b>: you can lock the screen, switch apps or reload — when you come back the time is correct (counted by the clock) and the alarm fires even if the step ended while the app was in the background.</span>',
       ajCronogramaTit: 'Schedule tab',
-      ajCronograma: '<p>Set the <b>poolish start</b> and the <b>baking time</b> (and appretto length). The app plans backwards and shows each step with date/time.</p><p>In a hurry? Pick the <b>maturation time</b> (<b>8h · 24h · 48h · 53h</b>): the app sets the baking day (at 19:00), <b>fills in the poolish start</b> and <b>adjusts the yeast</b> for that time (shorter = more yeast). If the final dough would land in the middle of the night, the start is nudged to avoid awkward hours. Changing the <b>baking time</b> also repositions the start; adjust the start only to fine-tune.</p><p>The <b>"now"</b> marker highlights the current stage by the clock and the next action (with time remaining).</p><p>Watch the <b>alerts</b>: awkward hours (late night), out-of-range maturation or long appretto.</p>',
+      ajCronograma: '<p>Planning has 3 steps: <b>1)</b> pick the <b>maturation time</b> (<b>8h · 24h · 48h · 53h</b>) — this sets the <b>yeast</b> (shorter = more yeast); <b>2)</b> set the <b>baking time</b>; <b>3)</b> the app <b>computes the poolish start</b> and builds the timeline. If the final dough would land in the middle of the night, the start is nudged to avoid awkward hours. The "Poolish start (computed)" field can be fine-tuned by hand if you want.</p><p>The <b>"now"</b> marker highlights the current stage by the clock and the next action (with time remaining).</p><p>Watch the <b>alerts</b>: awkward hours (late night), out-of-range maturation or long appretto.</p>',
       ajDiarioTit: 'Log tab',
       ajDiario: '<ul><li><b>Log a bake</b>: saves the batch, temperatures and measured dough temp.</li><li>The app computes the mixer\'s <b>real friction</b> and the average — apply it to the water card to calibrate.</li><li><b>Rating (1–5 stars)</b>, <b>favorite</b> (star) and <b>Repeat</b> (reloads that bake\'s recipe).</li><li><b>Sort</b> (newest/oldest/best rating) and <b>filter</b> (favorites only); <b>Compare</b> two bakes side by side.</li><li><b>Photos</b> per bake and <b>Insights</b>: charts of friction, dough temp and oven time.</li></ul>',
       ajReferenciaTit: 'Reference tab',
@@ -3763,7 +3765,7 @@
       ajDicasTit: 'Usage tips',
       ajDicas: '<ul><li><b>Hands-on</b> (top button): a full-screen step-by-step for the bench. It <b>resumes where you left off</b> and marks completed steps (↺ Restart clears it).</li><li><b>Keep screen on</b>: stops the phone screen turning off during prep.</li><li><b>Theme, visual style, language and units</b>: set them on the <b>Settings</b> tab.</li><li><b>Print</b>: recipe, schedule, shopping list and table have their own buttons.</li><li><b>Install</b>: on mobile, "Add to Home screen" to use it as an app, offline.</li></ul><span class="aj-dica"><b>Expand/Collapse cards</b> acts on the current tab; the <b>double chevron</b> next to it acts on all tabs.</span>',
       ajSobreTit: 'About',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><p><a href="#" onclick="reverOnboarding();return false" style="color:var(--orange);font-weight:600;text-decoration:none">↻ Review welcome</a></p><hr class="sobre-sep"><p>Developed by <b>Paulo Godoy</b></p><p>Year: <b>© 2026</b> · Version: <b id="verTap">1.29.0</b></p><hr class="sobre-sep"><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> and <b>Fornetto® Slim™</b> are trademarks of their respective owners, cited only as equipment reference.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><p><a href="#" onclick="reverOnboarding();return false" style="color:var(--orange);font-weight:600;text-decoration:none">↻ Review welcome</a></p><hr class="sobre-sep"><p>Developed by <b>Paulo Godoy</b></p><p>Year: <b>© 2026</b> · Version: <b id="verTap">1.30.0</b></p><hr class="sobre-sep"><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> and <b>Fornetto® Slim™</b> are trademarks of their respective owners, cited only as equipment reference.</p>',
       // Full backup
       backupTitulo: 'Full backup',
       backupIntro: 'Save <b>everything</b> to a file: profiles, flours, prices, log (with photos), settings and language. Use it to <b>move to another device</b> or back up before clearing the browser. Importing <b>replaces</b> the current data.',
@@ -3798,6 +3800,11 @@
       mnmP2Lead: 'Mix the final dough on the mixer following the steps below, with the timers. Use the <b>water at the calculated temperature</b> to reach 19–23°C.',
       mnmP2Agua: 'Water temperature',
       mnmP2SemAgua: 'Open the Prep tab to compute the water temperature.',
+      mnmP3TitAmbiente: 'Room-temperature maturation',
+      mnmP3LeadAmbiente: 'Let the dough bulk-mature <b>at room temperature</b> (same-day mode) — the rest that develops flavor and structure.',
+      mnmP3I1Ambiente: 'Bowl closed with film in contact + lid.',
+      mnmP3I2Ambiente: 'Stays at room temperature (no fridge).',
+      mnmP3I3Ambiente: 'The schedule computes the exact maturation time.',
       mnmP3Tit: 'Cold maturation',
       mnmP3Lead: 'Move the dough to the fridge for bulk maturation — the main rest, which develops flavor and structure.',
       mnmP3I1: 'Bowl closed with film in contact + lid.',
@@ -3894,7 +3901,7 @@
       btnCarregarPadrao: 'Load default schedule',
       btnImprimirCrono: 'Print schedule',
       btnLimpar: 'Clear checks',
-      inicioPoolish: 'Poolish start:', horaAssar: 'Baking time:', as: 'at',
+      inicioPoolish: 'Poolish start:', inicioPoolishCalc: 'Poolish start (computed):', horaAssar: 'Baking time:', as: 'at',
       atalhoMaturacaoLabel: 'Maturation:',
       duracaoAppretto: 'Appretto duration',
       // Schedule reminders (notifications + calendar)
@@ -3942,7 +3949,7 @@
       btnImprimirVel: 'Print table',
       btnImprimirGlossario: 'Print glossary',
       thVel: 'Speed', thPotencia: 'Power', thUso: 'Use / industrial equivalent',
-      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.29.0</span>',
+      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.30.0</span>',
       velIntro: 'Spiral mixer with rotating bowl (60–300 RPM). Since the industrial mixer is also a spiral, the comparison is direct by hook RPM: <b>industrial 1st speed ≈ 100 RPM</b> (speed 4) and <b>2nd speed ≈ 200 RPM</b> (speed 12).',
       comoFunciona: '<b>How it works:</b> Quantities scale proportionally, keeping the recipe ratios (flour 95% Alma + 5% Integral, salt 2.5%, yeast 0.1%). <b>Hydration</b> is adjustable and recalculates the total water. The <b>poolish</b> is adjustable from 45% to 100% <b>of the total water</b>, always at 100% hydration (equal water and flour); the yeast follows that fraction. The remaining water and flour go into the final dough. A ~1% dough loss during handling is accounted for in the reverse calculation.',
       progresso: (n, t) => `<b>${n}</b> of ${t} steps`,
@@ -4082,6 +4089,7 @@
       stPoolishTit: 'Poolish',
       stPoolishLead: '{poolishFarinha} Alma Italiana flour + {poolishAgua} water + {poolishFerm} dry yeast.',
       stPoolishI1: () => `2h at room temperature + the rest in the fridge at ${fmtTemp(4)} ({poolishFrio} cold).`,
+      stPoolishI1Ambiente: 'The whole time at room temperature (same-day mode) — no fridge.',
       stPoolishI2: 'Halo Core bowl with the silicone lid closed, but with the vent hole open.',
       stMassaTit: 'Final dough — Halo Core',
       stMassaLead: 'All the poolish + {finalAlma} Alma Italiana + {finalIntegral} Wholemeal + {finalAgua} ice-cold water with crushed ice + {finalSal} salt + {finalFerm} dry yeast.',
@@ -4094,6 +4102,8 @@
       stMassaWarn: () => `Final temperature ${usaImp() ? Math.round(cToF(19)) + '-' + Math.round(cToF(23)) + '°F' : '19-23°C'}`,
       stMaturTit: 'Cold maturation',
       stMaturLead: 'Dough in the closed Tramontina 8.3L bowl with plastic film in contact + lid. Goes to the fridge ~30 min after the final dough. Total bulk maturation: {maturacao}.',
+      stMaturTitAmbiente: 'Room-temperature maturation',
+      stMaturLeadAmbiente: 'Dough in the closed bowl with film in contact + lid, at <b>room temperature</b> (same-day mode). Total bulk maturation: {maturacao}.',
       stBolearTit: 'Balling + Appretto',
       stBolearLead: '{discos} dough balls of {peso} stored in the containers with release agent and covered at room temperature ({appretto} of appretto).',
       stBolearI1: () => `Room temperature < ${usaImp() ? Math.round(cToF(22)) + '°F' : '22°C'}: up to ~4h.`,
@@ -4367,11 +4377,15 @@
   // a farinha. Âncoras validadas pelo usuário: 8h = 0,60% e 53h = 0,10% (receita de
   // referência). 24h/48h interpolados. VALORES DE REFERÊNCIA — calibrar pela prática.
   //   fermentoPct é sobre a farinha (ex.: 0.60 = 0,60% = 6 g por kg de farinha).
+  // Fases por modo (horas): poolish e appretto são FIXOS do modo; a maturação em
+  // bloco é o "resto" (absorve a folga e o ajuste de horário incômodo — só estica,
+  // nunca encurta: mais geladeira = melhor). matAmbiente=true -> maturação à
+  // temperatura ambiente (modo mesmo-dia); senão, na geladeira.
   const FERM_MODOS = {
-    '8h':  { horas: 8,  fermentoPct: 0.60 },
-    '24h': { horas: 24, fermentoPct: 0.20 },
-    '48h': { horas: 48, fermentoPct: 0.12 },
-    '53h': { horas: 53, fermentoPct: 0.10 }   // = receita de referência validada
+    '8h':  { horas: 8,  fermentoPct: 0.60, poolishH: 2,  apprettoH: 2, matAmbiente: true  },
+    '24h': { horas: 24, fermentoPct: 0.20, poolishH: 10, apprettoH: 4, matAmbiente: false },
+    '48h': { horas: 48, fermentoPct: 0.12, poolishH: 15, apprettoH: 4, matAmbiente: false },
+    '53h': { horas: 53, fermentoPct: 0.10, poolishH: 20, apprettoH: 4, matAmbiente: false }   // ciclo validado
   };
   const FERM_MODO_PADRAO = '53h';   // o ciclo validado é o padrão
 
@@ -5761,8 +5775,18 @@
     CRONOGRAMA.forEach((step, i) => {
       const done = doneSteps.includes(i);
       const ehAgora = (i === idxAgora);
-      const itens = step.itensKeys.length
-        ? `<ul>${step.itensKeys.map(k => `<li>${fill(t(k))}</li>`).join('')}</ul>` : '';
+      // Modo mesmo-dia (8h): variantes "ambiente" dos textos que citam geladeira.
+      const amb = !!(plano && plano.matAmbiente);
+      let titKey = step.titKey, leadKey = step.leadKey, itensKeys = step.itensKeys;
+      if (amb && step.id === 'maturacao') { titKey = 'stMaturTitAmbiente'; leadKey = 'stMaturLeadAmbiente'; }
+      // Massa final: a água é SEMPRE gelada (a Halo Core aquece a massa na sova;
+      // sem água gelada a massa passa de 19–23°C e desanda) — vale p/ todos os modos.
+      if (amb && step.id === 'poolish') {
+        // troca "2h fora da geladeira…" pela versão em temperatura ambiente
+        itensKeys = step.itensKeys.map(k => k === 'stPoolishI1' ? 'stPoolishI1Ambiente' : k);
+      }
+      const itens = itensKeys.length
+        ? `<ul>${itensKeys.map(k => `<li>${fill(t(k))}</li>`).join('')}</ul>` : '';
       const warn = step.warnKey ? `<div class="step-warn">▲ ${t(step.warnKey)}</div>` : '';
 
       // tag (pílula) com o tempo decorrido desde o início do poolish até este passo
@@ -5785,10 +5809,10 @@
           <div class="dot">${done ? '✓' : (i + 1)}</div>
           <div class="content">
             <div class="step-top">
-              <span class="title">${t(step.titKey)}${tag}${seloAgora}</span>
+              <span class="title">${t(titKey)}${tag}${seloAgora}</span>
             </div>
             ${whenHtml}
-            <div class="lead">${fill(t(step.leadKey))}</div>
+            <div class="lead">${fill(t(leadKey))}</div>
             ${itens}
             ${warn}
             <label class="done-toggle">
@@ -5830,30 +5854,22 @@
     const apprettoH = clampFloat(parseFloat(apprettoRange.value) || 4, PLANO.apprettoMin, PLANO.apprettoMax);
     const bolear = addH(assar, -apprettoH);
 
-    // Escolhe a duração do poolish preferindo o padrão (20h). Só desvia se 20h
-    // fizer a massa final cair no horário incômodo — e então busca o valor MAIS
-    // PRÓXIMO de 20h (dentro de 19-23h) que evite a madrugada.
-    let poolishH = PLANO.poolishPadrao;
-    if (ehNoite(addH(inicio, poolishH))) {
-      // varre por distância crescente ao padrão: 0,5, 1,0, 1,5... para os dois lados
-      let achou = false;
-      for (let delta = 0.5; delta <= (PLANO.poolishMax - PLANO.poolishMin) && !achou; delta += 0.5) {
-        for (const cand of [PLANO.poolishPadrao + delta, PLANO.poolishPadrao - delta]) {
-          if (cand < PLANO.poolishMin || cand > PLANO.poolishMax) continue;
-          if (!ehNoite(addH(inicio, cand))) { poolishH = cand; achou = true; break; }
-        }
-      }
-      // se nada resolver, mantém o padrão (o alerta de horário incômodo avisará)
-    }
+    // O poolish vem do MODO de fermentação (fixo por modo). O ajuste para fugir do
+    // horário incômodo é feito no POSICIONAMENTO do início (ajustarInicioParaDiurno),
+    // não mexendo no poolish — assim o modo mantém suas proporções. A maturação em
+    // bloco é o "resto" (amortecedor) e absorve a folga.
+    const modo = FERM_MODOS[fermModoAtual()];
+    const poolishH = modo.poolishH;
+    const matAmbiente = !!modo.matAmbiente;   // maturação ambiente (modo mesmo-dia)
 
     const massaFinal = addH(inicio, poolishH);
     const geladeira = addH(massaFinal, PLANO.maturacaoOffset);
-    // maturação em bloco = da geladeira até o boleamento
+    // maturação em bloco = da geladeira (ou bancada, se ambiente) até o boleamento
     const maturacaoH = (bolear.getTime() - geladeira.getTime()) / 3600000;
     // tempo total do processo (início do poolish -> assar)
     const totalH = (assar.getTime() - inicio.getTime()) / 3600000;
 
-    return { inicio, massaFinal, geladeira, bolear, assar, poolishH, apprettoH, maturacaoH, totalH };
+    return { inicio, massaFinal, geladeira, bolear, assar, poolishH, apprettoH, maturacaoH, totalH, matAmbiente, modo: fermModoAtual() };
   }
 
   // ===== Timeline "agora" =====
@@ -5968,14 +5984,17 @@
     }
     const alerts = [];
 
+    // Maturação em bloco: a faixa saudável depende do MODO (o alvo é o "resto" da
+    // tabela do modo). Avisa se ficou impossível (<0) ou bem abaixo do alvo (o
+    // ajuste de horário comprimiu demais). "Longa" só preocupa no modo AMBIENTE
+    // (8h), onde o excesso superfermenta; na geladeira, mais tempo = melhor.
+    const alvo = matAlvoModo();
     if (plano.maturacaoH < 0) {
       alerts.push({ cls: 'bad', msg: t('cronoAssarCedo') });
-    } else {
-      if (plano.maturacaoH < PLANO.maturacaoMin) {
-        alerts.push({ cls: 'warn', msg: t('cronoMaturCurta', durLabel(plano.maturacaoH), PLANO.maturacaoMin) });
-      } else if (plano.maturacaoH > PLANO.maturacaoMax) {
-        alerts.push({ cls: 'warn', msg: t('cronoMaturLonga', durLabel(plano.maturacaoH), PLANO.maturacaoMax) });
-      }
+    } else if (plano.maturacaoH < alvo * 0.6) {
+      alerts.push({ cls: 'warn', msg: t('cronoMaturCurta', durLabel(plano.maturacaoH), Math.round(alvo)) });
+    } else if (plano.matAmbiente && plano.maturacaoH > alvo * 1.8) {
+      alerts.push({ cls: 'warn', msg: t('cronoMaturLonga', durLabel(plano.maturacaoH), Math.round(alvo)) });
     }
 
     if (plano.apprettoH > 4.5) {
@@ -8155,12 +8174,10 @@
     });
   }
 
-  const atalhoHora = document.getElementById('atalhoHora');
   (function popularSelects() {
     const { od, om, oa, oh } = opcoesData();
     inicioDia.innerHTML = od; inicioMes.innerHTML = om; inicioAno.innerHTML = oa; inicioHora.innerHTML = oh;
     assarDia.innerHTML = od; assarMes.innerHTML = om; assarAno.innerHTML = oa; assarHora.innerHTML = oh;
-    if (atalhoHora) { atalhoHora.innerHTML = oh; atalhoHora.value = '19:00'; }   // hora padrão do atalho
   })();
 
   function setSelectData(prefixoEls, d, hora) {
@@ -8246,24 +8263,29 @@
   function totalHorasModo() {
     return FERM_MODOS[fermModoAtual()].horas;
   }
+  // Maturação em bloco ALVO do modo (o "resto": total − poolish − 0,5 − appretto).
+  function matAlvoModo() {
+    const m = FERM_MODOS[fermModoAtual()];
+    return m.horas - m.poolishH - PLANO.maturacaoOffset - m.apprettoH;
+  }
 
-  // Atalho de MODO de fermentação (8h/24h/48h/53h). Seleciona o modo (muda o
-  // fermento), define a MATURAÇÃO/assar = hoje + ceil(horas/24) dias às 19:00 (ou a
-  // hora escolhida em #atalhoHora), e preenche o início do poolish recuando o tempo
-  // total do modo. O usuário pode refinar nos selects detalhados.
-  function atalhoModo(modo) {
+  // Seleciona o MODO de fermentação (8h/24h/48h/53h). Passo 1 do fluxo: só marca o
+  // modo (ajusta fermento + appretto do modo). NÃO cria data. Se JÁ houver uma hora
+  // de assar definida, recalcula o início do poolish com o novo modo; senão, espera
+  // o usuário definir a hora de assar (que então dispara o cálculo do início).
+  function selecionarModo(modo) {
     if (!FERM_MODOS[modo]) return;
     lsSet('pizzaFermModo', modo);                 // troca o modo (afeta o fermento)
-    const horas = FERM_MODOS[modo].horas;
-    const dias = Math.ceil(horas / 24);           // 8h->0, 24h->1, 48h->2, 53h->3
-    const hora = (atalhoHora && atalhoHora.value) ? atalhoHora.value : '19:00';
-    const [hh, mm] = hora.split(':').map(Number);
-    const assar = new Date();
-    assar.setDate(assar.getDate() + dias);
-    assar.setHours(hh, mm, 0, 0);
-    setSelectData(elsAssar, assar, hora);
-    recuarInicioDoAssar(assar);                   // início = assar − total do modo
+    // o appretto passa a ser o do modo (o slider reflete; usuário ainda pode refinar)
+    if (apprettoRange) {
+      apprettoRange.value = FERM_MODOS[modo].apprettoH;
+      const av = document.getElementById('apprettoVal');
+      if (av) av.textContent = parseFloat(apprettoRange.value).toFixed(1).replace('.', ',');
+    }
     marcarAtalhoAtivo(modo);
+    // se já há hora de assar, reposiciona o início pelo novo modo
+    const assar = getAssar();
+    if (assar) recuarInicioDoAssar(assar);
     salvarPlano();
     const wrap = document.getElementById('timelineWrap');
     if (!wrap.classList.contains('show')) toggleTimeline();
@@ -8287,7 +8309,8 @@
   // o ideal se nenhum resolver. Usa o poolish padrão como referência (o planejador
   // ainda afina ±h depois).
   function ajustarInicioParaDiurno(ideal) {
-    const massaOk = (ini) => !ehNoite(addH(ini, PLANO.poolishPadrao));
+    const poolishH = FERM_MODOS[fermModoAtual()].poolishH;
+    const massaOk = (ini) => !ehNoite(addH(ini, poolishH));
     if (massaOk(ideal)) return ideal;
     for (let d = 0.5; d <= 5; d += 0.5) {
       for (const sinal of [-1, 1]) {
@@ -8731,8 +8754,15 @@
         </div>`;
       html = aguaHtml + qtdHtml + `<div class="mnm-slot" id="mnmSlotMix"></div>`;
     } else if (passo === 'maturacao') {
-      titKey = 'mnmP3Tit'; leadKey = 'mnmP3Lead';
-      html = lista(['mnmP3I1', 'mnmP3I2', 'mnmP3I3']);
+      // modo mesmo-dia (8h): maturação em temperatura ambiente, não geladeira
+      const amb = !!FERM_MODOS[fermModoAtual()].matAmbiente;
+      if (amb) {
+        titKey = 'mnmP3TitAmbiente'; leadKey = 'mnmP3LeadAmbiente';
+        html = lista(['mnmP3I1Ambiente', 'mnmP3I2Ambiente', 'mnmP3I3Ambiente']);
+      } else {
+        titKey = 'mnmP3Tit'; leadKey = 'mnmP3Lead';
+        html = lista(['mnmP3I1', 'mnmP3I2', 'mnmP3I3']);
+      }
     } else if (passo === 'bolear') {
       titKey = 'mnmP4Tit'; leadKey = 'mnmP4Lead';
       html = `<div class="mnm-box"><div class="mnm-box-tit">${t('mnmBoxQtd')}</div>
