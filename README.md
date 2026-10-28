@@ -165,6 +165,11 @@ zerar).
 - **Tema claro/escuro** — **Automático** (segue o sistema, em tempo real), **claro** ou
   **escuro**, escolhido na aba Configurações. A preferência fica salva. Mantém o laranja (ação)
   e o verde (sucesso) como identidade.
+- **Cor de destaque (7 cores, por amostras)** — Troca a cor de marca/ação do app (botões, abas,
+  realces) escolhendo uma **amostra de cor**: **laranja** (padrão), **azul**, **cinza**, **verde**,
+  **roxo**, **teal** e **terracota**. As amostras seguem o estilo (redondas no Clássico, quadradas
+  no Flat). Funciona com qualquer tema e estilo; nas cores verde e teal, o indicador de sucesso
+  passa a âmbar para não se confundir com a marca. Preferência salva no aparelho.
 - **Estilo visual (Clássico/Flat)** — Escolha entre o visual **Clássico** (original,
   arredondado — padrão) e o **Flat** (mais clean e sóbrio: linhas retas, botões e cards
   planos, sem sombras, abas com indicador em barra). Muda só a "forma" — a paleta de cores dos
@@ -349,6 +354,11 @@ icon-only on mobile; timers use icons only (play/pause/reset).
 - **Light/dark theme** — **Automatic** (follows the system, in real time), **light** or **dark**,
   chosen on the Settings tab. The preference is saved. Keeps orange (action) and green (success)
   as the identity.
+- **Accent color (7 colors, via swatches)** — Switches the app's brand/action color (buttons, tabs,
+  highlights) by picking a **color swatch**: **orange** (default), **blue**, **gray**, **green**,
+  **purple**, **teal** and **terracotta**. Swatches follow the style (round in Classic, squared in
+  Flat). Works with any theme and style; in the green and teal colors the success indicator turns
+  amber so it won't be confused with the brand. Preference saved on the device.
 - **Visual style (Classic/Flat)** — Choose between the **Classic** look (original, rounded —
   default) and **Flat** (cleaner and more sober: straight lines, flat buttons and cards, no
   shadows, tabs with an underline indicator). It only changes the "shape" — the light/dark color
