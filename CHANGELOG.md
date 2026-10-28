@@ -17,6 +17,26 @@
 
 ## 🇧🇷 Português
 
+### v1.32.0 — Mais cores + seletor por amostras · 2026-10-23
+
+- **v1.32.0** — Três **cores de destaque** novas: **Roxo**, **Teal** e **Terracota** (somam-se a
+  Laranja/Azul/Cinza/Verde — agora **7 no total**). E o seletor de **Cor** (Config → Aparência)
+  deixou de usar botões de texto: agora são **amostras de cor (swatches)**, mais compactas e
+  intuitivas. A amostra selecionada ganha um **anel**, e a **forma acompanha o estilo** (redonda no
+  Clássico, quadrada no Flat). Cada amostra tem tooltip e rótulo acessível com o nome da cor
+  (traduzidos PT/EN). Como a cor **Teal** puxa para o verde, nela o indicador de **sucesso/pronto**
+  também vira **âmbar** (como já acontece no Verde).
+
+### v1.31.0 — Cor de destaque (Laranja/Azul/Cinza/Verde) · 2026-10-23
+
+- **v1.31.0** — Novo controle **Cor** na aba **Config → Aparência** (logo abaixo de *Tema*):
+  troca a cor de marca/ação do app (botões, abas, realces, slider) entre **Laranja** (padrão),
+  **Azul**, **Cinza** e **Verde**. Funciona junto com qualquer **tema** (claro/escuro/auto) e
+  **estilo** (Clássico/Flat) — muda só a cor de destaque, não a forma. Na cor **Verde**, o
+  indicador de **sucesso/pronto** passa a **âmbar** para não se confundir com a marca. A cor da
+  barra do navegador (theme-color) acompanha a cor escolhida no tema claro. Preferência salva no
+  aparelho (`pizzaCor`); padrão **Laranja**.
+
 ### v1.30.0 — Fases próprias por modo de fermentação · 2026-10-23
 
 - **v1.30.0** — **Fluxo do cronograma em 3 passos:** (1) escolher o **modo de fermentação**
@@ -355,6 +375,26 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.32.0 — More colors + swatch picker · 2026-10-23
+
+- **v1.32.0** — Three new **accent colors**: **Purple**, **Teal** and **Terracotta** (added to
+  Orange/Blue/Gray/Green — now **7 total**). And the **Color** picker (Settings → Appearance) no
+  longer uses text buttons: it's now **color swatches**, more compact and intuitive. The selected
+  swatch gets a **ring**, and the **shape follows the style** (round in Classic, squared in Flat).
+  Each swatch has a tooltip and accessible label with the color name (localized PT/EN). Since the
+  **Teal** color leans green, its **success/ready** indicator also turns **amber** (as already
+  happens with Green).
+
+### v1.31.0 — Accent color (Orange/Blue/Gray/Green) · 2026-10-23
+
+- **v1.31.0** — New **Color** control on the **Settings → Appearance** tab (right below *Theme*):
+  switches the app's brand/action color (buttons, tabs, highlights, slider) between **Orange**
+  (default), **Blue**, **Gray** and **Green**. Works alongside any **theme** (light/dark/auto) and
+  **style** (Classic/Flat) — it changes only the accent color, not the shape. In the **Green**
+  color, the **success/ready** indicator turns **amber** so it won't be confused with the brand.
+  The browser bar color (theme-color) follows the chosen color in the light theme. Preference saved
+  on the device (`pizzaCor`); default **Orange**.
 
 ### v1.30.0 — Per-mode fermentation phases · 2026-10-23
 
