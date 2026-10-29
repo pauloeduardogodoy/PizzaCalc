@@ -17,6 +17,18 @@
 
 ## 🇧🇷 Português
 
+### v1.32.1 — Barra do sistema edge-to-edge (transparente) · 2026-10-23
+
+- **v1.32.1** — No Android instalado, a **barra de navegação do sistema** (voltar/home/recentes)
+  deixava de acompanhar o app e ficava **laranja** nos dois temas — herança do `theme_color` fixo
+  do manifest. Agora o app usa **edge-to-edge**: a barra fica **transparente/translúcida** e o app
+  desenha atrás dela, deixando o Android aplicar sua translucidez padrão (combina com claro e
+  escuro automaticamente, sem cor própria). O `theme_color` do manifest e o `<meta theme-color>`
+  passaram a **transparente**, e o conteúdo ganhou respiro de **área segura**
+  (`env(safe-area-inset-*)`) no corpo e na barra de abas para nada ficar escondido atrás das barras
+  do sistema. **No Android instalado, reinstale o app** (Configurações do site → Limpar e redefinir
+  + reinstalar) para o sistema reler o manifest.
+
 ### v1.32.0 — Mais cores + seletor por amostras · 2026-10-23
 
 - **v1.32.0** — Três **cores de destaque** novas: **Roxo**, **Teal** e **Terracota** (somam-se a
@@ -375,6 +387,18 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.32.1 — Edge-to-edge system bar (transparent) · 2026-10-23
+
+- **v1.32.1** — On installed Android, the **system navigation bar** (back/home/recents) didn't
+  follow the app and stayed **orange** in both themes — inherited from the manifest's fixed
+  `theme_color`. The app now goes **edge-to-edge**: the bar is **transparent/translucent** and the
+  app draws behind it, letting Android apply its default translucency (matches light and dark
+  automatically, with no color of its own). The manifest `theme_color` and the `<meta theme-color>`
+  are now **transparent**, and the content gained **safe-area** padding
+  (`env(safe-area-inset-*)`) on the body and the tab bar so nothing hides behind the system bars.
+  **On installed Android, reinstall the app** (Site settings → Clear & reset + reinstall) so the
+  system re-reads the manifest.
 
 ### v1.32.0 — More colors + swatch picker · 2026-10-23
 
