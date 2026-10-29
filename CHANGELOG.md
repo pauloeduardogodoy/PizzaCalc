@@ -17,6 +17,23 @@
 
 ## 🇧🇷 Português
 
+### v1.32.3 — Barra do sistema preta · 2026-10-23
+
+- **v1.32.3** — Cor da barra do sistema alterada para **preto** (`#000000`) nos dois temas, no
+  `theme_color` do manifest e no `<meta theme-color>` dinâmico. **Reinstale o app** no Android para
+  o sistema reler o manifest.
+
+### v1.32.2 — Cor da barra do sistema (correção) · 2026-10-23
+
+- **v1.32.2** — Correção da tentativa anterior: `theme_color: "transparent"` é **inválido** num
+  manifest de PWA e era **ignorado** pelo Android, que caía num fallback **laranja** (cor dominante
+  do app). Trocado por uma cor **sólida e válida**: a barra do sistema agora usa **quase preto**
+  (`#17140f`) via `theme_color` do manifest, e o `<meta theme-color>` dinâmico acompanha o fundo do
+  tema (claro → bege; escuro → quase preto) onde o Android respeitar. A barra deixa de ser laranja.
+  **Observação honesta:** num PWA instalado pelo Chrome não há como forçar a barra de navegação
+  *translúcida de verdade* (edge-to-edge real) — isso depende de empacotar como app nativo/TWA
+  (plano futuro de Android). **Reinstale o app** no Android para o sistema reler o manifest.
+
 ### v1.32.1 — Barra do sistema edge-to-edge (transparente) · 2026-10-23
 
 - **v1.32.1** — No Android instalado, a **barra de navegação do sistema** (voltar/home/recentes)
@@ -387,6 +404,23 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.32.3 — Black system bar · 2026-10-23
+
+- **v1.32.3** — System bar color changed to **black** (`#000000`) in both themes, in the manifest
+  `theme_color` and the dynamic `<meta theme-color>`. **Reinstall the app** on Android so the system
+  re-reads the manifest.
+
+### v1.32.2 — System bar color (fix) · 2026-10-23
+
+- **v1.32.2** — Fix for the previous attempt: `theme_color: "transparent"` is **invalid** in a PWA
+  manifest and was **ignored** by Android, which fell back to an **orange** tint (the app's dominant
+  color). Replaced with a **solid, valid** color: the system bar now uses **near-black** (`#17140f`)
+  via the manifest `theme_color`, and the dynamic `<meta theme-color>` follows the theme background
+  (light → beige; dark → near-black) where Android honors it. The bar is no longer orange.
+  **Honest note:** on a PWA installed via Chrome there's no way to force a *truly translucent*
+  navigation bar (real edge-to-edge) — that requires packaging as a native app/TWA (future Android
+  plan). **Reinstall the app** on Android so the system re-reads the manifest.
 
 ### v1.32.1 — Edge-to-edge system bar (transparent) · 2026-10-23
 
