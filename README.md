@@ -29,7 +29,7 @@ com base no equipamento real de casa. A receita de referência (fonte da verdade
 ### Funcionalidades
 
 O app é organizado em **abas**, na ordem do fluxo de uma fornada (Cronograma · Receita · Preparo ·
-Diário · Referência · Ajuda · Config) com ícones; no celular as abas mostram só o ícone. A aba **Ajuda** traz um guia rápido de
+Diário · Preços · Referência · Ajuda · Config) com ícones; no celular as abas mostram só o ícone. A aba **Ajuda** traz um guia rápido de
 como usar cada parte do app, e a aba **Config** reúne as preferências (tema, idioma, notificações
 e mais). Os controles de produção ficam sempre visíveis
 no topo. Cada card recolhível (água, mistura, cocção, cronograma, diário, velocidades)
@@ -131,6 +131,13 @@ zerar).
   evolução do atrito, da temperatura da massa e do tempo de forno ao longo das fornadas, com
   médias e faixas ideais. Exporta/compartilha (JSON + resumo, com as fotos) e importa para migrar
   entre aparelhos.
+- **Preços de mercado** — Aba para anotar o preço de insumos (farinha, queijo, calabresa…) nas
+  compras, em dois momentos. No mercado, a **captura rápida** tira só a foto da etiqueta e cria um
+  registro pendente com a **data automática** (zero digitação), com um **contador de fotos da
+  visita**. Em casa, a **revisão** preenche mercado, produto, marca e **preço por unidade e/ou por
+  kg** (campos com autocompletar do que já foi usado). A **tabela** reúne os registros revisados,
+  com **filtro** por produto/mercado e **destaque do menor preço** por produto, e **exporta CSV** e
+  **imprime**. As fotos ficam no aparelho (comprovante) e vão no backup.
 - **Índice da Referência** — Uma barra de atalhos (chips) no topo da aba Referência (Farinhas ·
   Farinha e hidratação · Recheios · Velocidades · Glossário · Problemas): tocar num chip abre o
   card e rola até ele.
@@ -218,7 +225,7 @@ based on real home equipment. Reference recipe (source of truth):
 ### Features
 
 The app is organized into **tabs**, in a bake's flow order (Schedule · Recipe · Prep · Log ·
-Reference · Help · Settings) with icons; on mobile the tabs show the icon only. The **Help** tab has a quick guide on how to
+Prices · Reference · Help · Settings) with icons; on mobile the tabs show the icon only. The **Help** tab has a quick guide on how to
 use each part of the app, and the **Settings** tab gathers the preferences (theme, language,
 notifications and more). The production controls stay visible at the top. Each
 collapsible card (water, mixing, baking, schedule, log, speeds) **expands/collapses when you
@@ -318,6 +325,13 @@ icon-only on mobile; timers use icons only (play/pause/reset).
   It includes **Insights**: mini charts (SVG) of the friction, dough temperature and oven time
   trends across bakes, with averages and ideal ranges. Export/share (JSON + summary, including
   photos) and import to move between devices.
+- **Market prices** — A tab to log ingredient prices (flour, cheese, pepperoni…) while shopping, in
+  two moments. At the market, **quick capture** just takes a photo of the tag and creates a pending
+  entry with the **date filled automatically** (zero typing), with a **per-visit photo counter**.
+  At home, **review** fills in market, product, brand and **price per unit and/or per kg** (fields
+  autocomplete from what you already used). The **table** gathers the reviewed entries, with a
+  **filter** by product/market and the **lowest price** highlighted per product, and **exports CSV**
+  and **prints**. Photos stay on the device (receipt) and are included in the backup.
 - **Reference index** — A shortcut bar (chips) at the top of the Reference tab (Flours · Flour &
   hydration · Toppings · Speeds · Glossary · Troubleshooting): tapping a chip opens the card and
   scrolls to it.
