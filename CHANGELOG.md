@@ -17,6 +17,39 @@
 
 ## 🇧🇷 Português
 
+### v1.33.3 — Editar/excluir linhas da tabela de preços · 2026-10-23
+
+- **v1.33.3** — A **tabela de preços** ganhou, em cada linha, botões de **editar** e **excluir**.
+  Editar devolve o registro para o card **"A revisar"** (com o formulário completo) e rola até ele;
+  excluir remove o registro (com confirmação). Os botões não saem na impressão.
+
+### v1.33.2 — Card "Ajuste a produção" colapsável · 2026-10-23
+
+- **v1.33.2** — O card **"Ajuste a produção"** (fixo acima das abas) agora é **colapsável**: toque no
+  título para recolher/expandir. É **independente** dos cards das abas — os botões "expandir/recolher
+  cards" (da aba e global) não o afetam. O estado fica salvo neste aparelho.
+
+### v1.33.1 — Tabela de preços não estoura no celular · 2026-10-23
+
+- **v1.33.1** — Correção: a **tabela de preços** (7 colunas) estourava a largura da tela no celular.
+  Agora ela fica num container com **rolagem horizontal** (rola dentro da caixa, sem empurrar a
+  página); produto/marca podem quebrar em duas linhas e os filtros encolhem sem transbordar.
+
+### v1.33.0 — Aba Preços (preços de mercado) · 2026-10-23
+
+- **v1.33.0** — Nova aba **Preços** (entre Diário e Referência) para anotar o preço de insumos nas
+  compras, em dois momentos:
+  - **Captura rápida** (no mercado): o botão **Capturar preço** tira só a foto da etiqueta e cria um
+    registro **pendente** com a **data automática** — sem digitar nada. Um **contador** mostra
+    quantas fotos foram batidas **nesta visita** (com botão "Encerrar visita" para zerar).
+  - **A revisar** (em casa): cada foto pendente vira um formulário — **mercado**, **produto**,
+    **marca** e **preço por unidade e/ou por kg**. Os campos **autocompletam** com os valores já
+    usados. Toque na foto para ampliar.
+  - **Tabela de preços**: os registros revisados, com **filtro** por produto/mercado, **destaque do
+    menor preço** por produto, **exportar CSV** e **imprimir** (modo só-tabela).
+  - As fotos são comprimidas e guardadas no aparelho (comprovante) e **entram no backup completo**.
+  Ajuda e README atualizados; chave nova `pizzaPrecosMercado`.
+
 ### v1.32.3 — Barra do sistema preta · 2026-10-23
 
 - **v1.32.3** — Cor da barra do sistema alterada para **preto** (`#000000`) nos dois temas, no
@@ -404,6 +437,39 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.33.3 — Edit/delete price table rows · 2026-10-23
+
+- **v1.33.3** — The **price table** now has **edit** and **delete** buttons on each row. Edit sends
+  the entry back to the **"To review"** card (with the full form) and scrolls to it; delete removes
+  the entry (with confirmation). The buttons don't appear in print.
+
+### v1.33.2 — Collapsible "Adjust production" card · 2026-10-23
+
+- **v1.33.2** — The **"Adjust production"** card (pinned above the tabs) is now **collapsible**: tap
+  the title to collapse/expand. It's **independent** from the tab cards — the "expand/collapse cards"
+  buttons (per-tab and global) don't affect it. The state is saved on this device.
+
+### v1.33.1 — Price table no longer overflows on mobile · 2026-10-23
+
+- **v1.33.1** — Fix: the **price table** (7 columns) overflowed the screen width on mobile. It now
+  sits in a **horizontally scrollable** container (scrolls inside the box, without pushing the
+  page); product/brand can wrap to two lines and the filters shrink without overflowing.
+
+### v1.33.0 — Prices tab (market prices) · 2026-10-23
+
+- **v1.33.0** — New **Prices** tab (between Log and Reference) to log ingredient prices while
+  shopping, in two moments:
+  - **Quick capture** (at the market): the **Capture price** button just takes a photo of the tag
+    and creates a **pending** entry with the **date filled automatically** — no typing. A
+    **counter** shows how many photos were taken **this visit** ("End visit" resets it).
+  - **To review** (at home): each pending photo becomes a form — **market**, **product**, **brand**
+    and **price per unit and/or per kg**. Fields **autocomplete** from values already used. Tap the
+    photo to enlarge.
+  - **Price table**: the reviewed entries, with a **filter** by product/market, the **lowest price**
+    highlighted per product, **export CSV** and **print** (table-only mode).
+  - Photos are compressed and kept on the device (receipt) and **included in the full backup**.
+  Help and README updated; new key `pizzaPrecosMercado`.
 
 ### v1.32.3 — Black system bar · 2026-10-23
 
