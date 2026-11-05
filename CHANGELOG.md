@@ -17,6 +17,25 @@
 
 ## 🇧🇷 Português
 
+### v1.33.10 — Fim da decodificação dupla da foto · 2026-11-05
+
+- **v1.33.10** — Ataca a causa real do pico de memória na captura (Fase 1). A versão anterior ainda
+  <b>decodificava a imagem inteira duas vezes</b> (uma só para ler as dimensões). Agora as dimensões
+  são lidas de forma <b>barata</b> (sem pintar a imagem gigante num canvas) e a foto é decodificada
+  <b>uma única vez, já no tamanho reduzido</b>. A conversão final usa <code>toBlob</code> (menor pico
+  que <code>toDataURL</code>). Deve reduzir bastante o aviso "memória insuficiente". <i>(A solução
+  estrutural — guardar as fotos em IndexedDB em vez de base64 no localStorage — fica para uma Fase 2
+  futura, registrada no backlog.)</i>
+
+### v1.33.9 — Menos memória ao processar a foto · 2026-11-05
+
+- **v1.33.9** — Reduz o <b>pico de memória</b> ao processar a foto da câmera (causava no Android o
+  aviso "memória insuficiente"). Agora, quando o aparelho suporta, a imagem é <b>decodificada já no
+  tamanho reduzido</b> (via <code>createImageBitmap</code> com redimensionamento), em vez de
+  expandir a foto inteira na memória; se não houver suporte, usa o método anterior (com segurança).
+  As fotos de preço também ficaram um pouco <b>menores</b> (lado máx. 600 px). Vale para o diário
+  também. Não elimina 100% o limite do aparelho, mas reduz bastante a ocorrência.
+
 ### v1.33.8 — Captura de preço: diagnóstico e tolerância · 2026-11-05
 
 - **v1.33.8** — A tentativa anterior não resolveu a captura que "não salva nada". Agora o fluxo
@@ -478,6 +497,25 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.33.10 — No more double photo decoding · 2026-11-05
+
+- **v1.33.10** — Tackles the real cause of the capture memory peak (Phase 1). The previous version
+  still <b>decoded the full image twice</b> (once just to read dimensions). Now the dimensions are
+  read <b>cheaply</b> (without painting the huge image onto a canvas) and the photo is decoded
+  <b>only once, already at the reduced size</b>. The final conversion uses <code>toBlob</code>
+  (smaller peak than <code>toDataURL</code>). Should greatly reduce the "out of memory" warning.
+  <i>(The structural fix — storing photos in IndexedDB instead of base64 in localStorage — is left
+  for a future Phase 2, recorded in the backlog.)</i>
+
+### v1.33.9 — Less memory when processing the photo · 2026-11-05
+
+- **v1.33.9** — Reduces the <b>peak memory</b> when processing the camera photo (which triggered
+  Android's "out of memory" warning). Now, where supported, the image is <b>decoded already at the
+  reduced size</b> (via <code>createImageBitmap</code> with resizing), instead of expanding the full
+  photo in memory; if unsupported, it uses the previous method (safely). Price photos are also a bit
+  <b>smaller</b> (max side 600 px). Applies to the log too. It doesn't fully remove the device
+  limit, but greatly reduces how often it happens.
 
 ### v1.33.8 — Price capture: diagnostics and tolerance · 2026-11-05
 
