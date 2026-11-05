@@ -17,6 +17,32 @@
 
 ## 🇧🇷 Português
 
+### v1.33.6 — Ajuda em dia (fluxo, Preços, cor) · 2026-10-23
+
+- **v1.33.6** — Ajuda sincronizada: o card <b>"Começando"</b> agora lista as abas na <b>ordem real
+  do fluxo</b> (Cronograma → Receita → Preparo → Diário) e cita as abas de apoio, incluindo a nova
+  aba <b>Preços</b>. O card <b>"Dicas de uso"</b> passou a mencionar <b>Cor</b> junto de
+  tema/estilo/idioma/unidades.
+
+### v1.33.5 — Apagar fotos da tabela de preços (liberar espaço) · 2026-10-23
+
+- **v1.33.5** — Na **tabela de preços**, agora dá para **apagar a foto** mantendo os dados: um **×**
+  na miniatura remove a foto daquela linha, e o botão **"Limpar todas as fotos"** (no rodapé da
+  tabela) remove as fotos de **todos os registros revisados** de uma vez. O rodapé também mostra
+  **quantas fotos** há e o **espaço aproximado** que ocupam, para ajudar a decidir. Em todos os
+  casos, os dados digitados (data, mercado, produto, marca, preços) são preservados — some só a
+  imagem (comprovante). Linhas sem foto mostram "—".
+
+### v1.33.4 — Captura de preço: contador fiel e menos memória · 2026-10-23
+
+- **v1.33.4** — Correção na **captura de preço**: quando o armazenamento enchia, a foto não era
+  salva mas o **contador da visita somava mesmo assim** (o erro de cota era engolido). Agora a
+  gravação é **verificada de verdade** — o contador só sobe quando a foto é realmente gravada; se
+  falhar, avisa e **não conta**. Capturas rápidas em sequência foram **serializadas** (evita perder
+  uma foto por sobrescrita). Para reduzir o erro de memória do Android ao processar a foto da
+  câmera, as fotos de preço agora são **menores** (comprovante: lado máx. 720 px, qualidade 0,6) e
+  o canvas/imagem são liberados logo após comprimir.
+
 ### v1.33.3 — Editar/excluir linhas da tabela de preços · 2026-10-23
 
 - **v1.33.3** — A **tabela de preços** ganhou, em cada linha, botões de **editar** e **excluir**.
@@ -437,6 +463,32 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.33.6 — Help in sync (flow, Prices, color) · 2026-10-23
+
+- **v1.33.6** — Help synced: the <b>"Getting started"</b> card now lists the tabs in the <b>real
+  flow order</b> (Schedule → Recipe → Prep → Log) and mentions the support tabs, including the new
+  <b>Prices</b> tab. The <b>"Usage tips"</b> card now mentions <b>Color</b> alongside
+  theme/style/language/units.
+
+### v1.33.5 — Delete photos from the price table (free space) · 2026-10-23
+
+- **v1.33.5** — In the **price table**, you can now **delete the photo** while keeping the data: an
+  **×** on the thumbnail removes that row's photo, and the **"Clear all photos"** button (at the
+  bottom of the table) removes photos from **all reviewed entries** at once. The footer also shows
+  **how many photos** there are and the **approximate space** they take, to help you decide. In all
+  cases the typed data (date, market, product, brand, prices) is preserved — only the image
+  (receipt) is removed. Rows without a photo show "—".
+
+### v1.33.4 — Price capture: accurate counter and less memory · 2026-10-23
+
+- **v1.33.4** — Fix in **price capture**: when storage filled up, the photo wasn't saved but the
+  **visit counter still went up** (the quota error was swallowed). Saving is now **actually
+  verified** — the counter only increments when the photo really persists; on failure it warns and
+  **doesn't count**. Rapid consecutive captures are now **serialized** (prevents losing a photo to
+  overwrite). To reduce the Android memory error while processing the camera photo, price photos are
+  now **smaller** (receipt: max side 720 px, quality 0.6) and the canvas/image are released right
+  after compressing.
 
 ### v1.33.3 — Edit/delete price table rows · 2026-10-23
 
