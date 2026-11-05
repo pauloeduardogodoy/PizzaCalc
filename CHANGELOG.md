@@ -17,6 +17,13 @@
 
 ## 🇧🇷 Português
 
+### v1.33.7 — Correção: captura de preço não salvava · 2026-11-05
+
+- **v1.33.7** — Corrige a **captura rápida de preço**, que tirava a foto mas **não salvava nada**.
+  A causa era o input de câmera ter o `value` zerado **antes** de o arquivo ser lido — em alguns
+  WebView do Android isso invalidava a imagem antes da compressão. Agora o input só é liberado
+  **depois** que o processamento termina de ler a foto.
+
 ### v1.33.6 — Ajuda em dia (fluxo, Preços, cor) · 2026-11-05
 
 - **v1.33.6** — Ajuda sincronizada: o card <b>"Começando"</b> agora lista as abas na <b>ordem real
@@ -463,6 +470,13 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.33.7 — Fix: price capture didn't save · 2026-11-05
+
+- **v1.33.7** — Fixes **quick price capture**, which took the photo but **saved nothing**. The
+  cause was clearing the camera input's `value` **before** the file was read — on some Android
+  WebViews that invalidated the image before compression. The input is now released **after** the
+  processing finishes reading the photo.
 
 ### v1.33.6 — Help in sync (flow, Prices, color) · 2026-11-05
 
