@@ -17,6 +17,14 @@
 
 ## 🇧🇷 Português
 
+### v1.33.8 — Captura de preço: diagnóstico e tolerância · 2026-11-05
+
+- **v1.33.8** — A tentativa anterior não resolveu a captura que "não salva nada". Agora o fluxo
+  **deixou de abortar em silêncio** quando a câmera entrega o arquivo **sem tipo** (`image/*`
+  vazio, comum em alguns Android) — essa era a causa provável. Além disso, se ainda falhar, o aviso
+  diz **em qual etapa** (ler/decodificar/canvas/salvar/confirmar) e o **erro real**, e há uma
+  **conferência** de que a foto realmente persistiu. Objetivo: capturar a causa no aparelho.
+
 ### v1.33.7 — Correção: captura de preço não salvava · 2026-11-05
 
 - **v1.33.7** — Corrige a **captura rápida de preço**, que tirava a foto mas **não salvava nada**.
@@ -470,6 +478,14 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.33.8 — Price capture: diagnostics and tolerance · 2026-11-05
+
+- **v1.33.8** — The previous attempt didn't fix the capture that "saves nothing". The flow **no
+  longer aborts silently** when the camera returns the file **without a type** (empty `image/*`,
+  common on some Android) — the likely cause. Also, if it still fails, the alert now says **which
+  stage** (read/decode/canvas/save/confirm) and the **real error**, and there is a **verification**
+  that the photo actually persisted. Goal: capture the cause on the device.
 
 ### v1.33.7 — Fix: price capture didn't save · 2026-11-05
 
