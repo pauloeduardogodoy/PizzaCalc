@@ -17,6 +17,16 @@
 
 ## 🇧🇷 Português
 
+### v1.33.11 — Captura processa quando o app volta estável · 2026-11-05
+
+- **v1.33.11** — Causa raiz do erro ao tocar <b>OK</b> rápido na câmera: o app processava a foto
+  <b>no exato momento</b> em que o Android ainda restaurava o WebView (que fora descarregado
+  enquanto a câmera estava na frente) e liberava a memória da câmera — somando picos e estourando.
+  Era por isso que <b>esperar ~5 s</b> antes do OK funcionava. Agora o app <b>não processa na hora</b>:
+  guarda a foto, mostra <b>"Processando foto…"</b> e só decodifica/salva quando a janela volta a
+  ficar <b>visível/em foco</b> (eventos <code>visibilitychange</code>/<code>pageshow</code>/<code>focus</code>)
+  mais uma pequena folga — automatizando a espera que antes era manual.
+
 ### v1.33.10 — Fim da decodificação dupla da foto · 2026-11-05
 
 - **v1.33.10** — Ataca a causa real do pico de memória na captura (Fase 1). A versão anterior ainda
@@ -497,6 +507,16 @@
 ---
 
 ## 🇺🇸 English
+
+### v1.33.11 — Capture processes when the app comes back stable · 2026-11-05
+
+- **v1.33.11** — Root cause of the error when tapping <b>OK</b> quickly on the camera: the app
+  processed the photo <b>at the exact moment</b> Android was still restoring the WebView (unloaded
+  while the camera was in front) and freeing the camera's memory — stacking peaks and crashing. That
+  is why <b>waiting ~5 s</b> before OK worked. Now the app <b>doesn't process immediately</b>: it
+  stores the photo, shows <b>"Processing photo…"</b> and only decodes/saves when the window becomes
+  <b>visible/focused</b> again (<code>visibilitychange</code>/<code>pageshow</code>/<code>focus</code>
+  events) plus a small grace period — automating what used to be a manual wait.
 
 ### v1.33.10 — No more double photo decoding · 2026-11-05
 
