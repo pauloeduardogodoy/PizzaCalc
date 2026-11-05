@@ -1997,6 +1997,8 @@
   }
   .preco-cap-btn:hover { background: var(--orange-deep); }
   .preco-cap-btn .print-ico { width: 24px; height: 24px; }
+  .preco-cap-btn:disabled, .preco-cap-btn.processando { opacity: 0.6; cursor: default; }
+  .preco-cap-btn.processando { background: var(--orange-deep); }
 
   /* Contador de fotos da visita atual */
   .preco-visita {
@@ -3350,7 +3352,7 @@
   </div><!-- /ABA Config -->
 
   <footer id="footer" data-i18n="footer">
-    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.33.10</span>
+    Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.33.11</span>
   </footer>
 </div>
 
@@ -3561,6 +3563,7 @@
       precoCapTit: 'Captura rápida',
       precoCapIntro: 'No mercado, toque em <b>Capturar preço</b> e bata a foto da etiqueta — o app guarda a <b>foto + a data</b> e deixa o registro como <b>pendente</b>. Bata quantas quiser; depois, em casa, você revisa com calma.',
       precoCapBtn: 'Capturar preço (foto)',
+      precoProcessando: 'Processando foto…',
       precoVisitaTxt: (n) => `📸 ${n} foto${n === 1 ? '' : 's'} capturada${n === 1 ? '' : 's'} nesta visita`,
       precoVisitaFim: 'Encerrar visita',
       precoPendTit: 'A revisar',
@@ -3643,7 +3646,7 @@
       ajDicasTit: 'Dicas de uso',
       ajDicas: '<ul><li><b>Mão na massa</b> (botão no topo): passo a passo em tela cheia para usar na bancada. <b>Retoma de onde você parou</b> e marca os passos concluídos (↺ Recomeçar zera).</li><li><b>Manter tela ligada</b>: impede a tela do celular de apagar durante o preparo.</li><li><b>Tema, cor, estilo visual, idioma e unidades</b>: ajuste na aba <b>Config</b>.</li><li><b>Imprimir</b>: receita, cronograma, lista de compras e tabela têm botões próprios.</li><li><b>Instalar</b>: no celular, "Adicionar à tela inicial" para usar como app, offline.</li></ul><span class="aj-dica">Botões <b>Expandir/Recolher cards</b> agem na aba atual; o <b>chevron duplo</b> ao lado age em todas as abas.</span>',
       ajSobreTit: 'Sobre',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><p><a href="#" onclick="reverOnboarding();return false" style="color:var(--orange);font-weight:600;text-decoration:none">↻ Rever boas-vindas</a></p><hr class="sobre-sep"><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: <b>© 2026</b> · Versão: <b id="verTap">1.33.10</b></p><hr class="sobre-sep"><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> e <b>Fornetto® Slim™</b> são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Seu companheiro de bancada para calcular e conduzir a produção de pizza napolitana com poolish — da farinha 🌾 ao forno 🔥.</p><p>Feito para o pizzaiolo caseiro, do iniciante ao veterano 👨‍🍳: acompanhe seus testes 🧪, calibre cada fornada e deixe suas pizzas cada vez mais bonitas e saborosas. 🤌😋</p><p><a href="#" onclick="reverOnboarding();return false" style="color:var(--orange);font-weight:600;text-decoration:none">↻ Rever boas-vindas</a></p><hr class="sobre-sep"><p>Desenvolvido por <b>Paulo Godoy</b></p><p>Ano: <b>© 2026</b> · Versão: <b id="verTap">1.33.11</b></p><hr class="sobre-sep"><p>App web/PWA, sem fins comerciais. Todos os dados ficam salvos localmente, apenas no seu aparelho.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> e <b>Fornetto® Slim™</b> são marcas de seus respectivos donos, citadas apenas como referência de equipamento.</p>',
       // Backup completo
       backupTitulo: 'Backup completo',
       backupIntro: 'Salve <b>tudo</b> num arquivo: perfis, farinhas, preços, diário (com fotos), configuração e idioma. Use para <b>trocar de aparelho</b> ou fazer backup antes de limpar o navegador. Importar <b>substitui</b> os dados atuais.',
@@ -3835,7 +3838,7 @@
       btnImprimirVel: 'Imprimir tabela',
       btnImprimirGlossario: 'Imprimir glossário',
       thVel: 'Vel.', thPotencia: 'Potência', thUso: 'Uso / equivalente industrial',
-      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.33.10</span>',
+      footer: 'Baseado no cronograma validado • Maturação ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.33.11</span>',
       velIntro: 'Espiral com cuba giratória (60–300 RPM). Como a masseira industrial também é espiral, a comparação é direta por RPM do gancho: <b>1ª velocidade industrial ≈ 100 RPM</b> (vel. 4) e <b>2ª velocidade ≈ 200 RPM</b> (vel. 12).',
       comoFunciona: '<b>Como funciona:</b> As quantidades escalam proporcionalmente mantendo as proporções da receita (farinha 95% Alma + 5% Integral, sal 2,5%, fermento 0,1%). A <b>hidratação</b> é ajustável e recalcula a água total. O <b>poolish</b> é ajustável de 45% a 100% <b>da água total</b>, sempre a 100% de hidratação (mesma quantidade de água e farinha); o fermento acompanha essa fração. O restante da água e da farinha entra na massa final. Uma perda de ~1% de massa no manuseio é considerada no cálculo reverso.',
       progresso: (n, t) => `<b>${n}</b> de ${t} etapas`,
@@ -4033,6 +4036,7 @@
       precoCapTit: 'Quick capture',
       precoCapIntro: 'At the market, tap <b>Capture price</b> and snap a photo of the price tag — the app stores the <b>photo + date</b> and leaves the entry as <b>pending</b>. Snap as many as you like; later, at home, you review them calmly.',
       precoCapBtn: 'Capture price (photo)',
+      precoProcessando: 'Processing photo…',
       precoVisitaTxt: (n) => `📸 ${n} photo${n === 1 ? '' : 's'} captured this visit`,
       precoVisitaFim: 'End visit',
       precoPendTit: 'To review',
@@ -4116,7 +4120,7 @@
       ajDicasTit: 'Usage tips',
       ajDicas: '<ul><li><b>Hands-on</b> (top button): a full-screen step-by-step for the bench. It <b>resumes where you left off</b> and marks completed steps (↺ Restart clears it).</li><li><b>Keep screen on</b>: stops the phone screen turning off during prep.</li><li><b>Theme, color, visual style, language and units</b>: set them on the <b>Settings</b> tab.</li><li><b>Print</b>: recipe, schedule, shopping list and table have their own buttons.</li><li><b>Install</b>: on mobile, "Add to Home screen" to use it as an app, offline.</li></ul><span class="aj-dica"><b>Expand/Collapse cards</b> acts on the current tab; the <b>double chevron</b> next to it acts on all tabs.</span>',
       ajSobreTit: 'About',
-      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><p><a href="#" onclick="reverOnboarding();return false" style="color:var(--orange);font-weight:600;text-decoration:none">↻ Review welcome</a></p><hr class="sobre-sep"><p>Developed by <b>Paulo Godoy</b></p><p>Year: <b>© 2026</b> · Version: <b id="verTap">1.33.10</b></p><hr class="sobre-sep"><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> and <b>Fornetto® Slim™</b> are trademarks of their respective owners, cited only as equipment reference.</p>',
+      ajSobre: '<p><b>PizzaCalc</b> 🍕</p><p>Your bench companion to calculate and run poolish-based Neapolitan pizza production — from flour 🌾 to oven 🔥.</p><p>Made for the home pizzaiolo, from beginner to veteran 👨‍🍳: track your experiments 🧪, calibrate every bake and make your pizzas ever more beautiful and tasty. 🤌😋</p><p><a href="#" onclick="reverOnboarding();return false" style="color:var(--orange);font-weight:600;text-decoration:none">↻ Review welcome</a></p><hr class="sobre-sep"><p>Developed by <b>Paulo Godoy</b></p><p>Year: <b>© 2026</b> · Version: <b id="verTap">1.33.11</b></p><hr class="sobre-sep"><p>Web/PWA app, non-commercial. All data is stored locally, only on your device.</p><p style="color:var(--gray);font-size:0.86rem"><b>Ooni® Halo Core™</b> and <b>Fornetto® Slim™</b> are trademarks of their respective owners, cited only as equipment reference.</p>',
       // Full backup
       backupTitulo: 'Full backup',
       backupIntro: 'Save <b>everything</b> to a file: profiles, flours, prices, log (with photos), settings and language. Use it to <b>move to another device</b> or back up before clearing the browser. Importing <b>replaces</b> the current data.',
@@ -4300,7 +4304,7 @@
       btnImprimirVel: 'Print table',
       btnImprimirGlossario: 'Print glossary',
       thVel: 'Speed', thPotencia: 'Power', thUso: 'Use / industrial equivalent',
-      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.33.10</span>',
+      footer: 'Based on the validated schedule • Maturation ~53h<br>Ooni® Halo Core™ • Fornetto® Slim™ 390°C<span class="footer-cred">Paulo Godoy · 2026 · v1.33.11</span>',
       velIntro: 'Spiral mixer with rotating bowl (60–300 RPM). Since the industrial mixer is also a spiral, the comparison is direct by hook RPM: <b>industrial 1st speed ≈ 100 RPM</b> (speed 4) and <b>2nd speed ≈ 200 RPM</b> (speed 12).',
       comoFunciona: '<b>How it works:</b> Quantities scale proportionally, keeping the recipe ratios (flour 95% Alma + 5% Integral, salt 2.5%, yeast 0.1%). <b>Hydration</b> is adjustable and recalculates the total water. The <b>poolish</b> is adjustable from 45% to 100% <b>of the total water</b>, always at 100% hydration (equal water and flour); the yeast follows that fraction. The remaining water and flour go into the final dough. A ~1% dough loss during handling is accounted for in the reverse calculation.',
       progresso: (n, t) => `<b>${n}</b> of ${t} steps`,
@@ -7938,13 +7942,79 @@
       alert(t('precoCapFalha', 'inesperado', (err && err.message) ? err.message : String(err)));
     } finally {
       _precoProcessando = false;
+      setPrecoProcessandoUI(false);        // volta o botão ao estado normal
       const inp = document.getElementById('precoInputCam');
       if (inp) inp.value = '';
     }
   }
 
+  // ===== Agendamento da captura: processar SÓ quando o app voltar estável =====
+  // Ao tocar OK na câmera, o Android finaliza a foto, libera a memória da câmera e
+  // RESTAURA o WebView do app (que foi descarregado enquanto a câmera estava na
+  // frente). Processar a foto nesse instante soma ao pico de restauração e estoura
+  // ("memória insuficiente"). Em vez de processar no 'change', guardamos o arquivo,
+  // mostramos "Processando…" e só processamos quando o app estiver VISÍVEL de novo
+  // (visibilitychange/pageshow/focus) + uma pequena folga — replicando, de forma
+  // automática, a espera de ~5 s que o usuário fazia na mão.
+  let _precoFotoPendente = null;      // File aguardando momento estável
+  let _precoAgendado = false;         // já há um disparo agendado?
+  const PRECO_FOLGA_MS = 1200;        // folga após o app ficar visível
+
+  function agendarProcessamentoPreco() {
+    if (_precoAgendado) return;
+    _precoAgendado = true;
+    const disparar = () => {
+      if (!_precoFotoPendente) { _precoAgendado = false; return; }
+      // só processa com o app visível (se não estiver, espera o próximo evento)
+      if (document.visibilityState === 'hidden') return;
+      const file = _precoFotoPendente;
+      _precoFotoPendente = null;
+      _precoAgendado = false;
+      removerListenersVolta();
+      const rodar = () => processarFotoPreco(file);
+      if (typeof requestIdleCallback === 'function') {
+        requestIdleCallback(rodar, { timeout: 2000 });
+      } else {
+        rodar();
+      }
+    };
+    // agenda após a folga; e também reage aos eventos de "app voltou"
+    const aoVoltar = () => { setTimeout(disparar, PRECO_FOLGA_MS); };
+    _precoAoVoltar = aoVoltar;
+    document.addEventListener('visibilitychange', aoVoltar);
+    window.addEventListener('pageshow', aoVoltar);
+    window.addEventListener('focus', aoVoltar);
+    // rede de segurança: se nenhum evento disparar, tenta assim mesmo após a folga
+    setTimeout(disparar, PRECO_FOLGA_MS + 300);
+  }
+  let _precoAoVoltar = null;
+  function removerListenersVolta() {
+    if (!_precoAoVoltar) return;
+    document.removeEventListener('visibilitychange', _precoAoVoltar);
+    window.removeEventListener('pageshow', _precoAoVoltar);
+    window.removeEventListener('focus', _precoAoVoltar);
+    _precoAoVoltar = null;
+  }
+
+  // Mostra/esconde o estado "Processando foto…" no card de captura
+  function setPrecoProcessandoUI(ativo) {
+    const btn = document.querySelector('#precoCapWrap .preco-cap-btn');
+    if (!btn) return;
+    btn.disabled = !!ativo;
+    btn.classList.toggle('processando', !!ativo);
+    const lbl = btn.querySelector('[data-i18n="precoCapBtn"]');
+    if (lbl) lbl.textContent = ativo ? t('precoProcessando') : t('precoCapBtn');
+  }
+
   document.getElementById('precoInputCam').addEventListener('change', (e) => {
-    processarFotoPreco((e.target.files || [])[0]);
+    const file = (e.target.files || [])[0];
+    if (!file) return;
+    // NÃO zerar e.target.value aqui: guardamos a referência do File para processar
+    // depois, e limpar o value cedo pode invalidar o File em alguns WebView. O
+    // value é liberado no finally de processarFotoPreco.
+    _precoFotoPendente = file;
+    setPrecoProcessandoUI(true);     // feedback imediato: "Processando foto…"
+    agendarProcessamentoPreco();
   }, false);
 
   function atualizarVisitaUI() {
