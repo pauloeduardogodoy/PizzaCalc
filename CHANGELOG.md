@@ -17,14 +17,14 @@
 
 ## 🇧🇷 Português
 
-### v1.33.6 — Ajuda em dia (fluxo, Preços, cor) · 2026-10-23
+### v1.33.6 — Ajuda em dia (fluxo, Preços, cor) · 2026-11-05
 
 - **v1.33.6** — Ajuda sincronizada: o card <b>"Começando"</b> agora lista as abas na <b>ordem real
   do fluxo</b> (Cronograma → Receita → Preparo → Diário) e cita as abas de apoio, incluindo a nova
   aba <b>Preços</b>. O card <b>"Dicas de uso"</b> passou a mencionar <b>Cor</b> junto de
   tema/estilo/idioma/unidades.
 
-### v1.33.5 — Apagar fotos da tabela de preços (liberar espaço) · 2026-10-23
+### v1.33.5 — Apagar fotos da tabela de preços (liberar espaço) · 2026-11-05
 
 - **v1.33.5** — Na **tabela de preços**, agora dá para **apagar a foto** mantendo os dados: um **×**
   na miniatura remove a foto daquela linha, e o botão **"Limpar todas as fotos"** (no rodapé da
@@ -33,7 +33,7 @@
   casos, os dados digitados (data, mercado, produto, marca, preços) são preservados — some só a
   imagem (comprovante). Linhas sem foto mostram "—".
 
-### v1.33.4 — Captura de preço: contador fiel e menos memória · 2026-10-23
+### v1.33.4 — Captura de preço: contador fiel e menos memória · 2026-11-05
 
 - **v1.33.4** — Correção na **captura de preço**: quando o armazenamento enchia, a foto não era
   salva mas o **contador da visita somava mesmo assim** (o erro de cota era engolido). Agora a
@@ -43,25 +43,25 @@
   câmera, as fotos de preço agora são **menores** (comprovante: lado máx. 720 px, qualidade 0,6) e
   o canvas/imagem são liberados logo após comprimir.
 
-### v1.33.3 — Editar/excluir linhas da tabela de preços · 2026-10-23
+### v1.33.3 — Editar/excluir linhas da tabela de preços · 2026-11-05
 
 - **v1.33.3** — A **tabela de preços** ganhou, em cada linha, botões de **editar** e **excluir**.
   Editar devolve o registro para o card **"A revisar"** (com o formulário completo) e rola até ele;
   excluir remove o registro (com confirmação). Os botões não saem na impressão.
 
-### v1.33.2 — Card "Ajuste a produção" colapsável · 2026-10-23
+### v1.33.2 — Card "Ajuste a produção" colapsável · 2026-11-05
 
 - **v1.33.2** — O card **"Ajuste a produção"** (fixo acima das abas) agora é **colapsável**: toque no
   título para recolher/expandir. É **independente** dos cards das abas — os botões "expandir/recolher
   cards" (da aba e global) não o afetam. O estado fica salvo neste aparelho.
 
-### v1.33.1 — Tabela de preços não estoura no celular · 2026-10-23
+### v1.33.1 — Tabela de preços não estoura no celular · 2026-11-05
 
 - **v1.33.1** — Correção: a **tabela de preços** (7 colunas) estourava a largura da tela no celular.
   Agora ela fica num container com **rolagem horizontal** (rola dentro da caixa, sem empurrar a
   página); produto/marca podem quebrar em duas linhas e os filtros encolhem sem transbordar.
 
-### v1.33.0 — Aba Preços (preços de mercado) · 2026-10-23
+### v1.33.0 — Aba Preços (preços de mercado) · 2026-11-05
 
 - **v1.33.0** — Nova aba **Preços** (entre Diário e Referência) para anotar o preço de insumos nas
   compras, em dois momentos:
@@ -76,13 +76,13 @@
   - As fotos são comprimidas e guardadas no aparelho (comprovante) e **entram no backup completo**.
   Ajuda e README atualizados; chave nova `pizzaPrecosMercado`.
 
-### v1.32.3 — Barra do sistema preta · 2026-10-23
+### v1.32.3 — Barra do sistema preta · 2026-11-05
 
 - **v1.32.3** — Cor da barra do sistema alterada para **preto** (`#000000`) nos dois temas, no
   `theme_color` do manifest e no `<meta theme-color>` dinâmico. **Reinstale o app** no Android para
   o sistema reler o manifest.
 
-### v1.32.2 — Cor da barra do sistema (correção) · 2026-10-23
+### v1.32.2 — Cor da barra do sistema (correção) · 2026-11-05
 
 - **v1.32.2** — Correção da tentativa anterior: `theme_color: "transparent"` é **inválido** num
   manifest de PWA e era **ignorado** pelo Android, que caía num fallback **laranja** (cor dominante
@@ -93,7 +93,7 @@
   *translúcida de verdade* (edge-to-edge real) — isso depende de empacotar como app nativo/TWA
   (plano futuro de Android). **Reinstale o app** no Android para o sistema reler o manifest.
 
-### v1.32.1 — Barra do sistema edge-to-edge (transparente) · 2026-10-23
+### v1.32.1 — Barra do sistema edge-to-edge (transparente) · 2026-11-05
 
 - **v1.32.1** — No Android instalado, a **barra de navegação do sistema** (voltar/home/recentes)
   deixava de acompanhar o app e ficava **laranja** nos dois temas — herança do `theme_color` fixo
@@ -105,7 +105,7 @@
   do sistema. **No Android instalado, reinstale o app** (Configurações do site → Limpar e redefinir
   + reinstalar) para o sistema reler o manifest.
 
-### v1.32.0 — Mais cores + seletor por amostras · 2026-10-23
+### v1.32.0 — Mais cores + seletor por amostras · 2026-11-05
 
 - **v1.32.0** — Três **cores de destaque** novas: **Roxo**, **Teal** e **Terracota** (somam-se a
   Laranja/Azul/Cinza/Verde — agora **7 no total**). E o seletor de **Cor** (Config → Aparência)
@@ -115,7 +115,7 @@
   (traduzidos PT/EN). Como a cor **Teal** puxa para o verde, nela o indicador de **sucesso/pronto**
   também vira **âmbar** (como já acontece no Verde).
 
-### v1.31.0 — Cor de destaque (Laranja/Azul/Cinza/Verde) · 2026-10-23
+### v1.31.0 — Cor de destaque (Laranja/Azul/Cinza/Verde) · 2026-11-05
 
 - **v1.31.0** — Novo controle **Cor** na aba **Config → Aparência** (logo abaixo de *Tema*):
   troca a cor de marca/ação do app (botões, abas, realces, slider) entre **Laranja** (padrão),
@@ -125,7 +125,7 @@
   barra do navegador (theme-color) acompanha a cor escolhida no tema claro. Preferência salva no
   aparelho (`pizzaCor`); padrão **Laranja**.
 
-### v1.30.0 — Fases próprias por modo de fermentação · 2026-10-23
+### v1.30.0 — Fases próprias por modo de fermentação · 2026-10-27
 
 - **v1.30.0** — **Fluxo do cronograma em 3 passos:** (1) escolher o **modo de fermentação**
   (8h/24h/48h/53h) — só marca o modo e ajusta o fermento; (2) definir a **hora de assar**; (3) o
@@ -145,7 +145,7 @@
   modos rápidos). Ao fugir do horário incômodo, só a **maturação** estica (poolish/appretto ficam
   fixos). Valores a calibrar na prática.
 
-### v1.29.0 — Modos de fermentação no Cronograma · 2026-10-23
+### v1.29.0 — Modos de fermentação no Cronograma · 2026-10-26
 
 - **v1.29.0** — Os atalhos do Cronograma agora são **modos de fermentação** (tempo total de
   maturação): **8h · 24h · 48h · 53h**. Ao escolher um:
@@ -160,26 +160,26 @@
   mostra o modo ativo e o fermento resultante. **Valores de fermento são de referência — calibre
   pelo seu diário de fornadas.** O modo fica salvo (`pizzaFermModo`), padrão 53h.
 
-### v1.28.1 — Tempo longo em dias e horas · 2026-10-23
+### v1.28.1 — Tempo longo em dias e horas · 2026-10-26
 
 - **v1.28.1** — Na faixa **"Próximo"** do cronograma (e demais durações), tempos **acima de 72h**
   passam a ser mostrados como **"N dias e XhYY"** (ex.: "3 dias e 8h30") em vez de um número
   grande de horas. Até 72h, segue no formato em horas. Bilíngue.
 
-### v1.28.0 — Toque tátil ao concluir etapas · 2026-10-23
+### v1.28.0 — Toque tátil ao concluir etapas · 2026-10-26
 
 - **v1.28.0** — Um **toque curto de vibração** confirma quando você marca uma etapa como
   concluída — tanto no **checklist do cronograma** quanto ao avançar um passo no **modo "mão na
   massa"**. É um pulso leve e único (bem diferente da vibração forte dos alarmes de timer, que já
   existia). Só em aparelhos com suporte a vibração.
 
-### v1.27.1 — Logo claro na impressão · 2026-10-23
+### v1.27.1 — Logo claro na impressão · 2026-10-26
 
 - **v1.27.1** — Na **impressão**, o logo passa a ser sempre a versão de **fundo claro** — no tema
   escuro o logo preto ficava estranho sobre o papel branco. A troca ocorre no `beforeprint` e é
   revertida no `afterprint` (vale para Ctrl+P e para os botões de imprimir).
 
-### v1.27.0 — Abas na ordem do fluxo · 2026-10-23
+### v1.27.0 — Abas na ordem do fluxo · 2026-10-26
 
 - **v1.27.0** — As abas foram **reordenadas para seguir o fluxo real de uma fornada**:
   **Cronograma → Receita → Preparo → Diário** (· Referência · Ajuda · Config). O planejamento da
@@ -187,13 +187,13 @@
   padrão**. O interruptor da Config virou **"Sempre iniciar no Cronograma"**. O "Imprimir tudo"
   continua com a ficha na página 1 e o cronograma na 2.
 
-### v1.26.0 — Índice na aba Referência · 2026-10-23
+### v1.26.0 — Índice na aba Referência · 2026-10-26
 
 - **v1.26.0** — A aba **Referência** ganhou um **índice de atalhos** (chips) no topo: Farinhas ·
   Farinha e hidratação · Recheios · Velocidades · Glossário · Problemas. Tocar num chip **abre o
   card correspondente e rola até ele**, sem precisar procurar rolando. Não aparece na impressão.
 
-### v1.25.0 — Boas-vindas + ajuste do cronograma · 2026-10-23
+### v1.25.0 — Boas-vindas + ajuste do cronograma · 2026-10-26
 
 - **v1.25.0** — Novo **card de boas-vindas** na primeira abertura: explica o fluxo das abas
   (Cronograma → Receita → Preparo → Diário) e o botão "Mão na massa". Traz um **seletor de idioma
@@ -204,7 +204,7 @@
   poolish automaticamente** (mesma regra dos atalhos Hoje/Amanhã/Depois); editar o início segue
   como ajuste fino manual.
 
-### v1.24.0 — "Mão na massa" retoma de onde parou · 2026-10-23
+### v1.24.0 — "Mão na massa" retoma de onde parou · 2026-10-26
 
 - **v1.24.0** — O modo **"mão na massa"** agora **lembra o progresso** da fornada: ao reabrir,
   volta no passo em que você estava (em vez de começar sempre do poolish) e **marca os passos
@@ -212,7 +212,7 @@
   o progresso para uma nova fornada (o modo também recomeça sozinho se a última já estava toda
   concluída). O progresso é salvo neste aparelho (`pizzaMnm`). Bilíngue.
 
-### v1.23.0 — Atalhos de data no cronograma · 2026-10-23
+### v1.23.0 — Atalhos de data no cronograma · 2026-10-26
 
 - **v1.23.0** — Novos **atalhos** no topo do cronograma: **Assar Hoje · Amanhã · Depois** + uma
   **hora** (padrão 19:00). Um toque define a data de assar e **preenche o início do poolish
@@ -220,20 +220,20 @@
   campos detalhados (início/assar) continuam disponíveis para ajuste fino, e mexer neles desmarca
   o atalho. Bilíngue.
 
-### v1.22.0 — Botão "próximo passo" · 2026-10-23
+### v1.22.0 — Botão "próximo passo" · 2026-10-26
 
 - **v1.22.0** — Um botão discreto no rodapé de cada aba do fluxo dá o **fio condutor** de uma
   fornada, na ordem real: **Cronograma → Receita → Preparo → Diário**. No Diário, o botão vira
   **"Nova fornada: Cronograma"**, fechando o ciclo para a próxima. As abas de consulta
   (Referência, Ajuda, Config) não têm o botão. Não aparece na impressão.
 
-### v1.21.1 — Layout do estimador de pessoas · 2026-10-23
+### v1.21.1 — Layout do estimador de pessoas · 2026-10-26
 
 - **v1.21.1** — No estimador por nº de pessoas, os botões de apetite foram para uma **linha
   própria** abaixo do campo "Pessoas", com o rótulo **"Apetite"** na frente — fica mais claro e
   respira melhor no celular.
 
-### v1.21.0 — Discos por nº de pessoas · 2026-10-23
+### v1.21.0 — Discos por nº de pessoas · 2026-10-26
 
 - **v1.21.0** — Novo **estimador por nº de pessoas** no topo do card de produção (aba Receita):
   informe quantas **pessoas** e o **apetite** (Leve · Normal · Faminto) e o app sugere o nº de
@@ -242,7 +242,7 @@
   slider de discos continua editável na mão. Pessoas + apetite ficam salvos no aparelho
   (`pizzaPessoas`). Bilíngue.
 
-### v1.20.0 — Retomar a última aba · 2026-10-23
+### v1.20.0 — Retomar a última aba · 2026-10-26
 
 - **v1.20.0** — O app agora **reabre na última aba** que você estava usando, em vez de voltar
   sempre para a Receita — ótimo para continuar de onde parou no meio de uma fornada (ainda mais
@@ -250,14 +250,14 @@
   prefere o comportamento antigo, há um novo interruptor **"Sempre iniciar na aba Receita"** no
   card *Dados e layout* da aba Config (desligado por padrão).
 
-### v1.19.1 — Ajuste do status da cocção · 2026-10-23
+### v1.19.1 — Ajuste do status da cocção · 2026-10-26
 
 - **v1.19.1** — No status da cocção, removido o contador de segundos do texto "Assando…" (o
   relógio grande logo acima já mostra o tempo) e arredondados os segundos para inteiro nos
   textos de "ponto ideal" e "passou de 140 s" (antes, com a contagem pelo relógio, apareciam
   casas decimais, ex.: "20.005s").
 
-### v1.19.0 — Timers que não se perdem · 2026-10-23
+### v1.19.0 — Timers que não se perdem · 2026-10-26
 
 - **v1.19.0** — Os três timers (mistura, pré-aquecimento e cocção) agora **sobrevivem a
   bloquear a tela, trocar de app ou recarregar a página**. O tempo passou a ser contado pelo
@@ -268,7 +268,7 @@
   só retoma após o primeiro toque na tela; a vibração, a notificação e o destaque visual
   aparecem na hora.
 
-### v1.18.0 — Estilo visual Flat · 2026-10-23
+### v1.18.0 — Estilo visual Flat · 2026-10-26
 
 - **v1.18.0** — Novo seletor de **estilo visual** na aba Config (card Aparência, abaixo do
   tema): **Clássico** (o visual original, arredondado — padrão) ou **Flat** (mais clean e
@@ -464,14 +464,14 @@
 
 ## 🇺🇸 English
 
-### v1.33.6 — Help in sync (flow, Prices, color) · 2026-10-23
+### v1.33.6 — Help in sync (flow, Prices, color) · 2026-11-05
 
 - **v1.33.6** — Help synced: the <b>"Getting started"</b> card now lists the tabs in the <b>real
   flow order</b> (Schedule → Recipe → Prep → Log) and mentions the support tabs, including the new
   <b>Prices</b> tab. The <b>"Usage tips"</b> card now mentions <b>Color</b> alongside
   theme/style/language/units.
 
-### v1.33.5 — Delete photos from the price table (free space) · 2026-10-23
+### v1.33.5 — Delete photos from the price table (free space) · 2026-11-05
 
 - **v1.33.5** — In the **price table**, you can now **delete the photo** while keeping the data: an
   **×** on the thumbnail removes that row's photo, and the **"Clear all photos"** button (at the
@@ -480,7 +480,7 @@
   cases the typed data (date, market, product, brand, prices) is preserved — only the image
   (receipt) is removed. Rows without a photo show "—".
 
-### v1.33.4 — Price capture: accurate counter and less memory · 2026-10-23
+### v1.33.4 — Price capture: accurate counter and less memory · 2026-11-05
 
 - **v1.33.4** — Fix in **price capture**: when storage filled up, the photo wasn't saved but the
   **visit counter still went up** (the quota error was swallowed). Saving is now **actually
@@ -490,25 +490,25 @@
   now **smaller** (receipt: max side 720 px, quality 0.6) and the canvas/image are released right
   after compressing.
 
-### v1.33.3 — Edit/delete price table rows · 2026-10-23
+### v1.33.3 — Edit/delete price table rows · 2026-11-05
 
 - **v1.33.3** — The **price table** now has **edit** and **delete** buttons on each row. Edit sends
   the entry back to the **"To review"** card (with the full form) and scrolls to it; delete removes
   the entry (with confirmation). The buttons don't appear in print.
 
-### v1.33.2 — Collapsible "Adjust production" card · 2026-10-23
+### v1.33.2 — Collapsible "Adjust production" card · 2026-11-05
 
 - **v1.33.2** — The **"Adjust production"** card (pinned above the tabs) is now **collapsible**: tap
   the title to collapse/expand. It's **independent** from the tab cards — the "expand/collapse cards"
   buttons (per-tab and global) don't affect it. The state is saved on this device.
 
-### v1.33.1 — Price table no longer overflows on mobile · 2026-10-23
+### v1.33.1 — Price table no longer overflows on mobile · 2026-11-05
 
 - **v1.33.1** — Fix: the **price table** (7 columns) overflowed the screen width on mobile. It now
   sits in a **horizontally scrollable** container (scrolls inside the box, without pushing the
   page); product/brand can wrap to two lines and the filters shrink without overflowing.
 
-### v1.33.0 — Prices tab (market prices) · 2026-10-23
+### v1.33.0 — Prices tab (market prices) · 2026-11-05
 
 - **v1.33.0** — New **Prices** tab (between Log and Reference) to log ingredient prices while
   shopping, in two moments:
@@ -523,13 +523,13 @@
   - Photos are compressed and kept on the device (receipt) and **included in the full backup**.
   Help and README updated; new key `pizzaPrecosMercado`.
 
-### v1.32.3 — Black system bar · 2026-10-23
+### v1.32.3 — Black system bar · 2026-11-05
 
 - **v1.32.3** — System bar color changed to **black** (`#000000`) in both themes, in the manifest
   `theme_color` and the dynamic `<meta theme-color>`. **Reinstall the app** on Android so the system
   re-reads the manifest.
 
-### v1.32.2 — System bar color (fix) · 2026-10-23
+### v1.32.2 — System bar color (fix) · 2026-11-05
 
 - **v1.32.2** — Fix for the previous attempt: `theme_color: "transparent"` is **invalid** in a PWA
   manifest and was **ignored** by Android, which fell back to an **orange** tint (the app's dominant
@@ -540,7 +540,7 @@
   navigation bar (real edge-to-edge) — that requires packaging as a native app/TWA (future Android
   plan). **Reinstall the app** on Android so the system re-reads the manifest.
 
-### v1.32.1 — Edge-to-edge system bar (transparent) · 2026-10-23
+### v1.32.1 — Edge-to-edge system bar (transparent) · 2026-11-05
 
 - **v1.32.1** — On installed Android, the **system navigation bar** (back/home/recents) didn't
   follow the app and stayed **orange** in both themes — inherited from the manifest's fixed
@@ -552,7 +552,7 @@
   **On installed Android, reinstall the app** (Site settings → Clear & reset + reinstall) so the
   system re-reads the manifest.
 
-### v1.32.0 — More colors + swatch picker · 2026-10-23
+### v1.32.0 — More colors + swatch picker · 2026-11-05
 
 - **v1.32.0** — Three new **accent colors**: **Purple**, **Teal** and **Terracotta** (added to
   Orange/Blue/Gray/Green — now **7 total**). And the **Color** picker (Settings → Appearance) no
@@ -562,7 +562,7 @@
   **Teal** color leans green, its **success/ready** indicator also turns **amber** (as already
   happens with Green).
 
-### v1.31.0 — Accent color (Orange/Blue/Gray/Green) · 2026-10-23
+### v1.31.0 — Accent color (Orange/Blue/Gray/Green) · 2026-11-05
 
 - **v1.31.0** — New **Color** control on the **Settings → Appearance** tab (right below *Theme*):
   switches the app's brand/action color (buttons, tabs, highlights, slider) between **Orange**
@@ -572,7 +572,7 @@
   The browser bar color (theme-color) follows the chosen color in the light theme. Preference saved
   on the device (`pizzaCor`); default **Orange**.
 
-### v1.30.0 — Per-mode fermentation phases · 2026-10-23
+### v1.30.0 — Per-mode fermentation phases · 2026-10-27
 
 - **v1.30.0** — **3-step schedule flow:** (1) pick the **fermentation mode** (8h/24h/48h/53h) —
   it just marks the mode and adjusts the yeast; (2) set the **baking time**; (3) the app
@@ -590,7 +590,7 @@
   awkward hours, only **maturation** stretches (poolish/appretto stay fixed). Values to calibrate
   in practice.
 
-### v1.29.0 — Fermentation modes in the Schedule · 2026-10-23
+### v1.29.0 — Fermentation modes in the Schedule · 2026-10-26
 
 - **v1.29.0** — The Schedule shortcuts are now **fermentation modes** (total maturation time):
   **8h · 24h · 48h · 53h**. Picking one:
@@ -605,26 +605,26 @@
   shows the active mode and resulting yeast. **Yeast values are reference — calibrate with your
   bake log.** The mode is saved (`pizzaFermModo`), default 53h.
 
-### v1.28.1 — Long durations in days and hours · 2026-10-23
+### v1.28.1 — Long durations in days and hours · 2026-10-26
 
 - **v1.28.1** — In the schedule's **"Next"** strip (and other durations), times **over 72h** are
   now shown as **"N days and XhYY"** (e.g. "3 days and 8h30") instead of a large hour count. Up to
   72h it stays in the hours format. Bilingual.
 
-### v1.28.0 — Haptic tap when completing steps · 2026-10-23
+### v1.28.0 — Haptic tap when completing steps · 2026-10-26
 
 - **v1.28.0** — A **short vibration tap** confirms when you mark a step as done — both in the
   **schedule checklist** and when advancing a step in **hands-on mode**. It's a light single pulse
   (quite different from the strong timer-alarm vibration, which already existed). Only on devices
   that support vibration.
 
-### v1.27.1 — Light logo when printing · 2026-10-23
+### v1.27.1 — Light logo when printing · 2026-10-26
 
 - **v1.27.1** — When **printing**, the logo now always uses the **light-background** version — in
   dark theme the black logo looked odd on white paper. It swaps on `beforeprint` and reverts on
   `afterprint` (covers Ctrl+P and the print buttons).
 
-### v1.27.0 — Tabs in flow order · 2026-10-23
+### v1.27.0 — Tabs in flow order · 2026-10-26
 
 - **v1.27.0** — The tabs were **reordered to follow the real bake flow**: **Schedule → Recipe →
   Prep → Log** (· Reference · Help · Settings). Planning the date (Schedule) is the start of
@@ -632,13 +632,13 @@
   toggle became **"Always start on the Schedule tab"**. "Print everything" still has the recipe
   sheet on page 1 and the schedule on page 2.
 
-### v1.26.0 — Reference tab index · 2026-10-23
+### v1.26.0 — Reference tab index · 2026-10-26
 
 - **v1.26.0** — The **Reference** tab now has a **shortcut index** (chips) at the top: Flours ·
   Flour & hydration · Toppings · Speeds · Glossary · Troubleshooting. Tapping a chip **opens the
   matching card and scrolls to it**, no more hunting by scrolling. Hidden when printing.
 
-### v1.25.0 — Welcome card + schedule tweak · 2026-10-23
+### v1.25.0 — Welcome card + schedule tweak · 2026-10-26
 
 - **v1.25.0** — New **welcome card** on first launch: explains the tab flow (Schedule → Recipe →
   Prep → Log) and the "Hands-on" button. It includes a **flag language switcher (PT/EN)** right at
@@ -649,7 +649,7 @@
   automatically** (same rule as the Today/Tomorrow/Day-after shortcuts); editing the start remains
   a manual fine-tune.
 
-### v1.24.0 — "Hands-on" resumes where you left off · 2026-10-23
+### v1.24.0 — "Hands-on" resumes where you left off · 2026-10-26
 
 - **v1.24.0** — The **"hands-on"** mode now **remembers the bake's progress**: on reopen it
   returns to the step you were on (instead of always starting at the poolish) and **marks
@@ -657,7 +657,7 @@
   top clears the progress for a new bake (the mode also restarts on its own if the last one was
   fully completed). Progress is saved on this device (`pizzaMnm`). Bilingual.
 
-### v1.23.0 — Schedule date shortcuts · 2026-10-23
+### v1.23.0 — Schedule date shortcuts · 2026-10-26
 
 - **v1.23.0** — New **shortcuts** at the top of the schedule: **Bake Today · Tomorrow · Day after**
   + a **time** (default 19:00). One tap sets the baking date and **fills in the poolish start
@@ -665,19 +665,19 @@
   case. The detailed fields (start/bake) are still there for fine-tuning, and editing them clears
   the shortcut. Bilingual.
 
-### v1.22.0 — "Next step" button · 2026-10-23
+### v1.22.0 — "Next step" button · 2026-10-26
 
 - **v1.22.0** — A discreet button at the bottom of each flow tab gives a bake a **guided thread**,
   in the real order: **Schedule → Recipe → Prep → Log**. On the Log, the button becomes **"New
   bake: Schedule"**, closing the loop for the next one. The reference tabs (Reference, Help,
   Settings) don't have the button. It doesn't show when printing.
 
-### v1.21.1 — People estimator layout · 2026-10-23
+### v1.21.1 — People estimator layout · 2026-10-26
 
 - **v1.21.1** — In the people estimator, the appetite buttons moved to their **own row** below the
   "People" field, with an **"Appetite"** label in front — clearer and roomier on mobile.
 
-### v1.21.0 — Pizzas by number of people · 2026-10-23
+### v1.21.0 — Pizzas by number of people · 2026-10-26
 
 - **v1.21.0** — New **people estimator** at the top of the batch card (Recipe tab): enter how
   many **people** and the **appetite** (Light · Normal · Hungry) and the app suggests the number
@@ -686,7 +686,7 @@
   pizza. The pizzas slider stays editable by hand. People + appetite are saved on the device
   (`pizzaPessoas`). Bilingual.
 
-### v1.20.0 — Resume the last tab · 2026-10-23
+### v1.20.0 — Resume the last tab · 2026-10-26
 
 - **v1.20.0** — The app now **reopens on the last tab** you were using instead of always going
   back to Recipe — great for picking up where you left off mid-bake (even more so with the timers
@@ -694,14 +694,14 @@
   old behavior, there's a new **"Always start on the Recipe tab"** switch in the *Data & layout*
   card on the Settings tab (off by default).
 
-### v1.19.1 — Baking status tweak · 2026-10-23
+### v1.19.1 — Baking status tweak · 2026-10-26
 
 - **v1.19.1** — In the baking status, removed the seconds counter from the "Baking…" text (the
   big clock right above already shows the time) and rounded the seconds to whole numbers in the
   "sweet spot" and "past 140 s" messages (with clock-based counting they were showing decimals,
   e.g. "20.005s").
 
-### v1.19.0 — Timers that don't get lost · 2026-10-23
+### v1.19.0 — Timers that don't get lost · 2026-10-26
 
 - **v1.19.0** — The three timers (mixing, preheat and baking) now **survive locking the screen,
   switching apps or reloading the page**. Time is now counted by the **real clock** (not an
@@ -711,7 +711,7 @@
   foreground. Note: by browser policy, the alarm **sound** only resumes after the first tap on
   the screen; the vibration, notification and visual highlight show up right away.
 
-### v1.18.0 — Flat visual style · 2026-10-23
+### v1.18.0 — Flat visual style · 2026-10-26
 
 - **v1.18.0** — New **visual style** selector on the Settings tab (Appearance card, below the
   theme): **Classic** (the original, rounded look — default) or **Flat** (cleaner and more
